@@ -1,0 +1,841 @@
+/* ============================================================================
+   MOBILE — everything below 760px.
+
+   The rest of this site is a 1440px canvas scaled to fit: s = min(vw/1440, 1).
+   That is right down to about a tablet and wrong on a phone, where it renders the
+   whole design at roughly a quarter size and 16px body text lands at 4px. Below the
+   breakpoint the scaling scripts stand down (each one clears the inline styles it
+   wrote) and the pages become ordinary stacked documents.
+
+   This file only ever ADDS rules inside one media query, so desktop is untouched by
+   construction — deleting the file returns the site exactly to where it was.
+
+   Two things CSS cannot do here, so mobile.js does them: it cannot divide one
+   length by another to get a scale factor, and a fixed-size Figma block that has to
+   fit a fluid column needs exactly that. --card-k and --well-k come from there.
+   ========================================================================== */
+
+@media (max-width: 760px) {
+
+  /* ---------- shared ---------- */
+  html, body { width: 100%; overflow-x: hidden; }
+  body { height: auto !important; }
+
+  /* Every page's stage stops being a scaled canvas and becomes flow. */
+  #stage, #ab-stage, #cs-stage {
+    position: static !important;
+    width: auto !important;
+    transform: none !important;
+    left: auto !important;
+    top: auto !important;
+  }
+
+  /* site.css sets `section{width:1440px}` for every section on every page — the
+     work block and both footers included — so releasing the stages alone left them
+     all 1440 wide inside a 390 column. */
+  section { width: auto !important; }
+
+  /* Nothing fixed-width may push the document sideways. */
+  img, svg, video { max-width: 100%; }
+
+
+  /* ======================= HOME ======================= */
+
+  /* No bottom padding: Calcifer is the last thing in the hero and the 40px that used
+     to sit under him read as him being cut off short of the edge rather than standing
+     on it. He is clipped by the 28px bottom radius, which is the intent. */
+  /* z-index 3 so the fixed bar inside it can outrank the footer. The bar carries
+     z-index 60, but #hero is z-index 2 and positioned, so it opens a stacking context
+     and that 60 only ranks the bar WITHIN the hero. The footer is also z-index 2 and
+     comes later in the document, so it won the tie and painted over the whole hero, the
+     bar with it: scrolled to the bottom the menu simply vanished. Raising the hero is
+     safe because it sits at the top of the page and clips its own contents, so nothing
+     but the fixed bar can ever reach the footer. On desktop the bar stands down when
+     the footer arrives, which is why this only bites here. */
+  #hero {
+    position: relative;
+    z-index: 3;
+    height: auto !important;
+    min-height: 0;
+    padding: 28px 20px 0;
+    box-sizing: border-box;
+  }
+  .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* relative, not static: .hero-bg is absolutely positioned and would otherwise
+     paint over everything in here, since positioned elements sit above in-flow ones
+     in the same stacking context. */
+  .hgroup {
+    position: relative !important;
+    z-index: 2;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    left: auto !important;
+    pointer-events: auto;
+  }
+
+  .name-block { position: static; width: 100%; }
+  .name { font-size: 48px; line-height: 1.15; }
+  /* nowrap keeps the dot beside the place. It used to wrap, because the dot plus its
+     gap plus a 332px paragraph came to 356 in a 350 column, which put the dot alone on
+     the first line. The paragraph now breaks internally instead, so the dot and the
+     place share a line and "Currently @" takes the next one. */
+  /* This strip is the busiest thing on the page for its size. In 40px it runs an accent
+     dot, ApercuMono in parchment, and Monument Bold in hero-green under a rule: two
+     families, three colours and a weight jump, sitting between 48px Kyoto above and 18px
+     Diatype below. Four families inside the first 200px.
+
+     It is metadata, so it recedes rather than competing, and 13px against the bio's 18 is
+     the step down. Size does that work alone: dimming it was tried and reverted, because
+     the ground cannot afford it. The brightest patch of the photograph behind this strip
+     is (92,130,141), where sage reads 2.35:1 and even the bio's own parchment only reaches
+     4.02:1, already under the 4.5 AA floor. Taking ink out of small type over that would
+     make a marginal contrast worse. The dot and the green link stay, proportionally
+     calmer at 13 than they were at 15. */
+  .loc { flex-wrap: nowrap; align-items: flex-start; gap: 8px; margin-top: 12px; }
+  .loc .dot { width: 8px; height: 8px; margin-top: 5px; }
+  .loc p { width: auto; font-size: 15px; white-space: normal; }
+  .loc .loc-now { display: block; }
+  /* Back to 16, but keeping the 1.6 leading that came in with the 18.
+     The two were separate changes: the size was an attempt to buy readability the way
+     jennywen.ca does at 18 on 1.625, and the leading was the part that actually opened
+     the paragraph up. At 16 the block returns to nine lines and gives back the 43px. */
+  .bio { width: auto; margin-top: 16px; font-size: 16px; line-height: 1.6; }
+
+  /* Calcifer keeps his place, at a size a phone can hold. The sparkle overlays and
+     the two hand-set captions are pinned to coordinates in the 1440 canvas and have
+     nowhere sensible to go here, so they sit this one out. */
+  /* The artwork on a phone. It is the WRAPPER that is sized now, not the image:
+     the prompt overlay lives inside that box and is positioned in percentages of it,
+     so sizing the wrapper carries the overlay along and the prompt keeps landing on
+     the laptop screen at every width. Sizing the <img> alone left the overlay behind
+     at desktop canvas coordinates, which is how it vanished on a phone.
+
+     aspect-ratio rather than height:auto, because the box has to have a height
+     before its absolutely-positioned child can be placed inside it.
+
+     Wider than the old 62vw. This is a landscape drawing of two cats and a laptop
+     with readable text on the screen; at 240px the prompt was too small to read and
+     the picture read as a thumbnail. 78% of the viewport, capped, gives it presence
+     without crowding the column. The top margin drops to 40 to match. */
+  /* relative, NOT static. The image and the prompt inside it are absolutely
+     positioned, so the wrapper has to remain their containing block. Set to static it
+     stopped being one, both children resolved against .hgroup instead, and the
+     artwork stretched over the whole column and sat on top of the bio. */
+  .mascot-wrap { position: relative; display: block;
+                 /* top/left MUST be cleared. The desktop rule places this box at
+                    left:56px top:418px, and those offsets keep applying under
+                    position:relative -- they just become a shift from the flow
+                    position instead of an absolute one. Left in, they pushed the
+                    artwork 418px down, past the hero's overflow:hidden, and it
+                    vanished from the page entirely. */
+                 top: auto; left: auto;
+                 width: min(78vw, 330px); height: auto; aspect-ratio: 1080 / 836;
+                 margin: 40px auto 0; }
+  .mascot { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .spk-layer { display: none; }
+  /* Gone on every width now. The artwork is a drawing with "Clawed" painted into
+     the laptop screen, so the overlay that used to supply that word would print a
+     second one across it. Kept as a rule rather than deleted so a future mascot
+     without lettering only has to fill this back in. */
+  .mascot-label { display: none; }
+  /* Under them, not beside them. There is no clear gutter on a landscape drawing
+     whose right half is a laptop screen, and a line under the picture needs no
+     fractions of anything and cannot come loose when the artwork changes again. */
+  .mascot-cap { display: block; position: static; margin: 12px auto 0;
+                width: min(78vw, 330px); left: auto; right: auto; top: auto;
+                bottom: auto; font-size: 10px; line-height: 1.35;
+                text-align: center; white-space: normal;
+                transform: rotate(-1.2deg); }
+  /* The bubble is the hero's one piece of play, so it stays — on a tap rather than a
+     hover (mobile.js). Both it and its nudge are placed against Calcifer instead of
+     against canvas coordinates: he is the last thing in this column, so his bottom
+     edge is the column's, and they sit his own height above it.
+
+     Centred with margin:auto between left:0 and right:0 rather than with a
+     translate, because .bubble animates its transform on the way in and the two
+     would fight. */
+  .bubble-prompt, .bubble {
+    position: absolute; left: 0; right: 0; margin-inline: auto; width: max-content;
+    /* top:461px is the desktop placement and it has to go, or the box is
+       over-constrained — top and bottom both set with an auto height — and top wins,
+       which put the bubble squarely across Calcifer's face. */
+    top: auto;
+    /* The -8 drops both of them together. It goes on bottom rather than a transform
+       because .bubble animates its own transform on the way in and the two would fight;
+       the nudge's extra 12 is a transform for the opposite reason, that it is the only
+       one of the pair that moves. */
+    bottom: calc(var(--bubble-bottom, calc(min(78vw, 330px) * 0.774 + 10px)) - 8px);
+    z-index: 3;
+  }
+  /* 13, down from 16. At 16 it was a third headline in a column that already has a 48px
+     name, a 13px metadata strip and an 18px paragraph. It is a nudge. */
+  /* translateY rather than a smaller bottom, because --bubble-bottom is shared with the
+     speech bubble and only the nudge moves. Nothing else transforms this element, so
+     there is nothing to fight. */
+  .bubble-prompt { max-width: 78vw; text-align: center; font-size: 13px;
+                   transform: translateY(12px); }
+  .bubble p { white-space: normal; max-width: min(74vw, 290px); }
+
+  /* The glass pill becomes a bottom bar — it is already the right shape for one. */
+  #hg-center {
+    position: fixed !important;
+    left: 0; right: 0; bottom: 24px;
+    top: auto !important;      /* .hgroup sets top:0; with both set, top wins and
+                                  the pill pinned itself over the name */
+    display: flex; justify-content: center;
+    z-index: 60; pointer-events: none;
+  }
+  .nav { position: static !important; transform: scale(.84); transform-origin: bottom center;
+         pointer-events: auto;
+         /* flex:none, or the bar is squeezed before it is scaled. It is a flex item of
+            #hg-center, so a natural width wider than the viewport made it shrink to
+            the viewport first and the .84 then applied to the squeezed box -- 302 at
+            360px against a natural 335, i.e. the padding eaten by 10%. The scale is
+            what should do the fitting, and at .84 the widest bar is 356 against 360. */
+         flex: none;
+         /* On desktop this pill sits on the hero photograph, so it is transparent
+            with a white gradient stroke and a backdrop blur. As a bottom bar it sits
+            over parchment instead, where transparent-plus-white-stroke reads as
+            nothing at all — just icons floating loose over the page. It gets a real
+            surface here. */
+         background: rgba(253,251,239,.94);
+         border: 1px solid var(--outline-stroke);
+         box-shadow: 0 6px 22px rgba(66,62,61,.16); }
+  .nav::before { display: none; }              /* the white stroke, invisible on parchment */
+  .nav-home .label { color: var(--dusty-granite); }      /* was parchment, i.e. invisible on itself */
+  /* The tooltips are :hover pseudo-elements floating above the bar. A tap leaves
+     hover stuck on a touch device, so they hang there with nothing to explain them. */
+  .nav [data-tip]::after, .nav [data-tip]::before { display: none !important; }
+  /* One menu on every page. library.html recolours its own bar to new-leaf-green, both
+     the home glyph and the :hover, where index and about stay persimmon; that is a
+     deliberate page accent on desktop but on a phone the three bars sit side by side in
+     the same role and the odd one out just reads as a mistake.
+
+     The hover rule goes entirely rather than being recoloured. A tap leaves :hover stuck
+     on a touch device, so what it actually produced was a permanently highlighted icon
+     after any tap, in a different colour per page. Nothing to hover with means nothing
+     to leave behind. */
+  #lb-navwrap .nav-home svg { color: var(--accent) !important; }
+  /* Library dresses its whole menu in new-leaf-green, the "Copied!" pill included, and
+     site-nav.js reads the sprinkle's colour off that pill's own face -- so the burst came
+     out green here too. On a phone the three menus sit in the same role and the green one
+     reads as a mistake, so the pill goes persimmon and the sprinkle follows it without
+     being told. The desktop composition keeps its green. */
+  #lb-navwrap .nav a[data-tip]::after {
+    background: var(--accent) !important; color: var(--cream) !important;
+  }
+  .nav a:hover svg,
+  #lb-navwrap .nav a:hover svg { color: inherit !important; }
+  .nav-home svg { color: var(--accent) !important; }
+  .nav-icons svg { color: #AEAEAC !important; }
+  /* Except the one that is not a hover tooltip. Copying is the only thing the menu
+     does that needs an answer, and hiding every ::after took its "Copied!" with it, so
+     a tap looked like it had done nothing at all. site-nav.js marks the link while the
+     message is up. */
+  .nav a[data-mail].is-copied::after {
+    display: block !important; opacity: 1 !important;
+    transform: translateX(-50%) !important; }
+
+  /* No ticket flow on a phone. The whole right-hand cluster goes — postcards, the
+     invitation and the button — and the modal with it, so there is no way in even
+     if something else reaches for it. Calcifer carries the hero on his own. */
+  #hg-right { display: none !important; }
+  #modal-overlay { display: none !important; }
+
+  /* The whole photo is scaled by --card-k, about .6 here, so the desktop toast lands
+     at 87x24 with 8px type. Growing the element rather than counter-scaling it keeps
+     script's transform free; the translate offsets are half the box, so it stays
+     centred on its resting --mx/--my. */
+  .sp-toast { width: 208px; height: 58px; border-radius: 15px;
+              font-size: 19px; letter-spacing: .05em;
+              transform: translate(calc(var(--mx) - 104px), calc(var(--my) - 29px))
+                         rotate(var(--rot, 0deg)); }
+
+  /* ---- work ---- */
+  #work { padding: 44px 20px; }
+  .work-inner { padding-bottom: 8px; }
+  .work-row { flex-direction: column; width: 100%; height: auto !important;
+              padding: 0 !important; gap: 40px; }
+  /* The 40px gap is per row, so nothing separated the last ticket of the top row from
+     the first of the bottom one: measured, the four gaps down the column ran
+     40, 0, 40. This is that missing one. */
+  .work-row.bottom { padding-bottom: 0 !important; margin-top: 40px; }
+  /* a.card{display:block} out-specifies a bare .card, so the anchor cards ignored
+     flex entirely and `order` did nothing to them. */
+  .card, a.card { width: 100%; height: auto; display: flex; flex-direction: column;
+                  padding: 14px 16px 24px; box-sizing: border-box; }
+  /* card-ticket.svg carries no preserveAspectRatio="none", so it letterboxes inside its
+     own viewport whatever object-fit says: measured in isolation it filled 350x384 of a
+     350x458 box and floated 37px clear of both ends, which is why "No. 01" sat above the
+     frame and the last line of the description below it. object-fit was never the lever.
+
+     Nor could the file be used as-is once stretched. Its perforation is fixed at 403/628
+     of the drawing, and a phone's text block is proportionally so much taller than the
+     desktop card's that no scale lands that line in the gap between the shot and the
+     copy; solving for it asks for a 63px hole. So assets/ui/card-ticket-mobile.svg is the
+     same outline with the perforation taken out (18 of its 19 subpaths were the dots,
+     and two curve runs were the bites in either edge) and preserveAspectRatio="none"
+     added. Stretched to 100% 100% it fills the card exactly, teeth landing on the edges
+     with their real profile and the stroke intact.
+
+     Drawn as a background rather than through the <img>, so the frame follows the card's
+     height with no second element and no mask. A mask was tried and is what shipped
+     broken: it cut the teeth away from the body and left them hanging as loose
+     triangles, and it also cut off any border, so the card lost its stroke. */
+  .card .ticket { display: none; }
+  .card, a.card { background: url("assets/ui/card-ticket-mobile.svg") 0 0 / 100% 100% no-repeat; }
+
+  /* The card's parts are placed by hand inside a 573x703 box. Unpinned they fall
+     into DOM order, which is photo-dots-number-meta; order puts them back into the
+     reading order the design has. */
+  /* relative, not static, for the same reason as .hgroup: the ticket frame is
+     absolutely positioned and would otherwise paint over all of this.
+
+     left/top have to be cleared with it. They were written for absolute placement
+     inside the 573x703 card — .card-meta sits at top:471.25px — and on a relatively
+     positioned element the same declarations become OFFSETS, which pushed every
+     card's text hundreds of pixels down its own box and the last card's clean over
+     the footer. */
+  .card-no, .card-dots, .card-photo, .card-meta {
+    position: relative; z-index: 1; left: auto; top: auto;
+  }
+  .card-no    { order: 1; margin-top: 16px; }
+  .card-dots  { order: 2; width: 100%; height: 15px; margin: 2px 0 10px; }
+  .card-photo { order: 3; }
+  /* Stands in for the SVG's mid perforation, which used to divide the shot from the
+     copy and now lands wherever the copy starts. */
+  .card-meta  { order: 4; width: 100%; margin-top: 18px; gap: 10px;
+                border-top: 1px dashed var(--outline-stroke); padding-top: 16px; }
+  .card-title { font-size: 22px; }
+  .card-desc  { font-size: 15px; }
+  /* The pills used to sit beside the title, which squeezed every title onto two lines
+     and three for Copilot, and pushed Split Payments' second pill 41px past the card's
+     own edge. Underneath the title they get the full column, and at 13/8 both pills fit
+     one line on every card. The ticket frame is stretched to the card box, so the card
+     losing a line of title is what makes the frame hug its contents again. */
+  .card-title-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .card .tags { gap: 6px; }
+  .card .tag  { font-size: 13px; padding: 8px; border-radius: 9px; }
+
+  /* The phone mock inside is 529x304 of hand-placed px with a running animation, so
+     it is scaled whole rather than rebuilt. transform does not affect layout, hence
+     the negative margin that takes back the height the unscaled box still claims. */
+  .card-photo {
+    width: 529px; height: 304px; flex: none; align-self: flex-start;
+    transform: scale(var(--card-k, 1));
+    transform-origin: top left;
+    margin-bottom: calc(304px * var(--card-k, 1) - 304px);
+  }
+
+  /* Nothing sat above it: the last ticket's bottom edge and the rule were touching.
+     .reads already opens 56px below, so only the top needed opening. */
+  .divider { width: 100%; margin-top: 44px; }
+  /* The flowers are one sprite read through object-position, so the cell cannot be
+     resized without picking a different part of it. zoom is the tool: it scales the
+     layout box as well as the paint, so the column closes up on its own and the wind
+     animation, which drives transform on each stem, is left alone.
+
+     This replaces a transform plus a negative margin. transform does not affect
+     layout, so the height had to be clawed back by hand, and the -98px I used was
+     three times the 31px the scale actually frees. */
+  .flowers { zoom: .68; }
+  /* .reads is a grid now, not a flex row, so flex-direction no longer collapses it --
+     one column does. The mini cards are fluid, so only the shot needs a height: 312 is
+     the desktop figure and would eat the screen next to a 180-wide card. */
+  .reads { grid-template-columns: 1fr; gap: 16px; padding: 56px 0 0; }
+  /* The shot fills the card and its height follows the artwork's own 1.245.
+
+     A wider variant was tried and is gone. Figma 454:1142 is a 388x312 frame whose
+     photograph, image 74, is 463 wide at x=-37 -- so the ground runs barely 37px past
+     each edge. Reshaping to the case studies' 1.74 needs 230px a side, which the source
+     does not have, so both attempts at it were invented ground: first a blurred cover,
+     which blew the sides out white wherever the middle of the image was a device, then an
+     edge clamp, which was truthful about colour but still visibly not photograph. The
+     artwork cannot be widened outside Figma. */
+  /* height:auto here dates from when these thumbnails were drawn SVGs at their own
+     aspect. They are browser frames now: .tile is height:100% and everything inside
+     it is absolutely positioned, so against an auto-height parent the whole tile
+     collapsed. Measured on a phone it was TWO PIXELS tall, which is to say the six
+     project thumbnails did not exist on mobile at all.
+
+     aspect-ratio keeps the box without pinning a height, so the frame, the window
+     and the scroll all scale down together and --travel, being a percentage of the
+     image's own height, stays correct at every width. 388x312 is the desktop slot. */
+  .mini-shot { height: auto; aspect-ratio: 388 / 312; }
+  .mini-shot > img { height: auto; }
+
+
+  /* ======================= CASE STUDY ======================= */
+
+  .cs-page { width: auto !important; }
+  .cs-main {
+    width: auto !important;
+    margin-left: 0 !important;
+    padding: 68px 20px 72px !important;   /* 20 + the 48px fixed nav strip */
+    gap: 72px !important;
+  }
+  /* The arrow gets its own box rather than floating over the strip. It was a bare fixed
+     icon at left 16, and .cs-nav simply padded 52px to clear it -- but that padding
+     scrolls away with the strip, so every anchor slid underneath the arrow as you moved
+     along it. "Impact", the last one, spent most of its life there. An opaque box with a
+     divider means the strip passes cleanly behind a fixed edge instead. */
+  .cs-back { position: fixed !important; left: 0 !important; top: 0 !important;
+             transform: none !important; z-index: 40;
+             width: 52px; height: 48px; box-sizing: border-box;
+             display: flex; align-items: center; justify-content: center;
+             background: var(--parchment);
+             border-right: 1px solid var(--outline-stroke);
+             border-bottom: 1px solid var(--outline-stroke);
+             /* opacity 1, not the .48 the desktop rule sets. There the arrow is a bare
+                glyph on a photograph and the fade is the point; here it carries the box,
+                so fading it made the whole surface translucent and the strip showed
+                straight through. The glyph itself takes the fade instead. */
+             opacity: 1 !important; }
+  .cs-back svg { width: 22px; height: 22px; opacity: .62; }
+
+  /* The section rail is a 320px gutter on desktop. There is no gutter here, so it
+     becomes a scrolling strip under the back arrow — still a way to move around the
+     piece, without eating a third of the screen. */
+  /* fixed, not sticky. mobile.css puts overflow-x:hidden on html and body so nothing can
+     drag the page sideways, and that turns the body into the scrollport -- which leaves
+     position:sticky with nothing to stick to. Measured: at scrollY 1500 the "sticky" bar
+     had a top of -1500, i.e. it had scrolled clean off. Fixed pins it for real; .cs-main
+     pays back the 48px it no longer occupies in flow. */
+  .cs-nav {
+    position: fixed !important;
+    left: 0 !important; right: 0 !important; top: 0 !important;
+    transform: none !important;
+    display: flex; flex-direction: row; gap: 18px;
+    width: 100%; box-sizing: border-box;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding: 14px 20px 12px 68px;
+    background: var(--parchment);
+    border-bottom: 1px solid var(--outline-stroke);
+    z-index: 30; scrollbar-width: none;
+  }
+  .cs-nav::-webkit-scrollbar { display: none; }
+  /* flex:none, or the row shares out the overflow by shrinking everything: measured, the
+     items wanted 1037px in a 390 box and every one had flex-shrink 1, so the shortest --
+     "Impact", at 46px -- took the worst of it. A scrolling strip must let its items keep
+     their natural width. */
+  .cs-nav a { white-space: nowrap; font-size: 14px; flex: none; }
+  /* The three sub-anchors are full section headlines, 196px each, and together they are
+     three fifths of the strip's length. The three top-level sections are the map; the
+     headlines are already in the page. */
+  .cs-nav a.sub { display: none; }
+  .cs-nav a::before { display: none; }   /* the persimmon dot needs a left margin it no longer has */
+
+  .cs-titleblock { width: auto !important; }
+  .cs-title { font-size: 28px; }
+  /* The hero's two phone mocks used to be hidden here, on the grounds that they sit at
+     x=283 and x=404 inside a 799-wide frame and would be slivers at the right edge of a
+     350 column. True if the stage keeps its size, but the stage can be scaled like any
+     other fixed composition -- and by HEIGHT rather than width, which is what brings them
+     into frame. 190/307 is 0.619, and at that scale the pair lands at x 176..321 and
+     y 12..178, both comfortably inside 350x190, at 71x155 each.
+
+     Scaling by width instead would give 0.438 and a 134px-tall hero, which is a band
+     rather than a hero. The stage is 494 wide at this scale and the frame shows the first
+     350 of it; everything past that is empty ground. */
+  .cs-hero { height: 190px; }
+  /* zoom, not transform. site-motion.js drives a scroll parallax by writing an inline
+     transform on .hero-stage, and it is not gated to desktop -- so a CSS transform here
+     was simply overwritten on the first scroll event, which put the phones back at full
+     size and at their 799-space coordinates, half off the right edge. That is the
+     "cut off" hero.
+
+     zoom scales the layout box as well as the paint and composes with the inline
+     transform instead of fighting it. The stage is inset:0, so at 0.619 its own
+     coordinate space becomes 565x307 -- and the phones, which sit at x 283..519 and
+     y 19..287, fit inside that with room to spare. */
+  .cs-hero .hero-stage {
+    zoom: calc(190 / 307);
+    /* inset:0 makes the stage 566 wide in its own zoomed space (350 / 0.619), but the
+       phones are placed against the 799 the composition was drawn for -- so they landed
+       at 71% across instead of 50%, which is the hero sitting right of centre. Pinning
+       the stage to its authored 799 and centring that puts them back at exactly 50%. */
+    width: 799px; height: 307px;
+    left: calc(50% - 399.5px); right: auto;
+  }
+  /* Two columns, not one. Stacked, five short label/value pairs ran the block to nearly
+     a screen for perhaps forty words; paired up it is half that and each value still has
+     its own line. The note is a sentence rather than a field, so it spans both. */
+  .cs-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px;
+             padding: 16px; align-items: start; }
+  .cs-meta .col { gap: 4px; }
+  .cs-meta .col:last-child { grid-column: 1 / -1; }
+  .cs-meta .lbl { font-size: 13px; }
+  /* The authored <br> stays. Hiding it to let the values reflow welded the words either
+     side together -- "Lead productdesigner" -- because the break was carrying the space.
+     At 149px a column holds "Mobile (Android" and "Shipped Apr 2026" on one line each
+     anyway, so the designed breaks are the right ones. */
+  .cs-section { gap: 24px; }
+  .cs-body { font-size: 15px; }
+  /* Figures are drawn at canvas widths; let the wide ones scroll rather than
+     forcing the page sideways. */
+  /* The two flows go side by side here as well. payment-requests.html gates that on
+     min-width:761px, from before figures were scaled to fit -- stacking them was the only
+     way two 170px phones fitted a phone column. Now the whole figure scales, so the pair
+     costs 446 of the 799 it is drawn in and the caption's "side by side" is true on both.
+     Stacked, it was also the tallest thing on the page by some way. */
+  .rflow { flex-direction: row !important; justify-content: center;
+           gap: 56px; align-items: flex-start; padding: 28px; }
+
+  /* Four across, as designed. payment-requests.html drops the variants to two columns
+     below 761px, from the same era as the .rflow stack -- but .pr-phone is sized by
+     aspect-ratio off its column, so halving the count doubled each phone to about 370
+     wide in the 799 the figure is drawn in, and 559 tall. The sheet inside is fixed, so
+     it sat marooned in a box twice the size it was drawn for: the header at the top, the
+     button at the bottom, and a large empty middle. That is the warping. The figure
+     scales to the column now, so the authored four-up needs no help. */
+  .pr-variants { grid-template-columns: repeat(4, 1fr) !important; gap: 24px !important; }
+
+  /* Impact is read, not looked at, so it is the one figure that does not scale. At 0.438
+     a 44px number renders at 19 and the label under it at 6, which is why it was hard to
+     take in without expanding. It reflows instead: the three stats stack, each keeps type
+     at its own size, and the dividers turn from vertical to horizontal. */
+  /* Principles read the same way Impact does, so they get the same treatment: no scaling,
+     a layout that suits the column. The three columns become a stack -- the number and
+     the title share a line, since "01" is scaffolding rather than a heading, and the
+     description follows underneath at full size. At 0.438 the title was rendering at 8px
+     and the body at 7. */
+  /* One column. The four cards are 390 wide inside the 799 the figure is drawn in, which
+     is fine on a desktop and half a phone column here. */
+  /* !important because copilot-viva-engage.html carries its own <style> after this
+     file's link, so an equal-specificity rule here loses the cascade. Same reason the
+     Library overrides above need it. */
+  .cp-assume { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .cp-a { padding: 16px 18px !important; }
+  .cp-a .d { font-size: 15px !important; }
+
+  .cs-rule { flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 18px; }
+  .cs-rule .n { width: auto; }
+  .cs-rule .t { width: auto; font-size: 17px; }
+  .cs-rule .d { font-size: 15px; }
+
+  .stats { gap: 18px !important; padding: 20px !important; }
+  /* .stats-row is the flex row, not .stats -- .stats was already a column, so setting it
+     again did nothing and the three stats stayed side by side and ran off the edge. */
+  .stats-row { flex-direction: column; }
+  .stat { flex: none !important; padding: 14px 0 !important; }
+  .stat + .stat { padding-left: 0 !important; border-left: 0 !important;
+                  border-top: 1px solid var(--outline-stroke); }
+  .stat:first-child { padding-top: 0 !important; }
+  .stat:last-child { padding-bottom: 0 !important; }
+  .stat-n { font-size: 34px !important; }
+  .stats-eyebrow { font-size: 13px !important; }
+
+  /* Figures used to scroll sideways when they did not fit. They scale now instead, the
+     way .card-photo does, and the scale is the column ratio rather than anything measured
+     per figure: every one of these is width:100% inside .cs-main, which is 799px, and
+     their contents sit at absolute pixel coordinates tuned to that 799.
+
+     Measuring each figure's own contents was tried first and was wrong twice over. It
+     squeezed the frame to the phone column while the contents kept their 799 coordinates,
+     and it could not tell a designed crop from an accident: .cs-media is a 391px window
+     holding a 280x600 phone at left 260 with a camera move, so its overflow is the
+     composition. Scaling the whole frame by one ratio keeps every such relationship
+     intact. overflow stays hidden rather than auto so a rounding pixel cannot bring the
+     scrollbar back. */
+  .cs-figure { max-width: 100%; overflow: hidden; }
+  .cs-figure > img { height: auto; }
+  .cs-figure > .cs-fit {
+    width: 799px;
+    transform: scale(var(--fig-k, 1));
+    transform-origin: top left;
+  }
+
+
+  /* ======================= ABOUT ======================= */
+
+  .ab-canvas {
+    width: auto !important;
+    height: auto !important;
+    padding-bottom: 56px;
+  }
+  /* A portrait crop, not the landscape one squeezed into a column. about-bg.webp is
+     5760x4859, aspect 1.185, and desktop's canvas is 1440x1215 at the same 1.185, so
+     object-fit:fill there distorts by a factor of exactly 1.000. The stacked page is
+     390x1917, aspect 0.204, and cover threw away 83% of the width to fill it: what
+     showed was a narrow core of a landscape photograph, which reads as stretched even
+     though no pixel is.
+
+     Worse, cover centres, and the photograph's tonal range is not centred. Measured in
+     24 vertical bands, the spread runs 93-99 down the left and collapses to 55-59
+     through the middle, so the slice on show was the flattest part of the picture.
+
+     about-bg-mobile.webp is a full-height band cut at x 600-1589, aspect 0.204 to match
+     the column, from the varied side. Spread 99 against the 55-59 it replaces, and cover
+     now has almost nothing left to crop. The scrim below still carries the contrast the
+     desktop composition gets from its own range. */
+  #ab-bg { display: none; }
+  .ab-canvas { background: url("assets/hero/about-bg-mobile.webp") 50% 0 / cover no-repeat; }
+  .ab-canvas::before {
+    content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(rgba(48,32,16,.52), rgba(48,32,16,.30) 22%, rgba(48,32,16,.22));
+  }
+  .ab-canvas::after { height: 120px; z-index: 3; }
+
+  /* relative rather than static, and z-indexed above the ground: #ab-bg is
+     absolutely positioned, and a positioned element paints over in-flow ones in the
+     same stacking context — which put the whole page behind its own background.
+     left/top must be cleared with it or the desktop coordinates become offsets. */
+  /* 40/20 is Library's placement, and the two pages sit either side of one shared
+     view transition on the arrow, so they have to agree on where it is. */
+  .ab-back { position: relative !important; z-index: 2; display: block;
+             left: auto !important; top: auto !important;
+             margin: 40px 0 0 20px; width: 32px; height: 32px; }
+  .ab-back svg { width: 32px; height: 32px; }
+
+  .ab-page {
+    position: relative !important; z-index: 2;
+    left: auto !important; top: auto !important;
+    width: auto !important;
+    transform: none !important;
+    padding: 8px 20px 0;
+  }
+  .ab-hello { font-size: 42px; line-height: 1.15; width: auto; }
+  .ab-cols { display: block; width: auto !important; }
+  .ab-left, .ab-right { position: static !important; width: auto !important; }
+  .ab-intro { width: auto; font-size: 16px; }
+  .ab-rule { position: static !important; width: 100% !important; margin: 26px 0 22px; }
+  .ab-rule-moon { display: block; margin: 30px 0 26px; }
+
+  /* Six roles placed at top: calc(308px + i * 149px). Stacked, each one is a block
+     with its dates under the title rather than out in a second column. */
+  .ab-job { position: static !important; width: auto !important;
+            top: auto !important; flex-direction: column; gap: 2px;
+            margin-bottom: 26px; }
+  .ab-role { font-size: 19px; }
+  .ab-when { order: -1; font-size: 13px; }
+  .ab-desc { font-size: 15px; }
+
+  .ab-right { margin-top: 34px; }
+  .ab-moon { font-size: 16px; width: auto; }
+  /* The aside is set at an angle against a column that no longer exists. */
+  .ab-aside { display: none; }
+
+  /* The well keeps its proportions and its contents keep their placement inside it;
+     only the whole thing is scaled to the column. */
+  .ab-well {
+    position: static !important;
+    width: 591px; height: 497px;
+    /* 46 at the top, not 26. The polaroid is placed a little above the dashed frame, so
+       the gap the eye reads is to the photograph rather than to the well: measured, 26 on
+       the well left only 14 above the polaroid itself. */
+    margin: 46px 0 0;
+    transform: scale(var(--well-k, 1));
+    transform-origin: top left;
+    /* The polaroid deliberately hangs below the dashed frame -- 111px of it on desktop,
+       81 here -- but .ab-canvas is overflow:hidden with only 56px of padding under it, so
+       on a phone the bottom of every photograph was being cut off. The negative margin
+       still reclaims the height the unscaled box claims; the +96 is the overhang. */
+    margin-bottom: calc(497px * var(--well-k, 1) - 497px + 96px);
+  }
+
+
+  /* ======================= FOOTER ======================= */
+
+  /* 108 at the foot, not 34. The menu is fixed 12 off the bottom of the window and 62
+     tall, so at the end of the scroll it sat over the weather line by 40px. This is the
+     bar's whole footprint plus a gap. It works here and did not where I first put it,
+     because .foot-inner is absolute on desktop and static only below this breakpoint:
+     padding on the footer moves nothing at all up there. */
+  #footer { height: auto !important; padding: 30px 20px 108px; position: relative; z-index: 2; }
+  /* 108 buys clearance for the floating menu. Case studies do not carry one -- they load
+     no site-nav.js and their navigation is the fixed strip at the top -- so the space is
+     bought for nothing there. :has(#cs-stage) is what tells the two apart. */
+  body:has(#cs-stage) #footer { padding-bottom: 36px; }
+  .foot-inner { position: static !important; display: flex; flex-direction: column; gap: 26px; }
+  .foot-left, .foot-right {
+    position: static !important;
+    transform: none !important;
+    left: auto !important; right: auto !important; top: auto !important;
+  }
+  .foot-left { flex-direction: column; gap: 18px; }
+  /* Three sprite tiles cropped with object-fit:none cannot be resized without
+     recomputing every object-position, so the mobile footer shows one at full size.
+     The motif survives; the column does not. */
+  .flowers { flex-direction: row; width: auto; }
+  .flowers .fl:nth-child(n+2) { display: none; }
+  .quote { width: auto; height: auto; font-size: 26px; }
+
+  .foot-right { display: flex; flex-direction: row; gap: 40px; }
+  /* 18, with the icons taken down by the same ratio: 24 x 18/20 is 21.6, so 22, and the
+     gap follows from 12 to 11. The SVGs carry width/height attributes, so CSS has to set
+     both or they keep their attribute size. */
+  .foot-links a, .foot-nav a { font-size: 18px; }
+  .foot-links a { gap: 11px; }
+  .foot-links a svg { width: 22px; height: 22px; }
+  .foot-nav { width: auto; }
+
+  .weather { position: static !important; transform: none !important;
+             flex-wrap: wrap; gap: 12px; }
+  .weather p { font-size: 16px; white-space: normal; }
+
+  /* Back-to-top: case studies only. Everywhere else the nav pill is a fixed bottom
+     bar 356px wide against a 360 viewport, so there is no room beside it and stacking
+     the button above it just crowds the foot of the screen. Case studies pin their nav
+     to the top instead and leave the bottom empty, and they are the long pages where
+     a shortcut earns its place.
+
+     44px rather than the desktop 36, because this one gets tapped. The ::after halo
+     goes: it is a hover flourish and there is no hover here. */
+  .to-top { display: none !important; }
+  body:has(#cs-stage) .to-top {
+    display: flex !important;
+    right: 20px; bottom: 24px; width: 44px; height: 44px;
+  }
+  body:has(#cs-stage) .to-top::after { display: none; }
+  body:has(#cs-stage) .to-top svg { width: 22px; height: 22px; }
+
+
+
+  /* ---- About's glass menu ---- */
+  /* Same bottom bar the other pages get. The wrapper stops being a scaled 1440
+     canvas and becomes the fixed strip, and the pill inside it drops its own
+     absolute placement. */
+  #ab-navwrap { position: fixed !important; left: 0 !important; right: 0; bottom: 24px;
+                top: auto !important; width: auto !important; height: auto !important;
+                transform: none !important; display: flex; justify-content: center;
+                z-index: 60; pointer-events: none; }
+
+  /* ======================= LIBRARY ======================= */
+
+  /* On desktop this page is a fixed 1440x861 screen: the left column holds still
+     and only the shelf scrolls. A phone has no room for two columns and no second
+     axis to spare, so it becomes one ordinary scrolling page — title, description,
+     then the shelf, with the document doing the scrolling the shelf used to. */
+  /* relative, not static. The ground sits in the positioned layer with z-index 0;
+     a static stage paints below that and the title and the description vanished
+     behind the photograph. (The covers survived only because .lb-cover is relative
+     and comes later in the document.) left/top go with it — on a relative box the
+     desktop placement would stop being placement and start being an offset. */
+  #lb-stage { position: relative !important; z-index: 1;
+              left: auto !important; top: auto !important;
+              width: auto !important; height: auto !important;
+              transform: none !important; }
+  /* The padding belongs to the screen, not the stage, so the footer below it still
+     runs edge to edge. */
+  .lb-screen { position: relative; width: auto; height: auto;
+               overflow: visible; padding: 84px 20px 44px; }
+  /* The ground is fixed on a phone: the photograph holds still and the page travels
+     over it, until the footer arrives and covers it. */
+  #lb-bg, #lb-ground { position: fixed; height: 100%; }
+  /* The arrow is a sibling of the stage rather than a child of the screen, so that
+     on desktop it can escape this page's scale and take About's. That puts it
+     outside the screen's padding here, so it is placed rather than flowed: 20/40
+     is where it sat when it was in flow, and the screen's top padding opens up to
+     clear it. It scrolls away with the page, as About's does. */
+  .lb-back { left: 20px; top: 40px; width: 32px; height: 32px; opacity: .7; }
+  .lb-title { position: static; width: auto; font-size: 52px; }
+  .lb-intro { position: static; width: auto; margin-top: 12px; font-size: 17px; }
+
+  /* One instruction, two pages. About set its at 20px, centred, with the noun in
+     Monument green; Library set its at 16px, left, plain. They tell the reader the same
+     thing and now look like it: 16px reads as a note rather than a heading, and the
+     accented noun is the part that says which thing to tap. The wells differ because the
+     interactions land differently -- About reveals in place, Library opens a card -- but
+     the sentence is the same object on both. */
+  .ab-hint { font-size: 28px !important; }
+  .lb-hint span { font-family: 'Space Grotesk'; font-weight: 700; color: var(--new-leaf-green); }
+
+  /* The silhouette is a desktop object: it marks where a hover ticket will land, and
+     there is no hover here. The hint survives on its own, in flow between the
+     description and the grid, with its wording swapped by library.html. */
+  .lb-rest { position: static; width: auto; height: auto; margin: 20px 0 0;
+             opacity: 1 !important; }
+  .lb-dash, .lb-rest img { display: none; }
+  /* 16, its own size. The alignment
+     between the two instructions is the treatment -- ApercuMono, centred, the object word
+     accented in Monument green -- not the size. */
+  .lb-hint { position: static; width: auto; text-align: center; font-size: 16px;
+             margin-bottom: -8px; }
+
+  .lb-shelf { position: static; width: auto; height: auto;
+              overflow: visible !important;
+              -webkit-mask-image: none !important; mask-image: none !important;
+              margin-top: 28px; }
+  /* Three across on a phone, and the cells keep the design's 136:207 proportion
+     rather than a fixed width, so the row fits whatever the screen is. */
+  /* minmax(0,1fr) + min-width:0, so the tracks can shrink below the cover's own
+     min-content width on a narrow phone. With plain 1fr the row stayed 3x the cover
+     min and overflowed the right edge on anything under ~460px. */
+  .lb-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .lb-book { width: auto; height: auto; min-width: 0; aspect-ratio: 136 / 207; padding: 6px; }
+  .lb-cover { width: 100%; height: 100%; }
+
+  /* Nothing hovers here, so the ticket is what a tap produces: a card over the
+     page rather than a panel beside it. It keeps its own 375x610 geometry and is
+     scaled to fit, the way the home page's modal is. */
+  /* The card cannot simply be made shorter, which is what the first two attempts at this
+     did. Its perforation is 18 circles baked into library-ticket.svg at y 342 of a 610
+     viewBox, and the SVG stretches, so the row sits at a fixed FRACTION of whatever
+     height the card is given. Measured across all 25 book states the blurb ends between
+     285 and 316, and the perforation has to fall below that. At 610 it lands at 342 and
+     does. At the 500 I shipped it landed at 280 and at 465 at 261, both of which cut
+     straight through the longest blurbs.
+
+     So the perforation moves too. assets/ui/library-ticket-mobile.svg is the same file with
+     those 18 circles shifted 82 down the viewBox, to y 424, which at a 475-tall card puts
+     them back at 330 and 14 clear of the longest blurb. The recommendation block follows
+     underneath, and 475 is where its 393 bottom plus a 37 margin lands.
+
+     610 to 475, with the perforation still doing its job of dividing the two halves. */
+  .lb-tk-shape { display: none; }
+  .lb-ticket { background: url("assets/ui/library-ticket-mobile.svg") 0 0 / 100% 100% no-repeat; }
+  .lb-tk-rec-label { top: 364px !important; }
+  .lb-rule-red     { top: 379px !important; }
+  .lb-tk-rec       { top: 404px !important; }
+  .lb-ticket { height: 475px !important;
+               position: fixed !important; left: 50% !important; top: 50% !important;
+               z-index: 70;
+               /* the same rise as on desktop, folded into the centring transform */
+               transform: translate(-50%, calc(-50% + 22px)) scale(calc(var(--ticket-k, .8) * .985)) !important;
+               transform-origin: center center; }
+  .lb-ticket.is-open { transform: translate(-50%, -50%) scale(var(--ticket-k, .8)) !important;
+                       pointer-events: auto; }
+  /* A scrim, so the ticket is legible over the shelf and there is somewhere
+     obvious to tap to put it away. */
+  #lb-scrim { position: fixed; inset: 0; z-index: 65; background: rgba(20,26,34,.55);
+              opacity: 0; visibility: hidden; transition: opacity .22s ease, visibility .22s; }
+  #lb-scrim.is-on { opacity: 1; visibility: visible; }
+  /* Dimming the other eleven says "this one" on a page where the pointer already
+     said it. On a phone the ticket is over everything anyway. */
+  .lb-shelf.is-reading .lb-book:not(.is-lit) .lb-cover::after { opacity: 0; }
+
+  /* max-content, or the pill shrinks to fit. A fixed box with left:50% and no width
+     gets only the half-viewport to its right to be shrink-to-fit in, and the three
+     icons were squeezed to zero width inside it — the pill rendered with a label, a
+     separator and nothing after it. */
+  #lb-navwrap { position: fixed !important; left: 0 !important; top: auto !important;
+                width: auto !important; height: auto !important; transform: none !important; }
+  #lb-navwrap .nav { position: fixed !important; left: 50% !important; top: auto !important;
+                   /* 24, the same as #hg-center and #ab-navwrap. Library pins the pill
+                      itself rather than its wrapper, so it was missed when those two
+                      moved and sat 12 off the foot while the others sat 24. */
+                   bottom: 24px; width: max-content;
+                   transform: translateX(-50%) scale(.84) !important;
+                   transform-origin: bottom center; z-index: 60; }
+  /* This used to keep its glass, on the reasoning that Library is a photograph on a
+     phone just as it is on a desktop. That only holds at the top of the page: the bar is
+     fixed, so by the footer it is sitting on persimmon like every other page's, and next
+     to Index and About it was the one bar with no surface at all.
+
+     So it takes the same parchment face as the others. The cream label was the reason
+     the surface was refused -- cream on parchment is invisible -- so the label comes back
+     to dusty granite here, which is what the other two use. library.html sets it cream
+     for the desktop composition, where the pill really is over the photograph. */
+  #lb-navwrap .nav-home .label { color: var(--dusty-granite) !important; }
+
+
+  /* ======================= TICKET MODAL ======================= */
+
+  /* The modal is a 1052x750 canvas scaled by --modal-scale, which the home page's
+     fit() normally sets from the hero scale. On mobile that function stands down,
+     so mobile.js sets it to whatever fits the screen instead. The internals keep
+     their proportions — this is the piece most in need of a real phone layout, and
+     the least dangerous to leave proportional in the meantime. */
+  #print-modal { transform: translate(-50%, -50%) scale(var(--modal-scale, .34)) !important; }
+}

@@ -1,0 +1,15 @@
+# LF in the repository, whatever the checkout does locally. CNAME especially:
+# GitHub Pages reads that file literally, and a stray CR is the kind of thing that
+# makes a custom domain "not configured" with no useful error.
+* text=auto eol=lf
+
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.svg  text eol=lf
+*.mp4  binary
+*.mov  binary
+*.otf  binary
+*.ttf  binary
+*.pdf  binary

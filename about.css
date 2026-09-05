@@ -1,0 +1,270 @@
+/* ================= ABOUT (Figma 681:1009) ================= */
+/* Authored at 1440x1386 and scaled to fit, like every other page here. */
+/* The page is 1440 wide and centred, so on anything wider the surround shows down
+   both gutters — it used to be a flat orange left over from the old ground. It now
+   tracks the ground's own edge tone band by band (sampled from about-bg.webp), then
+   hard-stops to the footer colour at 75.00%, which is exactly where the canvas ends
+   and the footer begins. html carries the footer colour alone, for anything below
+   the body box. On iOS (viewport-fit=cover) the root also fills the safe-area strips:
+   a flat brown mismatched the grey sky at the very top, so the root runs the sky-grey
+   gradient start to the footer brown, matching both the top and bottom strips. */
+html{background:#87887F}
+body{background:linear-gradient(
+  #87887F 4.2%, #7E7668 12.5%, #896A4A 20.8%, #795027 29.2%, #663810 37.5%,
+  #6A3A0F 45.8%, #754415 54.2%, #83531F 62.5%, #8D602A 70.8%,
+  var(--pear) 75.00%, var(--pear) 100%)}
+body{overflow-x:hidden}
+#ab-stage{position:absolute;top:0;left:0;width:1440px;transform-origin:top left}
+/* The gradient belongs to the canvas, not the stage: the footer sits below it and
+   must not inherit the ground or be clipped by it. */
+/* The content is scaled to 0.8 and now starts at 99 to clear the back arrow, so
+   it ends at 99 + 1299*0.8 = 1138; the canvas follows it to keep the same 44px of
+   ground beneath the last entry that the design has. */
+.ab-canvas{position:relative;width:1440px;height:1214.73px;overflow:hidden;
+  /* The content is 1326 wide and drawn at .8, so it renders 1060.8. The 265px it
+     gives up is split evenly rather than dumped on the right — the design's gutters
+     are 57 and 57, and the page has to stay symmetric even at a smaller scale. */
+  --ab-inset:189.6px}
+/* 4320x4158 — a 3x asset for a 1440 box, so it stays sharp on 2x and 3x screens
+   alike. Shipping it at 1x was the original blur: the browser was upscaling to
+   device pixels and smearing the very grain the effect provides.
+
+   fill, NOT cover. The canvas is 1126 tall while the ground's own ratio wants
+   1386, so cover was cropping 130px off each end — taking the deepest orange at
+   the bottom and the palest top with it and leaving the flat middle, which is why
+   the page read brighter and lower in contrast than the design. Filling keeps the
+   whole tonal range; the vertical squash is carried by soft, blurred forms.
+
+   The ground is image 59 from node 659:445, exported at 4x (5760x4640) with the
+   texture effect baked in — checked against a render of the whole frame, where the
+   gutters agree to ~1.2/255, so nothing that Figma layers on top is missing. It is
+   pre-squashed to 4x the canvas box so the browser only ever does a clean 4:1
+   downscale. Filling rather than covering again: fill reproduces the frame's tone
+   exactly (122.3/86.3/50.6 both), cover crops to 119.9/80.1/42.3. */
+/* A 44x37 copy of the ground, inlined, sitting behind the real one. The full
+   image is 1.7MB — on anything but a fast connection the page used to arrive as
+   flat brown and then change colour under the reader, which is most of what made
+   the arrival feel erratic. This costs one KB, travels with the HTML, and holds
+   the right composition and tone until the real ground paints over it. Sized the
+   same way (100% 100%) so the two line up exactly and the swap is a sharpening
+   rather than a move. */
+#ab-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;
+  background:url('data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAQCACdASosACUAPpU6m0kloyKhKrqsALASiWMAwRAiAWqlRKcvl1rmBfTqfHdhVUhg6RfT2mpJsGpOvK+iMF71q+d4+2yTVckAAPxvuHF93SbzguCn4J4BWYTZaRMt9ftbYko7iAlxO1EspXjxrhi0cemLtEwZ3XZQ7a5kGmxN6D8xp0na+8BO5rMmDBcb54tgbljR7RQ02zwYIDjj+g2iXWGnwiy5emcrtdlIdnVDgJEFKKJsyru+IzZ1IUKwXAAAAA==') center/100% 100% no-repeat,#7A5633}
+
+/* Back to the index. Chrome in the left gutter, like the case study's — clear of
+   the content column rather than aligned to its edge.
+
+   Horizontally that is the case study's own position: .cs-back is a 24-unit
+   viewBox drawn at 28px from x=33, putting its glyph's left edge at 38.83, and
+   left:32 lands this 32-unit asset's glyph at 38.67. The two pages agree.
+
+   Vertically it is the case study's position too — glyph centre y=45 on both pages.
+   The title comes up to meet it rather than the arrow going down: .ab-page's top
+   margin is set so the h1's cap band starts level with the arrow's glyph, which
+   also lands About's first visible content at the same height as the case study's
+   (36.8 against 38.0). Moving the arrow instead would have given this page a
+   back-arrow position no other page shares.
+
+   Nougat at the design's 48%, lifting to full parchment on hover. */
+.ab-back{position:absolute;left:32px;top:63.5px;width:32px;height:32px;z-index:5;
+  color:var(--nougat);opacity:.48;display:block;
+  transition:opacity .2s ease,color .2s ease}
+.ab-back:hover,.ab-back:focus-visible{opacity:1;color:var(--parchment)}
+.ab-back svg{display:block;width:32px;height:32px}
+
+/* Frame 129 at (57,43), 1326 wide */
+/* Everything inside is dialled back 20%. Scaling from the block's own top-left
+   means the 57/43 page padding is untouched — only the content and its internal
+   spacing shrink, which is what "keep the padding the same" asks for. */
+.ab-page{position:absolute;left:var(--ab-inset);top:51.33px;width:1326px;
+  transform:scale(.8);transform-origin:top left}
+/* 100, so that it RENDERS at 80 like the other two pages' titles. This block sits
+   inside .ab-page, which is scaled to .8, so the Figma's 80 was arriving on screen at
+   64 while the index's name and Library's title both arrived at 80. The declared
+   number is the odd one here precisely so the rendered one is not. */
+.ab-hello{font-family:'Kyoto';font-weight:500;font-style:italic;font-size:100px;
+  line-height:1.3;color:var(--parchment);margin:0}
+/* Frame 71: the two columns, 622.5 and 616 with a 81px gutter (703.5 - 622.5) */
+.ab-cols{position:relative;margin-top:24px;width:1326px}
+.ab-left{position:absolute;left:0;top:0;width:622.5px}
+.ab-right{position:absolute;left:703.5px;top:0;width:616px}
+
+/* ----- left: intro, rule, and the history ----- */
+.ab-intro{font-family:'Diatype';font-weight:400;font-size:20px;line-height:1.6;
+  color:var(--parchment);margin:0;width:622.5px}
+.ab-intro b{font-weight:700;color:var(--new-leaf-green)}
+.ab-rule{position:absolute;left:0;top:266px;width:622.5px;height:1px;
+  background:var(--parchment);opacity:.55}
+.ab-rule-moon{display:none}
+/* Six entries on a 149px rhythm starting at 308. Driven by an explicit index
+   rather than nth-of-type: the rule above is a div too, so nth-of-type counted it
+   and shifted every entry down one slot. */
+.ab-job{position:absolute;left:0;width:622.5px;display:flex;gap:42px;align-items:flex-start;
+  top:calc(308px + var(--i) * 157px)}
+.ab-job-main{flex:1 0 0;min-width:0;display:flex;flex-direction:column;gap:4px}
+.ab-role{font-family:'Mackinac';font-weight:700;font-size:24px;line-height:1.3;
+  color:var(--parchment);white-space:nowrap;margin:0}
+.ab-role .at{color:var(--butter)}
+/* 18 rather than the design's 16. The hard line breaks are gone with it: they
+   were the positions a 16px line happened to end at, so at 18px they broke mid
+   thought and left ragged short lines. The column wraps them itself now. */
+.ab-desc{font-family:'Diatype';font-weight:400;font-size:18px;line-height:1.5;
+  color:var(--butter);margin:0}
+/* Both boxes start at y=0, as they do in Figma — but the role is 24px on 31.2 and
+   the date is 16px on normal, so equal box tops put the date's cap 2.45px above the
+   role's and it read as floating. Nudged by 3.06 at design scale (2.45 / .8) so the
+   two cap lines meet. */
+.ab-when{flex:none;font-family:'ApercuMonoPro';font-weight:500;font-size:16px;
+  line-height:normal;color:var(--parchment);white-space:nowrap;margin:3.06px 0 0}
+
+/* ----- right: the moonlight list ----- */
+.ab-moon{font-family:'Diatype';font-weight:400;font-size:20px;line-height:1.5;
+  color:var(--parchment);margin:0;width:616px}
+/* The green links, with the same sweep every other link on the site has: the rule
+   retracts to the right, then redraws from the left.
+
+   Drawn as a background gradient rather than the ::after the others use, because
+   these wrap — "fledgling ikebana florist" breaks across two lines — and an
+   ::after renders once, on the last line box only. A background paints on every
+   line box and can still be animated, via size and position rather than scaleX.
+   The colour does not change on hover; only the rule moves. */
+.ab-moon a{font-weight:700;color:var(--new-leaf-green);text-decoration:none;
+  background-image:linear-gradient(var(--new-leaf-green),var(--new-leaf-green));
+  background-repeat:no-repeat;background-size:100% 1px;
+  background-position:0 100%}
+/* The sweep reads as two moves, so it carries two easings. Declaring one on the
+   shorthand applied it to every segment, which decelerated into the midpoint, sat
+   there, then accelerated out — the stop-start that read as jitter. The rule now
+   accelerates as it retracts and decelerates as it returns, and the invisible
+   midpoint (width 0, anchor jumping right to left) is stepped rather than
+   interpolated so nothing is animated while there is nothing to see. */
+.ab-moon a:hover,.ab-moon a:focus-visible{
+  animation:ab-link-sweep .46s both}
+@keyframes ab-link-sweep{
+  0%   {background-size:100% 1px;background-position:100% 100%;
+        animation-timing-function:cubic-bezier(.55,0,1,.45)}
+  46%  {background-size:0 1px;    background-position:100% 100%;
+        animation-timing-function:steps(1,end)}
+  54%  {background-size:0 1px;    background-position:0 100%;
+        animation-timing-function:cubic-bezier(0,.55,.45,1)}
+  100% {background-size:100% 1px;background-position:0 100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .ab-moon a:hover,.ab-moon a:focus-visible{animation:none}
+}
+
+/* the rotated aside. Figma reports only a rotated bounding box (222.8x71.3 for two
+   16px lines), so the angle is solved from it rather than given: ~ -7.5deg.
+
+   Figma's y of 88 puts its rotated box 15px INTO the moonlight paragraph — the
+   rotation drops its lower-left corner onto the first line. Lifted to 60.25, which
+   clears the paragraph by 7px — enough to sit off the text, close enough to still
+   read as a note about it. It has no horizontal overlap with the heading
+   (the aside starts at x 879, "Hello world!" ends near 451), so the room is free.
+
+   85.25 rather than the 60.25 it started at. That is 25 design units, which lands as
+   20px on screen, because this block sits inside .ab-page at a scale of 0.8 -- so
+   every nudge here is asked for in screen pixels and written down at 1.25x. */
+.ab-aside{position:absolute;left:879px;top:85.25px;width:220px;
+  font-family:'ApercuMono';font-weight:400;font-size:16px;line-height:1.4;
+  color:var(--nougat);text-align:center;margin:0;transform:rotate(-7.5deg)}
+
+/* ----- the illustration well ----- */
+/* 591x497, centred in the 616 column, 88px under the list (Frame 127 is a flex
+   column with gap 88; the list runs 181 tall). */
+/* Figma 696:1404: the rectangle is 591x497 at x=0 in this column, not inset. The
+   12.5 it used to carry was a guess at centring it in the 616 column, and every
+   illustration coordinate was quietly written against that mistake. */
+.ab-well{position:absolute;left:0;top:269px;width:591px;height:497px}
+/* The page ends on a dark photograph and the footer starts on #E2F085 — 49 points
+   of L* in one line, which is what read as abrupt. Rather than dull the footer, the
+   last 170px of ground lift toward its hue, so the two surfaces meet instead of
+   colliding. The footer keeps the colour the design specifies. */
+.ab-canvas::after{content:'';position:absolute;left:0;right:0;bottom:0;height:170px;
+  background:linear-gradient(rgba(226,240,133,0),rgba(226,240,133,.34));
+  pointer-events:none;z-index:1}
+
+/* The readability wash.
+
+   This page runs body copy, six job entries and a hover well across the ENTIRE
+   canvas, so unlike the hero there is nowhere a picture can be left alone and the
+   wash has to be flat rather than directional.
+
+   It also has to be strong. A first attempt put Monet's Argenteuil garden here, and
+   at every strength that made the paragraphs readable the painting had turned to
+   brown mud: high-key and busy is the wrong kind of picture for this slot. The Met's
+   water lilies works because it is darker and quieter to begin with, so the wash has
+   less to do.
+
+   One number tunes it. Raise it if the type ever gets hard to read; lower it if the
+   painting disappears. Both failure modes have happened. */
+#ab-wash{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:rgba(22, 20, 12, .58)}
+.ab-page,.ab-back{z-index:2}
+
+/* Figma 696:1404, measured off the node's own render rather than read off a class
+   name: 1px, radius 24, outline-stroke — and a dash of 11.8 on a gap of 11.8, a
+   period of 23.6. border-style:dashed cannot say any of that; it draws whatever
+   pattern the engine likes, which here was roughly 3 on 3 and read as a much finer
+   rule than the design's. So it is a real stroke on a real path.
+
+   The rect is inset half a pixel and its radius reduced to match, so the 1px stroke
+   straddles the pixel grid the way the border did and the outer edge still lands on
+   24. */
+.ab-dash{position:absolute;inset:0;display:block;width:100%;height:100%}
+.ab-dash rect{fill:none;stroke:var(--outline-stroke);stroke-width:1;
+  stroke-dasharray:11.8 11.8}
+.ab-rest{position:absolute;inset:0;transition:opacity .3s ease}
+.ab-rest img{position:absolute;left:236.49px;top:146px;width:120px;height:110.75px}
+/* 20 rather than the design's 24 */
+.ab-hint{position:absolute;left:186px;top:283.74px;width:219px;margin:0;
+  font-family:'ApercuMono';font-weight:400;font-size:20px;line-height:1.4;
+  color:var(--nougat);text-align:center;white-space:pre-wrap}
+.ab-hint span{font-family:'Monument';font-weight:700;color:var(--new-leaf-green);
+  box-shadow:inset 0 -2px 0 0 var(--new-leaf-green)}
+
+/* Each illustration is placed at its own Figma coordinates, converted to be
+   relative to the well's top-left (page 773,440). They are deliberately allowed to
+   overflow: the polaroids run past the bottom of the dashed box and the melons run
+   past both ends, which is how the frames are drawn. */
+/* Every polaroid lands in the same slot, so without this they would read as one
+   template shown eight times. Each gets its own angle, and drifts a third of a
+   degree either side of it — the periods are all different and the delays negative,
+   so no two are ever in step and none of them starts from rest. The pivot is the
+   card's own centre (67.5 + 427/2, -12 + 638.4/2) rather than the well's, so it turns
+   like a photograph on a wall instead of swinging from the corner. */
+.ab-art{position:absolute;inset:0;opacity:0;visibility:hidden;
+  transform:rotate(var(--tilt,0deg));transform-origin:281px 307.2px;
+  transition:opacity .32s ease,visibility .32s}
+.ab-art.is-on{animation:ab-sway var(--sway,8s) ease-in-out infinite;
+  animation-delay:var(--sway-delay,0s)}
+@keyframes ab-sway{
+  0%,100%{transform:rotate(calc(var(--tilt,0deg) - .34deg))}
+  50%    {transform:rotate(calc(var(--tilt,0deg) + .34deg))}
+}
+.ab-art img{position:absolute;display:block}
+.ab-well.is-showing .ab-rest,
+.ab-well.is-showing .ab-dash{opacity:0}
+.ab-dash{transition:opacity .3s ease}
+.ab-art.is-on{opacity:1;visibility:visible}
+/* a small settle as each arrives, so the swap has some life in it */
+.ab-art img{transform:translateY(10px) scale(.985);
+  transition:transform .42s cubic-bezier(.22,.8,.3,1)}
+.ab-art.is-on img{transform:none}
+.ab-art.is-on img:nth-child(2){transition-delay:.05s}
+
+@media (prefers-reduced-motion:reduce){
+  .ab-art,.ab-rest,.ab-dash,.ab-art img{transition:none}
+  .ab-art.is-on{animation:none}
+  .ab-art img{transform:none}
+}
+
+/* The glass menu's wrapper. A copy of the index's .hgroup geometry, driven by the
+   index's scale rather than this page's -- see the note on the markup. */
+#ab-navwrap{position:fixed;left:0;top:0;width:1440px;height:861px;
+  transform-origin:top left;pointer-events:none;z-index:50}
+#ab-navwrap .nav{pointer-events:auto}
+/* The current page's own icon has nowhere to go, so it does not answer the hover
+   the way the other three do. */
+#ab-navwrap .nav-home a{cursor:default}
+#ab-navwrap .nav-home a:hover svg{color:var(--accent)}

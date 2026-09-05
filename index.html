@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kiara Vong</title>
+<meta name="description" content="Kiara Vong — product design engineer. Design systems, internal platforms, and developer tooling.">
+<meta property="og:title" content="Kiara Vong — Product Design Engineer">
+<meta property="og:description" content="Design systems, internal platforms, and developer tooling.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#5690AE">
+<link rel="icon" href="assets/ui/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/ui/favicon.svg">
+
+<!-- Critical: painted before site.css arrives. Without it the first frame of a cold
+     load is browser-default white, which flashes against the full-viewport dark hero
+     that follows. #223B34 is hero-bg.webp's own mean tone, so the pre-load paint
+     composites to the same colour the loaded photograph does. -->
+<style>html{background:#223B34}</style>
+
+<!-- The hero entrance waits for this image to decode before the three clusters fade
+     in, so whatever it costs is the pause in front of every visit to the home page.
+     Left to the parser it is not requested until the <img> that references it is
+     reached, well down the body, while the fonts discovered in the stylesheet have
+     already started. It is the one asset on this page worth naming up here. -->
+<link rel="preload" as="image" href="assets/hero/hero-bg.webp" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="site.css">
+
+<!-- After the stylesheet: site.css sets html,body to parchment, but on iOS
+     (viewport-fit=cover) the safe-area strips are painted by BODY where it is opaque,
+     falling through to HTML where it is transparent. #work/#hero/#footer each carry
+     their own background, so body can be transparent here; the strips then show
+     html's forest green rather than parchment. -->
+<style>html{background:#223B34}body{background:transparent}</style>
+
+<!-- The layout below is computed, not authored: hero height, the three hero clusters'
+     scale and offsets, the document stage's scale/left/top, the body height and the
+     footer bleed all come from viewport maths. Run at the end of <body> that meant the
+     first paint had #stage at top:0 over the hero, everything unscaled, and then it all
+     snapped into place at once. Computing it here writes the same values as a
+     stylesheet before anything paints, so there is nothing to snap.
+
+     This owns the constants; fit() in site-nav.js reads them back, so the two cannot
+     drift. WH is #work's authored height, and it is MEASURED, not derived: this grid
+     has four full cards and six project tiles where the original had a different mix,
+     so the inherited 2108 left the body 900px short and the footer band sat up inside
+     the tiles. Read #work.offsetHeight at 1440px wide after any change to the grid
+     and put the result here. FH is the footer's, which has not moved. -->
+<script>
+window.__hl = (function () {
+  var C = { W: 1440, HH: 861, WH: 2790, FH: 405 };
+  C.measure = function () {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var hs = Math.min(vw / C.W, vh / C.HH, 1);
+    var ds = Math.min(vw / C.W, 1);
+    return { vw: vw, hs: hs, ds: ds, heroH: C.HH * hs, slack: vw - C.W * hs };
+  };
+  /* Below this width the page stops being a scaled 1440 canvas and becomes a
+     stacked layout in mobile.css. None of the geometry below applies there, and
+     writing it would fight the stylesheet. */
+  C.MOBILE = 760;
+
+  var el = document.createElement('style');
+  el.id = 'initial-layout';
+  document.head.appendChild(el);
+
+  /* This RUNS ON EVERY RESIZE, and has to.
+
+     It used to run once, in the head, and never again. That is what made the page
+     cut off at the right when the window narrowed: the canvas kept the scale it was
+     given at load, so at any smaller width it was simply too big and the overflow was
+     clipped. Crossing the 760 breakpoint was worse in both directions, because the
+     rules written for one layout stayed applied to the other.
+
+     Writing an empty string below the breakpoint is the important half of that:
+     mobile.css cannot win against inline geometry that is still sitting in the head,
+     so the rules have to be REMOVED rather than overridden.
+
+     Written SYNCHRONOUSLY on the event, not inside requestAnimationFrame. rAF looks
+     like the careful choice and is the wrong one here: it reads no layout, so there
+     is nothing to batch, and browsers throttle rAF for backgrounded or offscreen
+     content -- which meant the canvas silently stopped tracking the window in exactly
+     the cases where it had drifted furthest. Six numbers and a string assignment is
+     cheap enough to do on every event. */
+  function write() {
+    var m = C.measure();
+    el.textContent = (m.vw <= C.MOBILE) ? '' :
+      /* Square bottom. The 80px radius was the reference build's, and it reads as a
+         rounded panel sitting on the page rather than as ground the page begins on. */
+      '#hero{height:' + m.heroH + 'px}' +
+      '#hg-left{transform:scale(' + m.hs + ');left:0px}' +
+      '#hg-center{transform:scale(' + m.hs + ');left:' + (m.slack / 2) + 'px}' +
+      '#hg-right{transform:scale(' + m.hs + ');left:' + m.slack + 'px}' +
+      '#stage{transform:scale(' + m.ds + ');left:' +
+        Math.max(0, (m.vw - C.W * m.ds) / 2) + 'px;top:' + m.heroH + 'px}' +
+      'body{height:' + (m.heroH + (C.WH + C.FH) * m.ds) + 'px}' +
+      '#bg-footer{top:' + (m.heroH + C.WH * m.ds) + 'px;height:' + (C.FH * m.ds) + 'px}' +
+      ':root{--modal-scale:' + m.hs + '}';
+  }
+  C.apply = write;
+  write();
+  window.addEventListener('resize', write, { passive: true });
+  window.addEventListener('orientationchange', write);
+  return C;
+})();
+</script>
+<script src="site-motion.js"></script>
+<style>
+/* ===== Card thumbnails =====
+   The four cards' internals. These live here rather than in site.css for the reason
+   that sheet gives for its own card rules: they are choreography for four specific
+   pieces of artwork, not a component anyone else reuses.
+
+   Every shot is authored in one 1200x700 space and scaled into the 529x304 window by
+   a single transform on .cast, so a mockup can be redrawn at full size without any
+   coordinate in here changing. .40 puts a 480x280 window inside the 529x304 box with
+   ground showing on all four sides, which is the rule the original followed too: the
+   screen sits ON the field rather than filling it. */
+.card-photo .shot{position:absolute;left:24.5px;top:12px;width:480px;height:280px;
+  z-index:1;overflow:hidden;border-radius:8px;
+  box-shadow:0 10px 26px rgba(45,40,38,.17),0 2px 5px rgba(45,40,38,.10)}
+.card-photo .cast{position:absolute;left:0;top:0;width:1200px;height:700px;
+  transform:scale(.4);transform-origin:0 0}
+/* More specific than site.css's `.card-photo img{width:100%;height:100%}`, which
+   otherwise stretches every one of these to its parent's box. */
+.card-photo .shot img{position:absolute;left:0;top:0;width:1200px;height:700px;display:block}
+
+/* ----- Card 1: Design System Overhaul -----
+   The window holds still and the documentation scrolls inside it, because the claim
+   the card is making is about extent: foundations, then components, then usage, then
+   the migration itself. A static frame would show one component grid and argue nothing.
+
+   The view is the base's content well in cast coordinates (the sidebar is 196 wide,
+   the chrome 52 tall), so the strip scrolls behind the chrome and beside the nav
+   exactly as real content would. Travel is strip height minus view height: 1900-648. */
+.ds-view{position:absolute;left:196px;top:52px;width:1004px;height:648px;overflow:hidden}
+.card-photo .ds-view .ds-strip{position:absolute;left:0;top:0;width:1004px;height:1900px;
+  will-change:transform;animation:ds-scroll 16s cubic-bezier(.4,0,.2,1) infinite}
+/* Long holds at both ends: the pause is what lets someone actually read the top of
+   the page before it leaves, and the card is on screen in a grid of four. */
+@keyframes ds-scroll{
+  0%,10%    {transform:translateY(0)}
+  46%,58%   {transform:translateY(-1252px)}
+  94%,100%  {transform:translateY(0)}
+}
+
+/* ----- Cards 3 and 4 -----
+   No rules needed. Both animate from a stylesheet embedded in the SVG itself, which an
+   <img> still runs, so the choreography travels with the artwork and there is nothing
+   here to keep in sync with it. Their reduced-motion handling is in there too. */
+
+@media (prefers-reduced-motion:reduce){
+  .card-photo .ds-view .ds-strip,
+  .card-photo .plat .cast,
+  .card-photo .plat img{animation:none}
+  /* Without the cross-fade running, all four platform states would stack at full
+     opacity. Pin the one that reads best as a still. */
+  .card-photo .plat img{opacity:0}
+  .card-photo .plat .s4{opacity:1}
+}
+
+/* The fox is the hover target for the speech bubble, the way the original's rabbit was. */
+}
+
+/* Project tiles link out to the running project. The anchor wraps the whole card
+   rather than the title alone, so the target is the thing you are looking at. */
+/* The card is no longer one big anchor. It could not be: the Demo chip is a link
+   too, and a link inside a link is invalid and behaves unpredictably.
+
+   The standard fix instead. The TITLE holds the real anchor, and its ::after is
+   stretched over the whole card so the card is still entirely clickable. .mini-tags
+   is then raised above that overlay so the Demo chip stays reachable. Hover states
+   move from .mini-link to .mini, since the card is the thing being hovered now.
+
+   text-decoration:none on the anchor is also what removes the underlines that were
+   running under every title and every description: the wrapping anchor was passing
+   them down to all its text. */
+.mini{position:relative;
+  transition:transform .35s cubic-bezier(.34,1.3,.5,1)}
+.mini-link{text-decoration:none;color:inherit}
+.mini-link::after{content:"";position:absolute;inset:0;z-index:1}
+.mini-tags{position:relative;z-index:2}
+
+/* The Live Site chip. Reads as a chip so it sits with the year, behaves as a button
+   so nobody wonders whether it opens the write-up or the thing itself. The label says
+   where it goes, target=_blank keeps the portfolio open behind it, and the arrow says
+   "leaves this site" the way an arrow always has.
+
+   The arrow is an inline SVG and must stay one. U+2197 has no glyph in Apercu Mono
+   and shipped as a tofu box on these very cards once already. */
+.mini-tag.demo{display:inline-flex;align-items:center;
+  border-color:var(--accent);color:var(--accent);font-weight:500;
+  text-decoration:none;cursor:pointer;
+  transition:background .2s ease,color .2s ease,border-color .2s ease}
+.mini-tag.demo .ext{width:9px;height:9px;margin-left:5px;flex:none;
+  fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.mini-tag.demo:hover{background:var(--accent);color:var(--parchment);
+  border-color:var(--accent)}
+/* No ::after arrow here. U+2197 has no glyph in Apercu Mono and rendered as a
+   tofu box on the archive tiles once already. If this ever wants a mark, it has
+   to be an inline SVG, not a codepoint. */
+.mini:hover{transform:translateY(-5px)}
+.mini:nth-child(even):hover{transform:translateY(-5px) rotate(.5deg)}
+.mini:hover .mini-title{color:var(--accent)}
+.mini-title{transition:color .25s ease}
+@media (prefers-reduced-motion:reduce){
+  .mini{transition:none}
+  .mini:hover{transform:none}
+}
+
+/* ----- Project tiles -----
+   The frame is drawn here rather than baked into six images, so all six share one
+   rule and the capture inside stays its own layer -- which is what lets it move.
+   The reference build does the same thing on its first card: a tall screenshot
+   scrolling inside a fixed viewport is how a thumbnail shows a PAGE rather than a
+   screenful of one.
+
+   --field is the tile's ground colour. --travel is how far the capture has to move,
+   and it is a PERCENTAGE OF THE IMAGE'S OWN HEIGHT, not a pixel count.
+
+   That distinction is the whole bug this replaced. The values here used to be pixels
+   measured in the capture's own 776px-wide space, but the capture renders at 322px
+   inside the window, so every one of them was roughly 2.8x too large: the animation
+   ran the image clean past its own bottom edge and held there, which reads as the
+   thumbnail cutting off two thirds of the way through.
+
+   A percentage is also the only form that survives a phone. translateY resolves it
+   against the image's own height, and mobile.css scales the card and the image
+   together, so the ratio holds at every width where a pixel value would not.
+
+   The number is (1 - windowHeight / renderedImageHeight) * 100, measured in the
+   browser rather than derived: the window is .tile-view, 248px tall on the desktop
+   canvas, and the rendered height is whatever the capture becomes at 322px wide.
+   Re-measure both if the grid changes. A capture with nothing below the fold gets no
+   --travel at all and takes the .pan treatment instead. */
+.mini-shot{position:relative;padding:0;background:none;border:none;overflow:visible}
+.tile{position:relative;width:100%;height:100%;background:var(--field);
+  border:1px solid var(--outline-stroke);border-radius:8px 8px 0 0;overflow:hidden}
+.tile-win{position:absolute;left:8.5%;right:8.5%;top:15%;bottom:-1px;
+  background:var(--parchment);border-radius:9px 9px 0 0;overflow:hidden;
+  box-shadow:0 10px 22px rgba(52,46,42,.22)}
+.tile-bar{position:relative;height:17px;background:var(--dove-ivory);
+  border-bottom:1px solid var(--outline-stroke)}
+.tile-bar i{position:absolute;top:6px;width:5px;height:5px;border-radius:50%;
+  background:#E6685C}
+.tile-bar i:nth-child(1){left:7px}
+.tile-bar i:nth-child(2){left:16px;background:#E8B84B}
+.tile-bar i:nth-child(3){left:25px;background:#7DC26B}
+.tile-bar span{position:absolute;left:38px;right:10px;top:4px;height:9px;
+  border-radius:5px;background:var(--parchment);border:1px solid var(--outline-stroke)}
+.tile-view{position:absolute;left:0;right:0;top:17px;bottom:0;overflow:hidden}
+.tile-view img{display:block;width:100%;height:auto;
+  animation:tile-scroll 14s cubic-bezier(.4,0,.2,1) infinite}
+
+/* Three of the six have nothing to scroll. A chess board, a maze and a generated
+   island each fill one screen exactly -- captured at 1280x860 from the live builds,
+   there is no page below the fold, and giving them a scroll would be animating
+   content that does not exist.
+
+   So they get the other half of the same idea: the frame moves across a still
+   instead of the still moving through the frame. Slow, wide, and on a different
+   period from the scroll (19s against 14s) so a row of six never falls into step.
+   object-fit:cover here rather than the natural height the scrolling tiles use,
+   because a pan needs the image to fill its window before it can move inside it. */
+.tile-view.pan img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  animation:tile-pan 19s ease-in-out infinite}
+@keyframes tile-pan{
+  0%,8%    {transform:scale(1.10) translate(2.5%,2%)}
+  50%,58%  {transform:scale(1.22) translate(-2.5%,-2.5%)}
+  100%     {transform:scale(1.10) translate(2.5%,2%)}
+}
+@media (prefers-reduced-motion:reduce){.tile-view.pan img{animation:none}}
+/* Long holds at both ends: the pause is what lets someone actually read the top of
+   a page before it moves, and six of these are on screen together. */
+@keyframes tile-scroll{
+  0%,16%   {transform:translateY(0)}
+  46%,62%  {transform:translateY(calc(var(--travel,0px) * -1))}
+  92%,100% {transform:translateY(0)}
+}
+/* Hovering a tile brings its window forward slightly. The lift on the card is on
+   .mini; this is the second, smaller move inside it. */
+.mini:hover .tile-win{box-shadow:0 16px 30px rgba(52,46,42,.30)}
+.tile-win{transition:box-shadow .3s ease}
+@media (prefers-reduced-motion:reduce){
+  .tile-view img{animation:none}
+  .tile-win{transition:none}
+}
+
+/* ----- Card 4: the unshipped one -----
+   It is a <div>, not an <a>, because there is nothing to link to yet and a card
+   that looks clickable and is not is worse than one that plainly is not. The
+   thumbnail still animates; only the affordance is withheld. The toast says why,
+   and it appears on hover only, so the card reads as a normal card until you
+   reach for it. */
+.card-persona{cursor:default}
+.ps-photo{position:relative}
+.ps-toast{position:absolute;left:50%;top:50%;z-index:3;
+  transform:translate(-50%,-50%) scale(.94);
+  background:var(--parchment);border:1px solid var(--outline-stroke);
+  border-radius:14px;padding:10px 18px;white-space:nowrap;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:16px;
+  color:var(--accent);opacity:0;visibility:hidden;pointer-events:none;
+  box-shadow:0 8px 20px rgba(45,40,38,.14);
+  transition:opacity .28s ease,transform .32s cubic-bezier(.34,1.4,.5,1),visibility 0s linear .28s}
+.card-persona:hover .ps-toast{opacity:1;visibility:visible;
+  transform:translate(-50%,-50%) scale(1);transition-delay:0s,0s,0s}
+/* The thumbnail dims behind it, so the toast stays legible over a busy diagram. */
+.card-persona .shot{transition:filter .28s ease}
+.card-persona:hover .shot{filter:saturate(.55) brightness(.94)}
+@media (prefers-reduced-motion:reduce){
+  .ps-toast,.card-persona .shot{transition:none}
+}
+
+/* The one emphasis in the bio. Italic in the body face rather than a
+   weight change, because the sentence is making a distinction, not
+   shouting. */
+.bio em{font-style:italic}
+/* Lyra, drawn. The slot was a 400 square for the reference photo; this artwork is
+   552x416, so the box takes its ratio and keeps the same bottom edge (461+400=861)
+   rather than letterboxing a landscape drawing inside a square.
+
+   No .mascot-label here any more: the word "Clawed" is painted into the laptop
+   screen in the artwork itself, and the overlay that used to supply it would now
+   print a second one on top. */
+/* The artwork and the prompt typed onto its screen, as ONE box.
+
+   Every number below the wrapper is a PERCENTAGE of that box, and the type is sized
+   in cqw, so the whole thing scales with the artwork at any width. It used to be
+   canvas pixels: correct at 1440 and nowhere else, and on a phone, where mobile.css
+   makes the picture 240px wide and static, the overlay was still being placed at
+   left:267px inside the hero and simply landed off the artwork. That is the "prompt
+   box disappears" at narrow widths.
+
+   The fractions come from the measured canvas geometry, divided through by the box:
+   the panel was 267,604 at 114x42 inside a picture at 56,418 at 530x410. Re-measure
+   with a grid over the artwork if it ever changes, then divide again. */
+.mascot-wrap{position:absolute;left:56px;top:418px;width:530px;height:410px;
+  container-type:inline-size;cursor:pointer}
+.mascot{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.mascot-cap,.mascot-label{display:none}
+
+/* The caption, above them, in the voice the single-cat one had. Two lines by
+   construction rather than by luck: the break is a <br>, so it lands in the same
+   place at every width instead of moving with the box. */
+.mascot-cap{position:absolute;left:44px;top:456px;width:420px;pointer-events:none;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-size:11.5px;
+  line-height:1.5;color:var(--sage);transform:rotate(-2.4deg);text-align:left;
+  display:block}
+
+/* The prompt panel, in fractions of the artwork.
+
+   The tilt is CLOCKWISE, +10.5deg, which is what the two handwritten baselines in the
+   picture measure. Two earlier attempts assumed it leaned the other way and drove the
+   panel through the "Clawed" wordmark.
+
+   The panel is opaque because it has to cover the prompt the illustrator painted in.
+   #F9F2DD is that paper sampled out of the file, and its variance is low enough
+   (std 11 across the box) that a flat fill does not read as a patch.
+
+   Its RIGHT edge is set by the cat avatar painted inside the box, not by the box
+   border, and its BOTTOM by the near cat's forehead. Widen or deepen it and it starts
+   covering one or the other. */
+.mascot-prompt{position:absolute;left:39.8%;top:45.4%;width:21.5%;height:10.3%;
+  padding:0 0.4cqw;box-sizing:border-box;background:#F9F2DD;
+  transform:rotate(10.5deg);transform-origin:50% 50%;
+  pointer-events:none;overflow:hidden;
+  display:flex;align-items:center;flex-wrap:wrap;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+  font-size:2.08cqw;line-height:1.28;color:#4A4438}
+.mascot-prompt .caret{display:inline-block;width:1px;height:.95em;
+  vertical-align:-0.1em;background:#4A4438;margin-left:1px;
+  animation:blink 1.1s step-end infinite}
+@media (prefers-reduced-motion:reduce){.mascot-prompt .caret{animation:none}}
+</style>
+<link rel="stylesheet" href="mobile.css">
+
+</head>
+<body>
+
+<!-- ===== HERO (full-viewport cover, edge-anchored clusters) ===== -->
+<section id="hero">
+  <img id="hero-bg" src="assets/hero/hero-bg.webp" alt="" fetchpriority="high" decoding="async">
+
+  <!-- Left cluster: anchored to the left edge -->
+  <div class="hgroup" id="hg-left">
+    <div class="name-block">
+      <h1 class="name">Kiara Vong</h1>
+      <div class="loc">
+        <span class="dot"></span>
+        <!-- Split into two spans so mobile can put "Currently @" on its own line. The
+             run of spaces between them is what separates the halves on desktop, where
+             .loc p is white-space:pre-wrap, so it has to survive intact. -->
+        <p><span class="loc-place">WASHINGTON, DC</span>     <span class="loc-now">Currently @ <a class="wa" href="https://www.capitalone.com" target="_blank" rel="noopener">Capital One</a></span></p>
+      </div>
+      <p class="bio">I build the layer everything else sits on: design systems, internal platforms, the tools engineers open forty times a day and never think about. Because I write the code <em>and</em> draw the thing, I&rsquo;m usually the one asking whether we need this component at all and then building it anyway. Off the clock, I paint badly and lose, regularly, to a chess engine I wrote myself.</p>
+    </div>
+
+    <!-- Lyra and Goose. The overlaid sparkle PNGs went with the old artwork: this
+         one is drawn with its own sparks and a heart, and a second set on top of
+         them was the overlap. -->
+    <p class="mascot-cap">my cats, lyra &amp; goose,<br>
+       senior prompt engineers</p>
+    <div class="mascot-wrap">
+      <img class="mascot" src="assets/hero/cats-hero.webp" alt="Lyra and Goose, two cats, at one open laptop with Claude on the screen">
+      <p class="mascot-prompt" aria-hidden="true"><span class="bubble-text"></span><span class="caret"></span></p>
+    </div>
+  </div>
+
+  <!-- Centre cluster: anchored to the horizontal centre -->
+  <div class="hgroup" id="hg-center">
+    <nav class="nav" aria-label="Primary">
+      <div class="nav-inner">
+        <div class="nav-home">
+          <a href="index.html" aria-label="Index" data-tip="Index">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 28V17.3333C20 16.9797 19.8595 16.6406 19.6095 16.3905C19.3594 16.1405 19.0203 16 18.6667 16H13.3333C12.9797 16 12.6406 16.1405 12.3905 16.3905C12.1405 16.6406 12 16.9797 12 17.3333V28"/><path d="M4 13.3333C3.99991 12.9454 4.08445 12.5622 4.24772 12.2103C4.41099 11.8584 4.64906 11.5464 4.94533 11.296L14.2787 3.296C14.76 2.88921 15.3698 2.66603 16 2.66603C16.6302 2.66603 17.24 2.88921 17.7213 3.296L27.0547 11.296C27.3509 11.5464 27.589 11.8584 27.7523 12.2103C27.9156 12.5622 28.0001 12.9454 28 13.3333V25.3333C28 26.0406 27.719 26.7189 27.219 27.2189C26.7189 27.719 26.0406 28 25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.2189C4.28095 26.7189 4 26.0406 4 25.3333V13.3333Z"/></svg>
+          </a>
+          <span class="label">Index</span>
+        </div>
+        <div class="nav-sep"></div>
+        <div class="nav-icons">
+          <a href="index.html#projects" aria-label="Projects" data-tip="Projects">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.6667 2.33333V11.6667L15.1667 8.16667L18.6667 11.6667V2.33333"/><path d="M4.66667 22.75V5.25C4.66667 4.47645 4.97396 3.73459 5.52094 3.18761C6.06792 2.64062 6.80979 2.33333 7.58333 2.33333H22.1667C22.4761 2.33333 22.7728 2.45625 22.9916 2.67504C23.2104 2.89383 23.3333 3.19058 23.3333 3.5V24.5C23.3333 24.8094 23.2104 25.1062 22.9916 25.325C22.7728 25.5438 22.4761 25.6667 22.1667 25.6667H7.58333C6.80979 25.6667 6.06792 25.3594 5.52094 24.8124C4.97396 24.2654 4.66667 23.5235 4.66667 22.75ZM4.66667 22.75C4.66667 21.9765 4.97396 21.2346 5.52094 20.6876C6.06792 20.1406 6.80979 19.8333 7.58333 19.8333H23.3333"/></svg>
+          </a>
+          <a href="art/" aria-label="Art" data-tip="Art">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.66667 4.66667C4.66667 3.5621 5.5621 2.66667 6.66667 2.66667H21.3333C22.4379 2.66667 23.3333 3.5621 23.3333 4.66667V23.3333C23.3333 24.4379 22.4379 25.3333 21.3333 25.3333H6.66667C5.5621 25.3333 4.66667 24.4379 4.66667 23.3333V4.66667Z"/><path d="M10.5 11.0833C11.4665 11.0833 12.25 10.2998 12.25 9.33333C12.25 8.36683 11.4665 7.58333 10.5 7.58333C9.5335 7.58333 8.75 8.36683 8.75 9.33333C8.75 10.2998 9.5335 11.0833 10.5 11.0833Z"/><path d="M4.66667 19.8333L10.2083 14.2917C10.9894 13.5106 12.2556 13.5106 13.0367 14.2917L18.6667 19.9217"/><path d="M16.9167 18.1667L18.7083 16.375C19.4894 15.5939 20.7556 15.5939 21.5367 16.375L23.3333 18.1717"/></svg>
+          </a>
+          <a href="about.html" aria-label="About" data-tip="About">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25.6667C20.4433 25.6667 25.6667 20.4433 25.6667 14C25.6667 7.55668 20.4433 2.33333 14 2.33333C7.55668 2.33333 2.33333 7.55668 2.33333 14C2.33333 20.4433 7.55668 25.6667 14 25.6667Z"/><path d="M14 15.1667C15.933 15.1667 17.5 13.5997 17.5 11.6667C17.5 9.73367 15.933 8.16667 14 8.16667C12.067 8.16667 10.5 9.73367 10.5 11.6667C10.5 13.5997 12.067 15.1667 14 15.1667Z"/><path d="M8.16667 24.1057V22.1667C8.16667 21.5478 8.4125 20.9543 8.85008 20.5167C9.28767 20.0792 9.88116 19.8333 10.5 19.8333H17.5C18.1188 19.8333 18.7123 20.0792 19.1499 20.5167C19.5875 20.9543 19.8333 21.5478 19.8333 22.1667V24.1057"/></svg>
+          </a>
+          <a href="#" aria-label="Email" data-tip="Copy email" data-mail>
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M29.3333 9.33333L17.3453 16.9693C16.9385 17.2056 16.4764 17.3301 16.006 17.3301C15.5356 17.3301 15.0735 17.2056 14.6667 16.9693L2.66667 9.33333"/><path d="M26.6667 5.33333H5.33333C3.86057 5.33333 2.66667 6.52724 2.66667 8V24C2.66667 25.4728 3.86057 26.6667 5.33333 26.6667H26.6667C28.1394 26.6667 29.3333 25.4728 29.3333 24V8C29.3333 6.52724 28.1394 5.33333 26.6667 5.33333Z"/></svg>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Right cluster: anchored to the right edge.
+       Both plates are the site owner's own work, which is the whole point of the
+       pairing: a photograph she took beside a painting she made. -->
+  <div class="hgroup" id="hg-right">
+    <img class="postcard-top" src="assets/hero/postcard-top.svg" alt="">
+    <img class="postcard-bottom" src="assets/hero/postcard-bottom.svg" alt="">
+    <p class="pc-label">Life imitates art?</p>
+    <p class="pc-dots">•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</p>
+    <img class="pc-photo one" src="assets/hero/postcard-photo.png" alt="A photograph taken at Mitaka, Tokyo">
+    <img class="pc-photo two" src="assets/hero/postcard-painting.webp" alt="Printemps a Pont-Aven by Ernest de Chamaillard">
+    <div class="pc-caps">
+      <p class="cap-title">Studio Ghibli Museum</p>
+      <p class="cap-info">INFO : Mitaka, Tokyo, Mar 2025</p>
+      <p class="cap-dots">•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</p>
+      <p class="cap-title">Printemps &agrave; Pont-Aven</p>
+      <p class="cap-info">INFO : E. de Chamaillard, 1900</p>
+    </div>
+    <p class="pc-print">See the work</p>
+    <a class="pc-btn" href="#work" aria-label="See the work">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<div id="bg-footer"></div>
+<div id="stage">
+
+  <!-- ===== WORK ===== -->
+  <section id="work">
+    <div class="work-inner">
+      <div class="work-row top">
+        <!-- Card 01 -->
+        <a class="card card-resource-dashboard" href="work/resource-dashboard.html" aria-label="Resource Dashboard — Capital One case study">
+          <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
+          <div class="card-photo">
+            <img class="cp-field" src="assets/cards/field-plat.svg" alt="">
+            <div class="shot resource-dashboard">
+              <div class="cast">
+                <img class="base" src="assets/cards/shot-dashboard.svg" alt="A cloud resource dashboard with filters, a drill-down explorer and an export action">
+              </div>
+            </div>
+          </div>
+          <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
+          <div class="card-no">No. 01</div>
+          <div class="card-meta">
+            <div class="card-title-row">
+              <div class="card-title">Resource Dashboard</div>
+              <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">2025</span></div>
+            </div>
+            <p class="card-desc">Ownership in one system, compliance jobs in another, inventory in a third. Designed and built the surface that replaced the reconciling: two views over one dataset, and an export at every level.</p>
+          </div>
+        </a>
+        <!-- Card 02 -->
+        <a class="card card-events-timeline" href="work/events-timeline.html" aria-label="Events Timeline — Capital One case study">
+          <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
+          <div class="card-photo">
+            <img class="cp-field" src="assets/cards/field-gql.svg" alt="">
+            <div class="shot events-timeline">
+              <div class="cast">
+                <img class="base" src="assets/cards/shot-timeline.svg" alt="A compliance event timeline with coloured state runs between dated event dots">
+              </div>
+            </div>
+          </div>
+          <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
+          <div class="card-no">No. 02</div>
+          <div class="card-meta">
+            <div class="card-title-row">
+              <div class="card-title">Events Timeline</div>
+              <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">2026</span></div>
+            </div>
+            <p class="card-desc">A compliance history that was technically complete and practically unreadable. Designed the timeline above it, where state carries across the gaps so you can see how long something was broken.</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="work-row bottom">
+        <!-- Card 03 -->
+        <a class="card card-ui-consistency" href="work/ui-consistency.html" aria-label="UI Consistency — Capital One case study">
+          <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
+          <div class="card-photo">
+            <img class="cp-field" src="assets/cards/field-ds.svg" alt="">
+            <div class="shot ds">
+              <div class="cast">
+                <img class="base" src="assets/cards/shot-ds-base.svg" alt="">
+                <div class="ds-view">
+                  <img class="ds-strip" src="assets/cards/shot-ds-strip.svg" alt="A design system reference page: colour ramps, a type scale, a component grid and a migration checklist">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
+          <div class="card-no">No. 03</div>
+          <div class="card-meta">
+            <div class="card-title-row">
+              <div class="card-title">UI Consistency</div>
+              <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">2026</span></div>
+            </div>
+            <p class="card-desc">A dozen local dialects of the same interface. Audited it, designed the shared layer underneath, and cut the 208-file change into ten pull requests a human could actually review.</p>
+          </div>
+        </a>
+        <!-- Card 04 -->
+        <div class="card card-persona-homepage">
+          <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
+          <div class="card-photo ps-photo">
+            <img class="cp-field" src="assets/cards/field-persona.svg" alt="">
+            <div class="shot persona-homepage">
+              <div class="cast">
+                <img class="base" src="assets/cards/shot-persona.svg" alt="A homepage rearranging itself as the selected persona changes">
+              </div>
+            </div>
+            <span class="ps-toast">Coming soon!</span>
+          </div>
+          <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
+          <div class="card-no">No. 04</div>
+          <div class="card-meta">
+            <div class="card-title-row">
+              <div class="card-title">Persona Homepage</div>
+              <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">Upcoming</span></div>
+            </div>
+            <p class="card-desc">A homepage that reorders itself around who is looking at it. Designing the customisation model, the defaults that have to be right before anyone touches a setting, and how a page earns the right to move.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects. Smaller builds, each linking into the existing project pages.
+           Thumbnails are drawn rather than screenshotted for the same reason the cards
+           above are: at 283px a real screen capture of a game board is unreadable, and
+           the drawn version can say what the project is in one glance. -->
+      <div class="reads" id="projects">
+        <article class="mini">
+          <div class="mini-shot">
+            <div class="tile" style="--field:#BDE3F0">
+              <div class="tile-win">
+                <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
+                <div class="tile-view pan">
+                  <img src="assets/tile/ac.jpg" alt="Animal Crossing island generator"  loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-head">
+              <h3 class="mini-title"><a class="mini-link" href="projects/animal-crossing.html">Animal Crossing island generator</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/animal-crossing/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2024</span></div>
+            </div>
+            <p class="mini-desc">A procedural 3D island built tile by tile with wave function collapse, the same technique games like Bad North use to grow coherent worlds from a small set of hand-modelled pieces.</p>
+          </div>
+        </article>
+        <article class="mini">
+          <div class="mini-shot">
+            <div class="tile" style="--field:#F0E4DC">
+              <div class="tile-win">
+                <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
+                <div class="tile-view">
+                  <img src="assets/tile/dorms.svg" alt="Dorms @ Brown" style="--travel:49.08%" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-head">
+              <h3 class="mini-title"><a class="mini-link" href="projects/dorms.html">Dorms @ Brown</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/dab/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
+            </div>
+            <p class="mini-desc">A housing-decision app for the lottery: every dorm on campus with photos, floor plans and peer reviews, plus a quiz that narrows thirty dorms to a shortlist. React, Java and Firebase.</p>
+          </div>
+        </article>
+        <article class="mini">
+          <div class="mini-shot">
+            <div class="tile" style="--field:#EEEAD6">
+              <div class="tile-win">
+                <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
+                <div class="tile-view">
+                  <img src="assets/tile/stardew.jpg" alt="Stardew Valley companion" style="--travel:41.92%" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-head">
+              <h3 class="mini-title"><a class="mini-link" href="projects/stardew.html">Stardew Valley companion</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/stardew/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2024</span></div>
+            </div>
+            <p class="mini-desc">Look up any villager's favourite gifts, click around town to learn what each building does. No framework and no build step, styled closely enough to feel like it belongs in the game.</p>
+          </div>
+        </article>
+        <article class="mini">
+          <div class="mini-shot">
+            <div class="tile" style="--field:#D6DBEA">
+              <div class="tile-win">
+                <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
+                <div class="tile-view">
+                  <img src="assets/tile/uxfolio.jpg" alt="UI/UX case studies" style="--travel:53.56%" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-head">
+              <h3 class="mini-title"><a class="mini-link" href="projects/uxfolio.html">UI/UX case studies</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/portfolio/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
+            </div>
+            <p class="mini-desc">An earlier portfolio built around research and process rather than final screenshots: each piece walks through the problem, what was tried, and what actually shipped.</p>
+          </div>
+        </article>
+        <article class="mini">
+          <div class="mini-shot">
+            <div class="tile" style="--field:#E8DCC0">
+              <div class="tile-win">
+                <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
+                <div class="tile-view pan">
+                  <img src="assets/tile/chess.jpg" alt="Chess engine"  loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-head">
+              <h3 class="mini-title"><a class="mini-link" href="projects/chess.html">Chess engine</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/site/projects/chess/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
+            </div>
+            <p class="mini-desc">A playable board with an opponent behind it: move generation, alpha-beta search, and an evaluation that is honest about how much it does not know.</p>
+          </div>
+        </article>
+        <article class="mini">
+          <div class="mini-shot">
+            <div class="tile" style="--field:#E8E2D0">
+              <div class="tile-win">
+                <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
+                <div class="tile-view pan">
+                  <img src="assets/tile/pacman.jpg" alt="Pac-Man"  loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-head">
+              <h3 class="mini-title"><a class="mini-link" href="projects/pacman.html">Pac-Man</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/site/projects/pacman/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
+            </div>
+            <p class="mini-desc">Pac-Man rebuilt in the browser, four ghosts included. They share one movement system and differ only in the tile each one aims at, which is a cheap way to buy four personalities.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <div id="site-footer"></div>
+
+</div>
+
+<script src="site-footer.js"></script>
+<script src="site-nav.js"></script>
+<script>
+/* What Lyra is prompting, typed onto the laptop screen in the artwork.
+
+   It used to be a hover-only speech bubble, which meant the joke existed but nobody
+   who did not happen to point at the cat ever saw it. Now it runs on its own: type
+   a line, hold it long enough to read, clear, take the next. Hovering her skips
+   ahead, so pointing at the cat still does something.
+
+   Ordered rather than random. Random repeats itself often enough to look broken. */
+(function () {
+  var cat = document.querySelector('.mascot');
+  var text = document.querySelector('.mascot-prompt .bubble-text');
+  if (!cat || !text) return;
+
+  var LINES = ['plan my nap schedule',
+              'argue why i deserve more treats',
+              'how to open doors without thumbs',
+              'write a haiku about tuna', 
+              'explain taxes',
+              'what is a job?',
+              'is it normal to sleep 18 hours?',
+              'why does everyone keep calling me fat?',
+              'is my tail sentient?',
+              'how to catch red dot',
+              'how to deal with annoying siblings'
+            ];
+
+  var reduce = window.matchMedia &&
+               window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var at = -1, t = null;
+
+  function step() {
+    at = (at + 1) % LINES.length;
+    var line = LINES[at], i = 0;
+    /* Under reduced motion the line is simply set, held and swapped: no typing, but
+       the content still rotates, so nothing is lost except the movement. */
+    if (reduce) {
+      text.textContent = line;
+      t = setTimeout(step, 5200);
+      return;
+    }
+    (function tick() {
+      text.textContent = line.slice(0, ++i);
+      /* HOLD is what makes it readable. Typing straight into the next line reads as
+         a ticker; the pause is what makes it read as somebody typing. */
+      t = setTimeout(i < line.length ? tick : step, i < line.length ? 42 : 3400);
+    })();
+  }
+
+  function skip() { clearTimeout(t); step(); }
+  cat.addEventListener('mouseenter', skip);
+  cat.addEventListener('focus', skip);
+  step();
+})();
+
+</script>
+<script src="mobile.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+
+# Scratch, not part of the site.
+#   _preview.html  the hero background picker
+#   _mobile.html   horizontal-overflow audit
+#   _resize.html   live-resize audit
+_preview.html
+_mobile.html
+_resize.html
+
+# One-shot scripts at the ROOT only. Anchored, because an unanchored _*.py also
+# swallowed gen/__init__.py and content/__init__.py, without which `python -m gen.x`
+# does not work at all on a fresh clone.
+/_*.py
+
+# NOT in the repo, deliberately. assets/fonts holds 11 commercial faces (PP Kyoto,
+# ABC Diatype, Apercu Mono, P22 Mackinac, Monument Grotesk). Serving them unlicensed
+# is one problem; committing them to a PUBLIC repository is redistribution, which is
+# a bigger one, and git history makes it permanent.
+#
+# site.css @imports Newsreader, Inter, JetBrains Mono and Fraunces, and every rule
+# names one of them as its fallback, so the site renders properly without these.
+#
+# If you buy webfont licences, or make the repo private, delete these two lines and
+# run:  git add -f assets/fonts
+assets/fonts/

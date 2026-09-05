@@ -1,0 +1,20 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<!-- One five-petal bloom on the page's own parchment. At 16px anything with more
+     than one form in it turns to mush, so this is a single flower rather than the
+     sprig used elsewhere: five petals, a butter centre, one leaf to break the
+     symmetry so the mark is not a perfect rosette. -->
+<rect width="64" height="64" rx="14" fill="#FDFBEF"/>
+<g transform="translate(32 30)">
+  <g fill="#F2511A">
+    <ellipse cx="0" cy="-14" rx="7.5" ry="11"/>
+    <ellipse cx="13.3" cy="-4.3" rx="7.5" ry="11" transform="rotate(72)"/>
+    <ellipse cx="8.2" cy="11.3" rx="7.5" ry="11" transform="rotate(144)"/>
+    <ellipse cx="-8.2" cy="11.3" rx="7.5" ry="11" transform="rotate(216)"/>
+    <ellipse cx="-13.3" cy="-4.3" rx="7.5" ry="11" transform="rotate(288)"/>
+  </g>
+  <circle r="6.4" fill="#FFEDBC"/>
+  <circle r="2.6" fill="#C8D665"/>
+</g>
+<path d="M32 44 V 57" stroke="#749F25" stroke-width="4" stroke-linecap="round"/>
+<path d="M32 50 C 24 49 20 45 19 40 C 26 40 31 44 32 50 Z" fill="#8D9934"/>
+</svg>

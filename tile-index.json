@@ -1,0 +1,26 @@
+{
+  "ac": {
+    "field": "#BDE3F0",
+    "h": 500
+  },
+  "chess": {
+    "field": "#E8DCC0",
+    "h": 582
+  },
+  "dorms": {
+    "field": "#F0E4DC",
+    "h": null
+  },
+  "pacman": {
+    "field": "#12131A",
+    "h": 521
+  },
+  "stardew": {
+    "field": "#EEEAD6",
+    "h": 1034
+  },
+  "uxfolio": {
+    "field": "#D6DBEA",
+    "h": 1293
+  }
+}
