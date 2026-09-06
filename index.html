@@ -356,7 +356,7 @@ window.__hl = (function () {
    The fractions come from the measured canvas geometry, divided through by the box:
    the panel was 267,604 at 114x42 inside a picture at 56,418 at 530x410. Re-measure
    with a grid over the artwork if it ever changes, then divide again. */
-.mascot-wrap{position:absolute;left:56px;top:418px;width:530px;height:410px;
+.mascot-wrap{position:absolute;left:50px;top:412px;width:578px;height:447px;
   container-type:inline-size}
 /* No cursor:pointer on the artwork. It is a 530x410 rectangle whose corners are
    transparent, so the pointer appeared over a wide band of empty hero background and
@@ -390,8 +390,20 @@ window.__hl = (function () {
    Its RIGHT edge is set by the cat avatar painted inside the box at about 63%, not
    by the box border at 71%, and its BOTTOM by the box's own lower rule. Widen or
    deepen it and it starts covering one or the other. */
-.mascot-prompt{position:absolute;left:40%;top:48.2%;width:21.6%;height:11.8%;
+.mascot-prompt{position:absolute;left:40.6%;top:49%;width:20.4%;height:10.4%;
   padding:0 0.4cqw;box-sizing:border-box;background:#F8F0DB;
+  /* The patch is FEATHERED, not butted up against the drawing.
+
+     A flat fill with a hard edge is invisible at 530px and obvious at 578: the
+     screen's paper has grain and a vignette, so a rectangle of one flat value shows
+     its own outline wherever it crosses open paper, which here is on every side. The
+     same-colour halo lets it fall off gradually instead, and 5px of spread under 9px
+     of blur is enough that the seam disappears while the covered area only grows by
+     about a tenth of the panel.
+
+     Which is why the box below is SMALLER than the area it has to cover. The halo
+     does the last few pixels on each side. */
+  box-shadow:0 0 9px 5px #F8F0DB;
   transform:rotate(-4.5deg);transform-origin:50% 50%;
   pointer-events:none;overflow:hidden;
   display:flex;align-items:center;flex-wrap:wrap;
@@ -441,10 +453,10 @@ window.__hl = (function () {
     <nav class="nav" aria-label="Primary">
       <div class="nav-inner">
         <div class="nav-home">
-          <a href="index.html" aria-label="Index" data-tip="Index">
+          <a href="index.html" aria-label="Home" data-tip="Home">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 28V17.3333C20 16.9797 19.8595 16.6406 19.6095 16.3905C19.3594 16.1405 19.0203 16 18.6667 16H13.3333C12.9797 16 12.6406 16.1405 12.3905 16.3905C12.1405 16.6406 12 16.9797 12 17.3333V28"/><path d="M4 13.3333C3.99991 12.9454 4.08445 12.5622 4.24772 12.2103C4.41099 11.8584 4.64906 11.5464 4.94533 11.296L14.2787 3.296C14.76 2.88921 15.3698 2.66603 16 2.66603C16.6302 2.66603 17.24 2.88921 17.7213 3.296L27.0547 11.296C27.3509 11.5464 27.589 11.8584 27.7523 12.2103C27.9156 12.5622 28.0001 12.9454 28 13.3333V25.3333C28 26.0406 27.719 26.7189 27.219 27.2189C26.7189 27.719 26.0406 28 25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.2189C4.28095 26.7189 4 26.0406 4 25.3333V13.3333Z"/></svg>
           </a>
-          <span class="label">Index</span>
+          <span class="label">Home</span>
         </div>
         <div class="nav-sep"></div>
         <div class="nav-icons">

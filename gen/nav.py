@@ -31,7 +31,7 @@ ICONS = {
               '<path d="M26.6667 5.33333H5.33333C3.86057 5.33333 2.66667 6.52724 2.66667 8V24C2.66667 25.4728 3.86057 26.6667 5.33333 26.6667H26.6667C28.1394 26.6667 29.3333 25.4728 29.3333 24V8C29.3333 6.52724 28.1394 5.33333 26.6667 5.33333Z"/>'),
 }
 
-LABELS = {"index": "Index", "archive": "Projects", "art": "Art",
+LABELS = {"index": "Home", "archive": "Projects", "art": "Art",
           "resume": "Resume", "about": "About", "email": "Copy email"}
 # Relative to the ROOT of the site. nav() and pill() prefix them, because half the
 # pages now live one folder down and a bare "index.html" from art/ is art/index.html.

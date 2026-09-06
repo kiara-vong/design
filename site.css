@@ -434,12 +434,12 @@ section {
    gradient stroke (bright top-left ~0.6, second catch bottom-right ~0.47, faint between). */
 /* Trimmed from the Figma's 411x81 / 25-49-24-48: the padding comes down to 42 all
    round and the height 81 -> 74. The width is left to the content and the pill is
-   centred on 718.5 from its own middle, so a longer label (Home -> Index, or
-   Library on that page) lengthens the pill evenly instead of pushing the row off
-   centre inside a fixed 398. */
+   centred on 718.5 from its own middle, so a longer label (Library on that page)
+   lengthens the pill evenly instead of pushing the row off centre inside a fixed
+   398. */
 /* The pill is exactly as wide as its contents. It was pinned to one width for a
    while, so that no icon moved between pages, but a fixed box and a centred row left
-   21px of dead air after the shorter labels -- "Index" and "About" floated away from
+   21px of dead air after the shorter labels -- "Home" and "About" floated away from
    the separator while "Library" sat snug against it. The padding is 42 on every page
    again, which is what the design asks for and what actually looks even.
 
