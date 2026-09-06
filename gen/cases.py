@@ -116,7 +116,28 @@ build("resource-dashboard", dict(
                   "Scoped to what is on screen: current filters, current "
                   "level, nothing else.",
                   "86%", "91%", "2.2", "68%")]),
-            first=True),
+            first=True,
+            after=media.clip(
+                "dashboard-filters-persist",
+                "Filters applied in the table view, still applied after switching "
+                "to the graph view",
+                "Set a filter, switch views, and it's still set. \u201cPersists across "
+                "the toggle\u201d is a claim about behaviour a callout can\u2019t make on its "
+                "own; this is what it looks like happening.")
+            + media.push(
+                "plate/dashboard-jobs-list.webp",
+                "The default view: resources with an outstanding job, sorted by "
+                "due date",
+                "What actually opens first. Not the hierarchy, not a blank table "
+                "\u2014 the subset of what you own that needs something from you today, "
+                "oldest due date on top.",
+                z=1.25, fx="62%", fy="51%")
+            + media.deal(
+                ["plate/dashboard-view-table.webp", "plate/dashboard-view-graph.webp"],
+                "The dashboard's table view, rows sorted by column",
+                "Table and graph, same dataset. The table is what stays on screen "
+                "when the toggle is left alone, which is why it comes first here "
+                "too.")),
 
         sub("drill", "Key decisions", "Drilling without getting lost",
             ["The explorer goes environment, then region, then type, then the resource "
@@ -147,7 +168,7 @@ build("resource-dashboard", dict(
                        "What comes out is what is on screen: current filters, current "
                        "level, nothing else. A resource's tags and its jobs list each "
                        "have their own.",
-                       z=1.4, fx="78%", fy="76%")) +
+                       z=1.2, fx="50%", fy="60%")) +
         # The rebuild's strongest engineering claim, and the one the write-up had no
         # slot for. The data layer is a real network boundary rather than an imported
         # array: typed fetch functions behind small hooks, a mocked REST surface
@@ -182,7 +203,15 @@ build("resource-dashboard", dict(
                        "compliance, network and tags",
                        "One resource, five readings of what came back for it. Every "
                        "one of these arrived over the boundary described above."),
-            after=plate("video", "screen recording, DevTools visible",
+            after=media.strip(
+                "plate/resource-detail-full.webp",
+                "One resource detail page, scrolled through its full height: "
+                "header, tabs and the active tab's content in one continuous view",
+                "The five tabs above, in the page they actually live in rather "
+                "than cropped to just their content. Same boundary, same "
+                "resource, the context the tab-by-tab view leaves out.",
+                travel="71.77%")
+            + plate("video", "screen recording, DevTools visible",
                   "The requests are real",
                   "Open the Network tab and reload. Genuine fetch calls with latency, "
                   "skeletons while they are in flight, and an error state that "
@@ -255,7 +284,7 @@ build("events-timeline", dict(
                     "The whole history, and technically complete. Working out how "
                     "long anything was in trouble means reading two rows and doing "
                     "the arithmetic yourself.",
-                    z=1.5, fx="34%", fy="62%")),
+                    z=1.3, fx="38%", fy="55%")),
 
         '    <div id="decisions" class="cs-group">\n\n' +
         sub("carry", "Key decisions", "Colouring the gaps",
@@ -369,7 +398,7 @@ build("ui-consistency", dict(
                     "One component, as many versions of it as the app actually "
                     "had. Nothing here is tidied: the spacing and the radii are "
                     "what shipped, and the mess is the argument.",
-                    z=1.5, fx="28%", fy="45%")),
+                    z=1.3, fx="32%", fy="33%")),
 
         '    <div id="decisions" class="cs-group">\n\n' +
         sub("audit", "Key decisions", "Counting what was actually there",
@@ -404,7 +433,15 @@ build("ui-consistency", dict(
                 "One table before and after the shared layer, at identical width",
                 "Same data, same window, same scroll position. The row height is "
                 "the difference anyone can see without being told what to look for.",
-                z=1.35, fx="50%", fy="55%")),
+                z=1.4, fx="74%", fy="56%"),
+            after=media.strip(
+                "plate/style-guide-full.webp",
+                "The full style guide: colour, typography, spacing and radius "
+                "tokens, then every shared component built on them",
+                "Every token on one page, in order, so a change to a value is a "
+                "single edit against something you can point a reviewer at "
+                "instead of an inline style hunted down file by file.",
+                travel="84.31%")),
 
         sub("prs", "Key decisions", "Ten pull requests, in dependency order",
             ["208 files across 9 commits is not a reviewable change. It is a change "

@@ -1,15 +1,9 @@
 {
- "chess": {
-  "h": 746,
-  "kb": 13,
-  "travel": 50.93,
-  "w": 748
- },
  "dashboard-button-contact-sheet": {
-  "h": 605,
-  "kb": 26,
+  "h": 1077,
+  "kb": 34,
   "travel": 0.0,
-  "w": 1600
+  "w": 2200
  },
  "dashboard-default-annotated": {
   "h": 979,
@@ -18,21 +12,21 @@
   "w": 2200
  },
  "dashboard-events-table-explored": {
-  "h": 496,
-  "kb": 31,
+  "h": 1077,
+  "kb": 44,
   "travel": 0.0,
-  "w": 1600
+  "w": 2200
  },
  "dashboard-export-scoped": {
-  "h": 904,
-  "kb": 72,
+  "h": 1077,
+  "kb": 66,
   "travel": 0.0,
   "w": 2200
  },
  "dashboard-jobs-list": {
   "h": 899,
   "kb": 36,
-  "travel": 12.9,
+  "travel": 12.91,
   "w": 1600
  },
  "dashboard-tab-account-details": {
@@ -84,28 +78,28 @@
   "w": 1600
  },
  "dashboard-view-table": {
-  "h": 766,
+  "h": 776,
   "kb": 57,
   "travel": 0.0,
   "w": 1600
  },
  "dorms-floorplans-multibuilding": {
-  "h": 469,
-  "kb": 17,
+  "h": 1077,
+  "kb": 28,
   "travel": 0.0,
-  "w": 1600
+  "w": 2200
  },
  "dorms-gallery-letterbox": {
-  "h": 808,
-  "kb": 94,
+  "h": 1077,
+  "kb": 86,
   "travel": 0.0,
   "w": 2200
  },
  "dorms-reviews": {
-  "h": 482,
-  "kb": 10,
+  "h": 1077,
+  "kb": 16,
   "travel": 0.0,
-  "w": 1600
+  "w": 2200
  },
  "dorms-signin-gate": {
   "h": 751,
@@ -143,23 +137,17 @@
   "travel": 0.0,
   "w": 1600
  },
- "pacman": {
-  "h": 700,
-  "kb": 17,
-  "travel": 56.87,
-  "w": 617
- },
  "resource-detail-full": {
-  "h": 2773,
+  "h": 2810,
   "kb": 149,
-  "travel": 71.77,
+  "travel": 72.14,
   "w": 1600
  },
  "showcase-full-height": {
   "h": 3908,
-  "kb": 191,
-  "travel": 83.97,
-  "w": 1280
+  "kb": 190,
+  "travel": 84.1,
+  "w": 1270
  },
  "showcase-tables-before-after": {
   "h": 766,
@@ -168,10 +156,10 @@
   "w": 1600
  },
  "stardew-arcade-row": {
-  "h": 362,
-  "kb": 35,
+  "h": 1077,
+  "kb": 49,
   "travel": 0.0,
-  "w": 1600
+  "w": 2200
  },
  "stardew-didyouknow-1": {
   "h": 740,
@@ -206,7 +194,7 @@
  "stardew-location-popup-saloon": {
   "h": 1058,
   "kb": 69,
-  "travel": 25.98,
+  "travel": 25.99,
   "w": 1600
  },
  "stardew-locations-both-tiers": {
@@ -229,9 +217,9 @@
  },
  "style-guide-full": {
   "h": 3992,
-  "kb": 128,
-  "travel": 84.31,
-  "w": 1280
+  "kb": 127,
+  "travel": 84.43,
+  "w": 1270
  },
  "uxfolio-casestudies-index": {
   "h": 3529,

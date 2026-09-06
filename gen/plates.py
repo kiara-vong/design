@@ -28,7 +28,7 @@ import io
 import json
 import os
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 SRC = os.path.join("assets", "tile", "_src")
 OUT = os.path.join("assets", "plate")
@@ -53,11 +53,83 @@ SHARP = {
     "dorms-gallery-letterbox",
     "stardew-villager-abigail",
     "dashboard-timeline-carryforward",
+    "dashboard-events-table-explored",
+    "dorms-floorplans-multibuilding",
+    "dashboard-button-contact-sheet",
+    "dorms-reviews",
+    "stardew-arcade-row",
 }
 
 # Captures that are the home page's thumbnails, prepared by gen/tiles.py from the
 # same folder. Preparing them twice would put a second copy of each on disk.
-SKIP = {"dorms", "stardew", "uxfolio"}
+SKIP = {"dorms", "stardew", "uxfolio", "chess", "pacman", "ac",
+        # A whole-page capture kept as the source the tile and several
+        # plates are cut from, rather than a figure in its own right.
+        "stardew-full"}
+
+# Plates whose subject runs to both edges of the capture.
+#
+# The slot draws every plate with object-fit:cover, which crops a wide capture to
+# the slot's own 2.04 and throws the sides away. For most captures that is fine --
+# the middle is the subject. For these it is not: the thing the caption names lives
+# in the strip cover discards, so the figure argued for something it never showed.
+# A review's stars sit hard right of an otherwise empty card; the letterboxed photo
+# is only legible BECAUSE of the blurred bands at its two edges; the export control
+# is at one end of a row and the count it belongs to is at the other.
+#
+# So these are composited onto a ground at the slot's own aspect instead, which is
+# what the reference build does with every screenshot on its case-study pages: the
+# capture sits ON a surface with air around it rather than bleeding to the edges.
+# Nothing is cropped, the whole frame is legible at rest, and --fx/--fy then land
+# where they say they do, because the plate and the slot finally agree on a shape.
+FRAMED = {
+    "dorms-gallery-letterbox",
+    "dashboard-export-scoped",
+    # Wide interface captures whose first column or leftmost label is the thing the
+    # caption is about. Cover took the timestamps off the event table, the building
+    # names off the floor plans, and both end labels off the contact sheet.
+    "dashboard-events-table-explored",
+    "dorms-floorplans-multibuilding",
+    "dashboard-button-contact-sheet",
+    # A single review card, laid out full-bleed: blurred author at one end,
+    # rating at the other, the words down in a corner. Cover can frame any one
+    # of those three and never two.
+    "dorms-reviews",
+    "stardew-arcade-row",
+}
+
+# The ground the framed plates sit on, and the air around them. --dove-ivory from
+# site.css, which is the same surface the case-study page itself is painted in, so
+# the inset reads as the page showing through rather than as a border drawn on.
+GROUND = (245, 242, 229)
+STROKE = (227, 225, 204)
+INSET = 0.045          # air on the long side, as a fraction of plate width
+
+
+def frame(im, target):
+    """Sit a capture on a ground at the slot's aspect, with air around it.
+
+    Sized so the capture keeps `target` as its LONG side wherever it can: the
+    ground grows around it rather than the capture shrinking into a fixed box, so
+    a framed plate carries the same detail per pixel as an unframed one.
+    """
+    iw, ih = im.size
+    inset = int(round(target * INSET))
+    cw = target - inset * 2                       # capture width inside the frame
+    ch = int(round(ih * cw / float(iw)))
+    gw = target
+    gh = max(int(round(gw / (SLOT_W / SLOT_H))), ch + inset * 2)
+    # A capture taller than the slot's aspect allows would be squeezed by the
+    # ground rather than framed by it; widen the ground to keep the air even.
+    if ch + inset * 2 > gh:
+        gh = ch + inset * 2
+    out = Image.new("RGB", (gw, gh), GROUND)
+    x, y = (gw - cw) // 2, (gh - ch) // 2
+    out.paste(im.resize((cw, ch), Image.LANCZOS), (x, y))
+    # A hairline so the capture's own white does not dissolve into the ground.
+    ImageDraw.Draw(out).rectangle([x - 1, y - 1, x + cw, y + ch],
+                                  outline=STROKE, width=1)
+    return out
 
 
 def main():
@@ -78,6 +150,9 @@ def main():
         target = SHARP_WIDTH if name in SHARP else WIDTH
         if w > target:
             im = im.resize((target, int(round(h * target / float(w)))), Image.LANCZOS)
+        if name in FRAMED:
+            im = frame(im, target)
+        w, h = im.size
         dst = os.path.join(OUT, name + ".webp")
         im.save(dst, "WEBP", quality=QUALITY, method=6)
         kb = os.path.getsize(dst) / 1024.0

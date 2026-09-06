@@ -65,9 +65,7 @@ JOBS = [
      "end to end: design, build, test and rollout.",
      "2022"),
     ("B.Sc. Computer Science", "Brown University",
-     "Computer science, 4.0, weighted toward the electives that were really about "
-     "interfaces. Edited the yearbook, which is where the interest in making "
-     "complicated things legible started.",
+     "Computer science, 4.0.",
      "2020 &ndash; 2024"),
     ("Study Abroad", "Yonsei University",
      "A semester in Seoul.",
@@ -240,7 +238,7 @@ PAGE = '''<!doctype html>
  <div class="ab-canvas">
   <img id="ab-bg" src="assets/hero/about-bg.webp" alt="" fetchpriority="high" decoding="async">
   <div id="ab-wash" aria-hidden="true"></div>
-  <a class="ab-back" href="index.html" aria-label="Back to the index">
+  <a class="ab-back" href="./" aria-label="Back to the index">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
   </a>
 

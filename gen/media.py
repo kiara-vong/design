@@ -109,6 +109,19 @@ def deal(srcs, alt, caption, dur="14s", root="../"):
     return _fig("".join(o), caption)
 
 
+def flat(src, alt, caption, root="../"):
+    """A drawn figure, held still.
+
+    The SVG animates itself from its own <style>, so there is no camera machine
+    over the top of it: a machine here would be a second thing moving, out of
+    phase with the first. The slot just holds it at its authored size.
+    """
+    return _fig(
+        '        <div class="cs-media">\n'
+        '          <img class="cs-flat" src="%sassets/%s" alt="%s" loading="lazy">\n'
+        '        </div>\n' % (root, src, esc(alt)), caption)
+
+
 def annotated(src, alt, caption, notes, root="../"):
     """A still with leader-line labels that push the picture in on what they name.
 

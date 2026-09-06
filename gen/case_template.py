@@ -242,7 +242,7 @@ def build(slug, spec):
         # section lit in the pill, and their own gallery CSS, and nothing else. A
         # parallel template would have drifted from this one within a week.
         extra_css=spec.get("extra_css", ""),
-        back=spec.get("back", root + "index.html"),
+        back=spec.get("back", root or "./"),
         back_label=esc(spec.get("back_label", "Back to home")),
         root=root,
         nav_pill=_nv.nav(spec.get("pill", "index"), "  ", root),
@@ -256,7 +256,7 @@ def build(slug, spec):
 # of where the page lives rather than a constant.
 def note(root=""):
     return ('If you would like the detail, please <a class="touch" '
-            'href="%sindex.html">get in touch</a>' % root)
+            'href="%s">get in touch</a>' % (root or "./"))
 
 
 NOTE = note("../")

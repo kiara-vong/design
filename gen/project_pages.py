@@ -181,7 +181,7 @@ PROJECTS = [
               media.push("plate/dorms-reviews.webp",
                          "A dorm's review list with star ratings",
                          "Named in the intro of every version of this project and, until now, shown nowhere. Author names are blurred; these are real students.",
-                         z=1.4, fx="40%", fy="52%")),
+                         z=1.2, fx="48%", fy="52%")),
              ("how", "How it works", "Why there is a backend at all",
               ["The frontend never talks to the database. Every read and write goes "
                "through a Java server, which is the only thing holding admin "
@@ -217,7 +217,7 @@ PROJECTS = [
               media.push("plate/dorms-floorplans-multibuilding.webp",
                          "Floor plans grouped into one card grid per building",
                          "Five of the thirty dorms are several buildings. A flat list of plans is wrong for those and quietly misleading to anyone who does not already know it.",
-                         z=1.35, fx="30%", fy="50%")),
+                         z=1.3, fx="34%", fy="50%")),
              ("photos", "How it works", "Photographs nobody framed",
               ["Dorm photos are phone snapshots in every orientation and resolution. "
                "Hard-cropping a tall photo into a fixed frame cuts off half the room, "
@@ -229,7 +229,7 @@ PROJECTS = [
               media.push("plate/dorms-gallery-letterbox.webp",
                          "A tall phone photo letterboxed over a blurred copy of itself",
                          "Nothing is cropped and the frame keeps its size. What fills the rest is the same photograph, blurred and darkened.",
-                         z=1.45, fx="50%", fy="50%")),
+                         z=1.35, fx="14%", fy="50%")),
              ("taught", "What it taught me", "The deployment is part of the design",
               ["I had thought of hosting as something that happens after the build. It "
                "is not: the static-host constraint decided the architecture, the "
@@ -293,7 +293,11 @@ PROJECTS = [
               media.strip("plate/stardew-explore-valley-popup.webp",
                           "The Explore the Valley popup, scrolled through its full height",
                           "The outdoor areas are one long scrollable panel rather than a box each, because they are places to wander through rather than buildings to visit.",
-                          travel="39.39%")),
+                          travel="39.39%"),
+              media.strip("plate/stardew-location-popup-saloon.webp",
+                          "The Saloon popup, scrolled through its full height",
+                          "One of the six full-box buildings, given the same treatment as the others: hours, what's inside, who you'll find there.",
+                          travel="25.98%")),
              ("data", "How it works", "Facts, sprites and code are not the same thing",
               ["The gift lists are game data, so a one-time Node script parsed them out "
                "of a mirrored fan site rather than my typing 34 characters' worth of "
@@ -323,7 +327,7 @@ PROJECTS = [
               media.push("plate/stardew-villager-abigail.webp",
                          "A villager card: bracketed portrait, birthday, biography, loved and liked gifts",
                          "The hearts beside Loves and Likes are the game's own friendship sprites rather than emoji, which is the sort of detail the whole pastiche rests on.",
-                         z=1.5, fx="62%", fy="68%")),
+                         z=1.5, fx="62%", fy="75%")),
              ("arcade", "The arcade", "Four cabinets and no game engine",
               ["Half of this project is not a guide at all. Four playable cabinets sit "
                "on the same page, each a plain canvas element with its own loop, and "
@@ -350,7 +354,13 @@ PROJECTS = [
               media.push("plate/stardew-arcade-row.webp",
                          "Four arcade cabinets side by side",
                          "Junimo Kart, Fishing, Prairie King and Junimo Jamboree. Each is a plain canvas with its own loop and no engine under it.",
-                         z=1.5, fx="22%", fy="50%")),
+                         z=1.35, fx="50%", fy="54%"),
+              media.clip("stardew-junimo-kart",
+                         "Junimo Kart: the start line, a cleared gap, a spike hit, and the score screen",
+                         "Start, a cleared jump, a spike taken wrong, the score screen it resets from. Four states standing in for the run until this one gets a real recording."),
+              media.clip("stardew-prairie-king",
+                         "Journey of the Prairie King: spawn, a wave cleared, a hit taken, the wave counter climbing",
+                         "Five waves as five stills. The counter and the health both move considerably faster than this in the actual game.")),
              ("rhythm", "The arcade", "One source for the song and the chart",
               ["Junimo Jamboree has no audio track. A short hand-written motif is "
                "arranged into a sixteen-measure structure at load, and that same "
@@ -370,7 +380,10 @@ PROJECTS = [
               media.strip("plate/stardew-jamboree-difficulty.webp",
                           "The difficulty select, with a best score kept per difficulty",
                           "Three difficulties over one generated song. What changes is note density and the timing windows, not the music.",
-                          travel="36.64%")),
+                          travel="36.64%"),
+              media.clip("stardew-junimo-jamboree",
+                         "Junimo Jamboree: difficulty select, notes falling in the four lanes, a cleared song",
+                         "Difficulty select, notes falling, a cleared song: three states where the actual note timing belongs once there's a real capture of it.")),
              ("taught", "What it taught me", "Ports have tick rates",
               ["Matching an existing visual language closely is much harder than "
                "designing freely, and much better practice. You cannot fall back on "
@@ -575,7 +588,15 @@ PROJECTS = [
                          "collision, death and restart",
                          "The countdown, a clean run past two ghosts, then a cornering "
                          "none of the three chase rules were built to survive, and the "
-                         "restart that follows automatically.")),
+                         "restart that follows automatically.")
+              + media.flat(
+                  "case/cs-pac-targets.svg",
+                  "Four boards side by side: the same player in each, one ghost "
+                  "each, and a different highlighted target tile every time",
+                  "The part no screenshot of this game can show. Every frame of "
+                  "the clip above is four ghosts moving; the reason they move "
+                  "differently is four target tiles, and that only exists in the "
+                  "code until something draws it.")),
              ("taught", "What it taught me", "Behaviour is cheaper than content",
               ["Four ghosts with four target rules produce more variety than four "
                "hand-authored patrol routes would have, and they keep producing it "

@@ -393,7 +393,7 @@ def build_index():
     shell("art/index.html", "Art — Kiara Vong",
           "Paintings, drawings, photography, editorial design and fluid-mechanics "
           "project work by Kiara Vong.",
-          CSS_INDEX, "".join(o), back="../index.html",
+          CSS_INDEX, "".join(o), back="../",
           backlabel="Back to the index", root="../")
 
 

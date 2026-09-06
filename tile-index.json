@@ -14,20 +14,20 @@
   "dorms": {
     "field": "#F0E4DC",
     "ground": "field-dorms.webp",
-    "h": 2093,
-    "travel": 71.44
+    "h": 690,
+    "travel": 13.38
   },
   "pacman": {
     "field": "#12131A",
     "ground": "field-pacman.webp",
-    "h": 880,
-    "travel": 32.08
+    "h": 847,
+    "travel": 29.44
   },
   "stardew": {
     "field": "#EEEAD6",
     "ground": "field-stardew.webp",
-    "h": 638,
-    "travel": 6.32
+    "h": 1112,
+    "travel": 46.25
   },
   "uxfolio": {
     "field": "#D6DBEA",

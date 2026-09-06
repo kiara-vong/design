@@ -228,12 +228,131 @@ def persona_reorder():
 
 
 
+def pac_targets():
+    """Pac-Man's actual argument: one movement system, four target rules.
+
+    Every screenshot of this game shows the same thing -- a maze, some dots, four
+    ghosts -- and none of them show the only part worth writing about, which is
+    that the four ghosts run identical code against four different target tiles.
+    That is not a visible property of any one frame. It is the rule behind all of
+    them, so it wants a diagram rather than a capture.
+
+    Four panels rather than one board, and that is the whole design. A single
+    board with four leader lines on it was tried first: the lines crossed, the
+    ghosts overlapped in the middle where they start, and reading it meant
+    tracing four paths through one picture. Four small boards make the comparison
+    the layout instead of the reader's job -- same fragment, same player, same
+    position, one ghost each, and the only thing that moves between panels is the
+    highlighted tile. Which is exactly the claim.
+    """
+    o = [title(28, 40, "One movement system, four targets"),
+         sub(28, 62, "identical code; the ghosts differ only in the tile they aim at")]
+
+    CELL = 25
+    COLS = ROWS = 5
+    PANEL_W = 178
+    BOARD = COLS * CELL                       # 135
+    TOP = 92
+    BOARD_Y = TOP + 30
+
+    # Same fragment in all four: player mid-board, facing left.
+    PC, PR = 2, 2
+
+    GHOSTS = [
+        # name, colour, ghost cell, target cell, rule, note
+        ("Blinky", "#E4483C", (4, 0), (2, 2), "the player's tile",
+         "chases directly"),
+        ("Pinky",  "#F2A9CE", (0, 0), (0, 2), "four tiles ahead",
+         "cuts you off"),
+        ("Inky",   "#5FD4E8", (4, 4), (4, 0), "reflected through Blinky",
+         "needs Blinky too"),
+        ("Clyde",  "#EFA24B", (2, 4), (0, 4), "his corner, when close",
+         "gives up nearby"),
+    ]
+
+    for i, (nm, col, (gc, gr), (tc, tr), rule, note) in enumerate(GHOSTS):
+        px = 28 + i * PANEL_W
+        bx = px + (PANEL_W - BOARD) / 2.0 - 6
+
+        o.append(t(px + 2, TOP + 14, nm, 12, col, "sans", 700))
+        o.append(t(px + 2 + len(nm) * 8 + 8, TOP + 14, note, 10, MUT, "mono", 400))
+
+        # the board fragment
+        o.append(r(bx - 7, BOARD_Y - 7, BOARD + 14, BOARD + 14, "#0E1017", 9))
+        for k in range(COLS + 1):
+            o.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" '
+                     'stroke="#26314A" stroke-width="1"/>'
+                     % (bx + k * CELL, BOARD_Y, bx + k * CELL, BOARD_Y + BOARD))
+            o.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" '
+                     'stroke="#26314A" stroke-width="1"/>'
+                     % (bx, BOARD_Y + k * CELL, bx + BOARD, BOARD_Y + k * CELL))
+
+        def cx(c, _bx=bx):
+            return _bx + c * CELL + CELL / 2.0
+
+        def cy(rr):
+            return BOARD_Y + rr * CELL + CELL / 2.0
+
+        # the target tile -- the one thing that differs between panels
+        o.append(r(bx + tc * CELL + 2.5, BOARD_Y + tr * CELL + 2.5,
+                   CELL - 5, CELL - 5, col, 4, op=.26,
+                   cls="tgt p%d" % i))
+        o.append(r(bx + tc * CELL + 2.5, BOARD_Y + tr * CELL + 2.5,
+                   CELL - 5, CELL - 5, "none", 4, stroke=col, sw=1.6,
+                   cls="tgt p%d" % i))
+
+        # ghost -> target
+        if (gc, gr) != (tc, tr):
+            o.append('<path class="aim p%d" d="M %.1f %.1f L %.1f %.1f" '
+                     'stroke="%s" stroke-width="1.8" stroke-dasharray="4 4" '
+                     'fill="none"/>'
+                     % (i, cx(gc), cy(gr), cx(tc), cy(tr), col))
+
+        # the player, facing left, identical in every panel
+        o.append('<path d="M %.1f %.1f L %.1f %.1f A 9 9 0 1 0 %.1f %.1f Z" '
+                 'fill="#F2C744"/>'
+                 % (cx(PC), cy(PR), cx(PC) - 8.5, cy(PR) - 3.1,
+                    cx(PC) - 8.5, cy(PR) + 3.1))
+
+        # the ghost
+        o.append('<path class="gh p%d" d="M %.1f %.1f a 8 8 0 0 1 16 0 v 9.5 '
+                 'l -2.7 -2.7 l -2.7 2.7 l -2.6 -2.7 l -2.7 2.7 l -2.7 -2.7 '
+                 'l -2.6 2.7 z" fill="%s"/>'
+                 % (i, cx(gc) - 8, cy(gr), col))
+
+        o.append(t(px + 2, BOARD_Y + BOARD + 26, "aims at", 9, MUT, "mono", 400))
+        o.append(t(px + 2, BOARD_Y + BOARD + 42, rule, 11, INK, "sans", 700))
+
+    # the shared rule, stated once, under all four
+    y = BOARD_Y + BOARD + 56
+    o.append('<line x1="28" y1="%.1f" x2="771" y2="%.1f" stroke="%s" '
+             'stroke-width="1"/>' % (y, y, LINE))
+    o.append(t(28, y + 22, "At every junction each of them runs the same "
+               "comparison: take the exit that most reduces the distance to my "
+               "target.", 12, INK, "sans", 400))
+    o.append(t(28, y + 40, "Frightened mode does not replace that rule. It flips "
+               "the comparison to the exit that INCREASES it.", 11, MUT, "sans", 400))
+
+    css = (
+        ".tgt{animation:tgt 8s ease-out infinite}"
+        "@keyframes tgt{0%,6%{opacity:.45}18%,80%{opacity:1}94%,100%{opacity:.45}}"
+        ".aim{stroke-dashoffset:60;animation:aim 8s ease-out infinite}"
+        "@keyframes aim{0%,6%{stroke-dashoffset:60;opacity:.5}"
+        "22%,80%{stroke-dashoffset:0;opacity:1}94%,100%{stroke-dashoffset:60;opacity:.5}}"
+        ".gh{animation:gh 8s ease-out infinite}"
+        "@keyframes gh{0%,6%{opacity:.62}18%,80%{opacity:1}94%,100%{opacity:.62}}"
+        ".p1{animation-delay:.3s}.p2{animation-delay:.6s}.p3{animation-delay:.9s}"
+    )
+    return o, css
+
+
 print("case-study figures:")
 FIGS = [
     ("cs-dash-seams", dash_seams),
     ("cs-tl-carry", tl_carry),
     ("cs-ui-drift", ui_drift),
     ("cs-persona-reorder", persona_reorder),
+    ("cs-pac-targets", pac_targets),
 ]
 for name, fn in FIGS:
     body, css = fn()

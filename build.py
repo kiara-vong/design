@@ -134,7 +134,11 @@ def check():
             if here and not os.path.exists(here):
                 bad.append("%s -> %s (missing)" % (f, m))
             elif "#" in m and here.endswith(".html"):
+                # normpath leaves a "./" on a link that climbs back to the root,
+                # and the id map is keyed without one.
                 key = here.replace(os.sep, "/")
+                if key.startswith("./"):
+                    key = key[2:]
                 if m.split("#")[1] not in ids.get(key, set()):
                     bad.append("%s -> %s (no such anchor)" % (f, m))
 

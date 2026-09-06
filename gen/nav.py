@@ -35,8 +35,26 @@ LABELS = {"index": "Home", "archive": "Projects", "art": "Art",
           "resume": "Resume", "about": "About", "email": "Copy email"}
 # Relative to the ROOT of the site. nav() and pill() prefix them, because half the
 # pages now live one folder down and a bare "index.html" from art/ is art/index.html.
-HREFS = {"index": "index.html", "archive": "index.html#projects", "art": "art/",
+#
+# The home entry is the empty string, so it resolves to the site root as a DIRECTORY:
+# "../" from a subpage, and "./" from the home page itself, which _href below
+# supplies because an empty href means "this exact URL including its query" rather
+# than "the index here". Naming index.html works and puts kiaravong.com/index.html in
+# the address bar, where it then stays for the rest of the visit.
+HREFS = {"index": "", "archive": "@#projects", "art": "art/",
          "resume": "resume.html", "about": "about.html"}
+def _href(root, target):
+    """Join a root prefix to a target, keeping the site root a directory link.
+
+    A leading "@" means the target is a fragment ON THE HOME PAGE rather than on
+    this one. From a subpage "../#projects" already says that; from a page at the
+    site root a bare "#projects" would be an anchor in the page you are standing on,
+    which is how the About pill quietly stopped going anywhere.
+    """
+    if target.startswith("@"):
+        return (root or "./") + target[1:]
+    return (root + target) or "./"
+
 
 # The About page's own person mark, kept so that entry is unchanged.
 ICONS["about"] = ('28', '<path d="M14 25.6667C20.4433 25.6667 25.6667 20.4433 25.6667 14C25.6667 7.55668 20.4433 2.33333 14 2.33333C7.55668 2.33333 2.33333 7.55668 2.33333 14C2.33333 20.4433 7.55668 25.6667 14 25.6667Z"/>'
@@ -63,7 +81,8 @@ def pill(current="index", indent="      ", root=""):
     o = ['%s<div class="nav-inner">\n' % i,
          '%s  <div class="nav-home">\n' % i,
          '%s    <a href="%s" aria-label="%s" data-tip="%s">\n%s      %s\n%s    </a>\n'
-         % (i, (root + HREFS.get(home, "#")), LABELS[home], LABELS[home], i, _svg(home), i),
+         % (i, _href(root, HREFS.get(home, "#")), LABELS[home], LABELS[home],
+            i, _svg(home), i),
          '%s    <span class="label">%s</span>\n' % (i, LABELS[home]),
          '%s  </div>\n' % i,
          '%s  <div class="nav-sep"></div>\n' % i,
@@ -74,7 +93,7 @@ def pill(current="index", indent="      ", root=""):
                      'data-mail>\n%s      %s\n%s    </a>\n' % (i, i, _svg(k), i))
         else:
             o.append('%s    <a href="%s" aria-label="%s" data-tip="%s">\n%s      %s\n%s    </a>\n'
-                     % (i, (root + HREFS[k]), LABELS[k], LABELS[k], i, _svg(k), i))
+                     % (i, _href(root, HREFS[k]), LABELS[k], LABELS[k], i, _svg(k), i))
     o.append('%s  </div>\n%s</div>' % (i, i))
     return "".join(o)
 
