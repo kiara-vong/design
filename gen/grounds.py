@@ -241,16 +241,17 @@ PLATES = [
      "about-bg.webp", (2400, 2025), 0.5),
     (None, "about-bg-mobile.webp", (780, 3834), 0.5),
 
-    # The footer ground. Her own photograph rather than a flat brand colour: one of
-    # the vortex-ring frames, smoke lit hard against black, which is the one series
-    # on this site that is already mostly dark and reads at any crop.
+    # The footer ground. Monet's Water Lilies, and the band is cut from the lower
+    # third where the big lily cluster is: 810 out of 3265 is a quarter of the height
+    # of a square painting, so which quarter is the whole decision.
     #
-    # 3.31:1 native against the band's 3.56:1, so the fit takes a little off the
-    # sides rather than a lot off the top and bottom, and the structure survives.
-    # The scrim that keeps the footer's pale text legible is in site.css, on top,
-    # rather than baked in here: the image is also the darkest thing on the page and
-    # over-darkening it twice would leave a black rectangle.
-    ("smoke-0923.png", "footer-bg.webp", (2880, 810), 0.5),
+    # The scrim over it in site.css is much lighter than a photograph would need,
+    # because this is a mid-tone painting rather than a dark one. Solved rather than
+    # guessed: against cream text, 0.40 already clears 4.5:1 on the brightest five
+    # percent of the crop, so the 0.48-to-0.64 gradient it actually uses has real
+    # headroom and still lets the painting be a painting.
+    ("Claude_Monet_-_Water_Lilies_-_Google_Art_Project_(462013).jpg",
+     "footer-bg.webp", (2880, 810), 0.72),
 ]
 SRC = os.path.join("assets", "hero", "_src")
 

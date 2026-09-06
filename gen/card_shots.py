@@ -15,7 +15,7 @@ def ds_strip():
     o.append(text(x0, 52, "Foundations", 22, INK, "'Fraunces',serif", 600))
     o.append(bar(x0, 68, 300, 8, LINE))
     # Colour ramps: the palette of this very site, so the artwork and the page agree.
-    for r, base in enumerate(("#5690AE", "#649F25", "#1F597B", "#8460C6")):
+    for r, base in enumerate(("#649F25", "#649F25", "#1F597B", "#8460C6")):
         for c in range(9):
             o.append(rect(x0 + c * 58, 100 + r * 52, 50, 40, base, 6,
                           op=round(.14 + c * .107, 2)))

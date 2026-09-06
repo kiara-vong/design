@@ -154,7 +154,10 @@ var SITE_ROOT = (function () {
   if(!footer || !layer) return;
   /* The About footer's ground is pale, so the light plant would vanish into it.
      Same three stages, dark artwork. */
-  var PLANTS = footer.classList.contains('is-about')
+  /* One set now. The About footer used to be a pale green band that needed the
+     dark sprouts; it is the same painting as every other footer since, so a second
+     set of artwork would be two answers to a question that now has one. */
+  var PLANTS = false
     ? [SITE_ROOT + 'assets/ui/plant-dark-sm.svg', SITE_ROOT + 'assets/ui/plant-dark-med.svg',
        SITE_ROOT + 'assets/ui/plant-dark-lg.svg']
     : [SITE_ROOT + 'assets/ui/plant-sm.svg', SITE_ROOT + 'assets/ui/plant-med.svg',

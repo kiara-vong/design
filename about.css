@@ -3,16 +3,17 @@
 /* The page is 1440 wide and centred, so on anything wider the surround shows down
    both gutters — it used to be a flat orange left over from the old ground. It now
    tracks the ground's own edge tone band by band (sampled from about-bg.webp), then
-   hard-stops to the footer colour at 75.00%, which is exactly where the canvas ends
+   hard-stops at 75.00% to the tone the footer's painting sits at once its scrim
+   is applied, which is exactly where the canvas ends
    and the footer begins. html carries the footer colour alone, for anything below
    the body box. On iOS (viewport-fit=cover) the root also fills the safe-area strips:
    a flat brown mismatched the grey sky at the very top, so the root runs the sky-grey
    gradient start to the footer brown, matching both the top and bottom strips. */
-html{background:#87887F}
+html{background:#364045}
 body{background:linear-gradient(
   #87887F 4.2%, #7E7668 12.5%, #896A4A 20.8%, #795027 29.2%, #663810 37.5%,
   #6A3A0F 45.8%, #754415 54.2%, #83531F 62.5%, #8D602A 70.8%,
-  var(--pear) 75.00%, var(--pear) 100%)}
+  #364045 75.00%, #364045 100%)}
 body{overflow-x:hidden}
 #ab-stage{position:absolute;top:0;left:0;width:1440px;transform-origin:top left}
 /* The gradient belongs to the canvas, not the stage: the footer sits below it and

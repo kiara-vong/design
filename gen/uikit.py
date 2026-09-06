@@ -17,7 +17,7 @@ import io, math, random
 W, H = 1200, 700   # the canvas every full-window mockup is authored in
 INK, MUT, LINE = "#423E3D", "#878676", "#E3E1CC"
 PAPER, WASH = "#FFFFFF", "#F7F5EA"
-ACCENT, GREEN, BLUE, VIOLET = "#5690AE", "#649F25", "#1F597B", "#8460C6"
+ACCENT, GREEN, BLUE, VIOLET = "#649F25", "#649F25", "#1F597B", "#8460C6"
 
 def esc(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")

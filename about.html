@@ -7,7 +7,7 @@
 <meta name="description" content="Kiara Vong — engineer who kept ending up in the design conversation.">
 <link rel="icon" href="assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/ui/favicon.svg">
-<meta name="theme-color" content="#5690AE">
+<meta name="theme-color" content="#649F25">
 <!-- Critical, before the stylesheet: the ground here is a warm gradient, so a cold
      load would otherwise flash parchment before the image lands. This is the
      image's own mid tone. -->
@@ -25,7 +25,7 @@
      before anything paints, so the 1440-wide canvas never renders unscaled first. -->
 <script>
 (function(){
-  var W = 1440, H = 1372 + 405;   // canvas + footer
+  var W = 1440, H = 1546 + 405;   // canvas + footer
   var s = Math.min(window.innerWidth / W, 1);
   var hs = Math.min(window.innerWidth / W, window.innerHeight / 861, 1);   /* the index's */
   var el = document.createElement('style');
@@ -54,7 +54,7 @@
 .ab-rule{position:static;margin:34px 0 30px;width:100%}
 .ab-job{position:static;top:auto;margin-bottom:30px}
 .ab-job:last-of-type{margin-bottom:0}
-.ab-canvas{height:1372px}
+.ab-canvas{height:1546px}
 
 /* The résumé download, as a ticket stub rather than a button. The site's whole
    visual language is perforated card stock, and "take one" is a thing a stub
@@ -299,7 +299,7 @@
 
 /* Keep the 1440 canvas fitted on resize; the head script does the first paint. */
 (function(){
-  var W = 1440, H = 1372 + 405, stage = document.getElementById('ab-stage');
+  var W = 1440, H = 1546 + 405, stage = document.getElementById('ab-stage');
   var navwrap = document.getElementById('ab-navwrap');
   function fit(){
     /* Below 760 the page is stacked by mobile.css, not scaled, so give back every

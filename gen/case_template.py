@@ -109,7 +109,7 @@ PAGE = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title} — Kiara Vong</title>
 <meta name="description" content="{intro_short}">
-<meta name="theme-color" content="#5690AE">
+<meta name="theme-color" content="#649F25">
 <link rel="icon" href="{root}assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{root}assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->

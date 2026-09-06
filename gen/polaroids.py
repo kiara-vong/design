@@ -140,7 +140,7 @@ open(os.path.join("assets", "ui", "about-rest.svg"), "w").write(
     'stroke-linecap="round" fill="none"/>'
     '<path d="M52 74 C36 70 28 58 26 44 C42 46 52 58 52 74 Z" fill="#749F25"/>'
     '<path d="M56 88 C74 86 84 76 88 62 C70 62 58 72 56 88 Z" fill="#8D9934"/>'
-    '<circle cx="44" cy="36" r="13" fill="#5690AE"/>'
+    '<circle cx="44" cy="36" r="13" fill="#649F25"/>'
     '<circle cx="44" cy="36" r="5" fill="#FFEDBC"/>'
     '<circle cx="66" cy="28" r="8" fill="#FFEDBC"/>'
     '<circle cx="28" cy="24" r="6" fill="#C8D665"/>'

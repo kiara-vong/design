@@ -68,7 +68,7 @@ SHELL = """<!doctype html>
 <meta name="description" content="__DESC__">
 <link rel="icon" href="../assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/ui/favicon.svg">
-<meta name="theme-color" content="#5690AE">
+<meta name="theme-color" content="#649F25">
 <style>html{background:#FDFBEF}</style>
 <link rel="stylesheet" href="../site.css">
 <script src="../site-motion.js"></script>

@@ -114,12 +114,12 @@
       One orange survives on purpose: the asterisk on the laptop screen in the hero
       artwork. It is painted into the picture, and now that it is the only warm mark
       on the page it reads as a deliberate spot rather than as a leftover. */
-   --accent: #5690AE;
+   --accent: #649F25;
    /* The footer is 405px of flat accent, and a colour that is right for a link at
       14px is too light across a whole band. Same hue and chroma, L* 47 instead of
       57, so it still reads as one colour with the accent rather than as a second
       blue. Only the footer and its bleed use it. */
-   --accent-deep: #3D7791;
+   --accent-deep: #4C7A1C;
    --outline-stroke: #E3E1CC;
    --dove-ivory: #F5F2E5;
    --new-leaf-green: #E4F56F;
@@ -270,7 +270,7 @@ section {
    z-index: 0;
    /* Matches #footer, or the photograph stops at the 1440 canvas and a flat colour
       continues either side of it. */
-   background: linear-gradient(rgba(19, 34, 40, .70), rgba(15, 27, 32, .84)),
+   background: linear-gradient(rgba(18, 30, 34, .48), rgba(14, 24, 28, .64)),
                url("assets/hero/footer-bg.webp") center / cover no-repeat,
                var(--accent-deep)
 }
@@ -1570,23 +1570,29 @@ a.card:nth-of-type(even):hover {
 }
 
 /* ================= FOOTER ================= */
-/* The ground is one of her own photographs rather than a flat brand colour: a
-   vortex ring from the smoke series, lit hard against black. It is the one series on
-   this site that is already mostly dark, so it takes a scrim without turning into a
-   black rectangle, and it means the band under every page is work rather than paint.
+/* The ground is Monet's Water Lilies rather than a flat brand colour, cut from the
+   lower third where the lily cluster is. It is the same hand the hero and the About
+   page already borrow, so the band under every page belongs to the same set of
+   pictures rather than being the one surface painted a brand value.
 
    The scrim is not optional and it is not decoration. This band carries pale text,
    the plant cursor and the click-to-plant stamps, all of which need a predictable
-   ground; a photograph varies across its width and text laid straight onto one is
-   legible in some columns and not others. The gradient runs slightly darker at the
-   foot, where the smaller print sits.
+   ground; a painting varies across its width, and text laid straight onto one is
+   legible in some columns and not others.
+
+   It is solved rather than chosen. Against the footer's cream, 0.40 is where the
+   BRIGHTEST five percent of the crop reaches 4.5:1 -- the brightest passage, not the
+   mean, because that is what actually breaks legibility. 0.48 to 0.64 keeps real
+   headroom, runs darker at the foot where the small monospace print sits, and is
+   still light enough that the lilies read as lilies. A photograph would have wanted
+   0.70 and up; this is a mid-tone painting and does not.
 
    --accent-deep stays underneath as the fallback tone, so a failed image request
    leaves the footer coloured rather than transparent, and so the colour the rest of
    the page was toned against is still the colour that shows through. */
 #footer {
    height: 405px;
-   background: linear-gradient(rgba(19, 34, 40, .70), rgba(15, 27, 32, .84)),
+   background: linear-gradient(rgba(18, 30, 34, .48), rgba(14, 24, 28, .64)),
                url("assets/hero/footer-bg.webp") center / cover no-repeat,
                var(--accent-deep);
    overflow: hidden
@@ -1691,13 +1697,6 @@ a.card:nth-of-type(even):hover {
    above which Windows ignores a custom cursor entirely. */
 #footer {
    cursor: url("assets/ui/plant-cursor.svg") 12 31, auto
-}
-
-/* The About footer is pale, and the light cursor all but vanished on it. Same
-   sprout, drawn in the moss the dark stamps use, so what you are holding matches
-   what you plant. */
-#footer.is-about {
-   cursor: url("assets/ui/plant-cursor-dark.svg") 12 31, auto
 }
 
 /* Links get their own cursor, everywhere.
@@ -1879,28 +1878,19 @@ a[href] {
    color: var(--new-leaf-green)
 }
 
-/* Green variant (Figma 358:1299), used by the About page. Only the ground, the
-   tiles and which entry reads as current differ; every measurement is shared. */
-#footer.is-about {
-   background: var(--pear)
-}
+/* The About page used to end on a pale green variant of this footer: its own
+   ground, slate marks instead of cream, a darker plant cursor and darker stamps.
+   That is gone, and .is-about now changes nothing.
 
-#footer.is-about .flowers .fl {
-   object-fit: contain;
-   object-position: 0 0
-}
+   The variant existed when the footer was a flat colour and About's ground was warm
+   enough that the blue band read as a different site. The band is a painting now,
+   and one painting under every page is the point of it; a second treatment turns the
+   one element that appears on every page back into the one element that changes.
 
-/* Every mark in this footer is slate on the pale ground; only the current nav item
-   and the weather dot lift to moss. */
-#footer.is-about .quote,
-#footer.is-about .foot-links a,
-#footer.is-about .foot-links svg,
-#footer.is-about .foot-nav a,
-#footer.is-about .weather p {
-   color: var(--slate)
-}
+   site-footer.js still reads .is-about to pick its stamp artwork, which is why the
+   class is still applied rather than removed from the markup. */
 
-#footer.is-about .foot-nav a.current {
+.foot-nav a.current {
    color: var(--moss)
 }
 

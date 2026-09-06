@@ -19,7 +19,16 @@ import io
 
 # The canvas has to clear six entries in flow rather than the reference's six at a
 # fixed 157px rhythm. Measured from the rendered page; re-measure after adding one.
-CANVAS = 1372
+#
+# And after changing the TYPE, which is what caught it last time: bumping the body
+# sizes a step pushed the lowest element 130px past a canvas that is overflow:hidden,
+# and the whole resume link at the foot of the page simply stopped being drawn. No
+# error, no scrollbar, just a missing block. 1546 is the lowest element's bottom plus
+# the 44px of ground the design keeps under the last entry.
+#
+# To re-measure: load the page, then in the console take the largest
+# getBoundingClientRect().bottom of everything inside .ab-canvas and add 44.
+CANVAS = 1546
 
 FOOT = "assets/about"
 
@@ -136,7 +145,7 @@ PAGE = '''<!doctype html>
 <meta name="description" content="Kiara Vong — engineer who kept ending up in the design conversation.">
 <link rel="icon" href="assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/ui/favicon.svg">
-<meta name="theme-color" content="#5690AE">
+<meta name="theme-color" content="#649F25">
 <!-- Critical, before the stylesheet: the ground here is a warm gradient, so a cold
      load would otherwise flash parchment before the image lands. This is the
      image's own mid tone. -->
