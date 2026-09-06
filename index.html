@@ -202,13 +202,29 @@ window.__hl = (function () {
 /* No ::after arrow here. U+2197 has no glyph in Apercu Mono and rendered as a
    tofu box on the archive tiles once already. If this ever wants a mark, it has
    to be an inline SVG, not a codepoint. */
-.mini:hover{transform:translateY(-5px)}
-.mini:nth-child(even):hover{transform:translateY(-5px) rotate(.5deg)}
+/* The lift, and it has to name .is-in as well.
+
+   site.css runs the entrance on this same element: `.pt .mini{transform:translateY(10px)}`
+   settling to `.pt .mini.is-in{transform:none}`. That second rule is three classes,
+   and a plain `.mini:hover` is two, so once a card had finished arriving the entrance
+   won and the card stopped lifting entirely. Nothing looked broken; the hover just
+   silently did nothing.
+
+   It only became a collision when the hover moved onto .mini. It used to sit on
+   .mini-link, which was a different element from the one the entrance animates, and
+   .mini-link is now only the title's anchor.
+
+   Both selectors are needed: .is-in is absent under prefers-reduced-motion, where
+   site-motion.js never adds .pt and the entrance rules do not apply at all. */
+.mini:hover,
+.mini.is-in:hover{transform:translateY(-5px)}
+.mini:nth-child(even):hover,
+.mini.is-in:nth-child(even):hover{transform:translateY(-5px) rotate(.5deg)}
 .mini:hover .mini-title{color:var(--accent)}
 .mini-title{transition:color .25s ease}
 @media (prefers-reduced-motion:reduce){
   .mini{transition:none}
-  .mini:hover{transform:none}
+  .mini:hover,.mini.is-in:hover{transform:none}
 }
 
 /* ----- Project tiles -----

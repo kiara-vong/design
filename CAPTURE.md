@@ -75,13 +75,6 @@ than an upscale.
 put anything in `assets/video/` or `assets/tile/` directly; those are output and get
 overwritten. `gen/video.py` does the crop, trim and encode.
 
-**CONFIDENTIALITY, for the four case studies.** These are captures of an internal
-Capital One tool and the line already drawn on this site holds: mock data only, and
-no internal product name, no internal URLs, no repository or pull-request links, and
-no employer brand hex values anywhere in frame. Crop past the nav rail if a product
-logo lives there. If a capture cannot be taken without one of those in shot, skip it
-and say so.
-
 ---
 
 # Part 1 — Project thumbnails
@@ -90,7 +83,7 @@ Six tiles on the home page. Each is a still image the page animates itself: a ta
 capture that scrolls inside a browser frame, or a single screen that pans. **No
 video here.** The CSS mechanism is smaller, sharper and keeps the drawn frame.
 
-### 1.1 UI/UX Case Studies — BLOCKED, needed first
+### 1.1 UI/UX Case Studies
 
 `kiara-vong.github.io/portfolio/` renders nothing in headless Chrome, so the current
 tile is a flat navy rectangle. This is the one capture that must come from a real
@@ -101,7 +94,7 @@ browser.
 - Landing page, top of page, nothing hovered.
 - Save as `assets/tile/_src/uxfolio.png`.
 
-### 1.2 Stardew Companion — replace
+### 1.2 Stardew Companion
 
 Currently the game's title screen, which shows nothing about the project. The page
 claims *"look up any villager's favourite gifts, click around town to learn what
