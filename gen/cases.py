@@ -128,8 +128,8 @@ build("resource-dashboard", dict(
                 "plate/dashboard-jobs-list.webp",
                 "The default view: resources with an outstanding job, sorted by "
                 "due date",
-                "What actually opens first. Not the hierarchy, not a blank table "
-                "\u2014 the subset of what you own that needs something from you today, "
+                "What actually opens first. Not the hierarchy and not a blank table, "
+                "but the subset of what you own that needs something from you today, "
                 "oldest due date on top.",
                 z=1.25, fx="62%", fy="51%")
             + media.deal(
@@ -158,7 +158,7 @@ build("resource-dashboard", dict(
              "at: current filters, current level, nothing else.",
              "This sounds like a checkbox feature and was one of the most-used things "
              "in the tool. People do not live in dashboards. They come in, narrow down "
-             "to the thing they care about, and then need it somewhere else — a "
+             "to the thing they care about, and then need it somewhere else. A "
              "ticket, a spreadsheet, a message to the team that owns it. A dashboard "
              "that cannot hand off its own answer sends everyone back to the "
              "reconciling-by-hand it was built to remove."],
@@ -228,9 +228,9 @@ build("resource-dashboard", dict(
 
         section("impact", "Impact", "From three tools to one",
                 ["The reconciliation step is gone. What used to be a cross-tool search "
-                 "is a paste-an-identifier lookup, and what used to be invisible — "
-                 "which of your resources have work outstanding — is the screen "
-                 "that opens by default.",
+                 "is a paste-an-identifier lookup. Which of your resources have work "
+                 "outstanding used to be invisible, and is now the screen that "
+                 "opens by default.",
                  "The dashboard shipped to enterprise users. Figures below describe the "
                  "shape of the work rather than usage numbers, which are not mine to "
                  "publish."],
@@ -342,8 +342,8 @@ build("events-timeline", dict(
         '    </div>\n\n',
 
         section("impact", "Impact", "The same data, now legible",
-                ["The question the feature exists to answer — how long, and is it "
-                 "fixed — went from a read-and-calculate to a glance. The table is "
+                ["The question the feature exists to answer, how long and is it fixed, "
+                 "went from a read-and-calculate to a glance. The table is "
                  "still there underneath for the cases where you need the specifics.",
                  "It shipped in beta for feedback, which was the right call for "
                  "something whose value is entirely in whether people read it the way "
@@ -459,7 +459,7 @@ build("ui-consistency", dict(
              "second because the page-level work consumes them. After that the "
              "remaining seven were independent and could go in parallel, in any order, "
              "by whoever had time.",
-             "The foundation PR contained no behavioural changes at all — visual "
+             "The foundation PR contained no behavioural changes at all. Visual "
              "consistency only. That was deliberate: the riskiest change in the "
              "sequence is the one everything depends on, so it should also be the one "
              "with the least in it."],
@@ -534,7 +534,7 @@ build("persona-homepage", dict(
                 ["The thing I keep coming back to is that customisation is not the "
                  "feature. The default is the feature, and customisation is what you "
                  "offer the people the default cannot serve. If the starting layout is "
-                 "right for most people, very few will change it — and that is the "
+                 "right for most people, very few will change it, and that is the "
                  "success case, not a sign the feature failed.",
                  "So the work is mostly research and defaults, not settings screens. "
                  "Which persona does the page open as, and how does it decide? What "

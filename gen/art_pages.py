@@ -231,6 +231,15 @@ CSS_INDEX = """
    The minmax floor is the real number here. It is the narrowest a ticket can be and
    still hold its serial, its kind and two tag chips on one line. */
 .ai-grid{display:grid;gap:34px 30px}
+/* A grid item defaults to min-width:auto, which floors its track at the item's own
+   min-content width. The perforation row is a long unbroken run of bullets with
+   white-space:nowrap, so that floor was 396px and the project tickets stayed 396
+   wide at every phone size, hanging off a 335px column and getting clipped. The
+   document never overflowed, which is why the overflow audit never saw it.
+
+   overflow:hidden on .ai-perf is not enough on its own; the item has to be allowed
+   to shrink past its content in the first place. */
+.ai-grid > *{min-width:0}
 .ai-grid.big{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))}
 .ai-grid.small{grid-template-columns:repeat(auto-fill,minmax(min(100%,228px),1fr))}
 
@@ -401,7 +410,7 @@ def build_index():
             o.append(ticket(c, n, False))
         o.append('    </div>\n')
     o.append('  </section>\n</div>\n')
-    shell("art/index.html", "Art — Kiara Vong",
+    shell("art/index.html", "Art · Kiara Vong",
           "Paintings, drawings, photography, editorial design and fluid-mechanics "
           "project work by Kiara Vong.",
           CSS_INDEX, "".join(o), back="../",
@@ -689,7 +698,7 @@ def plate(media, title, blurb, key, extra=""):
     were the last place still carrying a runtime and a description under each entry,
     and there was no reason for them to be the exception.
     """
-    tail = (' &mdash; %s' % (extra + esc(blurb))) if blurb else ""
+    tail = (' · %s' % (extra + esc(blurb))) if blurb else ""
     return ('      <figure class="cs-figure ac-plate">\n%s'
             '        <figcaption class="cs-caption"><span class="t">%s</span>%s'
             '%s</figcaption>\n'

@@ -1,3 +1,4 @@
+import io
 # -*- coding: utf-8 -*-
 """Filled media blocks: a real capture paired with one of camera.css's machines.
 
@@ -165,7 +166,7 @@ REST_PAD = 46.0
 LOOK_PAD = 20.0
 
 # Room held back for a label beside the region it names.
-CALL_W, CALL_GAP = 190.0, 26.0
+CALL_W, CALL_GAP = 166.0, 22.0
 
 # The detail camera never goes past 1:1. The plates are authored at 1440x810 and
 # the assets are 2x that, so scale 1 is where a capture is pixel-exact on a
@@ -173,23 +174,55 @@ CALL_W, CALL_GAP = 190.0, 26.0
 MAX_K = 1.0
 
 
-def _fit(pw, ph, pad):
-    """Largest scale fitting pw x ph in the slot with pad around it, and the
-    translate that centres it. Returns (x, y, k) in slot pixels."""
-    k = min((SLOT_W - pad * 2) / float(pw), (SLOT_H - pad * 2) / float(ph))
-    return ((SLOT_W - pw * k) / 2.0, (SLOT_H - ph * k) / 2.0, k)
+def _plate_size(src, given=None):
+    """The delivered size of a plate, from the index gen/plates.py writes.
+
+    The look rectangles are read off the delivered file, so they have to be in the
+    delivered file's coordinates -- and that is NOT the size of the capture that
+    went in, because plates.py resizes to a fixed delivery width. Passing the
+    source size instead puts every rect out by that ratio, which is silent, and
+    looks exactly like a badly chosen framing.
+    """
+    if given:
+        return given
+    try:
+        import json
+        idx = json.load(io.open("plate-index.json", encoding="utf-8"))
+    except Exception:
+        return (1440, 810)
+    name = src.split("/")[-1].rsplit(".", 1)[0]
+    e = idx.get(name)
+    return (e["w"], e["h"]) if e else (1440, 810)
 
 
-def _clamp(x, y, pw, ph, k):
-    """Keep the plate covering the slot, so the surface never shows through behind
-    a pushed-in camera."""
-    x = (SLOT_W - pw * k) / 2.0 if pw * k < SLOT_W else min(0.0, max(SLOT_W - pw * k, x))
+def _fit(pw, ph, pad, vw=SLOT_W):
+    """Largest scale fitting pw x ph in the view with pad around it, and the
+    translate that centres it there. Returns (x, y, k) in view pixels.
+
+    Against the VIEW rather than the card, because a figure carrying a label has a
+    narrower view -- and a resting framing measured against the card would have
+    its right-hand edge clipped off by the very window that makes room for the
+    label."""
+    k = min((vw - pad * 2) / float(pw), (SLOT_H - pad * 2) / float(ph))
+    return ((vw - pw * k) / 2.0, (SLOT_H - ph * k) / 2.0, k)
+
+
+def _clamp(x, y, pw, ph, k, vx=0.0, vw=SLOT_W):
+    """Keep the plate covering the viewport, so the surface never shows through
+    behind a pushed-in camera.
+
+    `vx`/`vw` are the part of the card the plate is allowed to occupy. It is the
+    whole card most of the time, and everything left of the label when there is
+    one -- which is what stops a callout being drawn on top of the screenshot it
+    is describing. The surface beside it is not a gap; it is the label's ground.
+    """
+    x = vx + (vw - pw * k) / 2.0 if pw * k < vw else min(vx, max(vx + vw - pw * k, x))
     y = (SLOT_H - ph * k) / 2.0 if ph * k < SLOT_H else min(0.0, max(SLOT_H - ph * k, y))
     return x, y
 
 
 def _look(rect, pw, ph, k, reserve=0.0):
-    """Translate that brings `rect` -- in the PLATE's own pixels -- into the slot
+    """Translate that brings `rect` -- in the PLATE's own pixels -- into the card
     at scale k.
 
     This is the point of the machine. Every other still here is aimed with a
@@ -199,11 +232,10 @@ def _look(rect, pw, ph, k, reserve=0.0):
     is computed from it rather than the other way round.
     """
     rx, ry, rw, rh = [float(v) for v in rect]
-    avail_w = SLOT_W - LOOK_PAD * 2 - reserve
-    cx = LOOK_PAD + avail_w / 2.0
-    x = cx - (rx + rw / 2.0) * k
+    vx, vw = LOOK_PAD, SLOT_W - reserve - LOOK_PAD * 2
+    x = vx + vw / 2.0 - (rx + rw / 2.0) * k
     y = SLOT_H / 2.0 - (ry + rh / 2.0) * k
-    return _clamp(x, y, pw, ph, k)
+    return _clamp(x, y, pw, ph, k, vx, vw)
 
 
 def _look_scale(rects, reserve=0.0):
@@ -216,7 +248,7 @@ def _look_scale(rects, reserve=0.0):
 
 
 def stage(shots, alt, caption, look=None, call=None, rest=None,
-          plate=(1440, 810), dur="13s", radius=7, root="../../"):
+          plate=None, dur="13s", radius=7, root="../../"):
     """A capture as an object on a surface, with a camera over it.
 
     shots  one src, or several. Several stack IN REGISTER at the plate's own size
@@ -239,19 +271,22 @@ def stage(shots, alt, caption, look=None, call=None, rest=None,
         shots = [shots]
     if look and isinstance(look[0], (int, float)):
         look = [look]
-    pw, ph = plate
+    pw, ph = _plate_size(shots[0], plate)
     n = max(len(shots), 1)
     rest_i = n - 1 if rest is None and n > 1 else (rest or 0)
 
-    x0, y0, k0 = _fit(pw, ph, REST_PAD)
+    reserve = (CALL_W + CALL_GAP + LOOK_PAD) if (call and look) else 0.0
+    view_w = SLOT_W - reserve
+    x0, y0, k0 = _fit(pw, ph, REST_PAD, view_w)
     cls = "cs-media cam cam-stage"
     var = ('--pw:%dpx;--ph:%dpx;--plate-r:%dpx;--dur:%s;--n:%d;'
            '--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f'
            % (pw, ph, radius, dur, n, x0, y0, k0))
+    if reserve:
+        var += ';--vx:0px;--vw:%.1fpx' % view_w
 
     call_html = ""
     if look:
-        reserve = (CALL_W + CALL_GAP) if call else 0.0
         k1 = _look_scale(look, reserve)
         cls += " moves"
         for i, rect in enumerate(look[:2]):
@@ -264,13 +299,11 @@ def stage(shots, alt, caption, look=None, call=None, rest=None,
             label, desc = call
             rx, ry, rw, rh = [float(v) for v in look[0]]
             ax, ay = _look(look[0], pw, ph, k1, reserve)
-            right = ax + (rx + rw) * k1
             mid = ay + (ry + rh / 2.0) * k1
-            side, cx = "", right + CALL_GAP
-            if cx + CALL_W > SLOT_W - LOOK_PAD:
-                cx, side = ax + rx * k1 - CALL_GAP - CALL_W, " right"
-            cx = max(LOOK_PAD, min(cx, SLOT_W - LOOK_PAD - CALL_W))
-            cy = max(LOOK_PAD, min(mid - 26.0, SLOT_H - LOOK_PAD - 64.0))
+            # The column the view gave up is where it goes; nothing to solve.
+            side, cx = "", view_w + CALL_GAP
+            cx = min(cx, SLOT_W - LOOK_PAD - CALL_W)
+            cy = max(LOOK_PAD, min(mid - 26.0, SLOT_H - LOOK_PAD - 74.0))
             call_html = (
                 '          <div class="call%s" style="--cx:%.1fpx;--cy:%.1fpx;'
                 '--cw:%dpx">\n'
@@ -281,14 +314,15 @@ def stage(shots, alt, caption, look=None, call=None, rest=None,
                 % (side, cx, cy, int(CALL_W), esc(label), esc(desc)))
 
     o = ['        <div class="%s" style="%s">\n' % (cls, var),
-         '          <div class="plate">\n']
+         '          <div class="view">\n',
+         '            <div class="plate">\n']
     for i, src in enumerate(shots):
-        o.append('            <img class="%s" style="--i:%d" src="%sassets/%s" '
+        o.append('              <img class="%s" style="--i:%d" src="%sassets/%s" '
                  'alt="%s"%s loading="lazy">\n'
                  % ("rest" if i == rest_i else "", i, root, src,
                     esc(alt) if i == rest_i else "",
                     "" if i == rest_i else ' aria-hidden="true"'))
-    o.append('          </div>\n')
+    o.append('            </div>\n          </div>\n')
     o.append(call_html)
     o.append('        </div>\n')
     return _fig("".join(o), caption)

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Art — Kiara Vong</title>
+<title>Art · Kiara Vong</title>
 <meta name="description" content="Paintings, drawings, photography, editorial design and fluid-mechanics project work by Kiara Vong.">
 <link rel="icon" href="../assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/ui/favicon.svg">
@@ -124,6 +124,15 @@ body.ap section{position:relative;width:auto}
    The minmax floor is the real number here. It is the narrowest a ticket can be and
    still hold its serial, its kind and two tag chips on one line. */
 .ai-grid{display:grid;gap:34px 30px}
+/* A grid item defaults to min-width:auto, which floors its track at the item's own
+   min-content width. The perforation row is a long unbroken run of bullets with
+   white-space:nowrap, so that floor was 396px and the project tickets stayed 396
+   wide at every phone size, hanging off a 335px column and getting clipped. The
+   document never overflowed, which is why the overflow audit never saw it.
+
+   overflow:hidden on .ai-perf is not enough on its own; the item has to be allowed
+   to shrink past its content in the first place. */
+.ai-grid > *{min-width:0}
 .ai-grid.big{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))}
 .ai-grid.small{grid-template-columns:repeat(auto-fill,minmax(min(100%,228px),1fr))}
 

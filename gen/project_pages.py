@@ -177,14 +177,29 @@ PROJECTS = [
                 "actually live there.")],
               media.clip("dorms-browse-filter",
                          "Filtering the dorm list, then searching it by name",
-                         "Six filter dimensions over the whole campus with live search on top. The narrowing is the feature."),
+                         "The narrowing is the feature: six dimensions and a live "
+                         "search, over the whole campus."),
+              media.stage("plate/dorms-list.webp",
+                          "The dorm index: a filter rail of six dimensions beside a "
+                          "grid of all thirty residence halls",
+                          "Thirty halls, and every one of them reachable by the same "
+                          "six switches. The clip above narrows it; this is what "
+                          "there is to narrow.",
+                          look=(55, 284, 312, 660),
+                          call=("six dimensions",
+                                "Room type, location, bathroom, kitchen, year, and "
+                                "a few switches for the rest.")),
               media.stage("plate/dorms-reviews.webp",
-                          "A dorm's review list with star ratings",
-                          "Named in the intro of every version of this project and, until now, shown nowhere. Author names are blurred; these are real students.",
-                          plate=(2200, 662), look=(120, 90, 900, 460),
-                          call=("5 stars", "The rating and the words are one "
-                                "submission; the site lays them out at opposite "
-                                "ends of the card."))),
+                          "The reviews section of a dorm page: the rating summary, "
+                          "the form for writing one, and a posted review",
+                          "Named in the intro of every version of this project and, "
+                          "until now, shown nowhere. A rating, a box asking what it "
+                          "is actually like, and the one review that came back.",
+                          # The whole section at rest, then the review itself. No
+                          # label on this one: the card runs the width of the page,
+                          # so reserving a column for one would shrink the words
+                          # below reading size, and the words are the point.
+                          plate=(2400, 1480), look=(380, 1120, 1640, 320))),
              ("how", "How it works", "Why there is a backend at all",
               ["The frontend never talks to the database. Every read and write goes "
                "through a Java server, which is the only thing holding admin "
@@ -252,9 +267,16 @@ PROJECTS = [
                "the redirect trick for deep links, because there is no server to "
                "rewrite a URL. That is a design decision that arrived from the "
                "infrastructure, and I would now go looking for those earlier."],
-              media.clip("dorms-quiz",
-                         "Answering the quiz and landing on a ranked shortlist",
-                         "Thirty dorms in, a shortlist worth touring out, over a container on a free tier that sleeps between visits.")),
+              media.stage(["plate/dorms-quiz-asked.webp",
+                           "plate/dorms-quiz-answered.webp"],
+                          "The recommendation quiz with its answers chosen, then "
+                          "the same page showing three dorms ranked one to three",
+                          "Thirty dorms in, a shortlist worth touring out, over a "
+                          "container on a free tier that sleeps between visits.",
+                          # Both shots are the same page at the same width, so they
+                          # sit in register and the camera holds one framing across
+                          # the change: preferences in, ranked list out.
+                          look=(275, 385, 1650, 513))),
          ]),
 
     dict(slug="p-stardew", title="Stardew Companion", kicker="Personal",

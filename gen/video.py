@@ -73,11 +73,22 @@ def main():
         cmd = [ff, "-y", "-i", src,
                "-vf", HLG if hlg else SDR,
                "-c:v", "libx264", "-profile:v", "high", "-preset", "medium",
-               "-crf", "26",
+               # 29, not 26. These four are the heaviest thing on the site by a
+               # distance: sandsketch is 63MB and fm-torah 53MB, together more than
+               # half the repository, and not because they were encoded badly. They
+               # are seven and four minutes long, at 720p and about 1.1Mbps, which is
+               # already lean. Length is the cost.
+               #
+               # Measured rather than guessed, on a 30-second slice of sandsketch:
+               # crf 26 gives 32MB, 29 gives 23MB, 32 gives 15MB. At 29 a 1:1 crop of
+               # a detail frame is indistinguishable from the original, and 32 starts
+               # to soften the sand lines, which are the subject. So 29, for a 63MB
+               # film at 23MB.
+               "-crf", "29",
                # A cap as well as a quality target. CRF alone lets a busy shot spike
                # to a bitrate that stalls on a normal connection, and every one of
                # these has motion in every frame.
-               "-maxrate", "2600k", "-bufsize", "5200k",
+               "-maxrate", "1400k", "-bufsize", "2800k",
                "-g", "60",
                "-c:a", "aac", "-b:a", "128k", "-ac", "2",
                # Metadata at the FRONT, so playback can start before the file has

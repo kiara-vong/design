@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>UI Consistency — Kiara Vong</title>
+<title>UI Consistency · Kiara Vong</title>
 <meta name="description" content="The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three ways to say “no data”. I au">
 <meta name="theme-color" content="#649F25">
 <link rel="icon" href="../../assets/ui/favicon.svg" type="image/svg+xml">
@@ -130,11 +130,13 @@
         <p>The cost was not really aesthetic. It was that every change had to be made in every copy, and the last copy was always the one somebody forgot. A shared layer is worth building at the point where keeping things in sync by hand costs more than the abstraction does, and we were well past it.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:832px;--plate-r:7px;--dur:13s;--n:1;--x0:46.0px;--y0:61.8px;--k0:0.3214;--x1:-28.9px;--y1:0.0px;--k1:0.5430">
-          <div class="plate">
-            <img class="rest" style="--i:0" src="../../assets/plate/dashboard-button-contact-sheet.webp" alt="Every live button variant side by side on a neutral ground" loading="lazy">
+        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:832px;--plate-r:7px;--dur:13s;--n:1;--x0:46.0px;--y0:101.1px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-29.6px;--y1:0.0px;--k1:0.5510">
+          <div class="view">
+            <div class="plate">
+              <img class="rest" style="--i:0" src="../../assets/plate/dashboard-button-contact-sheet.webp" alt="Every live button variant side by side on a neutral ground" loading="lazy">
+            </div>
           </div>
-          <div class="call" style="--cx:589.0px;--cy:131.5px;--cw:190px">
+          <div class="call" style="--cx:613.0px;--cy:133.8px;--cw:166px">
             <div class="call-row"><span class="call-line"></span><span class="call-note">two of seven</span></div>
             <p class="call-desc">Same control, different radius, different weight, different idea of what a button is.</p>
           </div>
@@ -182,7 +184,7 @@
       <div class="cs-body">
         <p>208 files across 9 commits is not a reviewable change. It is a change that gets approved without being read, which is the same as not being reviewed, on a diff touching every page in the app.</p>
         <p>So it went out as ten pull requests of fifteen files or fewer, ordered so each could merge on its own. The theme provider had to land first because everything else assumes it. The shared table and filter components went second because the page-level work consumes them. After that the remaining seven were independent and could go in parallel, in any order, by whoever had time.</p>
-        <p>The foundation PR contained no behavioural changes at all — visual consistency only. That was deliberate: the riskiest change in the sequence is the one everything depends on, so it should also be the one with the least in it.</p>
+        <p>The foundation PR contained no behavioural changes at all. Visual consistency only. That was deliberate: the riskiest change in the sequence is the one everything depends on, so it should also be the one with the least in it.</p>
       </div>
       <figure class="cs-figure">
         <div class="cs-media cam cam-strip" style="--travel:83.97%;--dur:17s">

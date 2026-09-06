@@ -107,7 +107,7 @@ PAGE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{title} — Kiara Vong</title>
+<title>{title} · Kiara Vong</title>
 <meta name="description" content="{intro_short}">
 <meta name="theme-color" content="#649F25">
 <link rel="icon" href="{root}assets/ui/favicon.svg" type="image/svg+xml">

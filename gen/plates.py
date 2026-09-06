@@ -58,6 +58,9 @@ SHARP = {
     "dashboard-button-contact-sheet",
     "dorms-reviews",
     "stardew-arcade-row",
+    "dorms-quiz-asked",
+    "dorms-quiz-answered",
+    "dorms-list",
 }
 
 # Captures that are the home page's thumbnails, prepared by gen/tiles.py from the

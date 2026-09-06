@@ -350,6 +350,23 @@
    sits on the stage rather than on the image so it SCALES: about 1px at the
    resting camera, about 3px pushed all the way in, which is how a real window
    edge behaves as you move toward it. */
+/* The window the plate moves inside. It is the whole card most of the time, and
+   NARROWER when the figure carries a label -- because positioning the plate away
+   from the label is not enough on its own: a plate wider than the card is clipped
+   by the CARD, so it still runs under the label and the callout ends up written
+   across the screenshot it is describing. Clipping it here instead leaves the
+   label a column of bare surface to sit on, which is the only arrangement where
+   a leader line can point AT something rather than across it. */
+.cam-stage .view {
+   position: absolute;
+   left: var(--vx, 0px);
+   top: 0;
+   width: var(--vw, 100%);
+   height: 100%;
+   overflow: hidden;
+   border-radius: 12px
+}
+
 .cam-stage .plate {
    position: absolute;
    left: 0;

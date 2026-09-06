@@ -95,10 +95,28 @@
   "travel": 0.0,
   "w": 2200
  },
- "dorms-reviews": {
-  "h": 662,
-  "kb": 15,
+ "dorms-list": {
+  "h": 1925,
+  "kb": 330,
+  "travel": 44.07,
+  "w": 2200
+ },
+ "dorms-quiz-answered": {
+  "h": 1008,
+  "kb": 120,
   "travel": 0.0,
+  "w": 2200
+ },
+ "dorms-quiz-asked": {
+  "h": 1008,
+  "kb": 48,
+  "travel": 0.0,
+  "w": 2200
+ },
+ "dorms-reviews": {
+  "h": 1357,
+  "kb": 41,
+  "travel": 20.66,
   "w": 2200
  },
  "dorms-signin-gate": {
