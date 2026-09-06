@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UI Consistency — Kiara Vong</title>
+<meta name="description" content="The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three ways to say “no data”. I au">
+<meta name="theme-color" content="#649F25">
+<link rel="icon" href="../assets/ui/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/ui/favicon.svg">
+<!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
+<style>html{background:#FDFBEF}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../site.css">
+<script src="../site-motion.js"></script>
+<link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
+<style>
+/* The reference build's hero hangs 115x250 phone renders in .hero-float. These
+   studies are web work, so the hero is one wide plate at the container's own size
+   (799x307, from .cs-hero) instead. It stays INSIDE .hero-stage / .hero-float
+   because those are what site-motion.js reveals and parallaxes: .js sets
+   .hero-float to opacity 0 and only the entrance animation puts it back, so an
+   image outside that wrapper never becomes visible at all. Same reason .cs-flat
+   sits inside .cs-media rather than replacing it.
+
+   Declared before mobile.css so the responsive sheet still has the last word on
+   a phone, which is the ordering rule the whole site follows. */
+.cs-hero .hero-float .cs-heroimg{position:absolute;inset:0;width:100%;height:100%;
+  display:block;object-fit:cover}
+.cs-media .cs-flat{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover}
+/* The pill, fixed over the page the way it is on About. A case study is a long
+   scroll and the section list on the left only moves within this page; the pill is
+   how you get off it.
+
+   --nav-k is the home page's canvas scale, published by site-motion.js, so the
+   pill is the same size here as it is on the page you arrived from. Scaled about
+   its bottom edge so the 26px gap survives. */
+#cs-navwrap{position:fixed;left:0;bottom:26px;width:100%;z-index:40;
+  display:flex;justify-content:center;pointer-events:none}
+#cs-navwrap .nav{position:static;left:auto;top:auto;pointer-events:auto;
+  transform:scale(var(--nav-k,1));transform-origin:bottom center}
+
+</style>
+<link rel="stylesheet" href="../mobile.css">
+</head>
+<body>
+  <a class="cs-back" href="../index.html" aria-label="Back to home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+<nav class="cs-nav">
+    <a href="#overview">Overview</a>
+    <a href="#context">Context</a>
+    <a href="#decisions">Key decisions</a>
+    <a class="sub" href="#audit">Counting what was actually there</a>
+    <a class="sub" href="#theme">One theme, no inline styles</a>
+    <a class="sub" href="#prs">Ten pull requests, in dependency order</a>
+    <a href="#impact">What changed</a>
+  </nav>
+<div id="cs-navwrap" aria-hidden="false">
+  <nav class="nav" aria-label="Primary">
+    <div class="nav-inner">
+      <div class="nav-home">
+        <a href="../index.html" aria-label="Home" data-tip="Home">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 28V17.3333C20 16.9797 19.8595 16.6406 19.6095 16.3905C19.3594 16.1405 19.0203 16 18.6667 16H13.3333C12.9797 16 12.6406 16.1405 12.3905 16.3905C12.1405 16.6406 12 16.9797 12 17.3333V28"/><path d="M4 13.3333C3.99991 12.9454 4.08445 12.5622 4.24772 12.2103C4.41099 11.8584 4.64906 11.5464 4.94533 11.296L14.2787 3.296C14.76 2.88921 15.3698 2.66603 16 2.66603C16.6302 2.66603 17.24 2.88921 17.7213 3.296L27.0547 11.296C27.3509 11.5464 27.589 11.8584 27.7523 12.2103C27.9156 12.5622 28.0001 12.9454 28 13.3333V25.3333C28 26.0406 27.719 26.7189 27.219 27.2189C26.7189 27.719 26.0406 28 25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.2189C4.28095 26.7189 4 26.0406 4 25.3333V13.3333Z"/></svg>
+        </a>
+        <span class="label">Home</span>
+      </div>
+      <div class="nav-sep"></div>
+      <div class="nav-icons">
+        <a href="../index.html#projects" aria-label="Projects" data-tip="Projects">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.6667 2.33333V11.6667L15.1667 8.16667L18.6667 11.6667V2.33333"/><path d="M4.66667 22.75V5.25C4.66667 4.47645 4.97396 3.73459 5.52094 3.18761C6.06792 2.64062 6.80979 2.33333 7.58333 2.33333H22.1667C22.4761 2.33333 22.7728 2.45625 22.9916 2.67504C23.2104 2.89383 23.3333 3.19058 23.3333 3.5V24.5C23.3333 24.8094 23.2104 25.1062 22.9916 25.325C22.7728 25.5438 22.4761 25.6667 22.1667 25.6667H7.58333C6.80979 25.6667 6.06792 25.3594 5.52094 24.8124C4.97396 24.2654 4.66667 23.5235 4.66667 22.75ZM4.66667 22.75C4.66667 21.9765 4.97396 21.2346 5.52094 20.6876C6.06792 20.1406 6.80979 19.8333 7.58333 19.8333H23.3333"/></svg>
+        </a>
+        <a href="../art/" aria-label="Art" data-tip="Art">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.66667 4.66667C4.66667 3.5621 5.5621 2.66667 6.66667 2.66667H21.3333C22.4379 2.66667 23.3333 3.5621 23.3333 4.66667V23.3333C23.3333 24.4379 22.4379 25.3333 21.3333 25.3333H6.66667C5.5621 25.3333 4.66667 24.4379 4.66667 23.3333V4.66667Z"/><path d="M10.5 11.0833C11.4665 11.0833 12.25 10.2998 12.25 9.33333C12.25 8.36683 11.4665 7.58333 10.5 7.58333C9.5335 7.58333 8.75 8.36683 8.75 9.33333C8.75 10.2998 9.5335 11.0833 10.5 11.0833Z"/><path d="M4.66667 19.8333L10.2083 14.2917C10.9894 13.5106 12.2556 13.5106 13.0367 14.2917L18.6667 19.9217"/><path d="M16.9167 18.1667L18.7083 16.375C19.4894 15.5939 20.7556 15.5939 21.5367 16.375L23.3333 18.1717"/></svg>
+        </a>
+        <a href="../about.html" aria-label="About" data-tip="About">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25.6667C20.4433 25.6667 25.6667 20.4433 25.6667 14C25.6667 7.55668 20.4433 2.33333 14 2.33333C7.55668 2.33333 2.33333 7.55668 2.33333 14C2.33333 20.4433 7.55668 25.6667 14 25.6667Z"/><path d="M14 15.1667C15.933 15.1667 17.5 13.5997 17.5 11.6667C17.5 9.73367 15.933 8.16667 14 8.16667C12.067 8.16667 10.5 9.73367 10.5 11.6667C10.5 13.5997 12.067 15.1667 14 15.1667Z"/><path d="M8.16667 24.1057V22.1667C8.16667 21.5478 8.4125 20.9543 8.85008 20.5167C9.28767 20.0792 9.88116 19.8333 10.5 19.8333H17.5C18.1188 19.8333 18.7123 20.0792 19.1499 20.5167C19.5875 20.9543 19.8333 21.5478 19.8333 22.1667V24.1057"/></svg>
+        </a>
+        <a href="#" aria-label="Email" data-tip="Copy email" data-mail>
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M29.3333 9.33333L17.3453 16.9693C16.9385 17.2056 16.4764 17.3301 16.006 17.3301C15.5356 17.3301 15.0735 17.2056 14.6667 16.9693L2.66667 9.33333"/><path d="M26.6667 5.33333H5.33333C3.86057 5.33333 2.66667 6.52724 2.66667 8V24C2.66667 25.4728 3.86057 26.6667 5.33333 26.6667H26.6667C28.1394 26.6667 29.3333 25.4728 29.3333 24V8C29.3333 6.52724 28.1394 5.33333 26.6667 5.33333Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div id="cs-stage">
+ <div class="cs-page">
+
+  <main class="cs-main">
+
+    <!-- Overview -->
+    <section id="overview" class="cs-overview">
+      <div class="cs-hero">
+        <div class="hero-stage">
+          <div class="hero-float">
+            <img class="cs-heroimg" src="../assets/case/cs-ui-drift.svg" alt="Nine slightly different buttons on the left, the same nine identical on the right">
+          </div>
+        </div>
+      </div>
+      <div class="cs-head">
+        <div class="cs-titleblock">
+          <p class="cs-kicker">Capital One</p>
+          <h1 class="cs-title">UI Consistency</h1>
+        </div>
+        <div class="cs-headgroup">
+        <p class="cs-intro">The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three ways to say “no data”. I audited it, designed the shared layer underneath, and cut the 208-file change into ten pull requests a human could actually review.</p>
+        <div class="cs-meta">
+          <div class="col"><span class="lbl">Role</span><span class="val">Design engineer,<br>system owner</span></div>
+          <div class="col"><span class="lbl">Stack</span><span class="val">React, TypeScript,<br>MUI theming</span></div>
+          <div class="col"><span class="lbl">Scope</span><span class="val">208 files,<br>9 commits, 10 PRs</span></div>
+          <div class="col"><span class="lbl">Status</span><span class="val">Shipped</span></div>
+          <div class="col"><span class="lbl">Rebuilt</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/resource-dashboard/#/showcase" target="_blank" rel="noopener">Open it</a></span></div>
+          <div class="col"><span class="lbl">Note</span><span class="val">If you would like the detail, please <a class="touch" href="../index.html">get in touch</a></span></div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="context" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Context</span></div>
+        <h2 class="cs-h2">Nobody set out to build four table layouts</h2>
+      </div>
+      <div class="cs-body">
+        <p>Each one was a reasonable local decision. A team needed a table, the existing one was close but not right, and copying it was ten minutes against a week of negotiation. Enough reasonable local decisions later, nobody could tell you what the product's table looked like, because the honest answer was that it depended on the page.</p>
+        <p>The cost was not really aesthetic. It was that every change had to be made in every copy, and the last copy was always the one somebody forgot. A shared layer is worth building at the point where keeping things in sync by hand costs more than the abstraction does, and we were well past it.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.5;--fx:28%;--fy:45%;--dur:13s">
+          <img src="../assets/plate/dashboard-button-contact-sheet.webp" alt="Every live button variant side by side on a neutral ground" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">One component, as many versions of it as the app actually had. Nothing here is tidied: the spacing and the radii are what shipped, and the mess is the argument.</figcaption>
+      </figure>
+    </section>
+
+    <div id="decisions" class="cs-group">
+
+      <div class="cs-sub" id="audit">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Key decisions</span></div>
+        <h2 class="cs-h2">Counting what was actually there</h2>
+      </div>
+      <div class="cs-body">
+        <p>The instinct is to design the target state and then go find everything that does not match it. I did the opposite: inventoried every variant already shipping, with no judgement attached, before proposing anything.</p>
+        <p>That order mattered more than it sounds. Two of the variants I would have deleted on sight turned out to be load-bearing, solving a real constraint the canonical component could not. They became part of that component's API rather than exceptions to it. Designing first and reconciling later produces a system that is correct in isolation and wrong in the product, which is the usual way these fail.</p>
+      </div>
+      </div>
+
+      <div class="cs-sub" id="theme">
+        <h2 class="cs-h2">One theme, no inline styles</h2>
+      <div class="cs-body">
+        <p>The foundation is a single theme provider wrapping the app, with tokens for colour, typography, spacing and radius. Components inherit from it instead of carrying their own inline values.</p>
+        <p>Underneath that, the shared pieces: one toolbar with search, filter chips and actions in a single row; one footer with the count on the left and export on the right; real empty and not-found states instead of the inline “no data” text that had been written separately on every page. Tables lost twenty pixels of row height, gained proper header treatment and zebra striping, and dropped to a subtler border.</p>
+        <p>The filter chips are the detail I am most pleased with. They show at full width rather than truncating, overflow collapses into a +N chip, the dropdown stays open while you are still choosing, and typing hides the chips so you get a clean search field. Four small decisions, all of them about not interrupting someone mid-thought.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.35;--fx:50%;--fy:55%;--dur:13s">
+          <img src="../assets/plate/showcase-tables-before-after.webp" alt="One table before and after the shared layer, at identical width" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Same data, same window, same scroll position. The row height is the difference anyone can see without being told what to look for.</figcaption>
+      </figure>
+      </div>
+
+      <div class="cs-sub" id="prs">
+        <h2 class="cs-h2">Ten pull requests, in dependency order</h2>
+      <div class="cs-body">
+        <p>208 files across 9 commits is not a reviewable change. It is a change that gets approved without being read, which is the same as not being reviewed, on a diff touching every page in the app.</p>
+        <p>So it went out as ten pull requests of fifteen files or fewer, ordered so each could merge on its own. The theme provider had to land first because everything else assumes it. The shared table and filter components went second because the page-level work consumes them. After that the remaining seven were independent and could go in parallel, in any order, by whoever had time.</p>
+        <p>The foundation PR contained no behavioural changes at all — visual consistency only. That was deliberate: the riskiest change in the sequence is the one everything depends on, so it should also be the one with the least in it.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:83.97%;--dur:17s">
+          <img src="../assets/plate/showcase-full-height.webp" alt="The full refactor showcase: eight sections, each with its problem and its resolution" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Eight of these, and each one carries the line that justified it. The argument was written down before the pull request was opened.</figcaption>
+      </figure>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">PR 1</span><span class="d">The theme provider and global defaults. No behavioural change. Everything downstream assumes it.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">PR 2</span><span class="d">Shared table, toolbar and filter components, consumed by every page-level PR that follows.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">PRs 3–10</span><span class="d">Page-level adoption. Independent of each other, reviewable in parallel, mergeable in any order.</span></div>
+      </div>
+      </div>
+
+    </div>
+
+    <section id="impact" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Impact</span></div>
+        <h2 class="cs-h2">One product, one language</h2>
+      </div>
+      <div class="cs-body">
+        <p>Every page now renders from one theme, and a change to a shared component is one edit rather than a search-and-replace across the app.</p>
+        <p>The result I care about most is quieter than the file count: design review stopped spending its first ten minutes establishing which version of a component we were looking at. The system's real output is the argument it makes unnecessary.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="stats">
+          <p class="stats-eyebrow"><span></span>208 files · 9 commits · 10 pull requests</p>
+          <div class="stats-row">
+            <div class="stat"><span class="stat-n" data-to="208">0</span><span class="stat-l">files changed</span><span class="stat-d">across the whole application</span></div>
+            <div class="stat"><span class="stat-n" data-to="10">0</span><span class="stat-l">reviewable pull requests</span><span class="stat-d">15 files or fewer, dependency-ordered</span></div>
+            <div class="stat"><span class="stat-n" data-to="1">0</span><span class="stat-l">theme provider</span><span class="stat-d">replacing inline styles throughout</span></div>
+          </div>
+          <p class="stats-note">Riskiest PR&nbsp; <b>The one with no behaviour in it</b></p>
+        </div>
+      </figure>
+    </section>
+
+  </main>
+
+  <div id="site-footer" data-flowers="foot-work.png"></div>
+
+ </div>
+</div>
+<div id="bg-footer"></div>
+
+<script src="../site-footer.js"></script>
+<script src="../site-nav.js"></script>
+<script src="../case-study.js"></script>
+<script src="../mobile.js"></script>
+</body>
+</html>

@@ -259,4 +259,4 @@ def note(root=""):
             'href="%sindex.html">get in touch</a>' % root)
 
 
-NOTE = note("../../")
+NOTE = note("../")

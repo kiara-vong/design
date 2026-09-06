@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stardew Companion — Kiara Vong</title>
+<meta name="description" content="A single-page fan guide: look up any of the 34 villagers' favourite gifts, click around town to learn what each building is for, and play one of four ">
+<meta name="theme-color" content="#649F25">
+<link rel="icon" href="../assets/ui/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/ui/favicon.svg">
+<!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
+<style>html{background:#FDFBEF}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../site.css">
+<script src="../site-motion.js"></script>
+<link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
+<style>
+/* The reference build's hero hangs 115x250 phone renders in .hero-float. These
+   studies are web work, so the hero is one wide plate at the container's own size
+   (799x307, from .cs-hero) instead. It stays INSIDE .hero-stage / .hero-float
+   because those are what site-motion.js reveals and parallaxes: .js sets
+   .hero-float to opacity 0 and only the entrance animation puts it back, so an
+   image outside that wrapper never becomes visible at all. Same reason .cs-flat
+   sits inside .cs-media rather than replacing it.
+
+   Declared before mobile.css so the responsive sheet still has the last word on
+   a phone, which is the ordering rule the whole site follows. */
+.cs-hero .hero-float .cs-heroimg{position:absolute;inset:0;width:100%;height:100%;
+  display:block;object-fit:cover}
+.cs-media .cs-flat{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover}
+/* The pill, fixed over the page the way it is on About. A case study is a long
+   scroll and the section list on the left only moves within this page; the pill is
+   how you get off it.
+
+   --nav-k is the home page's canvas scale, published by site-motion.js, so the
+   pill is the same size here as it is on the page you arrived from. Scaled about
+   its bottom edge so the 26px gap survives. */
+#cs-navwrap{position:fixed;left:0;bottom:26px;width:100%;z-index:40;
+  display:flex;justify-content:center;pointer-events:none}
+#cs-navwrap .nav{position:static;left:auto;top:auto;pointer-events:auto;
+  transform:scale(var(--nav-k,1));transform-origin:bottom center}
+
+</style>
+<link rel="stylesheet" href="../mobile.css">
+</head>
+<body>
+  <a class="cs-back" href="../index.html" aria-label="Back to home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+<nav class="cs-nav">
+    <a href="#overview">Overview</a>
+    <a href="#context">Context</a>
+    <a href="#how">How it works</a>
+    <a class="sub" href="#data">Facts and assets</a>
+    <a href="#arcade">The arcade</a>
+    <a class="sub" href="#rhythm">The rhythm game</a>
+    <a href="#taught">What it taught me</a>
+  </nav>
+<div id="cs-navwrap" aria-hidden="false">
+  <nav class="nav" aria-label="Primary">
+    <div class="nav-inner">
+      <div class="nav-home">
+        <a href="../index.html" aria-label="Home" data-tip="Home">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 28V17.3333C20 16.9797 19.8595 16.6406 19.6095 16.3905C19.3594 16.1405 19.0203 16 18.6667 16H13.3333C12.9797 16 12.6406 16.1405 12.3905 16.3905C12.1405 16.6406 12 16.9797 12 17.3333V28"/><path d="M4 13.3333C3.99991 12.9454 4.08445 12.5622 4.24772 12.2103C4.41099 11.8584 4.64906 11.5464 4.94533 11.296L14.2787 3.296C14.76 2.88921 15.3698 2.66603 16 2.66603C16.6302 2.66603 17.24 2.88921 17.7213 3.296L27.0547 11.296C27.3509 11.5464 27.589 11.8584 27.7523 12.2103C27.9156 12.5622 28.0001 12.9454 28 13.3333V25.3333C28 26.0406 27.719 26.7189 27.219 27.2189C26.7189 27.719 26.0406 28 25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.2189C4.28095 26.7189 4 26.0406 4 25.3333V13.3333Z"/></svg>
+        </a>
+        <span class="label">Home</span>
+      </div>
+      <div class="nav-sep"></div>
+      <div class="nav-icons">
+        <a href="../index.html#projects" aria-label="Projects" data-tip="Projects">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.6667 2.33333V11.6667L15.1667 8.16667L18.6667 11.6667V2.33333"/><path d="M4.66667 22.75V5.25C4.66667 4.47645 4.97396 3.73459 5.52094 3.18761C6.06792 2.64062 6.80979 2.33333 7.58333 2.33333H22.1667C22.4761 2.33333 22.7728 2.45625 22.9916 2.67504C23.2104 2.89383 23.3333 3.19058 23.3333 3.5V24.5C23.3333 24.8094 23.2104 25.1062 22.9916 25.325C22.7728 25.5438 22.4761 25.6667 22.1667 25.6667H7.58333C6.80979 25.6667 6.06792 25.3594 5.52094 24.8124C4.97396 24.2654 4.66667 23.5235 4.66667 22.75ZM4.66667 22.75C4.66667 21.9765 4.97396 21.2346 5.52094 20.6876C6.06792 20.1406 6.80979 19.8333 7.58333 19.8333H23.3333"/></svg>
+        </a>
+        <a href="../art/" aria-label="Art" data-tip="Art">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.66667 4.66667C4.66667 3.5621 5.5621 2.66667 6.66667 2.66667H21.3333C22.4379 2.66667 23.3333 3.5621 23.3333 4.66667V23.3333C23.3333 24.4379 22.4379 25.3333 21.3333 25.3333H6.66667C5.5621 25.3333 4.66667 24.4379 4.66667 23.3333V4.66667Z"/><path d="M10.5 11.0833C11.4665 11.0833 12.25 10.2998 12.25 9.33333C12.25 8.36683 11.4665 7.58333 10.5 7.58333C9.5335 7.58333 8.75 8.36683 8.75 9.33333C8.75 10.2998 9.5335 11.0833 10.5 11.0833Z"/><path d="M4.66667 19.8333L10.2083 14.2917C10.9894 13.5106 12.2556 13.5106 13.0367 14.2917L18.6667 19.9217"/><path d="M16.9167 18.1667L18.7083 16.375C19.4894 15.5939 20.7556 15.5939 21.5367 16.375L23.3333 18.1717"/></svg>
+        </a>
+        <a href="../about.html" aria-label="About" data-tip="About">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25.6667C20.4433 25.6667 25.6667 20.4433 25.6667 14C25.6667 7.55668 20.4433 2.33333 14 2.33333C7.55668 2.33333 2.33333 7.55668 2.33333 14C2.33333 20.4433 7.55668 25.6667 14 25.6667Z"/><path d="M14 15.1667C15.933 15.1667 17.5 13.5997 17.5 11.6667C17.5 9.73367 15.933 8.16667 14 8.16667C12.067 8.16667 10.5 9.73367 10.5 11.6667C10.5 13.5997 12.067 15.1667 14 15.1667Z"/><path d="M8.16667 24.1057V22.1667C8.16667 21.5478 8.4125 20.9543 8.85008 20.5167C9.28767 20.0792 9.88116 19.8333 10.5 19.8333H17.5C18.1188 19.8333 18.7123 20.0792 19.1499 20.5167C19.5875 20.9543 19.8333 21.5478 19.8333 22.1667V24.1057"/></svg>
+        </a>
+        <a href="#" aria-label="Email" data-tip="Copy email" data-mail>
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M29.3333 9.33333L17.3453 16.9693C16.9385 17.2056 16.4764 17.3301 16.006 17.3301C15.5356 17.3301 15.0735 17.2056 14.6667 16.9693L2.66667 9.33333"/><path d="M26.6667 5.33333H5.33333C3.86057 5.33333 2.66667 6.52724 2.66667 8V24C2.66667 25.4728 3.86057 26.6667 5.33333 26.6667H26.6667C28.1394 26.6667 29.3333 25.4728 29.3333 24V8C29.3333 6.52724 28.1394 5.33333 26.6667 5.33333Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div id="cs-stage">
+ <div class="cs-page">
+
+  <main class="cs-main">
+
+    <!-- Overview -->
+    <section id="overview" class="cs-overview">
+      <div class="cs-hero">
+        <div class="hero-stage">
+          <div class="hero-float">
+            <img class="cs-heroimg" src="../assets/tile/stardew.jpg" alt="A pixel-art farm title screen with mountains, a barn and a night sky">
+          </div>
+        </div>
+      </div>
+      <div class="cs-head">
+        <div class="cs-titleblock">
+          <p class="cs-kicker">Personal</p>
+          <h1 class="cs-title">Stardew Companion</h1>
+        </div>
+        <div class="cs-headgroup">
+        <p class="cs-intro">A single-page fan guide: look up any of the 34 villagers' favourite gifts, click around town to learn what each building is for, and play one of four arcade cabinets built into the page. No framework and no build step, styled closely enough that it feels like it belongs in the game.</p>
+        <div class="cs-meta">
+          <div class="col"><span class="lbl">Role</span><span class="val">Everything</span></div>
+          <div class="col"><span class="lbl">Stack</span><span class="val">HTML, CSS, vanilla JS,<br>canvas, Web Audio</span></div>
+          <div class="col"><span class="lbl">Year</span><span class="val">2024</span></div>
+          <div class="col"><span class="lbl">Live</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/stardew/" target="_blank" rel="noopener">Open it</a></span></div>
+          <div class="col"><span class="lbl">Note</span><span class="val">If you would like the detail, please <a class="touch" href="../index.html">get in touch</a></span></div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="context" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Context</span></div>
+        <h2 class="cs-h2">The wiki is complete and unpleasant</h2>
+      </div>
+      <div class="cs-body">
+        <p>Everything about this game is documented somewhere. The problem is that the documentation is a wiki, and a wiki is optimised for completeness rather than for the question you actually have, which is almost always “what does this one person want”, asked while the game is paused.</p>
+        <p>So the whole design brief was: one page, no navigation, answer that question in under three seconds.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/stardew-gift-lookup.mp4" poster="../assets/video/stardew-gift-lookup-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Searching a villager and opening their gift card"></video>
+        </div>
+        <figcaption class="cs-caption">Type a name, open the card, read the two lists. This is the question the wiki answers in four clicks and a lot of scrolling.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-deal" style="--dur:14s;--n:3">
+          <img style="--i:0" src="../assets/plate/stardew-didyouknow-1.webp" alt="The Did You Know card, showing three different facts" loading="lazy">
+          <img style="--i:1" src="../assets/plate/stardew-didyouknow-2.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:2" src="../assets/plate/stardew-didyouknow-3.webp" alt="" aria-hidden="true" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">What replaced a contact form that went nowhere. A fan guide does not need a get in touch box; it needs one more thing worth knowing.</figcaption>
+      </figure>
+    </section>
+
+    <div class="cs-group">
+
+      <div class="cs-sub" id="how">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">How it works</span></div>
+        <h2 class="cs-h2">Borrowing a visual language without stealing assets</h2>
+      </div>
+      <div class="cs-body">
+        <p>The thing that makes it feel like the game is not any single asset. It is the palette, the chunky border radii, the drop shadows on the panels and the specific weight of the type. Get those right and hand-drawn elements read as belonging; get them wrong and a real asset still looks pasted in.</p>
+        <p>No build step is a constraint I set on purpose. A fan guide that needs npm install to change a gift list is a fan guide that stops being updated.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:63.99%;--dur:17s">
+          <img src="../assets/plate/stardew-locations-both-tiers.webp" alt="The six main buildings as full boxes, the smaller spots as an icon row beneath" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Both tiers in one frame, which is the only way the tiering reads as a decision rather than as inconsistency.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:39.39%;--dur:17s">
+          <img src="../assets/plate/stardew-explore-valley-popup.webp" alt="The Explore the Valley popup, scrolled through its full height" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">The outdoor areas are one long scrollable panel rather than a box each, because they are places to wander through rather than buildings to visit.</figcaption>
+      </figure>
+      </div>
+
+      <div class="cs-sub" id="data">
+        <h2 class="cs-h2">Facts, sprites and code are not the same thing</h2>
+      <div class="cs-body">
+        <p>The gift lists are game data, so a one-time Node script parsed them out of a mirrored fan site rather than my typing 34 characters' worth of preferences by hand. Portraits, item icons and location photos come from the same source and the official wiki, used the way a fan guide typically uses them.</p>
+        <p>Game code is a different category, and the arcade below draws the line in both directions. Prairie King's shooter logic is an original recreation, because the original is somebody's work in a way a gift list is not. The fishing catch-bar, on the other hand, is a deliberate port of a specific open reference implementation at its own constants, because approximating it did not feel right and matching it exactly was the entire point.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:62.72%;--dur:17s">
+          <img src="../assets/plate/stardew-villagers-grid.webp" alt="All 34 villager portraits" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Thirty-four of them. A number in a sentence is an assertion, and this is why the gift lists were parsed once rather than typed out.</figcaption>
+      </figure>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">Facts are facts</span><span class="d">What a character likes is not authored; it is looked up. Scraping it once beats retyping it 34 times.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Sprites are borrowed, and credited</span><span class="d">Non-commercial fan use, the same footing as any fan wiki, and named as such.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">Logic is written, or ported on purpose</span><span class="d">Recreated where it belongs to someone, ported exactly where the reference is open and the fidelity IS the feature.</span></div>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.5;--fx:62%;--fy:68%;--dur:13s">
+          <img src="../assets/plate/stardew-villager-abigail.webp" alt="A villager card: bracketed portrait, birthday, biography, loved and liked gifts" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">The hearts beside Loves and Likes are the game's own friendship sprites rather than emoji, which is the sort of detail the whole pastiche rests on.</figcaption>
+      </figure>
+      </div>
+
+    </div>
+
+    <div class="cs-group">
+
+      <div class="cs-sub" id="arcade">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">The arcade</span></div>
+        <h2 class="cs-h2">Four cabinets and no game engine</h2>
+      </div>
+      <div class="cs-body">
+        <p>Half of this project is not a guide at all. Four playable cabinets sit on the same page, each a plain canvas element with its own loop, and none of them uses a framework or an engine.</p>
+        <p>They are also the reason the page does not cost anything while you are reading it. All four pause their render loop through an IntersectionObserver the moment they scroll out of view, and the rhythm game suspends its audio context at the same instant, so closing the modal actually stops the music rather than leaving it playing under everything else.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.5;--fx:22%;--fy:50%;--dur:13s">
+          <img src="../assets/plate/stardew-arcade-row.webp" alt="Four arcade cabinets side by side" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Junimo Kart, Fishing, Prairie King and Junimo Jamboree. Each is a plain canvas with its own loop and no engine under it.</figcaption>
+      </figure>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">Junimo Kart</span><span class="d">A runner. Jump the spikes and the gaps, collect stars, and beat a best score that survives a reload.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Fishing</span><span class="d">Cast, bite and result on canvas, with the catch-bar minigame itself built as a DOM overlay so its physics can run at the source's native 20ms tick rather than once a frame.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">Journey of the Prairie King</span><span class="d">A top-down shooter over five waves. Arrows or WASD to move, hold space to fire.</span></div>
+        <div class="cs-rule"><span class="n">04</span><span class="t">Junimo Jamboree</span><span class="d">A four-lane rhythm game at three difficulties, with a song that does not exist as a file.</span></div>
+      </div>
+      </div>
+
+      <div class="cs-sub" id="rhythm">
+        <h2 class="cs-h2">One source for the song and the chart</h2>
+      <div class="cs-body">
+        <p>Junimo Jamboree has no audio track. A short hand-written motif is arranged into a sixteen-measure structure at load, and that same generated chart drives both the falling notes and the oscillators, so the beatmap and the music are the same object rather than a track with a chart hand-placed on top of it. They cannot drift apart because there is nothing to drift.</p>
+        <p>Note judgment and the falling-note animation are both timed off the audio context's own clock rather than animation-frame timestamps, which is the difference between a rhythm game that feels tight and one that feels slightly wrong in a way players cannot name. Because the whole chart is known up front, every oscillator is scheduled in one pass at load instead of through the lookahead scheduler that Web Audio sequencing usually needs.</p>
+        <p>Difficulty changes note density and timing windows. It does not change the song.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:36.64%;--dur:17s">
+          <img src="../assets/plate/stardew-jamboree-difficulty.webp" alt="The difficulty select, with a best score kept per difficulty" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Three difficulties over one generated song. What changes is note density and the timing windows, not the music.</figcaption>
+      </figure>
+      </div>
+
+    </div>
+
+    <section id="taught" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">What it taught me</span></div>
+        <h2 class="cs-h2">Ports have tick rates</h2>
+      </div>
+      <div class="cs-body">
+        <p>Matching an existing visual language closely is much harder than designing freely, and much better practice. You cannot fall back on taste; you have to measure what is actually there and reproduce it, which is the same skill an audit of a design system needs.</p>
+        <p>The sharpest version of that lesson was numeric. The first pass at the catch-bar ran its physics once per animation frame, which at 60fps came out about 20% faster than intended, and every constant I then re-tuned by feel took it further from the thing I was trying to match. The fix was not a better constant, it was running the loop at the tick rate the original used.</p>
+        <p>The other one was structural. The popups rendered off-screen for a day because the page's parallax puts a perspective on the main element, which quietly makes it the containing block for any fixed-position child instead of the viewport. The modals had to live outside it in the DOM. Nothing about the symptom pointed at the cause.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/stardew-fishing.mp4" poster="../assets/video/stardew-fishing-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The cast, the bite, and the catch bar"></video>
+        </div>
+        <figcaption class="cs-caption">The catch bar is the ported one, and the thing that ran about 20 per cent fast until its physics moved to the tick rate the original used.</figcaption>
+      </figure>
+    </section>
+
+  </main>
+
+  <div id="site-footer" data-flowers="foot-projects.png"></div>
+
+ </div>
+</div>
+<div id="bg-footer"></div>
+
+<script src="../site-footer.js"></script>
+<script src="../site-nav.js"></script>
+<script src="../case-study.js"></script>
+<script src="../mobile.js"></script>
+</body>
+</html>

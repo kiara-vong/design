@@ -2,18 +2,21 @@
 """Cut the hand-drawn flower and cat icons out of one sheet, and build the footer
 strips and the link cursor from them.
 
-KEYING. The sheet's ground is a soft colour wash that runs red to green to blue
-across its own width, so no colour threshold can separate it: the value that keys the
-ground under the red poppies keys the poppies themselves under the blue. What does
-separate them is TEXTURE. The wash is low frequency by construction and has no edges
-anywhere; the drawings are stippled crayon, which is nothing but edges. Subtracting a
-heavy blur from the image leaves near zero on the ground and a great deal on a
-drawing, and thresholding that difference finds all 23 sprites cleanly.
+The sheet arrives with real transparency now, so the cut is the file's own alpha and
+nothing more. That is worth saying plainly, because what used to be here was three
+hundred lines of keying: the first sheet had every sprite sitting on a soft glow over
+a colour wash, and separating a cream petal from a cream glow is not possible with
+any filter. Threshold sweeps found no knee, narrowing the blur radius took the petals
+with the glow, and a soft alpha ramp made the petals ghostly, because their texture
+energy IS the glow's energy. The fix was never going to be a better filter. It was a
+better export, and this is it.
 
-Holes are filled from the outside rather than by dilation. A daisy is mostly gaps
-between its own stems, and dilating enough to close those would eat the gaps that are
-meant to be there. Flood filling the inverse from the crop's border marks only ground
-that is connected to the outside, which is the same trick gen/mascot.py uses.
+What remains is the one thing alpha alone does not solve. Keying only sets alpha, so
+a sprite's transparent margin still carries whatever colour was under it, and every
+resize -- the strip assembly here, then the browser scaling 240 into 120 -- averages
+that back in along the edges as a fringe. bleed() walks the drawing's own colour
+outward into that margin so a resample finds the same colour on both sides of an edge
+and has nothing foreign to mix.
 
 THE FOOTER STRIP GEOMETRY IS NOT NEGOTIABLE. site.css crops three tiles out of one
 sprite with object-position 0, -122.504 and -245.007 against a 120 x 110.504 box, so
@@ -31,24 +34,10 @@ SRC = os.path.join("assets", "ui", "_src", "icon-sheet.png")
 OUT = os.path.join("assets", "ui")
 ICONS = os.path.join(OUT, "icon")
 
-# Segmentation. K is the factor the mask is found at: fine enough to separate
-# neighbours, coarse enough that stipple does not fragment a drawing into pieces.
-K, TH, MIN_BLOB = 4, 6, 120
-BLUR = 9
-
-# The CUT uses a different key from the segmentation, and it has to.
-#
-# Each sprite on the sheet sits on a soft light glow. At the wide blur radius that
-# finds the sprites reliably, that glow reads as texture and is keyed IN, which put a
-# pale fog inside every drawing: most visible between a daisy's stems, and obvious
-# against the dark footer band. Raising the threshold does not fix it, because a
-# cream petal and a cream glow are equally bright and the petals erode first.
-#
-# What separates them is FREQUENCY. The glow is a smooth gradient; the drawing is
-# crayon stipple. A small blur radius differences out only the finest texture, which
-# the drawing has everywhere and the glow has nowhere. Three is where the fog goes
-# and the petals stay whole; two leaves haze and four starts biting into them.
-CUT_BLUR, CUT_TH, CUT_CLOSE = 3, 5, 3
+# Segmentation. Components are found on a downsampled alpha: fine enough to keep
+# neighbouring sprites apart, coarse enough to be quick. ALPHA_TH is what counts as
+# opaque, above the file's own soft edges.
+K, ALPHA_TH, MIN_BLOB = 4, 40, 120
 
 # Delivery. The tile is 120 x 110.504 in CSS; 2x keeps it sharp on a retina screen.
 TILE_W, TILE_H = 240.0, 221.008
@@ -64,7 +53,7 @@ PAD = 0.90            # how much of the tile a drawing may fill, so nothing touc
 STRIPS = {
     "foot-home":     [(1, 2), (4, 1), (2, 4)],   # daisies, Lyra the tabby, daisies
     "foot-projects": [(1, 1), (4, 2), (2, 1)],   # poppies, the black cat, yellow tulips
-    "foot-art":      [(2, 5), (4, 3), (1, 6)],   # pink cosmos, the calico, purple
+    "foot-art":      [(1, 3), (4, 3), (1, 6)],   # pink tulips, the calico, purple
     "foot-about":    [(1, 4), (4, 4), (3, 4)],   # forget-me-nots, Goose, lily of the valley
     "foot-work":     [(3, 1), (3, 6), (3, 7)],   # sprig, daisies, bow: foliage only
 }
@@ -73,26 +62,6 @@ STRIPS = {
 CURSOR_AT = (3, 2)
 CURSOR_W, CURSOR_H = 24, 32
 
-
-
-def energy(im, blur=None, close=5):
-    """Texture, not colour: |image - blur|, closed enough to bridge stipple.
-
-    The radius decides WHICH texture. Wide finds whole sprites against the ground;
-    narrow finds only the crayon grain, which is what separates a drawing from the
-    soft glow the sheet paints behind it.
-
-    The CLOSING filter is the other half, and it is what put a pale fog between a
-    daisy's stems. Dilating the energy bridges gaps in the stipple, which is exactly
-    what segmentation wants -- a sprite should come back as one blob. But it also
-    bridges the real gaps BETWEEN the stems, which are only a few pixels wide, so the
-    whole space between them was marked as drawing and filled with the sheet's own
-    glow. Five closes those gaps; three leaves them open and still holds the stipple
-    together.
-    """
-    r = BLUR if blur is None else blur
-    d = ImageChops.difference(im, im.filter(ImageFilter.GaussianBlur(r))).convert("L")
-    return d.filter(ImageFilter.MaxFilter(close)) if close > 1 else d
 
 
 def blobs(mask, w, h):
@@ -121,6 +90,17 @@ def blobs(mask, w, h):
     return out
 
 
+# NOTE ON THE SPLIT SPRITE. The pink cosmos in row two has a flower head drawn clear
+# of its own stem, so alpha finds it as two components and row two comes back with
+# seven entries instead of six. Everything after it in that row shifts by one; rows
+# one, three and four are unaffected.
+#
+# Merging by proximity was tried and cannot work: row three's small sprites sit as
+# close to each other as the cosmos's two pieces do, so any gap wide enough to rejoin
+# the flower also welds the sprig to the clover. The trios below simply avoid that
+# one sprite, which costs nothing since there are twenty-three others.
+
+
 def rows_of(boxes, n_rows=4):
     """Split into n_rows by the largest vertical gaps, then order each left to right.
 
@@ -140,105 +120,12 @@ def rows_of(boxes, n_rows=4):
             for i in range(len(cuts) - 1)]
 
 
-def cut(im, box, pad=10):
-    """One sprite with a keyed, feathered alpha."""
+def cut(im, box, pad=6):
+    """One sprite, carrying the sheet's own alpha."""
     W, H = im.size
-    x0 = max(0, box[0] - pad); y0 = max(0, box[1] - pad)
-    x1 = min(W, box[2] + pad); y1 = min(H, box[3] + pad)
-    crop = im.crop((x0, y0, x1, y1))
-    e = energy(crop, CUT_BLUR, CUT_CLOSE)
-    w, h = crop.size
-
-    # OPEN the mask before anything else uses it, and this is the fog.
-    #
-    # The gaps between a daisy's stems are not empty in the energy map: the sheet's
-    # grain and the drawing's own scatter leave isolated specks above the threshold
-    # all through them. At full resolution they are single pixels and invisible.
-    # Scaled down to the 120px the footer draws, they average together into a haze
-    # with an alpha around 60 to 180, which is the pale fill that survived every
-    # attempt to fix this by moving the threshold: the specks are as bright as the
-    # drawing, because they ARE the drawing's grain.
-    #
-    # An opening -- erode, then dilate by the same amount -- deletes any group too
-    # small to survive the erosion and restores everything that did. Speckle goes,
-    # stems keep their width.
-    mask = Image.frombytes("L", (w, h),
-                           bytes(255 if v > CUT_TH else 0 for v in e.getdata()))
-    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
-    m = bytearray(1 if v else 0 for v in mask.getdata())
-
-    # Ground is whatever the border can reach through the holes. Everything the
-    # flood cannot reach is inside the drawing and stays opaque, which is what keeps
-    # the gaps between a daisy's own stems from being punched out.
-    out = bytearray(m)
-    seen = bytearray(w * h)
-    q = deque()
-    for x in range(w):
-        for y in (0, h - 1):
-            if not m[y*w+x] and not seen[y*w+x]:
-                seen[y*w+x] = 1; q.append((x, y))
-    for y in range(h):
-        for x in (0, w - 1):
-            if not m[y*w+x] and not seen[y*w+x]:
-                seen[y*w+x] = 1; q.append((x, y))
-    while q:
-        x, y = q.popleft()
-        for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)):
-            nx, ny = x + dx, y + dy
-            j = ny * w + nx
-            if 0 <= nx < w and 0 <= ny < h and not seen[j] and not m[j]:
-                seen[j] = 1; q.append((nx, ny))
-    # Fill only the SMALL enclosed gaps.
-    #
-    # Filling every region the border cannot reach was wrong for this artwork, and
-    # wrong in the most visible way: a spray of daisies encloses big pockets of empty
-    # ground between its own stems, ringed by flowers above and leaves at the sides,
-    # so the flood could not get in and every one of those pockets was filled solid
-    # with the sheet's own wash. On the dark footer band it read as a pale fog inside
-    # the drawing, which is exactly the "fill in around the transparent background"
-    # that made these look wrong.
-    #
-    # Small pockets still want filling: a flat patch inside a black cat has no texture
-    # for the energy mask to find and would otherwise be punched through. So the test
-    # is area. Under a fiftieth of the crop it is a gap in the drawing; over it, it is
-    # ground the drawing happens to surround.
-    LIMIT = max(60, int(w * h * 0.02))
-    filled = bytearray(w * h)
-    for sy in range(h):
-        for sx in range(w):
-            i = sy * w + sx
-            if seen[i] or m[i] or filled[i]:
-                continue
-            q2 = deque([(sx, sy)]); filled[i] = 1; cells = [i]
-            while q2:
-                x, y = q2.popleft()
-                for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)):
-                    nx, ny = x + dx, y + dy
-                    j = ny * w + nx
-                    if (0 <= nx < w and 0 <= ny < h and not seen[j]
-                            and not m[j] and not filled[j]):
-                        filled[j] = 1; q2.append((nx, ny)); cells.append(j)
-            if len(cells) <= LIMIT:
-                for j in cells:
-                    out[j] = 1
-
-    # Keep only the biggest piece. Each sprite sits close enough to its neighbours
-    # that the crop catches a tick or two of the drawing beside it, and a stray mark
-    # floating off a flower reads as damage rather than as texture.
-    out = _largest(out, w, h)
-
-    # ERODE, do not dilate, and barely feather.
-    #
-    # The first pass grew the mask a pixel and blurred it over one, which put a soft
-    # rim of the sheet's own colour wash around every drawing: a blurry outline that
-    # follows the shape and belongs to neither the icon nor the page. Pulling the
-    # mask IN by a pixel lands the edge inside the drawing's own ink instead, and
-    # half a pixel of blur is enough to keep it from stair-stepping.
-    a = Image.frombytes("L", (w, h), bytes(255 if v else 0 for v in out))
-    a = a.filter(ImageFilter.GaussianBlur(0.5))
-    sprite = crop.convert("RGBA")
-    sprite.putalpha(a)
-    return sprite.crop(sprite.getbbox() or (0, 0, w, h))
+    crop = im.crop((max(0, box[0] - pad), max(0, box[1] - pad),
+                    min(W, box[2] + pad), min(H, box[3] + pad)))
+    return crop.crop(crop.getbbox() or (0, 0) + crop.size)
 
 
 def _largest(m, w, h):
@@ -308,11 +195,11 @@ def main():
     for d in (ICONS,):
         if not os.path.isdir(d):
             os.makedirs(d)
-    im = Image.open(SRC).convert("RGB")
+    im = Image.open(SRC).convert("RGBA")
     W, H = im.size
-    sm = energy(im).resize((W // K, H // K), Image.BOX)
+    sm = im.getchannel("A").resize((W // K, H // K), Image.BOX)
     w, h = sm.size
-    found = blobs(bytearray(1 if v > TH else 0 for v in sm.getdata()), w, h)
+    found = blobs(bytearray(1 if v > ALPHA_TH else 0 for v in sm.getdata()), w, h)
     grid = rows_of([(b[0]*K, b[1]*K, b[2]*K, b[3]*K) for b in found])
     print("  sheet %dx%d -> %d rows: %s"
           % (W, H, len(grid), [len(r) for r in grid]))

@@ -342,20 +342,25 @@ window.__hl = (function () {
   background:var(--parchment);border:1px solid var(--outline-stroke);
   border-radius:14px;padding:10px 18px;white-space:nowrap;
   font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:16px;
-  color:var(--accent);opacity:0;visibility:hidden;pointer-events:none;
+  color:var(--accent);pointer-events:none;
   box-shadow:0 8px 20px rgba(45,40,38,.14);
-  transition:opacity .28s ease,transform .32s cubic-bezier(.34,1.4,.5,1),visibility 0s linear .28s}
-.card-persona:hover .ps-toast{opacity:1;visibility:visible;
-  transform:translate(calc(var(--mx) - 50%),calc(var(--my) - 50%))
-            rotate(var(--rot,0deg)) scale(1);transition-delay:0s,0s,0s}
+  /* Visible at rest, not on hover.
+  
+     It used to fade in only when you reached for the card, which meant the one card
+     that does not open looked exactly like the three that do until you had already
+     tried. The label is the card's status, and a status you have to discover is not
+     one. The reference build shows its own the same way: parked in the middle, and
+     it picks itself up and follows the pointer from there. */
+  transition:transform .62s cubic-bezier(.22,1.35,.36,1)}
+.card-persona:hover .ps-toast{transform:translate(calc(var(--mx) - 50%),calc(var(--my) - 50%))
+            rotate(var(--rot,0deg)) scale(1)}
 /* Tight follow while the pointer is inside; the long, overshooting glide home is the
    base transition above. An object with mass arrives slightly past where it is going
    and settles back, which is the difference between this and a UI element sliding. */
-.ps-photo.is-live .ps-toast{transition:opacity .28s ease,transform .07s linear,
-  visibility 0s linear}
+.ps-photo.is-live .ps-toast{transition:transform .07s linear}
 /* The thumbnail dims behind it, so the toast stays legible over a busy diagram. */
 .card-persona .shot{transition:filter .28s ease}
-.card-persona:hover .shot{filter:saturate(.55) brightness(.94)}
+.card-persona:hover .shot{filter:saturate(.72) brightness(.97)}
 @media (prefers-reduced-motion:reduce){
   .ps-toast,.card-persona .shot{transition:none}
   .ps-trail{display:none}
@@ -503,7 +508,7 @@ window.__hl = (function () {
           <a href="index.html#projects" aria-label="Projects" data-tip="Projects">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.6667 2.33333V11.6667L15.1667 8.16667L18.6667 11.6667V2.33333"/><path d="M4.66667 22.75V5.25C4.66667 4.47645 4.97396 3.73459 5.52094 3.18761C6.06792 2.64062 6.80979 2.33333 7.58333 2.33333H22.1667C22.4761 2.33333 22.7728 2.45625 22.9916 2.67504C23.2104 2.89383 23.3333 3.19058 23.3333 3.5V24.5C23.3333 24.8094 23.2104 25.1062 22.9916 25.325C22.7728 25.5438 22.4761 25.6667 22.1667 25.6667H7.58333C6.80979 25.6667 6.06792 25.3594 5.52094 24.8124C4.97396 24.2654 4.66667 23.5235 4.66667 22.75ZM4.66667 22.75C4.66667 21.9765 4.97396 21.2346 5.52094 20.6876C6.06792 20.1406 6.80979 19.8333 7.58333 19.8333H23.3333"/></svg>
           </a>
-          <a href="pages/art/" aria-label="Art" data-tip="Art">
+          <a href="art/" aria-label="Art" data-tip="Art">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.66667 4.66667C4.66667 3.5621 5.5621 2.66667 6.66667 2.66667H21.3333C22.4379 2.66667 23.3333 3.5621 23.3333 4.66667V23.3333C23.3333 24.4379 22.4379 25.3333 21.3333 25.3333H6.66667C5.5621 25.3333 4.66667 24.4379 4.66667 23.3333V4.66667Z"/><path d="M10.5 11.0833C11.4665 11.0833 12.25 10.2998 12.25 9.33333C12.25 8.36683 11.4665 7.58333 10.5 7.58333C9.5335 7.58333 8.75 8.36683 8.75 9.33333C8.75 10.2998 9.5335 11.0833 10.5 11.0833Z"/><path d="M4.66667 19.8333L10.2083 14.2917C10.9894 13.5106 12.2556 13.5106 13.0367 14.2917L18.6667 19.9217"/><path d="M16.9167 18.1667L18.7083 16.375C19.4894 15.5939 20.7556 15.5939 21.5367 16.375L23.3333 18.1717"/></svg>
           </a>
           <a href="about.html" aria-label="About" data-tip="About">
@@ -549,7 +554,7 @@ window.__hl = (function () {
     <div class="work-inner">
       <div class="work-row top">
         <!-- Card 01 -->
-        <a class="card card-resource-dashboard" href="pages/work/resource-dashboard.html" aria-label="Resource Dashboard — Capital One case study">
+        <a class="card card-resource-dashboard" href="work/resource-dashboard.html" aria-label="Resource Dashboard — Capital One case study">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
           <div class="card-photo">
             <img class="cp-field" src="assets/cards/field-plat.webp" alt="">
@@ -570,7 +575,7 @@ window.__hl = (function () {
           </div>
         </a>
         <!-- Card 02 -->
-        <a class="card card-events-timeline" href="pages/work/events-timeline.html" aria-label="Events Timeline — Capital One case study">
+        <a class="card card-events-timeline" href="work/events-timeline.html" aria-label="Events Timeline — Capital One case study">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
           <div class="card-photo">
             <img class="cp-field" src="assets/cards/field-gql.webp" alt="">
@@ -594,7 +599,7 @@ window.__hl = (function () {
 
       <div class="work-row bottom">
         <!-- Card 03 -->
-        <a class="card card-ui-consistency" href="pages/work/ui-consistency.html" aria-label="UI Consistency — Capital One case study">
+        <a class="card card-ui-consistency" href="work/ui-consistency.html" aria-label="UI Consistency — Capital One case study">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
           <div class="card-photo">
             <img class="cp-field" src="assets/cards/field-ds.webp" alt="">
@@ -660,7 +665,7 @@ window.__hl = (function () {
           </div>
           <div class="mini-panel">
             <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="pages/projects/animal-crossing.html">Animal Crossing island generator</a></h3>
+              <h3 class="mini-title"><a class="mini-link" href="projects/animal-crossing.html">Animal Crossing island generator</a></h3>
               <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/animal-crossing/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2024</span></div>
             </div>
             <p class="mini-desc">A procedural 3D island built tile by tile with wave function collapse, the same technique games like Bad North use to grow coherent worlds from a small set of hand-modelled pieces.</p>
@@ -679,7 +684,7 @@ window.__hl = (function () {
           </div>
           <div class="mini-panel">
             <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="pages/projects/dorms.html">Dorms @ Brown</a></h3>
+              <h3 class="mini-title"><a class="mini-link" href="projects/dorms.html">Dorms @ Brown</a></h3>
               <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/dab/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
             </div>
             <p class="mini-desc">A housing-decision app for the lottery: every dorm on campus with photos, floor plans and peer reviews, plus a quiz that narrows thirty dorms to a shortlist. React, Java and Firebase.</p>
@@ -698,7 +703,7 @@ window.__hl = (function () {
           </div>
           <div class="mini-panel">
             <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="pages/projects/stardew.html">Stardew Valley companion</a></h3>
+              <h3 class="mini-title"><a class="mini-link" href="projects/stardew.html">Stardew Valley companion</a></h3>
               <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/stardew/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2024</span></div>
             </div>
             <p class="mini-desc">Look up any of the 34 villagers' favourite gifts, click around town to learn what each building does, then play one of four arcade cabinets built into the page. No framework, no build step, no game engine.</p>
@@ -717,7 +722,7 @@ window.__hl = (function () {
           </div>
           <div class="mini-panel">
             <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="pages/projects/uxfolio.html">UI/UX case studies</a></h3>
+              <h3 class="mini-title"><a class="mini-link" href="projects/uxfolio.html">UI/UX case studies</a></h3>
               <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/portfolio/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
             </div>
             <p class="mini-desc">An earlier portfolio built around research and process rather than final screenshots: each piece walks through the problem, what was tried, and what actually shipped.</p>
@@ -736,7 +741,7 @@ window.__hl = (function () {
           </div>
           <div class="mini-panel">
             <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="pages/projects/chess.html">Chess engine</a></h3>
+              <h3 class="mini-title"><a class="mini-link" href="projects/chess.html">Chess engine</a></h3>
               <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/site/projects/chess/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
             </div>
             <p class="mini-desc">A playable board with an opponent behind it: move generation, alpha-beta search, and an evaluation that is honest about how much it does not know.</p>
@@ -755,7 +760,7 @@ window.__hl = (function () {
           </div>
           <div class="mini-panel">
             <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="pages/projects/pacman.html">Pac-Man</a></h3>
+              <h3 class="mini-title"><a class="mini-link" href="projects/pacman.html">Pac-Man</a></h3>
               <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/site/projects/pacman/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
             </div>
             <p class="mini-desc">Pac-Man rebuilt in the browser, four ghosts included. They share one movement system and differ only in the tile each one aims at, which is a cheap way to buy four personalities.</p>

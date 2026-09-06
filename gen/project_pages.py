@@ -509,7 +509,15 @@ PROJECTS = [
                 "captures until the position is quiet."),
                ("Evaluate honestly",
                 "Material, position, mobility. It has no opening book and no endgame "
-                "tables, and it should not pretend otherwise.")]),
+                "tables, and it should not pretend otherwise.")],
+              media.clip("chess-autoplay",
+                         "Two copies of the engine playing each other with no human "
+                         "moves, the board degrading from the starting position into "
+                         "an unrecognizable mess within seconds",
+                         "Both sides set to the live site's own (BAD) AI CHESS, taking "
+                         "the engine's first choice every move. No opening book to "
+                         "paper over the early game and no endgame tables to recover "
+                         "with, so the position is unrecognizable by move six.")),
              ("taught", "What it taught me", "Correctness before cleverness",
               ["I wrote the search first and spent a fortnight debugging an engine that "
                "was fine. The bug was in castling. Building the unglamorous layer "
@@ -561,7 +569,13 @@ PROJECTS = [
                ("Grid first, pixels second",
                 "Movement resolves on tile centres and is interpolated for drawing. "
                 "Doing it the other way round makes turns feel mushy and lets a "
-                "character clip a corner it should not.")]),
+                "character clip a corner it should not.")],
+              media.clip("pacman-gameplay",
+                         "A round of Pac-Man from the ready countdown through a ghost "
+                         "collision, death and restart",
+                         "The countdown, a clean run past two ghosts, then a cornering "
+                         "none of the three chase rules were built to survive, and the "
+                         "restart that follows automatically.")),
              ("taught", "What it taught me", "Behaviour is cheaper than content",
               ["Four ghosts with four target rules produce more variety than four "
                "hand-authored patrol routes would have, and they keep producing it "
@@ -640,7 +654,7 @@ def build(p):
         i += len(run)
     # p-stardew.html was a prefix standing in for a folder. It is a folder now.
     _gc.build(p["slug"], dict(
-        out="pages/projects/%s.html" % p["slug"].replace("p-", ""), root="../../",
+        out="projects/%s.html" % p["slug"].replace("p-", ""), root="../",
         title=p["title"], kicker=p["kicker"], intro=p["intro"],
         flowers="foot-projects.png",
         hero=p["hero"], hero_alt=p["hero_alt"],

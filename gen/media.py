@@ -27,7 +27,7 @@ def _fig(inner, caption):
             '      </figure>\n' % (inner, esc(caption)))
 
 
-def clip(name, alt, caption, root="../../"):
+def clip(name, alt, caption, root="../"):
     """A walkthrough video. Plays itself, silently, forever.
 
     The poster is the clip's own opening frame, which is also the frame it dissolves
@@ -49,7 +49,7 @@ def clip(name, alt, caption, root="../../"):
         '        </div>\n' % (root, name, root, name, esc(alt)), caption)
 
 
-def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../../"):
+def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../"):
     """A still, framed whole and then pushed in on one part of itself.
 
     fx/fy name the point worth looking at, as percentages of the image, so the push
@@ -62,7 +62,7 @@ def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../../")
         '        </div>\n' % (z, fx, fy, dur, root, src, esc(alt)), caption)
 
 
-def strip(src, alt, caption, travel, dur="17s", root="../../"):
+def strip(src, alt, caption, travel, dur="17s", root="../"):
     """A tall still scrolling behind a fixed frame.
 
     travel is a PERCENTAGE OF THE IMAGE'S OWN HEIGHT, never a pixel count. See the
@@ -75,7 +75,7 @@ def strip(src, alt, caption, travel, dur="17s", root="../../"):
 
 
 def wipe(before_src, after_src, alt, caption,
-         before="Explored", after="Shipped", dur="11s", root="../../"):
+         before="Explored", after="Shipped", dur="11s", root="../"):
     """Two stills under a travelling seam, labelled inside the frame.
 
     The labels sit in the picture rather than in the caption because the whole
@@ -92,7 +92,7 @@ def wipe(before_src, after_src, alt, caption,
                               esc(before), esc(after)), caption)
 
 
-def deal(srcs, alt, caption, dur="14s", root="../../"):
+def deal(srcs, alt, caption, dur="14s", root="../"):
     """N stills at identical framing, cross-fading. The first is the resting state.
 
     Which means the first entry should be the frame worth leaving on screen, since
@@ -109,7 +109,7 @@ def deal(srcs, alt, caption, dur="14s", root="../../"):
     return _fig("".join(o), caption)
 
 
-def annotated(src, alt, caption, notes, root="../../"):
+def annotated(src, alt, caption, notes, root="../"):
     """A still with leader-line labels that push the picture in on what they name.
 
     notes is a list of (key, label, description, x, y, zoom, top), where x/y are the
