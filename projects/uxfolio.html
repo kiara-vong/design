@@ -52,7 +52,9 @@
 <nav class="cs-nav">
     <a href="#overview">Overview</a>
     <a href="#context">Context</a>
+    <a href="#studies">The four</a>
     <a href="#how">How it works</a>
+    <a class="sub" href="#build">Shared markup</a>
     <a href="#taught">What it taught me</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -126,7 +128,25 @@
       </div>
     </section>
 
-    <section id="how" class="cs-section">
+    <section id="studies" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">The four</span></div>
+        <h2 class="cs-h2">Four problems, deliberately unalike</h2>
+      </div>
+      <div class="cs-body">
+        <p>Four case studies, chosen so they do not all demonstrate the same skill. One is quantitative, one is competitive research turned into a build, one is a redesign with a sense of humour about itself, and one is a domain nobody designs for.</p>
+      </div>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">A/B Testing</span><span class="d">Two appointment-booking flows, a hypothesis, a statistical test, and a result that had to be reported whichever way it went.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Development</span><span class="d">Competitive analysis into UI design for a React film-discovery app: search, genre filtering, bookmarking.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">The Room</span><span class="d">A website redesign for the cult film, played straight enough to be useful and knowing enough to be funny.</span></div>
+        <div class="cs-rule"><span class="n">04</span><span class="t">Fonda Wallet</span><span class="d">A mobile finance tool for restaurant owners, centralising revenue and expenses. The least glamorous brief and the most interesting one.</span></div>
+      </div>
+    </section>
+
+    <div class="cs-group">
+
+      <div class="cs-sub" id="how">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">How it works</span></div>
         <h2 class="cs-h2">Process as the artefact</h2>
@@ -134,7 +154,18 @@
       <div class="cs-body">
         <p>Every case study leads with the problem and spends most of its length on the decisions, with the final screens arriving last and briefly. The explorations that were abandoned get as much room as the one that shipped, which is the only honest way to show a decision was made rather than stumbled into.</p>
       </div>
-    </section>
+      </div>
+
+      <div class="cs-sub" id="build">
+        <h2 class="cs-h2">Framework-free output, non-repetitive source</h2>
+      <div class="cs-body">
+        <p>The shipped site is plain HTML, CSS and JavaScript with no framework and no pipeline, which is the right answer for five static pages. The trouble with five static pages is that the nav, the footer and the about card exist five times each, and hand-editing one text change in five files is how they drift apart.</p>
+        <p>So the source is not what deploys. The shared pieces live once in a partials folder, the page sources reference them with include markers, and a small Node script assembles the flat static files that actually ship. The output stays framework-free; the source stops being repetitive.</p>
+        <p>This site does the same thing for the same reason, with Python instead of Node and considerably more generated. That is not a coincidence, it is this project's idea kept.</p>
+      </div>
+      </div>
+
+    </div>
 
     <section id="taught" class="cs-section">
       <div class="cs-sechead">

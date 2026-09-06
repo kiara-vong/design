@@ -52,7 +52,10 @@
 <nav class="cs-nav">
     <a href="#overview">Overview</a>
     <a href="#context">Context</a>
+    <a href="#does">What it does</a>
     <a href="#how">How it works</a>
+    <a class="sub" href="#plans">Floor plans</a>
+    <a class="sub" href="#photos">Photographs</a>
     <a href="#taught">What it taught me</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -126,7 +129,27 @@
       </div>
     </section>
 
-    <section id="how" class="cs-section">
+    <section id="does" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">What it does</span></div>
+        <h2 class="cs-h2">Everything in one place, then a shortlist</h2>
+      </div>
+      <div class="cs-body">
+        <p>Thirty dorms, filterable down to the few worth walking to. The filters are the ones people actually argue about in March: room type, location on campus, whether the bathroom is shared and how, kitchen access, class year, amenities, with live search by name over the top of all of it.</p>
+        <p>A dorm's own page then has to answer the question the filters cannot, which is what the place is like. Photo gallery, floor plans, room features, an embedded campus map, an average rating, and reviews from people who lived there.</p>
+      </div>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">Browse and filter</span><span class="d">Six filter dimensions and live name search, applied to the whole campus at once.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Dorm pages</span><span class="d">Photos, plans, features, map and rating, which is more than the official housing page has ever shown in one place.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">Peer reviews</span><span class="d">Read what other students said, or sign in and leave your own with an optional photo.</span></div>
+        <div class="cs-rule"><span class="n">04</span><span class="t">The quiz</span><span class="d">A few questions about what you care about, and thirty dorms come back as a ranked shortlist.</span></div>
+        <div class="cs-rule"><span class="n">05</span><span class="t">Sign-in</span><span class="d">Google, restricted to brown.edu, so the reviews come from people who actually live there.</span></div>
+      </div>
+    </section>
+
+    <div class="cs-group">
+
+      <div class="cs-sub" id="how">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">How it works</span></div>
         <h2 class="cs-h2">Why there is a backend at all</h2>
@@ -140,18 +163,25 @@
         <div class="cs-rule"><span class="n">02</span><span class="t">Static front, hosted back</span><span class="d">A static host cannot run a server, so the two deploy separately and meet over HTTP.</span></div>
         <div class="cs-rule"><span class="n">03</span><span class="t">Sign-in by redirect</span><span class="d">Popup sign-in is silently killed by default cross-origin policy on static hosts: the window opens, closes, and never completes.</span></div>
       </div>
-    </section>
-
-    <section id="photos" class="cs-section">
-      <div class="cs-sechead">
-        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">How it works</span></div>
-        <h2 class="cs-h2">Photographs nobody framed</h2>
       </div>
+
+      <div class="cs-sub" id="plans">
+        <h2 class="cs-h2">Some dorms are more than one building</h2>
+      <div class="cs-body">
+        <p>Keeney, Greg, Grad Center, New Pembroke and Young Orchard are not buildings, they are several, each with its own floors and its own set of plans. A flat list of floor plans is wrong for those five and quietly misleading for anyone who does not already know that.</p>
+        <p>So the plans render as grouped card grids, one group per building. It is a small structural decision that only exists because the data was looked at rather than assumed, and it is invisible on the other twenty-five dorms, which is the correct outcome.</p>
+      </div>
+      </div>
+
+      <div class="cs-sub" id="photos">
+        <h2 class="cs-h2">Photographs nobody framed</h2>
       <div class="cs-body">
         <p>Dorm photos are phone snapshots in every orientation and resolution. Hard-cropping a tall photo into a fixed frame cuts off half the room, which is the half you wanted.</p>
         <p>The gallery letterboxes the full photo over a blurred, darkened copy of itself filling the rest of the frame. Nothing is cropped, the frame stays a consistent size, and the fill reads as intentional rather than as empty space.</p>
       </div>
-    </section>
+      </div>
+
+    </div>
 
     <section id="taught" class="cs-section">
       <div class="cs-sechead">

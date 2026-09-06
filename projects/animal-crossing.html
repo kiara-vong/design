@@ -53,6 +53,8 @@
     <a href="#overview">Overview</a>
     <a href="#context">Context</a>
     <a href="#how">How it works</a>
+    <a class="sub" href="#grid">Triangles</a>
+    <a class="sub" href="#pipeline">The tile set</a>
     <a href="#taught">What it taught me</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -126,7 +128,9 @@
       </div>
     </section>
 
-    <section id="how" class="cs-section">
+    <div class="cs-group">
+
+      <div class="cs-sub" id="how">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">How it works</span></div>
         <h2 class="cs-h2">Adjacency is the whole ruleset</h2>
@@ -140,7 +144,26 @@
         <div class="cs-rule"><span class="n">02</span><span class="t">Propagate, then stop</span><span class="d">A settled cell narrows its neighbours, and theirs. The queue has to drain to a fixed point before the next collapse.</span></div>
         <div class="cs-rule"><span class="n">03</span><span class="t">Backtrack cheaply</span><span class="d">When a cell runs out of options, rewind to the last one that still had a choice. Most of the work is choosing where to look next.</span></div>
       </div>
-    </section>
+      </div>
+
+      <div class="cs-sub" id="grid">
+        <h2 class="cs-h2">Three edges, not four</h2>
+      <div class="cs-body">
+        <p>The island is a triangular grid rather than a square one, which is the decision the whole tile set rests on. Three edges instead of four means far fewer unique pieces are needed to cover a surface without a visible seam, and hand-modelling every piece is the expensive part of this kind of project.</p>
+        <p>The cost is a coordinate system that is genuinely harder to reason about. Each tile has three rotations rather than four, neighbours alternate orientation across a row, and every adjacency rule has to be stated against the right edge of the right rotation. That bookkeeping is where the bugs lived.</p>
+        <p>Generation is also steerable rather than purely automatic. Clicking any cell forces a specific tile there and re-propagates outward from it, so the solver can be pushed toward a coastline or a cliff and then left to resolve everything the choice implies.</p>
+      </div>
+      </div>
+
+      <div class="cs-sub" id="pipeline">
+        <h2 class="cs-h2">Blender to browser</h2>
+      <div class="cs-body">
+        <p>The pieces are modelled in Blender and exported as glTF, then loaded and instanced through react-three-fiber, which lets the scene graph be declarative JSX instead of imperative Three.js calls. That matters more than it sounds for a generator: the solver produces a list of placements and React renders it, so the algorithm never touches the renderer.</p>
+        <p>Rock and foliage colour is done in custom GLSL vertex shaders rather than baked into the models, which is what keeps a few hand-modelled pieces from reading as the same object repeated across the island.</p>
+      </div>
+      </div>
+
+    </div>
 
     <section id="taught" class="cs-section">
       <div class="cs-sechead">

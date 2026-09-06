@@ -42,7 +42,9 @@ PROJECTS = [
                ("Year", "2024"), ("Live", live("https://kiara-vong.github.io/animal-crossing/", "Open it")),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
-              ("how", "How it works", False), ("taught", "What it taught me", False)],
+              ("how", "How it works", False), ("grid", "Triangles", True),
+              ("pipeline", "The tile set", True),
+              ("taught", "What it taught me", False)],
          sections=[
              ("context", "Context", "Reading about an algorithm is not knowing it",
               ["I had read the wave function collapse write-ups and could have described "
@@ -73,6 +75,30 @@ PROJECTS = [
                ("Backtrack cheaply",
                 "When a cell runs out of options, rewind to the last one that still had "
                 "a choice. Most of the work is choosing where to look next.")]),
+             ("grid", "How it works", "Three edges, not four",
+              ["The island is a triangular grid rather than a square one, which is the "
+               "decision the whole tile set rests on. Three edges instead of four means "
+               "far fewer unique pieces are needed to cover a surface without a visible "
+               "seam, and hand-modelling every piece is the expensive part of this kind "
+               "of project.",
+               "The cost is a coordinate system that is genuinely harder to reason "
+               "about. Each tile has three rotations rather than four, neighbours "
+               "alternate orientation across a row, and every adjacency rule has to be "
+               "stated against the right edge of the right rotation. That bookkeeping is "
+               "where the bugs lived.",
+               "Generation is also steerable rather than purely automatic. Clicking any "
+               "cell forces a specific tile there and re-propagates outward from it, so "
+               "the solver can be pushed toward a coastline or a cliff and then left to "
+               "resolve everything the choice implies."]),
+             ("pipeline", "How it works", "Blender to browser",
+              ["The pieces are modelled in Blender and exported as glTF, then loaded and "
+               "instanced through react-three-fiber, which lets the scene graph be "
+               "declarative JSX instead of imperative Three.js calls. That matters more "
+               "than it sounds for a generator: the solver produces a list of placements "
+               "and React renders it, so the algorithm never touches the renderer.",
+               "Rock and foliage colour is done in custom GLSL vertex shaders rather "
+               "than baked into the models, which is what keeps a few hand-modelled "
+               "pieces from reading as the same object repeated across the island."]),
              ("taught", "What it taught me", "Constraint propagation, everywhere after",
               ["The thing I did not expect is how often this shape turns up once you "
                "have built it once. A design system's token layers are a constraint "
@@ -96,7 +122,9 @@ PROJECTS = [
                ("Year", "2023"), ("Live", live("https://kiara-vong.github.io/dab/", "Open it")),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
-              ("how", "How it works", False), ("taught", "What it taught me", False)],
+              ("does", "What it does", False), ("how", "How it works", False),
+              ("plans", "Floor plans", True), ("photos", "Photographs", True),
+              ("taught", "What it taught me", False)],
          sections=[
              ("context", "Context", "Everyone was guessing, including Res Life",
               ["The information existed. It was just scattered across a university "
@@ -106,6 +134,30 @@ PROJECTS = [
                "The cost landed on students as a bad decision they lived with for a "
                "year, and on Residential Life as a steady stream of one-off questions "
                "that better upfront information would have answered."]),
+             ("does", "What it does", "Everything in one place, then a shortlist",
+              ["Thirty dorms, filterable down to the few worth walking to. The filters "
+               "are the ones people actually argue about in March: room type, location "
+               "on campus, whether the bathroom is shared and how, kitchen access, class "
+               "year, amenities, with live search by name over the top of all of it.",
+               "A dorm's own page then has to answer the question the filters cannot, "
+               "which is what the place is like. Photo gallery, floor plans, room "
+               "features, an embedded campus map, an average rating, and reviews from "
+               "people who lived there."],
+              [("Browse and filter",
+                "Six filter dimensions and live name search, applied to the whole "
+                "campus at once."),
+               ("Dorm pages",
+                "Photos, plans, features, map and rating, which is more than the "
+                "official housing page has ever shown in one place."),
+               ("Peer reviews",
+                "Read what other students said, or sign in and leave your own with an "
+                "optional photo."),
+               ("The quiz",
+                "A few questions about what you care about, and thirty dorms come back "
+                "as a ranked shortlist."),
+               ("Sign-in",
+                "Google, restricted to brown.edu, so the reviews come from people who "
+                "actually live there.")]),
              ("how", "How it works", "Why there is a backend at all",
               ["The frontend never talks to the database. Every read and write goes "
                "through a Java server, which is the only thing holding admin "
@@ -125,6 +177,15 @@ PROJECTS = [
                ("Sign-in by redirect",
                 "Popup sign-in is silently killed by default cross-origin policy on "
                 "static hosts: the window opens, closes, and never completes.")]),
+             ("plans", "How it works", "Some dorms are more than one building",
+              ["Keeney, Greg, Grad Center, New Pembroke and Young Orchard are not "
+               "buildings, they are several, each with its own floors and its own set "
+               "of plans. A flat list of floor plans is wrong for those five and "
+               "quietly misleading for anyone who does not already know that.",
+               "So the plans render as grouped card grids, one group per building. It "
+               "is a small structural decision that only exists because the data was "
+               "looked at rather than assumed, and it is invisible on the other "
+               "twenty-five dorms, which is the correct outcome."]),
              ("photos", "How it works", "Photographs nobody framed",
               ["Dorm photos are phone snapshots in every orientation and resolution. "
                "Hard-cropping a tall photo into a fixed frame cuts off half the room, "
@@ -148,15 +209,19 @@ PROJECTS = [
          hero="tile/stardew.jpg",
          hero_alt="A pixel-art farm title screen with mountains, a barn and a night sky",
          live="https://kiara-vong.github.io/stardew/",
-         intro=("A single-page fan guide: look up any villager's favourite gifts, click "
-                "around town to learn what each building is for, and pick up a fact on "
-                "the way past. No framework and no build step, styled closely enough "
-                "that it feels like it belongs in the game."),
-         meta=[("Role", "Everything"), ("Stack", "HTML, CSS,<br>vanilla JS"),
+         intro=("A single-page fan guide: look up any of the 34 villagers' favourite "
+                "gifts, click around town to learn what each building is for, and play "
+                "one of four arcade cabinets built into the page. No framework and no "
+                "build step, styled closely enough that it feels like it belongs in "
+                "the game."),
+         meta=[("Role", "Everything"),
+               ("Stack", "HTML, CSS, vanilla JS,<br>canvas, Web Audio"),
                ("Year", "2024"), ("Live", live("https://kiara-vong.github.io/stardew/", "Open it")),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
-              ("how", "How it works", False), ("taught", "What it taught me", False)],
+              ("how", "How it works", False), ("data", "Facts and assets", True),
+              ("arcade", "The arcade", False), ("rhythm", "The rhythm game", True),
+              ("taught", "What it taught me", False)],
          sections=[
              ("context", "Context", "The wiki is complete and unpleasant",
               ["Everything about this game is documented somewhere. The problem is that "
@@ -174,11 +239,83 @@ PROJECTS = [
                "No build step is a constraint I set on purpose. A fan guide that needs "
                "npm install to change a gift list is a fan guide that stops being "
                "updated."]),
-             ("taught", "What it taught me", "Pastiche is a discipline",
+             ("data", "How it works", "Facts, sprites and code are not the same thing",
+              ["The gift lists are game data, so a one-time Node script parsed them out "
+               "of a mirrored fan site rather than my typing 34 characters' worth of "
+               "preferences by hand. Portraits, item icons and location photos come from "
+               "the same source and the official wiki, used the way a fan guide "
+               "typically uses them.",
+               "Game code is a different category, and the arcade below draws the line "
+               "in both directions. Prairie King's shooter logic is an original "
+               "recreation, because the original is somebody's work in a way a gift "
+               "list is not. The fishing catch-bar, on the other hand, is a deliberate "
+               "port of a specific open reference implementation at its own constants, "
+               "because approximating it did not feel right and matching it exactly was "
+               "the entire point."],
+              [("Facts are facts",
+                "What a character likes is not authored; it is looked up. Scraping it "
+                "once beats retyping it 34 times."),
+               ("Sprites are borrowed, and credited",
+                "Non-commercial fan use, the same footing as any fan wiki, and named "
+                "as such."),
+               ("Logic is written, or ported on purpose",
+                "Recreated where it belongs to someone, ported exactly where the "
+                "reference is open and the fidelity IS the feature.")]),
+             ("arcade", "The arcade", "Four cabinets and no game engine",
+              ["Half of this project is not a guide at all. Four playable cabinets sit "
+               "on the same page, each a plain canvas element with its own loop, and "
+               "none of them uses a framework or an engine.",
+               "They are also the reason the page does not cost anything while you are "
+               "reading it. All four pause their render loop through an "
+               "IntersectionObserver the moment they scroll out of view, and the rhythm "
+               "game suspends its audio context at the same instant, so closing the "
+               "modal actually stops the music rather than leaving it playing under "
+               "everything else."],
+              [("Junimo Kart",
+                "A runner. Jump the spikes and the gaps, collect stars, and beat a best "
+                "score that survives a reload."),
+               ("Fishing",
+                "Cast, bite and result on canvas, with the catch-bar minigame itself "
+                "built as a DOM overlay so its physics can run at the source's native "
+                "20ms tick rather than once a frame."),
+               ("Journey of the Prairie King",
+                "A top-down shooter over five waves. Arrows or WASD to move, hold space "
+                "to fire."),
+               ("Junimo Jamboree",
+                "A four-lane rhythm game at three difficulties, with a song that does "
+                "not exist as a file.")]),
+             ("rhythm", "The arcade", "One source for the song and the chart",
+              ["Junimo Jamboree has no audio track. A short hand-written motif is "
+               "arranged into a sixteen-measure structure at load, and that same "
+               "generated chart drives both the falling notes and the oscillators, so "
+               "the beatmap and the music are the same object rather than a track with "
+               "a chart hand-placed on top of it. They cannot drift apart because there "
+               "is nothing to drift.",
+               "Note judgment and the falling-note animation are both timed off the "
+               "audio context's own clock rather than animation-frame timestamps, which "
+               "is the difference between a rhythm game that feels tight and one that "
+               "feels slightly wrong in a way players cannot name. Because the whole "
+               "chart is known up front, every oscillator is scheduled in one pass at "
+               "load instead of through the lookahead scheduler that Web Audio "
+               "sequencing usually needs.",
+               "Difficulty changes note density and timing windows. It does not change "
+               "the song."]),
+             ("taught", "What it taught me", "Ports have tick rates",
               ["Matching an existing visual language closely is much harder than "
                "designing freely, and much better practice. You cannot fall back on "
                "taste; you have to measure what is actually there and reproduce it, "
-               "which is the same skill an audit of a design system needs."]),
+               "which is the same skill an audit of a design system needs.",
+               "The sharpest version of that lesson was numeric. The first pass at the "
+               "catch-bar ran its physics once per animation frame, which at 60fps came "
+               "out about 20% faster than intended, and every constant I then re-tuned "
+               "by feel took it further from the thing I was trying to match. The fix "
+               "was not a better constant, it was running the loop at the tick rate the "
+               "original used.",
+               "The other one was structural. The popups rendered off-screen for a day "
+               "because the page's parallax puts a perspective on the main element, "
+               "which quietly makes it the containing block for any fixed-position "
+               "child instead of the viewport. The modals had to live outside it in the "
+               "DOM. Nothing about the symptom pointed at the cause."]),
          ]),
 
     dict(slug="p-uxfolio", title="UI/UX Case Studies", kicker="Personal",
@@ -193,7 +330,9 @@ PROJECTS = [
                ("Year", "2023"), ("Live", live("https://kiara-vong.github.io/portfolio/", "Open it")),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
-              ("how", "How it works", False), ("taught", "What it taught me", False)],
+              ("studies", "The four", False), ("how", "How it works", False),
+              ("build", "Shared markup", True),
+              ("taught", "What it taught me", False)],
          sections=[
              ("context", "Context", "A grid of final screens says nothing",
               ["Most student portfolios are a grid of finished screens. They show that "
@@ -202,12 +341,43 @@ PROJECTS = [
                "What a reviewer actually wants is the middle: what you tried, what you "
                "threw away, and why. That is the part nobody publishes because it is "
                "the part that is unflattering."]),
+             ("studies", "The four", "Four problems, deliberately unalike",
+              ["Four case studies, chosen so they do not all demonstrate the same "
+               "skill. One is quantitative, one is competitive research turned into a "
+               "build, one is a redesign with a sense of humour about itself, and one "
+               "is a domain nobody designs for."],
+              [("A/B Testing",
+                "Two appointment-booking flows, a hypothesis, a statistical test, and "
+                "a result that had to be reported whichever way it went."),
+               ("Development",
+                "Competitive analysis into UI design for a React film-discovery app: "
+                "search, genre filtering, bookmarking."),
+               ("The Room",
+                "A website redesign for the cult film, played straight enough to be "
+                "useful and knowing enough to be funny."),
+               ("Fonda Wallet",
+                "A mobile finance tool for restaurant owners, centralising revenue and "
+                "expenses. The least glamorous brief and the most interesting one.")]),
              ("how", "How it works", "Process as the artefact",
               ["Every case study leads with the problem and spends most of its length "
                "on the decisions, with the final screens arriving last and briefly. "
                "The explorations that were abandoned get as much room as the one that "
                "shipped, which is the only honest way to show a decision was made "
                "rather than stumbled into."]),
+             ("build", "How it works", "Framework-free output, non-repetitive source",
+              ["The shipped site is plain HTML, CSS and JavaScript with no framework "
+               "and no pipeline, which is the right answer for five static pages. The "
+               "trouble with five static pages is that the nav, the footer and the "
+               "about card exist five times each, and hand-editing one text change in "
+               "five files is how they drift apart.",
+               "So the source is not what deploys. The shared pieces live once in a "
+               "partials folder, the page sources reference them with include markers, "
+               "and a small Node script assembles the flat static files that actually "
+               "ship. The output stays framework-free; the source stops being "
+               "repetitive.",
+               "This site does the same thing for the same reason, with Python instead "
+               "of Node and considerably more generated. That is not a coincidence, it "
+               "is this project's idea kept."]),
              ("taught", "What it taught me", "The format that survived",
               ["This is the direct ancestor of the case studies on this site: problem, "
                "then the two or three choices that were genuinely hard, then what "
@@ -316,18 +486,46 @@ PROJECTS = [
 ]
 
 
+def _parts(sec):
+    """(anchor, label, h2, escaped paragraphs, optional rules table)."""
+    after = rules(sec[4]) if len(sec) > 4 else None
+    return sec[0], sec[1], sec[2], [esc(x) for x in sec[3]], after
+
+
 def build(p):
     """Assemble one project page.
 
     A section is (anchor, label, h2, paragraphs) and optionally a fifth element, a
     list of (title, description) pairs that becomes the bordered rules table. That
     shape is the only thing PROJECTS has to know about the case-study template.
+
+    Consecutive sections that share a LABEL are one group rather than several
+    sections. The label is the small eyebrow above the heading, and it names the part
+    of the document you are in, so printing "How it works" three times in a row turns
+    one part into three loose ones and stops meaning anything. Inside a group only the
+    first sub carries the eyebrow; the rest carry their heading alone, which is what
+    the work case studies already do with their key decisions.
+
+    Nav anchors keep working either way: the spy resolves them with getElementById and
+    sub() puts the id on the .cs-sub. Marking those entries as sub in `nav` is what
+    indents them to match.
     """
-    blocks = []
-    for sec in p["sections"]:
-        anchor, label, h2, paras = sec[0], sec[1], sec[2], sec[3]
-        after = rules(sec[4]) if len(sec) > 4 else None
-        blocks.append(section(anchor, label, h2, [esc(x) for x in paras], after=after))
+    blocks, secs, i = [], p["sections"], 0
+    while i < len(secs):
+        run = [secs[i]]
+        while i + len(run) < len(secs) and secs[i + len(run)][1] == secs[i][1]:
+            run.append(secs[i + len(run)])
+        if len(run) == 1:
+            anchor, label, h2, paras, after = _parts(run[0])
+            blocks.append(section(anchor, label, h2, paras, after=after))
+        else:
+            group = ['    <div class="cs-group">\n\n']
+            for n, sec in enumerate(run):
+                anchor, label, h2, paras, after = _parts(sec)
+                group.append(sub(anchor, label, h2, paras, first=(n == 0), after=after))
+            group.append('    </div>\n\n')
+            blocks.append("".join(group))
+        i += len(run)
     # p-stardew.html was a prefix standing in for a folder. It is a folder now.
     _gc.build(p["slug"], dict(
         out="projects/%s.html" % p["slug"].replace("p-", ""), root="../",

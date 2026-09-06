@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Stardew Companion — Kiara Vong</title>
-<meta name="description" content="A single-page fan guide: look up any villager's favourite gifts, click around town to learn what each building is for, and pick up a fact on the way p">
+<meta name="description" content="A single-page fan guide: look up any of the 34 villagers' favourite gifts, click around town to learn what each building is for, and play one of four ">
 <meta name="theme-color" content="#5690AE">
 <link rel="icon" href="../assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/ui/favicon.svg">
@@ -53,6 +53,9 @@
     <a href="#overview">Overview</a>
     <a href="#context">Context</a>
     <a href="#how">How it works</a>
+    <a class="sub" href="#data">Facts and assets</a>
+    <a href="#arcade">The arcade</a>
+    <a class="sub" href="#rhythm">The rhythm game</a>
     <a href="#taught">What it taught me</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -103,10 +106,10 @@
           <h1 class="cs-title">Stardew Companion</h1>
         </div>
         <div class="cs-headgroup">
-        <p class="cs-intro">A single-page fan guide: look up any villager's favourite gifts, click around town to learn what each building is for, and pick up a fact on the way past. No framework and no build step, styled closely enough that it feels like it belongs in the game.</p>
+        <p class="cs-intro">A single-page fan guide: look up any of the 34 villagers' favourite gifts, click around town to learn what each building is for, and play one of four arcade cabinets built into the page. No framework and no build step, styled closely enough that it feels like it belongs in the game.</p>
         <div class="cs-meta">
           <div class="col"><span class="lbl">Role</span><span class="val">Everything</span></div>
-          <div class="col"><span class="lbl">Stack</span><span class="val">HTML, CSS,<br>vanilla JS</span></div>
+          <div class="col"><span class="lbl">Stack</span><span class="val">HTML, CSS, vanilla JS,<br>canvas, Web Audio</span></div>
           <div class="col"><span class="lbl">Year</span><span class="val">2024</span></div>
           <div class="col"><span class="lbl">Live</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/stardew/" target="_blank" rel="noopener">Open it</a></span></div>
           <div class="col"><span class="lbl">Note</span><span class="val">If you would like the detail, please <a class="touch" href="../index.html">get in touch</a></span></div>
@@ -126,7 +129,9 @@
       </div>
     </section>
 
-    <section id="how" class="cs-section">
+    <div class="cs-group">
+
+      <div class="cs-sub" id="how">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">How it works</span></div>
         <h2 class="cs-h2">Borrowing a visual language without stealing assets</h2>
@@ -135,15 +140,62 @@
         <p>The thing that makes it feel like the game is not any single asset. It is the palette, the chunky border radii, the drop shadows on the panels and the specific weight of the type. Get those right and hand-drawn elements read as belonging; get them wrong and a real asset still looks pasted in.</p>
         <p>No build step is a constraint I set on purpose. A fan guide that needs npm install to change a gift list is a fan guide that stops being updated.</p>
       </div>
-    </section>
+      </div>
+
+      <div class="cs-sub" id="data">
+        <h2 class="cs-h2">Facts, sprites and code are not the same thing</h2>
+      <div class="cs-body">
+        <p>The gift lists are game data, so a one-time Node script parsed them out of a mirrored fan site rather than my typing 34 characters' worth of preferences by hand. Portraits, item icons and location photos come from the same source and the official wiki, used the way a fan guide typically uses them.</p>
+        <p>Game code is a different category, and the arcade below draws the line in both directions. Prairie King's shooter logic is an original recreation, because the original is somebody's work in a way a gift list is not. The fishing catch-bar, on the other hand, is a deliberate port of a specific open reference implementation at its own constants, because approximating it did not feel right and matching it exactly was the entire point.</p>
+      </div>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">Facts are facts</span><span class="d">What a character likes is not authored; it is looked up. Scraping it once beats retyping it 34 times.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Sprites are borrowed, and credited</span><span class="d">Non-commercial fan use, the same footing as any fan wiki, and named as such.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">Logic is written, or ported on purpose</span><span class="d">Recreated where it belongs to someone, ported exactly where the reference is open and the fidelity IS the feature.</span></div>
+      </div>
+      </div>
+
+    </div>
+
+    <div class="cs-group">
+
+      <div class="cs-sub" id="arcade">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">The arcade</span></div>
+        <h2 class="cs-h2">Four cabinets and no game engine</h2>
+      </div>
+      <div class="cs-body">
+        <p>Half of this project is not a guide at all. Four playable cabinets sit on the same page, each a plain canvas element with its own loop, and none of them uses a framework or an engine.</p>
+        <p>They are also the reason the page does not cost anything while you are reading it. All four pause their render loop through an IntersectionObserver the moment they scroll out of view, and the rhythm game suspends its audio context at the same instant, so closing the modal actually stops the music rather than leaving it playing under everything else.</p>
+      </div>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">Junimo Kart</span><span class="d">A runner. Jump the spikes and the gaps, collect stars, and beat a best score that survives a reload.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Fishing</span><span class="d">Cast, bite and result on canvas, with the catch-bar minigame itself built as a DOM overlay so its physics can run at the source's native 20ms tick rather than once a frame.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">Journey of the Prairie King</span><span class="d">A top-down shooter over five waves. Arrows or WASD to move, hold space to fire.</span></div>
+        <div class="cs-rule"><span class="n">04</span><span class="t">Junimo Jamboree</span><span class="d">A four-lane rhythm game at three difficulties, with a song that does not exist as a file.</span></div>
+      </div>
+      </div>
+
+      <div class="cs-sub" id="rhythm">
+        <h2 class="cs-h2">One source for the song and the chart</h2>
+      <div class="cs-body">
+        <p>Junimo Jamboree has no audio track. A short hand-written motif is arranged into a sixteen-measure structure at load, and that same generated chart drives both the falling notes and the oscillators, so the beatmap and the music are the same object rather than a track with a chart hand-placed on top of it. They cannot drift apart because there is nothing to drift.</p>
+        <p>Note judgment and the falling-note animation are both timed off the audio context's own clock rather than animation-frame timestamps, which is the difference between a rhythm game that feels tight and one that feels slightly wrong in a way players cannot name. Because the whole chart is known up front, every oscillator is scheduled in one pass at load instead of through the lookahead scheduler that Web Audio sequencing usually needs.</p>
+        <p>Difficulty changes note density and timing windows. It does not change the song.</p>
+      </div>
+      </div>
+
+    </div>
 
     <section id="taught" class="cs-section">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">What it taught me</span></div>
-        <h2 class="cs-h2">Pastiche is a discipline</h2>
+        <h2 class="cs-h2">Ports have tick rates</h2>
       </div>
       <div class="cs-body">
         <p>Matching an existing visual language closely is much harder than designing freely, and much better practice. You cannot fall back on taste; you have to measure what is actually there and reproduce it, which is the same skill an audit of a design system needs.</p>
+        <p>The sharpest version of that lesson was numeric. The first pass at the catch-bar ran its physics once per animation frame, which at 60fps came out about 20% faster than intended, and every constant I then re-tuned by feel took it further from the thing I was trying to match. The fix was not a better constant, it was running the loop at the tick rate the original used.</p>
+        <p>The other one was structural. The popups rendered off-screen for a day because the page's parallax puts a perspective on the main element, which quietly makes it the containing block for any fixed-position child instead of the viewport. The modals had to live outside it in the DOM. Nothing about the symptom pointed at the cause.</p>
       </div>
     </section>
 
