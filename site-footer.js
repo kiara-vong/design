@@ -34,17 +34,17 @@ var SITE_ROOT = (function () {
   /* The persimmon footer draws its three tiles from one sprite via object-position.
      The About footer's three tiles are identical in the design (Figma 358:1299), so
      they all point at one asset rather than at a sprite or a pair. */
-  /* The persimmon footer draws its three tiles from one sprite via object-position.
-     The variants each have a single tile repeated three times in the design, so they
-     point all three at one asset instead. Library's two groups in Figma (358:1256
-     and 358:1263) are the same flower, checked pixel for pixel. */
-  var TILE = { about: SITE_ROOT + 'assets/ui/foot-flower-about.svg',
-               library: SITE_ROOT + 'assets/ui/foot-flower-alt.svg' };
-  if (TILE[variant]) {
-    document.querySelectorAll('#footer .flowers .fl').forEach(function(img){
-      img.src = TILE[variant];
-    });
-  }
+  /* No per-page flower artwork any more, and removing it fixed a bug that had been
+     there the whole time.
+
+     The About and Library footers used to swap all three tiles to a single-tile SVG,
+     on the reasoning that those variants repeat one flower rather than showing three
+     different ones. But .fl.f2 and .fl.f3 crop at object-position 0 -122.5 and
+     0 -245, which is past the bottom of a 120x111 image, so those two rendered
+     EMPTY. Every one of those pages has been showing one flower and two blank boxes.
+
+     The variants are gone with the pale About footer, so all three tiles come from
+     the same three-tile sprite everywhere and all three are drawn. */
 
   /* Which of the three reads as current, taken from the page itself rather than
      from the variant. It used to be handled inside the About branch alone, which

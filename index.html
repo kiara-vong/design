@@ -393,7 +393,7 @@ window.__hl = (function () {
    Its RIGHT edge is set by the cat avatar painted inside the box at about 63%, not
    by the box border at 71%, and its BOTTOM by the box's own lower rule. Widen or
    deepen it and it starts covering one or the other. */
-.mascot-prompt{position:absolute;left:40.2%;top:48.6%;width:23.2%;height:10.6%;
+.mascot-prompt{position:absolute;left:40.2%;top:49.6%;width:23.2%;height:10.6%;
   padding:0 0.4cqw;box-sizing:border-box;background:#F8F0DB;
   /* The patch is FEATHERED, not butted up against the drawing.
 
@@ -412,10 +412,18 @@ window.__hl = (function () {
   display:flex;align-items:center;flex-wrap:wrap;
   font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
   font-size:2.08cqw;line-height:1.28;color:#4A4438}
-.mascot-prompt .caret{display:inline-block;width:1px;height:.95em;
-  vertical-align:-0.1em;background:#4A4438;margin-left:1px;
+/* The caret is ::after on the TEXT, not a sibling.
+
+   As a sibling it was a flex item of its own, so the moment a line filled the box it
+   wrapped to a second line by itself, leaving a blinking bar under the sentence with
+   nothing beside it. Attached to the text it is in the same inline flow and can only
+   ever sit after the last character it was typed behind. */
+.mascot-prompt .bubble-text::after{content:"";display:inline-block;width:1px;
+  height:.95em;vertical-align:-0.1em;background:#4A4438;margin-left:1px;
   animation:blink 1.1s step-end infinite}
-@media (prefers-reduced-motion:reduce){.mascot-prompt .caret{animation:none}}
+@media (prefers-reduced-motion:reduce){
+  .mascot-prompt .bubble-text::after{animation:none}
+}
 </style>
 <link rel="stylesheet" href="mobile.css">
 
@@ -447,7 +455,7 @@ window.__hl = (function () {
        senior prompt engineers</p>
     <div class="mascot-wrap">
       <img class="mascot" src="assets/hero/cats-hero.webp" alt="Lyra and Goose, two cats, at one open laptop with Claude on the screen">
-      <p class="mascot-prompt" aria-hidden="true"><span class="bubble-text"></span><span class="caret"></span></p>
+      <p class="mascot-prompt" aria-hidden="true"><span class="bubble-text"></span></p>
     </div>
   </div>
 
@@ -755,7 +763,6 @@ window.__hl = (function () {
               'explain taxes',
               'what is a job?',
               'is it normal to sleep 18 hours?',
-              'why does everyone keep calling me fat?',
               'is my tail sentient?',
               'how to catch red dot',
               'how to deal with annoying siblings'

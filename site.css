@@ -1887,22 +1887,12 @@ a[href] {
    and one painting under every page is the point of it; a second treatment turns the
    one element that appears on every page back into the one element that changes.
 
-   site-footer.js still reads .is-about to pick its stamp artwork, which is why the
-   class is still applied rather than removed from the markup. */
+   The class is still applied to the markup, and site-footer.js no longer branches
+   on it either. It is left in place only so an About-only tweak has somewhere to go
+   if one is ever wanted again. */
 
 .foot-nav a.current {
    color: var(--moss)
-}
-
-#footer.is-about .weather .dot {
-   background: var(--moss)
-}
-
-/* cream would disappear against this ground, so hover darkens instead of lightening */
-#footer.is-about .foot-links a:hover,
-#footer.is-about .foot-nav a:hover,
-#footer.is-about .foot-nav a.current:hover {
-   color: var(--dusty-granite)
 }
 
 .foot-nav a.current {
