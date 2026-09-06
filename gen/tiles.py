@@ -39,6 +39,33 @@ PROJ = ".."
 # the image clean past its own bottom edge.
 VIEW_H, VIEW_W = 248.0, 322.0
 
+# The ground each tile's drawn browser frame sits on. It used to be one flat colour
+# per tile, sampled from the capture. It is a painting now, cut from the same folder
+# the page grounds come from, so the six tiles are bordered by the same hands the
+# hero and the About page are.
+#
+# Only a border of it is ever visible: .tile-win insets 8.5% either side and 15% at
+# the top, so what shows is a frame a few dozen pixels wide. That is the whole reason
+# this works at all. A painting behind a screenshot would fight it; a painting AROUND
+# one reads as a mount.
+#
+# Chosen for tone against the capture inside, not for subject: a warm ground under a
+# warm page, a cool one under a cool page, and the darkest painting under Pac-Man,
+# which is the only capture that is nearly black.
+FIELD_W, FIELD_H = 776, 624
+# Matched on a SUBSTRING rather than a filename. Half of these files carry an en
+# dash or an accented character in their name, and spelling those back out in a
+# source file is a way to silently match nothing.
+FIELDS = {
+    "ac":      ("RENOIR", 0.62),
+    "dorms":   ("Chamaillard", 0.45),
+    "stardew": ("Ottis-Adams", 0.55),
+    "uxfolio": ("Seurat", 0.5),
+    "chess":   ("Jacob-Alberts", 0.5),
+    "pacman":  ("Wisinger-Florian", 0.72),
+}
+HERO_SRC = os.path.join("assets", "hero", "_src")
+
 # (slug, source, field colour, crop-from-top). A page wants its top; a render or a
 # game board wants its middle.
 TILES = [
@@ -101,7 +128,22 @@ for slug, src, field, mode in TILES:
     # through the frame.
     drawn = h * VIEW_W / float(TILE_W)
     travel = round((1.0 - VIEW_H / drawn) * 100.0, 2) if drawn > VIEW_H else None
-    meta[slug] = {"field": field, "h": h, "travel": travel}
+    # The painting behind the frame, if this tile has one.
+    ground = None
+    if slug in FIELDS:
+        key, focus = FIELDS[slug]
+        hits = [f for f in sorted(os.listdir(HERO_SRC)) if key in f]
+        fpath = os.path.join(HERO_SRC, hits[0]) if hits else None
+        if fpath:
+            g = ImageOps.exif_transpose(Image.open(fpath).convert("RGB"))
+            g = ImageOps.fit(g, (FIELD_W, FIELD_H), Image.LANCZOS,
+                             centering=(0.5, focus))
+            g.save(os.path.join(OUT, "field-%s.webp" % slug),
+                   "WEBP", quality=84, method=6)
+            ground = "field-%s.webp" % slug
+        else:
+            print("     no painting matched %r for %s" % (key, slug))
+    meta[slug] = {"field": field, "h": h, "travel": travel, "ground": ground}
     print("  %-10s %dx%d  field %s  travel %s"
           % (slug + ".jpg", TILE_W, h, field,
              ("%.2f%%" % travel) if travel else "pan"))

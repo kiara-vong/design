@@ -42,16 +42,16 @@ COLOR = {
     # One feature colour per category, spread across the seven so no two adjacent
     # tickets on the index share one. All seven are the same lightness, so this is a
     # question of hue only.
-    "water-drop": "var(--ink-blue)",   "smoke": "var(--feat-clay)",
-    "rheoscopic": "var(--feat-plum)",  "sandsketch": "var(--feat-ochre)",
-    "films": "var(--feat-indigo)",
-    "canvas": "var(--feat-clay)",      "pens": "var(--feat-olive)",
-    "sketches": "var(--feat-indigo)",  "hatch": "var(--slate)",
-    "still-life": "var(--feat-plum)",
-    "football": "var(--feat-clay)",    "cheer": "var(--feat-fern)",
-    "powderpuff": "var(--feat-ochre)", "swim": "var(--feat-teal)",
-    "nature": "var(--feat-olive)",
-    "fantasy": "var(--feat-plum)",     "flashcards": "var(--feat-indigo)",
+    "water-drop": "var(--ink-blue)",   "smoke": "var(--feat-leaf)",
+    "rheoscopic": "var(--feat-sage)",  "sandsketch": "var(--feat-moss)",
+    "films": "var(--feat-bright)",
+    "canvas": "var(--feat-leaf)",      "pens": "var(--feat-lime)",
+    "sketches": "var(--feat-bright)",  "hatch": "var(--slate)",
+    "still-life": "var(--feat-sage)",
+    "football": "var(--feat-leaf)",    "cheer": "var(--feat-fern)",
+    "powderpuff": "var(--feat-moss)", "swim": "var(--feat-pine)",
+    "nature": "var(--feat-lime)",
+    "fantasy": "var(--feat-sage)",     "flashcards": "var(--feat-bright)",
     "graphics": "var(--slate)",        "yearbook": "var(--feat-fern)",
 }
 

@@ -147,25 +147,26 @@
    /* Feature colours: the accents that separate one art category, tag or callout
       from the next.
 
-      These replace four tokens named --feat-plum, --feat-clay, --feat-indigo
-      and --feat-ochre, which were the reference designer's client brands. Two of them
-      also fought the blue accent: --feat-indigo #6889E1 sat almost on top of it, and
-      --feat-ochre #EB804E was the old orange accent still in circulation.
+      A green family now, rather than seven hues spread evenly around the wheel.
+      The old set separated nineteen categories cleanly and had nothing to do with
+      the rest of the page; these are the greens the site already uses. --feat-leaf
+      IS --tag-green and --feat-moss IS --moss, so a category chip and a link are
+      the same colour rather than two colours that happen to coexist.
 
-      The set is chosen the way the accent was: one lightness, one chroma, hues spread
-      evenly. All seven sit at L* 52 and chroma 30, so no chip outshouts its
-      neighbour. The old set ran L* 36 to 65 and chroma 9 to 66, which is why Nike
-      shouted and slate disappeared.
+      Separation comes from lightness and from how yellow or how blue each green is,
+      which is a narrower instrument than hue and the right one when the point is
+      that they read as one palette. --feat-bright and --feat-leaf are the two the
+      set is built around; the other four sit between and beyond them.
 
-      Three more are defined than are currently used. They are here so a new category
-      takes one from the family rather than inventing a colour. */
-   --feat-clay: #AC6B60;
-   --feat-ochre: #98764A;
-   --feat-olive: #708350;
-   --feat-fern: #518863;
-   --feat-teal: #168A8D;
-   --feat-indigo: #4A81AE;
-   --feat-plum: #9C6D96;
+      Six rather than seven: with hue no longer doing the work, a seventh green was
+      a duplicate of one already here. */
+   --feat-bright: #7FBE33;
+   --feat-lime: #9FB63A;
+   --feat-moss: #8D9934;
+   --feat-leaf: #649F25;
+   --feat-sage: #6E8F5B;
+   --feat-fern: #4F8B4A;
+   --feat-pine: #2E7D5F;
    /* Payments Home only. Named for the case study, not the site: another case study
      should define its own pair rather than inherit these.
 
@@ -267,7 +268,11 @@ section {
    left: 0;
    width: 100%;
    z-index: 0;
-   background: var(--accent-deep)
+   /* Matches #footer, or the photograph stops at the 1440 canvas and a flat colour
+      continues either side of it. */
+   background: linear-gradient(rgba(19, 34, 40, .70), rgba(15, 27, 32, .84)),
+               url("assets/hero/footer-bg.webp") center / cover no-repeat,
+               var(--accent-deep)
 }
 
 /* ================= HERO ================= */
@@ -1442,19 +1447,19 @@ a.card:nth-of-type(even):hover {
 }
 
 .mini-tag.co-complete {
-   color: var(--feat-plum)
+   color: var(--feat-sage)
 }
 
 .mini-tag.co-flo {
-   color: var(--feat-clay)
+   color: var(--feat-leaf)
 }
 
 .mini-tag.co-baller {
-   color: var(--feat-indigo)
+   color: var(--feat-bright)
 }
 
 .mini-tag.co-nike {
-   color: var(--feat-ochre)
+   color: var(--feat-moss)
 }
 
 .mini-tag.co-personal {
@@ -1565,9 +1570,25 @@ a.card:nth-of-type(even):hover {
 }
 
 /* ================= FOOTER ================= */
+/* The ground is one of her own photographs rather than a flat brand colour: a
+   vortex ring from the smoke series, lit hard against black. It is the one series on
+   this site that is already mostly dark, so it takes a scrim without turning into a
+   black rectangle, and it means the band under every page is work rather than paint.
+
+   The scrim is not optional and it is not decoration. This band carries pale text,
+   the plant cursor and the click-to-plant stamps, all of which need a predictable
+   ground; a photograph varies across its width and text laid straight onto one is
+   legible in some columns and not others. The gradient runs slightly darker at the
+   foot, where the smaller print sits.
+
+   --accent-deep stays underneath as the fallback tone, so a failed image request
+   leaves the footer coloured rather than transparent, and so the colour the rest of
+   the page was toned against is still the colour that shows through. */
 #footer {
    height: 405px;
-   background: var(--accent-deep);
+   background: linear-gradient(rgba(19, 34, 40, .70), rgba(15, 27, 32, .84)),
+               url("assets/hero/footer-bg.webp") center / cover no-repeat,
+               var(--accent-deep);
    overflow: hidden
 }
 

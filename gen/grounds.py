@@ -240,6 +240,17 @@ PLATES = [
     ("Water-Lily_Pond_1919_Claude_Monet_Metropolitan.jpg",
      "about-bg.webp", (2400, 2025), 0.5),
     (None, "about-bg-mobile.webp", (780, 3834), 0.5),
+
+    # The footer ground. Her own photograph rather than a flat brand colour: one of
+    # the vortex-ring frames, smoke lit hard against black, which is the one series
+    # on this site that is already mostly dark and reads at any crop.
+    #
+    # 3.31:1 native against the band's 3.56:1, so the fit takes a little off the
+    # sides rather than a lot off the top and bottom, and the structure survives.
+    # The scrim that keeps the footer's pale text legible is in site.css, on top,
+    # rather than baked in here: the image is also the darkest thing on the page and
+    # over-darkening it twice would leave a black rectangle.
+    ("smoke-0923.png", "footer-bg.webp", (2880, 810), 0.5),
 ]
 SRC = os.path.join("assets", "hero", "_src")
 
