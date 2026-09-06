@@ -107,3 +107,28 @@ def deal(srcs, alt, caption, dur="14s", root="../"):
                     "" if i == 0 else ' aria-hidden="true"'))
     o.append('        </div>\n')
     return _fig("".join(o), caption)
+
+
+def annotated(src, alt, caption, notes, root="../"):
+    """A still with leader-line labels that push the picture in on what they name.
+
+    notes is a list of (key, label, description, x, y, zoom, top), where x/y are the
+    point to frame as percentages of the image, zoom is how far in to go, and top is
+    where the label sits down the right-hand margin.
+
+    The capture brief for these asks for about 120px left clear on the right for
+    exactly this, so the labels sit over ground rather than over the interface.
+    """
+    o = ['        <div class="cs-media cam ann">\n']
+    for key, label, desc, x, y, z, top in notes:
+        o.append('          <div class="ann-group" data-k="%s" '
+                 'style="--t:%s;--x:%s;--y:%s;--z:%s">\n'
+                 '            <div class="ann-row"><span class="ann-line"></span>'
+                 '<span class="ann-note">%s</span></div>\n'
+                 '            <p class="ann-desc">%s</p>\n'
+                 '          </div>\n'
+                 % (key, top, x, y, z, esc(label), esc(desc)))
+    o.append('          <div class="ann-view">'
+             '<img src="%sassets/%s" alt="%s" loading="lazy"></div>\n'
+             '        </div>\n' % (root, src, esc(alt)))
+    return _fig("".join(o), caption)

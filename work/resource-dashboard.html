@@ -153,13 +153,26 @@
         <p>Rather than average them into one compromised view, the dashboard has two and makes the default the urgent one. The job-focused view opens first, sorted by due date, because someone arriving without a plan is usually arriving because something is due. The hierarchy explorer is one toggle away for everyone else.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-wipe" style="--dur:11s">
-          <img src="../assets/plate/dashboard-view-table.webp" alt="The same eight resources as a table and as a drill-down graph" loading="lazy">
-          <img src="../assets/plate/dashboard-view-graph.webp" alt="" aria-hidden="true" loading="lazy">
-          <span class="seam"></span>
-          <span class="tag b">Table</span><span class="tag a">Graph</span>
+        <div class="cs-media cam ann">
+          <div class="ann-group" data-k="filters" style="--t:5%;--x:35%;--y:26%;--z:2.1">
+            <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Filters</span></div>
+            <p class="ann-desc">Category, region and environment. They persist across the view toggle, so switching does not cost you the narrowing you just did.</p>
+          </div>
+          <div class="ann-group" data-k="jobs" style="--t:26%;--x:72%;--y:17%;--z:2.4">
+            <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Resources with jobs</span></div>
+            <p class="ann-desc">A second source joined in rather than a filter over the first: which of your resources have work outstanding.</p>
+          </div>
+          <div class="ann-group" data-k="views" style="--t:47%;--x:88%;--y:17%;--z:2.4">
+            <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Table and Graph</span></div>
+            <p class="ann-desc">Two readings of one dataset. The urgent one opens first, because someone arriving without a plan is usually arriving because something is due.</p>
+          </div>
+          <div class="ann-group" data-k="export" style="--t:68%;--x:86%;--y:91%;--z:2.2">
+            <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Export</span></div>
+            <p class="ann-desc">Scoped to what is on screen: current filters, current level, nothing else.</p>
+          </div>
+          <div class="ann-view"><img src="../assets/plate/dashboard-default-annotated.webp" alt="The dashboard's default view, with its filters, view toggle, jobs filter and export called out" loading="lazy"></div>
         </div>
-        <figcaption class="cs-caption">One filtered set, two readings of it. Identical window, identical counts, so the only thing that changes is how it is being read.</figcaption>
+        <figcaption class="cs-caption">Point at a label and the picture goes there. Four controls, and the argument for each is that it survives the switch between views.</figcaption>
       </figure>
       </div>
 

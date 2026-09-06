@@ -29,10 +29,13 @@
    continuous drift that never lets anyone read either framing; with them it is a
    wide shot, a decision to look closer, and a detail. --fx/--fy name the point worth
    looking at, as percentages of the image. */
+/* No height here, on purpose. Every one of these is applied TOGETHER with .cs-media,
+   which is 391px tall, and height:100% resolves against .cs-figure, which has no
+   height of its own -- so setting it collapsed every camera plate on the site to two
+   pixels. The slot owns the box; the machine owns what moves inside it. */
 .cam {
    position: relative;
    width: 100%;
-   height: 100%;
    overflow: hidden
 }
 
@@ -294,5 +297,187 @@
 
    .cam-stagger > * {
       opacity: 1
+   }
+}
+
+/* ---------------------------------------------------------------- H. ann
+   An annotated still: leader lines to labels, and the picture pushes in on whatever
+   you point at.
+
+   This is the reference build's own walkthrough idea, moved off a phone mockup and
+   onto a desktop capture. It is the best thing on those project pages, and the
+   reason is that it inverts the usual arrangement: instead of a caption listing four
+   features under a screenshot, the screenshot answers the question you are already
+   asking, because pointing at a label IS the question.
+
+   Driven by data-hover on the container rather than by :hover on the label, and that
+   is not a preference. The zoom has to be read from the hovered label's own
+   coordinates, and a custom property set on one element cannot be read by a sibling:
+   properties inherit down, never sideways. case-study.js copies them up to the
+   container on pointerenter, which also makes the whole thing keyboard-operable for
+   free, since focus fires the same handler.
+
+   Resting state is the full frame with every label showing, which is a perfectly good
+   still and the one reduced motion keeps. */
+.ann {
+   position: relative;
+   width: 100%;
+   overflow: hidden;
+   background: var(--dove-ivory, #F6F2E6)
+}
+
+/* The picture stops short of the right edge and the labels get the strip that is
+   left. CAPTURE.md asks for about 120px clear on the right of an annotated capture
+   for this reason, but a full-width screenshot has none, so the plate makes the
+   margin itself rather than laying chips over the interface. Same arrangement the
+   reference build uses: subject left, annotations right, nothing overlapping. */
+.ann-view {
+   position: absolute;
+   left: 0;
+   top: 0;
+   bottom: 0;
+   right: 196px;
+   overflow: hidden;
+   border-right: 1px solid var(--outline-stroke, #D8D2C2)
+}
+
+/* CONTAIN, not cover. The labels name controls at the far edges of the interface --
+   the view toggle top right, the sidebar left, export bottom right -- and cover on a
+   box narrowed to make room for the labels crops exactly those away. The whole
+   screen has to be visible at rest or the annotations point at nothing. */
+.ann-view img {
+   position: absolute;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+   transform-origin: var(--fx, 50%) var(--fy, 50%);
+   transition: transform .55s cubic-bezier(.4, 0, .2, 1);
+   will-change: transform
+}
+
+.ann[data-hover] .ann-view img {
+   transform: scale(var(--z, 1.6))
+}
+
+/* A group is a leader line, a label, and a description that only exists on hover.
+   Right-aligned into the clear margin the capture brief asks to be left for them. */
+.ann-group {
+   position: absolute;
+   right: 14px;
+   top: var(--t);
+   z-index: 2;
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+   width: var(--w, 168px);
+   transition: opacity .28s ease
+}
+
+/* Everything except the one being pointed at gets out of the way. Fading rather than
+   hiding, so the group's own box keeps its place and nothing reflows underneath. */
+.ann[data-hover] .ann-group:not(.on) {
+   opacity: .12
+}
+
+.ann-row {
+   display: flex;
+   align-items: center;
+   gap: 6px
+}
+
+/* The leader points LEFT, out of the label and back toward the thing it names, so
+   the eye travels label to feature rather than the other way round. */
+.ann-line {
+   flex: none;
+   width: 26px;
+   height: 1px;
+   background: var(--outline-stroke, #D8D2C2);
+   position: relative
+}
+
+.ann-line::before {
+   content: "";
+   position: absolute;
+   left: -3px;
+   top: -2px;
+   width: 5px;
+   height: 5px;
+   border-radius: 50%;
+   background: var(--accent, #649F25)
+}
+
+.ann-note {
+   flex: 1 1 auto;
+   background: var(--parchment, #FDFBEF);
+   border: 1px solid var(--outline-stroke, #D8D2C2);
+   border-radius: 11px;
+   padding: 6px 10px;
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-weight: 500;
+   font-size: 12px;
+   line-height: 1.2;
+   color: var(--dusty-granite, #5C5651);
+   cursor: default;
+   box-shadow: 0 2px 6px rgba(45, 40, 38, .10);
+   transition: border-color .25s ease, color .25s ease
+}
+
+.ann-group.on .ann-note {
+   border-color: var(--accent, #649F25);
+   color: var(--accent, #649F25)
+}
+
+.ann-desc {
+   margin: 0;
+   padding-left: 32px;
+   font-family: 'Diatype', 'Inter', system-ui, sans-serif;
+   font-weight: 400;
+   font-size: 12px;
+   line-height: 1.35;
+   color: var(--dusty-granite, #5C5651);
+   opacity: 0;
+   transition: opacity .28s ease .04s
+}
+
+.ann-group.on .ann-desc {
+   opacity: 1
+}
+
+/* Until someone has pointed at one, the first label breathes. The reference build
+   does the same to its toggle, for the same reason: an interaction nobody knows is
+   there is an interaction nobody has. It stops for good on the first hover. */
+.ann:not(.used) .ann-group:first-of-type .ann-note {
+   animation: ann-nudge 2.6s ease-in-out infinite
+}
+
+@keyframes ann-nudge {
+   0%, 72%, 100% {
+      transform: translateX(0)
+   }
+
+   82% {
+      transform: translateX(-4px)
+   }
+
+   92% {
+      transform: translateX(0)
+   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   .ann-view img,
+   .ann-group,
+   .ann-desc {
+      transition: none
+   }
+
+   .ann[data-hover] .ann-view img {
+      transform: none
+   }
+
+   .ann:not(.used) .ann-group:first-of-type .ann-note {
+      animation: none
    }
 }

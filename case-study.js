@@ -245,3 +245,49 @@
   }, {threshold:.25, rootMargin:'0px 0px -10% 0px'});
   io.observe(el);
 })();
+
+/* Annotated stills: point at a label, the picture pushes in on what it names.
+   ---------------------------------------------------------------------------
+   The zoom target lives on the LABEL, as --x/--y/--z, and the transform runs on the
+   image. A custom property set on one element cannot be read by a sibling -- they
+   inherit down, never sideways -- so the values are copied up to the container here,
+   which is the whole reason this needs script at all.
+
+   pointerenter/leave rather than :hover, and focus/blur alongside it, so tabbing
+   through the labels drives exactly the same thing a mouse does. .used stops the
+   first label's idle nudge for good once anyone has actually used it. */
+(function () {
+  var plates = [].slice.call(document.querySelectorAll('.ann'));
+  if (!plates.length) return;
+
+  plates.forEach(function (plate) {
+    var groups = [].slice.call(plate.querySelectorAll('.ann-group'));
+
+    function on(g) {
+      plate.classList.add('used');
+      groups.forEach(function (o) { o.classList.toggle('on', o === g); });
+      plate.setAttribute('data-hover', g.getAttribute('data-k') || 'on');
+      plate.style.setProperty('--fx', g.style.getPropertyValue('--x') || '50%');
+      plate.style.setProperty('--fy', g.style.getPropertyValue('--y') || '50%');
+      plate.style.setProperty('--z', g.style.getPropertyValue('--z') || '1.6');
+    }
+
+    function off() {
+      groups.forEach(function (o) { o.classList.remove('on'); });
+      plate.removeAttribute('data-hover');
+    }
+
+    groups.forEach(function (g) {
+      var note = g.querySelector('.ann-note');
+      if (!note) return;
+      /* The note is the hit target, not the group: the group's box spans the full
+         label column including the description that is not shown yet, so hovering
+         anywhere in that empty space would fire it. */
+      note.setAttribute('tabindex', '0');
+      note.addEventListener('pointerenter', function () { on(g); });
+      note.addEventListener('focus', function () { on(g); });
+      note.addEventListener('blur', off);
+    });
+    plate.addEventListener('pointerleave', off);
+  });
+})();

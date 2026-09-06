@@ -93,13 +93,29 @@ build("resource-dashboard", dict(
              "first, sorted by due date, because someone arriving without a plan is "
              "usually arriving because something is due. The hierarchy explorer is one "
              "toggle away for everyone else."],
-            media.wipe(
-                "plate/dashboard-view-table.webp",
-                "plate/dashboard-view-graph.webp",
-                "The same eight resources as a table and as a drill-down graph",
-                "One filtered set, two readings of it. Identical window, identical "
-                "counts, so the only thing that changes is how it is being read.",
-                before="Table", after="Graph"),
+            media.annotated(
+                "plate/dashboard-default-annotated.webp",
+                "The dashboard's default view, with its filters, view toggle, jobs "
+                "filter and export called out",
+                "Point at a label and the picture goes there. Four controls, and the "
+                "argument for each is that it survives the switch between views.",
+                [("filters", "Filters",
+                  "Category, region and environment. They persist across the view "
+                  "toggle, so switching does not cost you the narrowing you just did.",
+                  "35%", "26%", "2.1", "5%"),
+                 ("jobs", "Resources with jobs",
+                  "A second source joined in rather than a filter over the first: "
+                  "which of your resources have work outstanding.",
+                  "72%", "17%", "2.4", "26%"),
+                 ("views", "Table and Graph",
+                  "Two readings of one dataset. The urgent one opens first, because "
+                  "someone arriving without a plan is usually arriving because "
+                  "something is due.",
+                  "88%", "17%", "2.4", "47%"),
+                 ("export", "Export",
+                  "Scoped to what is on screen: current filters, current "
+                  "level, nothing else.",
+                  "86%", "91%", "2.2", "68%")]),
             first=True),
 
         sub("drill", "Key decisions", "Drilling without getting lost",
