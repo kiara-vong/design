@@ -118,30 +118,18 @@ p.addEventListener = function (t, fn, o) {
 Footage that exists and is fine, but was captured in a shape that fights the
 figure.
 
-### Dorms — the review card
+### ~~Dorms — the review card~~ · done
 
-This is the weakest figure on the site. The card is real, but the site lays it out
-full-bleed: blurred author at one end, five stars at the other, the words down in a
-corner, and about 1600px of nothing between them. No framing rescues it.
+Your full-page shot of the Wellness page solved this. The figure now carries the
+rating summary, the write-a-review form and a real review, and no student name
+appears anywhere — so the caption no longer has to promise blurring.
 
-| Capture | What to do |
-|---|---|
-| `dorms-reviews` | Record or shoot the reviews list **at a narrow window** — around 900px — so the card reflows and the name, the stars and the review body sit together |
+### ~~Dorms — the quiz~~ · done
 
-Two or three reviews stacked is better than one. Blur the author names, or use
-reviews you wrote — the capture brief already says so, and they are real students.
-
-I could not do this one myself: `/dorms` redirects to `/login`, and signing in is
-not something I'll do on your behalf.
-
-### Dorms — the quiz
-
-| Capture | What to do |
-|---|---|
-| `dorms-quiz` | Re-record at 16:9. The current one is 1280 × 614, which is neither the spec nor a clean ratio |
-
-Warm the backend first — load any dorm page and wait out the ~23 second cold start
-on the free tier. A cold start on camera looks like a broken app.
+Your two shots — the quiz with its answers chosen, and the ranked shortlist —
+register as two states of one page, so the figure cross-fades between them in a
+single framing: preferences in, three dorms out. That reads better than the clip
+did, so the old `dorms-quiz.mp4` is now unused. **Nothing to re-record here.**
 
 ---
 

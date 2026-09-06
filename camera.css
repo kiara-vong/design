@@ -556,8 +556,7 @@
    font-size: 12px;
    line-height: 1.2;
    color: var(--dusty-granite, #5C5651);
-   box-shadow: 0 2px 6px rgba(45, 40, 38, .10);
-   white-space: nowrap
+   box-shadow: 0 2px 6px rgba(45, 40, 38, .10)
 }
 
 .cam-stage .call-desc {

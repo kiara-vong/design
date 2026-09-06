@@ -240,7 +240,7 @@ PROJECTS = [
                           "Five of the thirty dorms are several buildings. A flat list of plans is wrong for those and quietly misleading to anyone who does not already know it.",
                           plate=(2200, 744),
                           look=[(190, 150, 760, 230), (190, 400, 760, 230)],
-                          call=("one group per building",
+                          call=("per building",
                                 "Archibald-Bronson, then Everett-Poland. A flat "
                                 "list would run these together."))),
              ("photos", "How it works", "Photographs nobody framed",
