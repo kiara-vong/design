@@ -55,7 +55,6 @@ STEPS = [
     ("shots",     "gen.card_shots",      [], []),
     ("figures",   "gen.case_figures", [], []),
     ("archive",   "gen.tiles",    [], []),
-    ("dorms",     "gen.tile_dorms",      [], []),
     ("persona",   "gen.persona_art",    [], []),
     ("polaroids", "gen.polaroids",  [], []),
     # Writes gallery-index.py, which the Art pages read. This is THE ordering

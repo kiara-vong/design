@@ -34,7 +34,7 @@ PROJ = ".."
 TILES = [
     ("ac",       os.path.join(PROJ, "animal-crossing", "img", "sample.png"),
      "#BDE3F0", "trim"),
-    ("dorms",    os.path.join(PROJ, "dab", "README.md"), "#F0E4DC", "none"),
+    ("dorms",    os.path.join(SHOTS, "live2_dorms.png"), "#F0E4DC", "top"),
     ("stardew",  os.path.join(SHOTS, "tall_stardew.png"), "#EEEAD6", "top"),
     ("uxfolio",  os.path.join(SHOTS, "tall_uxfolio.png"), "#D6DBEA", "top"),
     ("chess",    os.path.join(SHOTS, "tall_chess.png"),   "#E8DCC0", "mid"),
