@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Resource Dashboard — Kiara Vong</title>
+<meta name="description" content="Engineers responsible for cloud resources had no single place to see them. Answering “what do I own, and what needs attention” meant three tools and a">
+<meta name="theme-color" content="#649F25">
+<link rel="icon" href="../../assets/ui/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
+<!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
+<style>html{background:#FDFBEF}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../../site.css">
+<script src="../../site-motion.js"></script>
+<link rel="stylesheet" href="../../case-study.css">
+<link rel="stylesheet" href="../../camera.css">
+<style>
+/* The reference build's hero hangs 115x250 phone renders in .hero-float. These
+   studies are web work, so the hero is one wide plate at the container's own size
+   (799x307, from .cs-hero) instead. It stays INSIDE .hero-stage / .hero-float
+   because those are what site-motion.js reveals and parallaxes: .js sets
+   .hero-float to opacity 0 and only the entrance animation puts it back, so an
+   image outside that wrapper never becomes visible at all. Same reason .cs-flat
+   sits inside .cs-media rather than replacing it.
+
+   Declared before mobile.css so the responsive sheet still has the last word on
+   a phone, which is the ordering rule the whole site follows. */
+.cs-hero .hero-float .cs-heroimg{position:absolute;inset:0;width:100%;height:100%;
+  display:block;object-fit:cover}
+.cs-media .cs-flat{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover}
+/* The pill, fixed over the page the way it is on About. A case study is a long
+   scroll and the section list on the left only moves within this page; the pill is
+   how you get off it.
+
+   --nav-k is the home page's canvas scale, published by site-motion.js, so the
+   pill is the same size here as it is on the page you arrived from. Scaled about
+   its bottom edge so the 26px gap survives. */
+#cs-navwrap{position:fixed;left:0;bottom:26px;width:100%;z-index:40;
+  display:flex;justify-content:center;pointer-events:none}
+#cs-navwrap .nav{position:static;left:auto;top:auto;pointer-events:auto;
+  transform:scale(var(--nav-k,1));transform-origin:bottom center}
+
+</style>
+<link rel="stylesheet" href="../../mobile.css">
+</head>
+<body>
+  <a class="cs-back" href="../../index.html" aria-label="Back to home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+<nav class="cs-nav">
+    <a href="#overview">Overview</a>
+    <a href="#context">Context</a>
+    <a href="#decisions">Key decisions</a>
+    <a class="sub" href="#two-views">Two views over one dataset</a>
+    <a class="sub" href="#drill">Drilling without getting lost</a>
+    <a class="sub" href="#export">An export at every level</a>
+    <a class="sub" href="#data">A real boundary</a>
+    <a href="#impact">What changed</a>
+  </nav>
+<div id="cs-navwrap" aria-hidden="false">
+  <nav class="nav" aria-label="Primary">
+    <div class="nav-inner">
+      <div class="nav-home">
+        <a href="../../index.html" aria-label="Home" data-tip="Home">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 28V17.3333C20 16.9797 19.8595 16.6406 19.6095 16.3905C19.3594 16.1405 19.0203 16 18.6667 16H13.3333C12.9797 16 12.6406 16.1405 12.3905 16.3905C12.1405 16.6406 12 16.9797 12 17.3333V28"/><path d="M4 13.3333C3.99991 12.9454 4.08445 12.5622 4.24772 12.2103C4.41099 11.8584 4.64906 11.5464 4.94533 11.296L14.2787 3.296C14.76 2.88921 15.3698 2.66603 16 2.66603C16.6302 2.66603 17.24 2.88921 17.7213 3.296L27.0547 11.296C27.3509 11.5464 27.589 11.8584 27.7523 12.2103C27.9156 12.5622 28.0001 12.9454 28 13.3333V25.3333C28 26.0406 27.719 26.7189 27.219 27.2189C26.7189 27.719 26.0406 28 25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.2189C4.28095 26.7189 4 26.0406 4 25.3333V13.3333Z"/></svg>
+        </a>
+        <span class="label">Home</span>
+      </div>
+      <div class="nav-sep"></div>
+      <div class="nav-icons">
+        <a href="../../index.html#projects" aria-label="Projects" data-tip="Projects">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.6667 2.33333V11.6667L15.1667 8.16667L18.6667 11.6667V2.33333"/><path d="M4.66667 22.75V5.25C4.66667 4.47645 4.97396 3.73459 5.52094 3.18761C6.06792 2.64062 6.80979 2.33333 7.58333 2.33333H22.1667C22.4761 2.33333 22.7728 2.45625 22.9916 2.67504C23.2104 2.89383 23.3333 3.19058 23.3333 3.5V24.5C23.3333 24.8094 23.2104 25.1062 22.9916 25.325C22.7728 25.5438 22.4761 25.6667 22.1667 25.6667H7.58333C6.80979 25.6667 6.06792 25.3594 5.52094 24.8124C4.97396 24.2654 4.66667 23.5235 4.66667 22.75ZM4.66667 22.75C4.66667 21.9765 4.97396 21.2346 5.52094 20.6876C6.06792 20.1406 6.80979 19.8333 7.58333 19.8333H23.3333"/></svg>
+        </a>
+        <a href="../../pages/art/" aria-label="Art" data-tip="Art">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.66667 4.66667C4.66667 3.5621 5.5621 2.66667 6.66667 2.66667H21.3333C22.4379 2.66667 23.3333 3.5621 23.3333 4.66667V23.3333C23.3333 24.4379 22.4379 25.3333 21.3333 25.3333H6.66667C5.5621 25.3333 4.66667 24.4379 4.66667 23.3333V4.66667Z"/><path d="M10.5 11.0833C11.4665 11.0833 12.25 10.2998 12.25 9.33333C12.25 8.36683 11.4665 7.58333 10.5 7.58333C9.5335 7.58333 8.75 8.36683 8.75 9.33333C8.75 10.2998 9.5335 11.0833 10.5 11.0833Z"/><path d="M4.66667 19.8333L10.2083 14.2917C10.9894 13.5106 12.2556 13.5106 13.0367 14.2917L18.6667 19.9217"/><path d="M16.9167 18.1667L18.7083 16.375C19.4894 15.5939 20.7556 15.5939 21.5367 16.375L23.3333 18.1717"/></svg>
+        </a>
+        <a href="../../about.html" aria-label="About" data-tip="About">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25.6667C20.4433 25.6667 25.6667 20.4433 25.6667 14C25.6667 7.55668 20.4433 2.33333 14 2.33333C7.55668 2.33333 2.33333 7.55668 2.33333 14C2.33333 20.4433 7.55668 25.6667 14 25.6667Z"/><path d="M14 15.1667C15.933 15.1667 17.5 13.5997 17.5 11.6667C17.5 9.73367 15.933 8.16667 14 8.16667C12.067 8.16667 10.5 9.73367 10.5 11.6667C10.5 13.5997 12.067 15.1667 14 15.1667Z"/><path d="M8.16667 24.1057V22.1667C8.16667 21.5478 8.4125 20.9543 8.85008 20.5167C9.28767 20.0792 9.88116 19.8333 10.5 19.8333H17.5C18.1188 19.8333 18.7123 20.0792 19.1499 20.5167C19.5875 20.9543 19.8333 21.5478 19.8333 22.1667V24.1057"/></svg>
+        </a>
+        <a href="#" aria-label="Email" data-tip="Copy email" data-mail>
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M29.3333 9.33333L17.3453 16.9693C16.9385 17.2056 16.4764 17.3301 16.006 17.3301C15.5356 17.3301 15.0735 17.2056 14.6667 16.9693L2.66667 9.33333"/><path d="M26.6667 5.33333H5.33333C3.86057 5.33333 2.66667 6.52724 2.66667 8V24C2.66667 25.4728 3.86057 26.6667 5.33333 26.6667H26.6667C28.1394 26.6667 29.3333 25.4728 29.3333 24V8C29.3333 6.52724 28.1394 5.33333 26.6667 5.33333Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div id="cs-stage">
+ <div class="cs-page">
+
+  <main class="cs-main">
+
+    <!-- Overview -->
+    <section id="overview" class="cs-overview">
+      <div class="cs-hero">
+        <div class="hero-stage">
+          <div class="hero-float">
+            <img class="cs-heroimg" src="../../assets/case/cs-dash-seams.svg" alt="A cloud resource dashboard with filters, a drill-down graph view and an export action">
+          </div>
+        </div>
+      </div>
+      <div class="cs-head">
+        <div class="cs-titleblock">
+          <p class="cs-kicker">Capital One</p>
+          <h1 class="cs-title">Resource Dashboard</h1>
+        </div>
+        <div class="cs-headgroup">
+        <p class="cs-intro">Engineers responsible for cloud resources had no single place to see them. Answering “what do I own, and what needs attention” meant three tools and a spreadsheet. I designed and built the dashboard that replaced that: one surface, two ways through it, and an export at every level.</p>
+        <div class="cs-meta">
+          <div class="col"><span class="lbl">Role</span><span class="val">Design engineer,<br>front end</span></div>
+          <div class="col"><span class="lbl">Stack</span><span class="val">React, TypeScript,<br>MUI, AG Grid</span></div>
+          <div class="col"><span class="lbl">Scope</span><span class="val">IA, components,<br>end-to-end flows</span></div>
+          <div class="col"><span class="lbl">Status</span><span class="val">Shipped to<br>enterprise users</span></div>
+          <div class="col"><span class="lbl">Rebuilt</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/resource-dashboard/#/resources" target="_blank" rel="noopener">Open it</a></span></div>
+          <div class="col"><span class="lbl">Note</span><span class="val">If you would like the detail, please <a class="touch" href="../../index.html">get in touch</a></span></div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="context" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Context</span></div>
+        <h2 class="cs-h2">Everything was somewhere, nothing was anywhere</h2>
+      </div>
+      <div class="cs-body">
+        <p>The data already existed. Ownership lived in one system, compliance jobs in another, the resource inventory in a third, and the way you answered a question about your own infrastructure was to open all three and reconcile them by hand.</p>
+        <p>That is a shape of problem I keep running into: nothing is broken, every individual tool works, and the entire cost sits in the seams between them. It never gets filed as a bug because no single step is wrong. It just quietly taxes everyone who has to do it.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-plate">
+          <div class="cs-plate-top"><span class="cs-kind is-video">Video / loop</span><span class="cs-tech">workflow demo, looping</span></div>
+          <h3>The three-tool reconciliation, before the dashboard existed</h3>
+          <p>A screen recording of the old workflow, so the reader feels the cost instead of being told about it. Cut it tight: the point is how many windows it takes to answer one question.</p>
+          <ul><li>Window 1: ownership lookup, paste an identifier</li><li>Window 2: the compliance job list, find the same resource</li><li>Window 3: the inventory, confirm what it actually is</li><li>End on all three open at once</li></ul>
+          <div class="cs-spec"><span><b>Size</b> 799x391</span><span><b>Format</b> muted mp4 + webm, or animated webp</span><span><b>Length</b> 8-12s, seamless loop</span><span><b>Cursor</b> visible</span></div>
+        </div>
+      </figure>
+    </section>
+
+    <div id="decisions" class="cs-group">
+
+      <div class="cs-sub" id="two-views">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Key decisions</span></div>
+        <h2 class="cs-h2">Two views over one dataset</h2>
+      </div>
+      <div class="cs-body">
+        <p>Two groups of people arrive at a tool like this with genuinely different questions. One has a job to do today and wants the shortest path to it. The other is exploring, and needs to understand the shape of what they own.</p>
+        <p>Rather than average them into one compromised view, the dashboard has two and makes the default the urgent one. The job-focused view opens first, sorted by due date, because someone arriving without a plan is usually arriving because something is due. The hierarchy explorer is one toggle away for everyone else.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam ann">
+          <div class="ann-group" data-k="filters" style="--t:5%;--x:35%;--y:26%;--z:2.1">
+            <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Filters</span></div>
+            <p class="ann-desc">Category, region and environment. They persist across the view toggle, so switching does not cost you the narrowing you just did.</p>
+          </div>
+          <div class="ann-group" data-k="jobs" style="--t:26%;--x:72%;--y:17%;--z:2.4">
+            <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Resources with jobs</span></div>
+            <p class="ann-desc">A second source joined in rather than a filter over the first: which of your resources have work outstanding.</p>
+          </div>
+          <div class="ann-group" data-k="views" style="--t:47%;--x:88%;--y:17%;--z:2.4">
+            <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Table and Graph</span></div>
+            <p class="ann-desc">Two readings of one dataset. The urgent one opens first, because someone arriving without a plan is usually arriving because something is due.</p>
+          </div>
+          <div class="ann-group" data-k="export" style="--t:68%;--x:86%;--y:91%;--z:2.2">
+            <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Export</span></div>
+            <p class="ann-desc">Scoped to what is on screen: current filters, current level, nothing else.</p>
+          </div>
+          <div class="ann-view"><img src="../../assets/plate/dashboard-default-annotated.webp" alt="The dashboard's default view, with its filters, view toggle, jobs filter and export called out" loading="lazy"></div>
+        </div>
+        <figcaption class="cs-caption">Point at a label and the picture goes there. Four controls, and the argument for each is that it survives the switch between views.</figcaption>
+      </figure>
+      </div>
+
+      <div class="cs-sub" id="drill">
+        <h2 class="cs-h2">Drilling without getting lost</h2>
+      <div class="cs-body">
+        <p>The explorer goes environment, then region, then type, then the resource itself. Four levels is enough to get lost in, so every level carries its own counts and a breadcrumb back out.</p>
+        <p>The counts are the part that earns its place. A level that only lists categories tells you where you can go; a level that lists categories with how much is in each tells you where you should go. It is a small addition that changes the drill-down from navigation into triage.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../../assets/video/dashboard-hierarchy-drill.mp4" poster="../../assets/video/dashboard-hierarchy-drill-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Drilling from environments to regions to categories to resources"></video>
+        </div>
+        <figcaption class="cs-caption">Four levels, and the breadcrumb is in every frame. It is what makes this navigation rather than four separate pages.</figcaption>
+      </figure>
+      </div>
+
+      <div class="cs-sub" id="export">
+        <h2 class="cs-h2">An export at every level</h2>
+      <div class="cs-body">
+        <p>Every table exports, and what it exports is exactly what you are looking at: current filters, current level, nothing else.</p>
+        <p>This sounds like a checkbox feature and was one of the most-used things in the tool. People do not live in dashboards. They come in, narrow down to the thing they care about, and then need it somewhere else — a ticket, a spreadsheet, a message to the team that owns it. A dashboard that cannot hand off its own answer sends everyone back to the reconciling-by-hand it was built to remove.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.4;--fx:78%;--fy:76%;--dur:13s">
+          <img src="../../assets/plate/dashboard-export-scoped.webp" alt="The export control beside the count of what is currently filtered" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">What comes out is what is on screen: current filters, current level, nothing else. A resource's tags and its jobs list each have their own.</figcaption>
+      </figure>
+      </div>
+
+      <div class="cs-sub" id="data">
+        <h2 class="cs-h2">A real boundary, not a prop</h2>
+      <div class="cs-body">
+        <p>Every screen here fetches. The data layer is typed fetch functions behind small hooks that track loading, error and refetch, with a mocked REST surface behind them at the service-worker level rather than an imported array pretending to be a response.</p>
+        <p>That distinction is why the loading skeletons and the retry banner exist at all. A component handed its data synchronously has no in-flight state to design, no failure to recover from, and no way to find out it was wrong until it meets a real server. The same handlers run in Node for the tests, so those drive the actual fetch, loading, render, error and retry cycle instead of asserting against props.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-deal" style="--dur:14s;--n:5">
+          <img style="--i:0" src="../../assets/plate/dashboard-tab-account-details.webp" alt="The five resource-detail tabs: account, configurations, compliance, network and tags" loading="lazy">
+          <img style="--i:1" src="../../assets/plate/dashboard-tab-configurations.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:2" src="../../assets/plate/dashboard-tab-compliance.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:3" src="../../assets/plate/dashboard-tab-network.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:4" src="../../assets/plate/dashboard-tab-tags.webp" alt="" aria-hidden="true" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">One resource, five readings of what came back for it. Every one of these arrived over the boundary described above.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-plate">
+          <div class="cs-plate-top"><span class="cs-kind is-video">Video / loop</span><span class="cs-tech">screen recording, DevTools visible</span></div>
+          <h3>The requests are real</h3>
+          <p>Open the Network tab and reload. Genuine fetch calls with latency, skeletons while they are in flight, and an error state that recovers. No still can make this claim and no sentence should be asked to carry it alone.</p>
+          <ul><li>Network tab open, reload, the endpoints resolve in turn</li><li>Loading skeletons on screen while they are in flight</li><li>Force one to fail; the retry banner appears</li><li>Click retry and let it recover</li></ul>
+          <div class="cs-spec"><span><b>Size</b> 799x391</span><span><b>Format</b> muted mp4 + webm</span><span><b>Length</b> 10-14s</span><span><b>Cursor</b> visible</span><span><b>Source</b> the public rebuild, not the internal tool</span></div>
+        </div>
+      </figure>
+      </div>
+
+    </div>
+
+    <section id="impact" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Impact</span></div>
+        <h2 class="cs-h2">From three tools to one</h2>
+      </div>
+      <div class="cs-body">
+        <p>The reconciliation step is gone. What used to be a cross-tool search is a paste-an-identifier lookup, and what used to be invisible — which of your resources have work outstanding — is the screen that opens by default.</p>
+        <p>The dashboard shipped to enterprise users. Figures below describe the shape of the work rather than usage numbers, which are not mine to publish.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-ba">
+          <div class="cs-ba-head"><span>Before</span><span></span><span>After</span></div>
+          <div class="cs-ba-row"><p class="b">No single view of your resources</p><svg class="arw" viewBox="0 0 20 12" aria-hidden="true"><path d="M1 6h16M13 2l4 4-4 4"/></svg><p class="a">One surface, two ways through it</p></div>
+          <div class="cs-ba-row"><p class="b">Search across several tools</p><svg class="arw" viewBox="0 0 20 12" aria-hidden="true"><path d="M1 6h16M13 2l4 4-4 4"/></svg><p class="a">Paste an identifier, get the resource</p></div>
+          <div class="cs-ba-row"><p class="b">Outstanding work invisible</p><svg class="arw" viewBox="0 0 20 12" aria-hidden="true"><path d="M1 6h16M13 2l4 4-4 4"/></svg><p class="a">Default view, sorted by urgency</p></div>
+          <div class="cs-ba-row"><p class="b">Manual, fragmented exports</p><svg class="arw" viewBox="0 0 20 12" aria-hidden="true"><path d="M1 6h16M13 2l4 4-4 4"/></svg><p class="a">One-click export at any level</p></div>
+          <div class="cs-ba-row"><p class="b">Metadata hard to parse</p><svg class="arw" viewBox="0 0 20 12" aria-hidden="true"><path d="M1 6h16M13 2l4 4-4 4"/></svg><p class="a">Organised for scanning</p></div>
+          <div class="cs-ba-row"><p class="b">No compliance history</p><svg class="arw" viewBox="0 0 20 12" aria-hidden="true"><path d="M1 6h16M13 2l4 4-4 4"/></svg><p class="a">Event timeline and table</p></div>
+        </div>
+      </figure>
+    </section>
+
+  </main>
+
+  <div id="site-footer" data-flowers="foot-work.png"></div>
+
+ </div>
+</div>
+<div id="bg-footer"></div>
+
+<script src="../../site-footer.js"></script>
+<script src="../../site-nav.js"></script>
+<script src="../../case-study.js"></script>
+<script src="../../mobile.js"></script>
+</body>
+</html>

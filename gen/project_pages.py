@@ -640,7 +640,7 @@ def build(p):
         i += len(run)
     # p-stardew.html was a prefix standing in for a folder. It is a folder now.
     _gc.build(p["slug"], dict(
-        out="projects/%s.html" % p["slug"].replace("p-", ""), root="../",
+        out="pages/projects/%s.html" % p["slug"].replace("p-", ""), root="../../",
         title=p["title"], kicker=p["kicker"], intro=p["intro"],
         flowers="foot-projects.png",
         hero=p["hero"], hero_alt=p["hero_alt"],

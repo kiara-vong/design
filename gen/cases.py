@@ -36,7 +36,7 @@ def demo(route, label="Open it"):
 
 # =====================================================================
 build("resource-dashboard", dict(
-    out="work/resource-dashboard.html", root="../",
+    out="pages/work/resource-dashboard.html", root="../../",
     kicker=CO,
     title="Resource Dashboard",
     hero="case/cs-dash-seams.svg",
@@ -217,7 +217,7 @@ build("resource-dashboard", dict(
 
 # =====================================================================
 build("events-timeline", dict(
-    out="work/events-timeline.html", root="../",
+    out="pages/work/events-timeline.html", root="../../",
     kicker=CO,
     title="Events Timeline",
     hero="case/cs-tl-carry.svg",
@@ -328,7 +328,7 @@ build("events-timeline", dict(
 
 # =====================================================================
 build("ui-consistency", dict(
-    out="work/ui-consistency.html", root="../",
+    out="pages/work/ui-consistency.html", root="../../",
     kicker=CO,
     title="UI Consistency",
     hero="case/cs-ui-drift.svg",
@@ -456,7 +456,7 @@ build("ui-consistency", dict(
 
 # =====================================================================
 build("persona-homepage", dict(
-    out="work/persona-homepage.html", root="../",
+    out="pages/work/persona-homepage.html", root="../../",
     kicker=CO,
     title="Persona Homepage",
     hero="case/cs-persona-reorder.svg",

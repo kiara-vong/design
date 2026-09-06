@@ -48,13 +48,31 @@ def fallback(path):
     return None
 
 
+def _walk(root):
+    """Every generated file under assets/art, one level down as well as at the top.
+
+    The cut images live in per-category folders now, so a flat listdir would leave
+    every one of them behind on a rebuild and the stale-file guarantee this loop
+    exists for would quietly stop holding.
+    """
+    out = []
+    for name in os.listdir(root):
+        p = os.path.join(root, name)
+        if name.startswith("_"):
+            continue
+        if os.path.isdir(p):
+            out += [os.path.join(p, n) for n in os.listdir(p)]
+        else:
+            out.append(p)
+    return out
+
+
 if not os.path.isdir(OUT):
     os.makedirs(OUT)
 # Clear only generated covers. Anything under _src is a staged source and any
 # file starting with "_" is deliberately not ours to delete.
-for f in os.listdir(OUT):
-    p = os.path.join(OUT, f)
-    if os.path.isfile(p) and not f.startswith("_"):
+for p in _walk(OUT):
+    if os.path.isfile(p) and not os.path.basename(p).startswith("_"):
         os.remove(p)
 
 index = []
@@ -71,7 +89,14 @@ for cat in CATEGORIES:
         if im.size[0] > MAX_W:
             im = im.resize((MAX_W, int(im.size[1] * MAX_W / float(im.size[0]))),
                            Image.LANCZOS)
-        im.save(os.path.join(OUT, "%s.jpg" % slug), quality=87, optimize=True)
+        # One folder per category, named for it. A hundred and sixty-three files in
+        # one directory is a directory nobody can read: the two-letter prefixes that
+        # were doing the sorting (ht, gr, yb) are only legible if you already know
+        # the categories they stand for.
+        d = os.path.join(OUT, cat["slug"])
+        if not os.path.isdir(d):
+            os.makedirs(d)
+        im.save(os.path.join(d, "%s.jpg" % slug), quality=87, optimize=True)
         rows.append((slug, title, blurb, im.size[0], im.size[1]))
         total += 1
     print("  %-13s %2d pieces" % (cat["slug"], len(rows)))

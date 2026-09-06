@@ -68,6 +68,7 @@ HOLD_FIRST_MS = 1500    # the opening state gets longer: it is the establishing 
 NEEDS_MOTION = {
     "stardew-junimo-kart", "stardew-prairie-king", "stardew-junimo-jamboree",
     "stardew-fishing", "island-generator-building",
+    "chess-autoplay", "pacman-gameplay",
 }
 
 # Per-clip overrides, only where the default pacing is wrong for the content.
@@ -88,6 +89,20 @@ TUNING = {
     "stardew-junimo-jamboree": dict(hold=1600),
     "stardew-junimo-kart": dict(hold=1500),
     "stardew-prairie-king": dict(hold=1300),
+    # Five states of a board eating itself: an autoplay game going from an
+    # opening position to chaos. Closer to island-generator-building's "read as
+    # progress" problem than to the arcade titles' "only 3-4 states" one, so it
+    # gets the same treatment -- a hold short enough that consecutive boards
+    # read as one thing unravelling rather than a slideshow, and a fade longer
+    # than the default so the melt between positions is legible as a melt.
+    "chess-autoplay": dict(hold=520, fade=420, hold_first=1000),
+    # Six states telling a small story -- countdown, chase, near-miss, death,
+    # restart -- rather than one continuous action. A single hold can't favour
+    # the death/restart beats over the chase without per-state timing, which
+    # is more machinery than one clip justifies; splitting the difference
+    # toward the arcade titles' longer holds (six sparse states, not thirty)
+    # keeps every beat, including those two, readable.
+    "pacman-gameplay": dict(hold=1050, fade=360),
 }
 
 

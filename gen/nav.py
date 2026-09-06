@@ -35,7 +35,7 @@ LABELS = {"index": "Home", "archive": "Projects", "art": "Art",
           "resume": "Resume", "about": "About", "email": "Copy email"}
 # Relative to the ROOT of the site. nav() and pill() prefix them, because half the
 # pages now live one folder down and a bare "index.html" from art/ is art/index.html.
-HREFS = {"index": "index.html", "archive": "index.html#projects", "art": "art/",
+HREFS = {"index": "index.html", "archive": "index.html#projects", "art": "pages/art/",
          "resume": "resume.html", "about": "about.html"}
 
 # The About page's own person mark, kept so that entry is unchanged.

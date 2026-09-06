@@ -165,7 +165,7 @@ CSS_INDEX = """
    type inset by that gutter from within. A painted ground that stops short of the
    window looks like a photograph of a painted ground. */
 .ai-hero{position:relative;margin:0 calc(var(--ai-gut) * -1) 0;
-  background:url("../assets/hero/art-bg.webp") 50% 50% / cover no-repeat,#7A5633;
+  background:url("../../assets/hero/art-bg.webp") 50% 50% / cover no-repeat,#7A5633;
   /* As tall as the home page's, which is the whole viewport less a little, so the
      ground is something you are standing in rather than a strip you scroll past.
      min-height rather than height: the type sets the floor on a short window and
@@ -237,7 +237,7 @@ CSS_INDEX = """
 /* The ticket. Same stretchable sawtooth frame the mobile work cards use, so the
    edge profile is identical to the index's tickets rather than a near-match. */
 .ai-ticket{position:relative;display:block;padding:26px 24px 22px;text-decoration:none;
-  color:inherit;background:url("../assets/ui/card-ticket-mobile.svg") 0 0 / 100% 100% no-repeat;
+  color:inherit;background:url("../../assets/ui/card-ticket-mobile.svg") 0 0 / 100% 100% no-repeat;
   transform-origin:50% 100%;
   transition:transform .35s cubic-bezier(.34,1.3,.5,1),filter .35s ease}
 .ai-ticket:hover{transform:translateY(-8px) rotate(-1.2deg);
@@ -323,7 +323,7 @@ def ticket(cat, serial, big):
     return ('    <a class="ai-ticket" href="%s.html" style="--sw:%s">\n'
             '      <div class="ai-top"><span class="ai-serial">No. %02d</span>'
             '<span class="ai-kind">%s</span></div>\n'
-            '      <div class="ai-win"><img src="../assets/art/%s.jpg" alt="%s" loading="lazy"></div>\n'
+            '      <div class="ai-win"><img src="../../assets/art/%s/%s.jpg" alt="%s" loading="lazy"></div>\n'
             '      <p class="ai-perf">%s</p>\n'
             '      <div class="ai-stub">\n'
             '        <span class="ai-admit">ADMIT ONE</span>\n'
@@ -334,7 +334,8 @@ def ticket(cat, serial, big):
             '        </div>\n'
             '      </div>\n'
             '    </a>\n'
-            % (cat["slug"], sw, serial, kind, cat["cover"], esc(cat["name"]),
+            % (cat["slug"], sw, serial, kind, cat["slug"], cat["cover"],
+               esc(cat["name"]),
                "&bull;" * (70 if big else 54), esc(cat["name"]), esc(cat["blurb"]),
                "".join(tags)))
 
@@ -389,11 +390,11 @@ def build_index():
             o.append(ticket(c, n, False))
         o.append('    </div>\n')
     o.append('  </section>\n</div>\n')
-    shell("art/index.html", "Art — Kiara Vong",
+    shell("pages/art/index.html", "Art — Kiara Vong",
           "Paintings, drawings, photography, editorial design and fluid-mechanics "
           "project work by Kiara Vong.",
-          CSS_INDEX, "".join(o), back="../index.html",
-          backlabel="Back to the index", root="../")
+          CSS_INDEX, "".join(o), back="../../index.html",
+          backlabel="Back to the index", root="../../")
 
 
 # =====================================================================
@@ -713,18 +714,19 @@ def build_category(cat):
                 # is played, and the poster is the still this entry used to be, so
                 # the page looks the same before anyone presses anything.
                 media = ('        <video controls preload="none" playsinline '
-                         'poster="assets/art/%s.jpg" width="%d" height="%d">\n'
-                         '          <source src="../assets/video/%s.mp4" type="video/mp4">\n'
+                         'poster="../../assets/art/%s/%s.jpg" width="%d" height="%d">\n'
+                         '          <source src="../../assets/video/%s.mp4" type="video/mp4">\n'
                          '          Your browser cannot play this film. '
-                         '<a href="../assets/video/%s.mp4">Download it instead.</a>\n'
-                         '        </video>\n' % (pslug, w, h, stem, stem))
+                         '<a href="../../assets/video/%s.mp4">Download it instead.</a>\n'
+                         '        </video>\n' % (slug, pslug, w, h, stem, stem))
                 # Title only, like every other gallery on the site. dur is still
                 # read, because carrying a runtime is what marks this entry as a
                 # film rather than a still.
                 extra, blurb = "", None
             else:
-                media = ('        <img src="../assets/art/%s.jpg" alt="%s" loading="lazy" '
-                         'width="%d" height="%d">\n' % (pslug, esc(title), w, h))
+                media = ('        <img src="../../assets/art/%s/%s.jpg" alt="%s" '
+                         'loading="lazy" width="%d" height="%d">\n'
+                         % (slug, pslug, esc(title), w, h))
                 extra = ""
             plates.append(plate(media, title, blurb, key, extra))
         if plates:
@@ -739,12 +741,12 @@ def build_category(cat):
         w, h = (p[3], p[4]) if p else (760, 427)
         nav.append(("run", film["title"], False))
         media = ('        <video controls preload="none" playsinline '
-                 'poster="assets/art/%s.jpg" width="%d" height="%d">\n'
-                 '          <source src="../assets/video/%s.mp4" type="video/mp4">\n'
+                 'poster="../../assets/art/%s/%s.jpg" width="%d" height="%d">\n'
+                 '          <source src="../../assets/video/%s.mp4" type="video/mp4">\n'
                  '          Your browser cannot play this film. '
-                 '<a href="../assets/video/%s.mp4">Download it instead.</a>\n'
+                 '<a href="../../assets/video/%s.mp4">Download it instead.</a>\n'
                  '        </video>\n'
-                 % (film["poster"], w, h, film["src"], film["src"]))
+                 % (slug, film["poster"], w, h, film["src"], film["src"]))
         secs.append(plain_section(
             "run", cat["tag"], film["title"],
             plate(media, film["title"], film["cap"], None,
@@ -758,11 +760,12 @@ def build_category(cat):
         for i, (pslug, title, blurb, w, h) in enumerate(cat["pieces"]):
             works.append(
                 '        <div class="ac-work %s">\n'
-                '          <div class="ac-frame"><img src="../assets/art/%s.jpg" alt="%s" '
+                '          <div class="ac-frame"><img src="../../assets/art/%s/%s.jpg" alt="%s" '
                 'loading="lazy" width="%d" height="%d"></div>\n'
                 '          <div class="ac-label"><span class="t">%s</span>%s</div>\n'
                 '        </div>\n'
-                % (FRAMES[i % len(FRAMES)], pslug, esc(title), w, h, esc(title),
+                % (FRAMES[i % len(FRAMES)], slug, pslug, esc(title), w, h,
+                   esc(title),
                    award(pslug)))
         works.append('      </div>\n')
         title = "The full set" if prose else "The work"
@@ -794,7 +797,7 @@ def build_category(cat):
     # screen later; a page that opens on its own thumbnail starts by repeating
     # itself.
     _cs.build("art-" + slug, dict(
-        out="art/%s.html" % slug, root="../",
+        out="pages/art/%s.html" % slug, root="../../",
         title=cat["name"], kicker=cat["tag"], intro=cat["blurb"], hero=None,
         nav=nav, meta=meta, sections=secs,
         extra_css=CSS_CAT, back="index.html", back_label="Back to Art",

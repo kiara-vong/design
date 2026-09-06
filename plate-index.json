@@ -1,4 +1,10 @@
 {
+ "chess": {
+  "h": 746,
+  "kb": 13,
+  "travel": 50.93,
+  "w": 748
+ },
  "dashboard-button-contact-sheet": {
   "h": 605,
   "kb": 26,
@@ -137,6 +143,12 @@
   "travel": 0.0,
   "w": 1600
  },
+ "pacman": {
+  "h": 700,
+  "kb": 17,
+  "travel": 56.87,
+  "w": 617
+ },
  "resource-detail-full": {
   "h": 2773,
   "kb": 149,
@@ -199,9 +211,9 @@
  },
  "stardew-locations-both-tiers": {
   "h": 1164,
-  "kb": 193,
-  "travel": 46.19,
-  "w": 1280
+  "kb": 192,
+  "travel": 46.86,
+  "w": 1264
  },
  "stardew-villager-abigail": {
   "h": 1100,
@@ -211,9 +223,9 @@
  },
  "stardew-villagers-grid": {
   "h": 1606,
-  "kb": 192,
-  "travel": 61.0,
-  "w": 1280
+  "kb": 191,
+  "travel": 61.79,
+  "w": 1254
  },
  "style-guide-full": {
   "h": 3992,
@@ -222,31 +234,31 @@
   "w": 1280
  },
  "uxfolio-casestudies-index": {
-  "h": 3479,
+  "h": 3529,
   "kb": 111,
-  "travel": 77.49,
+  "travel": 77.81,
   "w": 1600
  },
  "uxfolio-fondawallet-1-problem": {
-  "h": 766,
+  "h": 777,
   "kb": 44,
   "travel": 0.0,
   "w": 1600
  },
  "uxfolio-fondawallet-2-tried": {
-  "h": 766,
-  "kb": 41,
+  "h": 777,
+  "kb": 44,
   "travel": 0.0,
   "w": 1600
  },
  "uxfolio-fondawallet-3-iteration": {
-  "h": 766,
-  "kb": 64,
+  "h": 777,
+  "kb": 68,
   "travel": 0.0,
   "w": 1600
  },
  "uxfolio-fondawallet-4-shipped": {
-  "h": 766,
+  "h": 777,
   "kb": 24,
   "travel": 0.0,
   "w": 1600
