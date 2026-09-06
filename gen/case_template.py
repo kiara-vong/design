@@ -259,4 +259,6 @@ def note(root=""):
             'href="%s">get in touch</a>' % (root or "./"))
 
 
-NOTE = note("../")
+# Two levels, because every page that carries this note now lives in its own
+# directory: work/<slug>/index.html and projects/<slug>/index.html.
+NOTE = note("../../")

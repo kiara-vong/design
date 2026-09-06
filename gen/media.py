@@ -27,7 +27,7 @@ def _fig(inner, caption):
             '      </figure>\n' % (inner, esc(caption)))
 
 
-def clip(name, alt, caption, root="../"):
+def clip(name, alt, caption, root="../../"):
     """A walkthrough video. Plays itself, silently, forever.
 
     The poster is the clip's own opening frame, which is also the frame it dissolves
@@ -49,7 +49,7 @@ def clip(name, alt, caption, root="../"):
         '        </div>\n' % (root, name, root, name, esc(alt)), caption)
 
 
-def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../"):
+def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../../"):
     """A still, framed whole and then pushed in on one part of itself.
 
     fx/fy name the point worth looking at, as percentages of the image, so the push
@@ -62,7 +62,7 @@ def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../"):
         '        </div>\n' % (z, fx, fy, dur, root, src, esc(alt)), caption)
 
 
-def strip(src, alt, caption, travel, dur="17s", root="../"):
+def strip(src, alt, caption, travel, dur="17s", root="../../"):
     """A tall still scrolling behind a fixed frame.
 
     travel is a PERCENTAGE OF THE IMAGE'S OWN HEIGHT, never a pixel count. See the
@@ -75,7 +75,7 @@ def strip(src, alt, caption, travel, dur="17s", root="../"):
 
 
 def wipe(before_src, after_src, alt, caption,
-         before="Explored", after="Shipped", dur="11s", root="../"):
+         before="Explored", after="Shipped", dur="11s", root="../../"):
     """Two stills under a travelling seam, labelled inside the frame.
 
     The labels sit in the picture rather than in the caption because the whole
@@ -92,7 +92,7 @@ def wipe(before_src, after_src, alt, caption,
                               esc(before), esc(after)), caption)
 
 
-def deal(srcs, alt, caption, dur="14s", root="../"):
+def deal(srcs, alt, caption, dur="14s", root="../../"):
     """N stills at identical framing, cross-fading. The first is the resting state.
 
     Which means the first entry should be the frame worth leaving on screen, since
@@ -109,7 +109,7 @@ def deal(srcs, alt, caption, dur="14s", root="../"):
     return _fig("".join(o), caption)
 
 
-def flat(src, alt, caption, root="../"):
+def flat(src, alt, caption, root="../../"):
     """A drawn figure, held still.
 
     The SVG animates itself from its own <style>, so there is no camera machine
@@ -122,7 +122,7 @@ def flat(src, alt, caption, root="../"):
         '        </div>\n' % (root, src, esc(alt)), caption)
 
 
-def annotated(src, alt, caption, notes, root="../"):
+def annotated(src, alt, caption, notes, root="../../"):
     """A still with leader-line labels that push the picture in on what they name.
 
     notes is a list of (key, label, description, x, y, zoom, top), where x/y are the
@@ -144,4 +144,151 @@ def annotated(src, alt, caption, notes, root="../"):
     o.append('          <div class="ann-view">'
              '<img src="%sassets/%s" alt="%s" loading="lazy"></div>\n'
              '        </div>\n' % (root, src, esc(alt)))
+    return _fig("".join(o), caption)
+
+
+# ---------------------------------------------------------------------------
+# The stage: a capture as an object on a surface, with a camera over it.
+#
+# The slot's real size, from case-study.css. This machine works in pixels rather
+# than percentages, so the numbers are stated rather than implied -- the whole
+# point of it is that its numbers live in the same space as the thing they
+# describe.
+SLOT_W, SLOT_H = 799.0, 391.0
+
+# Air around the plate at its resting framing. Enough that the capture reads as an
+# object on a surface rather than as something that failed to fill the box.
+REST_PAD = 46.0
+
+# Air around a detail framing. Tighter: by then the reader has seen the whole
+# thing and the point is to be close to one part of it.
+LOOK_PAD = 20.0
+
+# Room held back for a label beside the region it names.
+CALL_W, CALL_GAP = 190.0, 26.0
+
+# The detail camera never goes past 1:1. The plates are authored at 1440x810 and
+# the assets are 2x that, so scale 1 is where a capture is pixel-exact on a
+# retina screen. Past it there is nothing left to reveal and the softness starts.
+MAX_K = 1.0
+
+
+def _fit(pw, ph, pad):
+    """Largest scale fitting pw x ph in the slot with pad around it, and the
+    translate that centres it. Returns (x, y, k) in slot pixels."""
+    k = min((SLOT_W - pad * 2) / float(pw), (SLOT_H - pad * 2) / float(ph))
+    return ((SLOT_W - pw * k) / 2.0, (SLOT_H - ph * k) / 2.0, k)
+
+
+def _clamp(x, y, pw, ph, k):
+    """Keep the plate covering the slot, so the surface never shows through behind
+    a pushed-in camera."""
+    x = (SLOT_W - pw * k) / 2.0 if pw * k < SLOT_W else min(0.0, max(SLOT_W - pw * k, x))
+    y = (SLOT_H - ph * k) / 2.0 if ph * k < SLOT_H else min(0.0, max(SLOT_H - ph * k, y))
+    return x, y
+
+
+def _look(rect, pw, ph, k, reserve=0.0):
+    """Translate that brings `rect` -- in the PLATE's own pixels -- into the slot
+    at scale k.
+
+    This is the point of the machine. Every other still here is aimed with a
+    percentage of the slot, which is a different space from the one the capture is
+    measured in, and the two agree only when the aspects happen to match. A
+    rectangle read off the capture cannot drift out of frame, because the framing
+    is computed from it rather than the other way round.
+    """
+    rx, ry, rw, rh = [float(v) for v in rect]
+    avail_w = SLOT_W - LOOK_PAD * 2 - reserve
+    cx = LOOK_PAD + avail_w / 2.0
+    x = cx - (rx + rw / 2.0) * k
+    y = SLOT_H / 2.0 - (ry + rh / 2.0) * k
+    return _clamp(x, y, pw, ph, k)
+
+
+def _look_scale(rects, reserve=0.0):
+    """One scale for every detail stop, so a pan between them is a pan and not a
+    second zoom. The tightest rect decides it."""
+    avail_w = SLOT_W - LOOK_PAD * 2 - reserve
+    avail_h = SLOT_H - LOOK_PAD * 2
+    k = min(min(avail_w / float(r[2]), avail_h / float(r[3])) for r in rects)
+    return min(k, MAX_K)
+
+
+def stage(shots, alt, caption, look=None, call=None, rest=None,
+          plate=(1440, 810), dur="13s", radius=7, root="../../"):
+    """A capture as an object on a surface, with a camera over it.
+
+    shots  one src, or several. Several stack IN REGISTER at the plate's own size
+           and cross-fade: states of one screen, not different screens.
+    look   the region worth going to, in the PLATE's pixels, read off the capture
+           at its authored size. One (x,y,w,h) rect for a push; two for a push and
+           then a pan between them at a fixed scale. Omit it and the figure holds
+           the whole plate still, which is right more often than the habit of
+           always moving suggests.
+    call   (label, description) for what `look` lands on. Drawn beside the region,
+           arriving as the camera does. Needs `look`: a label with nothing to point
+           at is a caption, and captions go underneath.
+    rest   index of the shot to hold when nothing is moving. Defaults to the first,
+           but for a sequence that ends somewhere the state worth leaving on screen
+           is usually the one it ends in.
+    plate  the capture's authored size. 1440x810 is the house 16:9; pass real
+           numbers for anything else and the arithmetic follows them.
+    """
+    if isinstance(shots, str):
+        shots = [shots]
+    if look and isinstance(look[0], (int, float)):
+        look = [look]
+    pw, ph = plate
+    n = max(len(shots), 1)
+    rest_i = n - 1 if rest is None and n > 1 else (rest or 0)
+
+    x0, y0, k0 = _fit(pw, ph, REST_PAD)
+    cls = "cs-media cam cam-stage"
+    var = ('--pw:%dpx;--ph:%dpx;--plate-r:%dpx;--dur:%s;--n:%d;'
+           '--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f'
+           % (pw, ph, radius, dur, n, x0, y0, k0))
+
+    call_html = ""
+    if look:
+        reserve = (CALL_W + CALL_GAP) if call else 0.0
+        k1 = _look_scale(look, reserve)
+        cls += " moves"
+        for i, rect in enumerate(look[:2]):
+            lx, ly = _look(rect, pw, ph, k1, reserve)
+            var += ';--x%d:%.1fpx;--y%d:%.1fpx' % (i + 1, lx, i + 1, ly)
+        var += ';--k1:%.4f' % k1
+        if len(look) > 1:
+            cls += " pans"
+        if call:
+            label, desc = call
+            rx, ry, rw, rh = [float(v) for v in look[0]]
+            ax, ay = _look(look[0], pw, ph, k1, reserve)
+            right = ax + (rx + rw) * k1
+            mid = ay + (ry + rh / 2.0) * k1
+            side, cx = "", right + CALL_GAP
+            if cx + CALL_W > SLOT_W - LOOK_PAD:
+                cx, side = ax + rx * k1 - CALL_GAP - CALL_W, " right"
+            cx = max(LOOK_PAD, min(cx, SLOT_W - LOOK_PAD - CALL_W))
+            cy = max(LOOK_PAD, min(mid - 26.0, SLOT_H - LOOK_PAD - 64.0))
+            call_html = (
+                '          <div class="call%s" style="--cx:%.1fpx;--cy:%.1fpx;'
+                '--cw:%dpx">\n'
+                '            <div class="call-row"><span class="call-line"></span>'
+                '<span class="call-note">%s</span></div>\n'
+                '            <p class="call-desc">%s</p>\n'
+                '          </div>\n'
+                % (side, cx, cy, int(CALL_W), esc(label), esc(desc)))
+
+    o = ['        <div class="%s" style="%s">\n' % (cls, var),
+         '          <div class="plate">\n']
+    for i, src in enumerate(shots):
+        o.append('            <img class="%s" style="--i:%d" src="%sassets/%s" '
+                 'alt="%s"%s loading="lazy">\n'
+                 % ("rest" if i == rest_i else "", i, root, src,
+                    esc(alt) if i == rest_i else "",
+                    "" if i == rest_i else ' aria-hidden="true"'))
+    o.append('          </div>\n')
+    o.append(call_html)
+    o.append('        </div>\n')
     return _fig("".join(o), caption)

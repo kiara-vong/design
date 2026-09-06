@@ -75,10 +75,10 @@ STEPS = [
     ("gallery",   "gen.gallery",    [], []),
 
     # ---- pages ----
-    ("cases",     "gen.cases",  ["work/*.html"], []),
-    ("projects",  "gen.project_pages",   ["projects/*.html"], []),
-    ("about",     "gen.about_page",      ["about.html"], []),
-    ("art",       "gen.art_pages",  ["art/*.html"], ["gallery"]),
+    ("cases",     "gen.cases",  ["work/*/index.html"], []),
+    ("projects",  "gen.project_pages",   ["projects/*/index.html"], []),
+    ("about",     "gen.about_page",      ["about/index.html"], []),
+    ("art",       "gen.art_pages",  ["art/*.html", "art/*/index.html"], ["gallery"]),
 ]
 
 PAGE_STEPS = {"cases", "projects", "about", "art"}
@@ -110,7 +110,10 @@ def check():
     # Underscore-prefixed pages are scratch (the background picker, for one) and
     # are gitignored, so they are not part of the site and should not be counted
     # or link-checked.
-    pages = sorted(f for f in glob.glob("*.html") + glob.glob("*/*.html")
+    # A directory per page, so the walk goes three levels: index.html at the root,
+    # about/index.html and art/index.html one down, the rest two.
+    pages = sorted(f for f in (glob.glob("*.html") + glob.glob("*/*.html")
+                               + glob.glob("*/*/*.html"))
                    if not os.path.basename(f).startswith("_"))
     ids = {f.replace(os.sep, "/"):
            set(re.findall(r'id="([^"]+)"', open(f, encoding="utf-8").read()))

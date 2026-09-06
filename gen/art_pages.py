@@ -331,7 +331,7 @@ def ticket(cat, serial, big):
         count = "%d pieces" % len(cat["pieces"])
     tags = ['<span class="ai-tag">%s</span>' % esc(cat["tag"]),
             '<span class="ai-tag mut">%s</span>' % esc(count)]
-    return ('    <a class="ai-ticket" href="%s.html" style="--sw:%s">\n'
+    return ('    <a class="ai-ticket" href="%s/" style="--sw:%s">\n'
             '      <div class="ai-top"><span class="ai-serial">No. %02d</span>'
             '<span class="ai-kind">%s</span></div>\n'
             '      <div class="ai-win"><img src="../assets/art/%s/%s.jpg" alt="%s" loading="lazy"></div>\n'
@@ -725,17 +725,17 @@ def build_category(cat):
                 # is played, and the poster is the still this entry used to be, so
                 # the page looks the same before anyone presses anything.
                 media = ('        <video controls preload="none" playsinline '
-                         'poster="../assets/art/%s/%s.jpg" width="%d" height="%d">\n'
-                         '          <source src="../assets/video/%s.mp4" type="video/mp4">\n'
+                         'poster="../../assets/art/%s/%s.jpg" width="%d" height="%d">\n'
+                         '          <source src="../../assets/video/%s.mp4" type="video/mp4">\n'
                          '          Your browser cannot play this film. '
-                         '<a href="../assets/video/%s.mp4">Download it instead.</a>\n'
+                         '<a href="../../assets/video/%s.mp4">Download it instead.</a>\n'
                          '        </video>\n' % (slug, pslug, w, h, stem, stem))
                 # Title only, like every other gallery on the site. dur is still
                 # read, because carrying a runtime is what marks this entry as a
                 # film rather than a still.
                 extra, blurb = "", None
             else:
-                media = ('        <img src="../assets/art/%s/%s.jpg" alt="%s" '
+                media = ('        <img src="../../assets/art/%s/%s.jpg" alt="%s" '
                          'loading="lazy" width="%d" height="%d">\n'
                          % (slug, pslug, esc(title), w, h))
                 extra = ""
@@ -752,10 +752,10 @@ def build_category(cat):
         w, h = (p[3], p[4]) if p else (760, 427)
         nav.append(("run", film["title"], False))
         media = ('        <video controls preload="none" playsinline '
-                 'poster="../assets/art/%s/%s.jpg" width="%d" height="%d">\n'
-                 '          <source src="../assets/video/%s.mp4" type="video/mp4">\n'
+                 'poster="../../assets/art/%s/%s.jpg" width="%d" height="%d">\n'
+                 '          <source src="../../assets/video/%s.mp4" type="video/mp4">\n'
                  '          Your browser cannot play this film. '
-                 '<a href="../assets/video/%s.mp4">Download it instead.</a>\n'
+                 '<a href="../../assets/video/%s.mp4">Download it instead.</a>\n'
                  '        </video>\n'
                  % (slug, film["poster"], w, h, film["src"], film["src"]))
         secs.append(plain_section(
@@ -771,7 +771,7 @@ def build_category(cat):
         for i, (pslug, title, blurb, w, h) in enumerate(cat["pieces"]):
             works.append(
                 '        <div class="ac-work %s">\n'
-                '          <div class="ac-frame"><img src="../assets/art/%s/%s.jpg" alt="%s" '
+                '          <div class="ac-frame"><img src="../../assets/art/%s/%s.jpg" alt="%s" '
                 'loading="lazy" width="%d" height="%d"></div>\n'
                 '          <div class="ac-label"><span class="t">%s</span>%s</div>\n'
                 '        </div>\n'
@@ -808,10 +808,10 @@ def build_category(cat):
     # screen later; a page that opens on its own thumbnail starts by repeating
     # itself.
     _cs.build("art-" + slug, dict(
-        out="art/%s.html" % slug, root="../",
+        out="art/%s/index.html" % slug, root="../../",
         title=cat["name"], kicker=cat["tag"], intro=cat["blurb"], hero=None,
         nav=nav, meta=meta, sections=secs,
-        extra_css=CSS_CAT, back="index.html", back_label="Back to Art",
+        extra_css=CSS_CAT, back="../", back_label="Back to Art",
         pill="art"))
 
 

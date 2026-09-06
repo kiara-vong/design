@@ -42,7 +42,7 @@ LABELS = {"index": "Home", "archive": "Projects", "art": "Art",
 # than "the index here". Naming index.html works and puts kiaravong.com/index.html in
 # the address bar, where it then stays for the rest of the visit.
 HREFS = {"index": "", "archive": "@#projects", "art": "art/",
-         "resume": "resume.html", "about": "about.html"}
+         "resume": "resume/", "about": "about/"}
 def _href(root, target):
     """Join a root prefix to a target, keeping the site root a directory link.
 

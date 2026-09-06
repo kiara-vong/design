@@ -16,6 +16,7 @@ The polaroids are the owner's own artwork (see gen-polaroids.py), which is the
 part that could not be borrowed and the part that makes the page hers.
 """
 import io
+import os
 
 # The canvas has to clear six entries in flow rather than the reference's six at a
 # fixed 157px rhythm. Measured from the rendered page; re-measure after adding one.
@@ -30,7 +31,7 @@ import io
 # getBoundingClientRect().bottom of everything inside .ab-canvas and add 44.
 CANVAS = 1546
 
-FOOT = "assets/about"
+FOOT = "../assets/about"
 
 # ---------------------------------------------------------------- content
 INTRO = ("I&rsquo;m Kiara. <b>/kee-ar-uh/</b><br>Welcome to the corner of the internet "
@@ -99,7 +100,7 @@ TILTS = [(-2.4, 7.5, -1.2), (1.8, 8.6, -3.4), (-1.3, 9.4, -0.5), (2.6, 7.9, -5.1
 # has its own icon. Hardcoding it here is how the About page ended up with a
 # different set from the index in the first place.
 from gen import nav as _nv
-NAV_ICONS = _nv.pill('about', '      ')
+NAV_ICONS = _nv.pill('about', '      ', '../')
 
 
 def jobs_html():
@@ -141,22 +142,22 @@ PAGE = '''<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>About — Kiara Vong</title>
 <meta name="description" content="Kiara Vong — engineer who kept ending up in the design conversation.">
-<link rel="icon" href="assets/ui/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/ui/favicon.svg">
+<link rel="icon" href="../assets/ui/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/ui/favicon.svg">
 <meta name="theme-color" content="#649F25">
 <!-- Critical, before the stylesheet: the ground here is a warm gradient, so a cold
      load would otherwise flash parchment before the image lands. This is the
      image's own mid tone. -->
 <style>html{background:#7A5633}</style>
-<link rel="stylesheet" href="site.css">
-<script src="site-motion.js"></script>
+<link rel="stylesheet" href="../site.css">
+<script src="../site-motion.js"></script>
 <!-- The ground IS the page. Left to the parser it queues behind the fonts and
      arrives last, so the page shows flat brown and then changes colour under the
      reader. The two faces carrying the title and the body get the same treatment,
      so the type stops reflowing a second after it appears. -->
-<link rel="preload" as="image" href="assets/hero/about-bg.webp" fetchpriority="high">
-<link rel="preload" as="font" type="font/otf" href="assets/fonts/PPKyoto-MediumItalic.otf" crossorigin>
-<link rel="preload" as="font" type="font/otf" href="assets/fonts/ABCDiatype-Regular.otf" crossorigin>
+<link rel="preload" as="image" href="../assets/hero/about-bg.webp" fetchpriority="high">
+<link rel="preload" as="font" type="font/otf" href="../assets/fonts/PPKyoto-MediumItalic.otf" crossorigin>
+<link rel="preload" as="font" type="font/otf" href="../assets/fonts/ABCDiatype-Regular.otf" crossorigin>
 <!-- Same trick as every other page here: the scale is written as a stylesheet
      before anything paints, so the 1440-wide canvas never renders unscaled first. -->
 <script>
@@ -175,7 +176,7 @@ PAGE = '''<!doctype html>
   document.head.appendChild(el);
 })();
 </script>
-<link rel="stylesheet" href="about.css">
+<link rel="stylesheet" href="../about.css">
 <!-- about.css hard-codes the reference canvas height, which was sized for six
      roles. This build has three; without the override the bottom third of the
      page is empty ground and the footer sits a long way below the last line. -->
@@ -224,7 +225,7 @@ PAGE = '''<!doctype html>
   .ab-stub:hover{transform:none}
 }
 </style>
-<link rel="stylesheet" href="mobile.css">
+<link rel="stylesheet" href="../mobile.css">
 </head>
 <body>
 
@@ -236,9 +237,9 @@ PAGE = '''<!doctype html>
 
 <div id="ab-stage">
  <div class="ab-canvas">
-  <img id="ab-bg" src="assets/hero/about-bg.webp" alt="" fetchpriority="high" decoding="async">
+  <img id="ab-bg" src="../assets/hero/about-bg.webp" alt="" fetchpriority="high" decoding="async">
   <div id="ab-wash" aria-hidden="true"></div>
-  <a class="ab-back" href="./" aria-label="Back to the index">
+  <a class="ab-back" href="../" aria-label="Back to the index">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
   </a>
 
@@ -250,7 +251,7 @@ PAGE = '''<!doctype html>
       <div class="ab-left">
         <p class="ab-intro">%s</p>
         <div class="ab-rule"></div>
-%s        <a class="ab-stub" href="assets/doc/Kiara-Vong-Resume.pdf" download>
+%s        <a class="ab-stub" href="../assets/doc/Kiara-Vong-Resume.pdf" download>
           <span class="ab-stub-no">ADMIT ONE</span>
           <span class="ab-stub-main">
             <span class="t">Take the full r&eacute;sum&eacute;</span>
@@ -275,7 +276,7 @@ PAGE = '''<!doctype html>
             <rect x="0.5" y="0.5" width="590" height="496" rx="23.5" ry="23.5"></rect>
           </svg>
           <div class="ab-rest">
-            <img src="assets/ui/about-rest.svg" alt="" aria-hidden="true">
+            <img src="../assets/ui/about-rest.svg" alt="" aria-hidden="true">
             <p class="ab-hint">hover over a <span>link</span></p>
           </div>
 %s        </div>
@@ -287,8 +288,8 @@ PAGE = '''<!doctype html>
  <div id="site-footer" data-variant="about" data-flowers="foot-about.png"></div>
 </div>
 
-<script src="site-footer.js"></script>
-<script src="site-nav.js"></script>
+<script src="../site-footer.js"></script>
+<script src="../site-nav.js"></script>
 <script>
 /* Swap the well's contents on hover. Pointer events rather than :hover so the art
    also responds to keyboard focus, and so leaving a link restores the resting
@@ -372,12 +373,13 @@ PAGE = '''<!doctype html>
   fit();
 })();
 </script>
-<script src="mobile.js"></script>
+<script src="../mobile.js"></script>
 </body>
 </html>
 '''
 
-io.open("about.html", "w", encoding="utf-8").write(
+os.path.isdir("about") or os.makedirs("about")
+io.open(os.path.join("about", "index.html"), "w", encoding="utf-8").write(
     PAGE.replace('__CANVAS__', str(CANVAS))
     % (NAV_ICONS, INTRO, jobs_html(), moon_html(), art_html()))
-print("wrote about.html (%d roles, %d polaroids)" % (len(JOBS), len(MOON)))
+print("wrote about/index.html (%d roles, %d polaroids)" % (len(JOBS), len(MOON)))

@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>About — Kiara Vong</title>
+<meta name="description" content="Kiara Vong — engineer who kept ending up in the design conversation.">
+<link rel="icon" href="../assets/ui/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/ui/favicon.svg">
+<meta name="theme-color" content="#649F25">
+<!-- Critical, before the stylesheet: the ground here is a warm gradient, so a cold
+     load would otherwise flash parchment before the image lands. This is the
+     image's own mid tone. -->
+<style>html{background:#7A5633}</style>
+<link rel="stylesheet" href="../site.css">
+<script src="../site-motion.js"></script>
+<!-- The ground IS the page. Left to the parser it queues behind the fonts and
+     arrives last, so the page shows flat brown and then changes colour under the
+     reader. The two faces carrying the title and the body get the same treatment,
+     so the type stops reflowing a second after it appears. -->
+<link rel="preload" as="image" href="../assets/hero/about-bg.webp" fetchpriority="high">
+<link rel="preload" as="font" type="font/otf" href="../assets/fonts/PPKyoto-MediumItalic.otf" crossorigin>
+<link rel="preload" as="font" type="font/otf" href="../assets/fonts/ABCDiatype-Regular.otf" crossorigin>
+<!-- Same trick as every other page here: the scale is written as a stylesheet
+     before anything paints, so the 1440-wide canvas never renders unscaled first. -->
+<script>
+(function(){
+  var W = 1440, H = 1546 + 405;   // canvas + footer
+  var s = Math.min(window.innerWidth / W, 1);
+  var hs = Math.min(window.innerWidth / W, window.innerHeight / 861, 1);   /* the index's */
+  var el = document.createElement('style');
+  el.id = 'ab-initial-layout';
+  el.textContent = window.innerWidth <= 760 ? '' :
+    '#ab-stage{transform:scale(' + s + ');left:' +
+      Math.max(0, (window.innerWidth - W * s) / 2) + 'px}' +
+    '#ab-navwrap{transform:scale(' + hs + ');left:' +
+      Math.max(0, (window.innerWidth - W * hs) / 2) + 'px}' +
+    'body{height:' + (H * s) + 'px}';
+  document.head.appendChild(el);
+})();
+</script>
+<link rel="stylesheet" href="../about.css">
+<!-- about.css hard-codes the reference canvas height, which was sized for six
+     roles. This build has three; without the override the bottom third of the
+     page is empty ground and the footer sits a long way below the last line. -->
+<style>
+/* about.css positions the left column by hand: the rule at a fixed 266px and each
+   role at 308 + index * 157. Both were measured against the reference intro and
+   its six entries, so with different copy the rule landed INSIDE the paragraph and
+   the roles sat on top of it. The column is normal flow here, which puts the rule
+   between the intro and the history whatever either of them is, and lets the
+   number of roles change without a second number needing to change with it. */
+.ab-left{display:flex;flex-direction:column}
+.ab-rule{position:static;margin:34px 0 30px;width:100%}
+.ab-job{position:static;top:auto;margin-bottom:30px}
+.ab-job:last-of-type{margin-bottom:0}
+.ab-canvas{height:1546px}
+
+/* The résumé download, as a ticket stub rather than a button. The site's whole
+   visual language is perforated card stock, and "take one" is a thing a stub
+   already says, so it reads as part of the page instead of a control dropped on
+   top of it. */
+.ab-stub{position:relative;align-self:flex-start;display:inline-flex;align-items:center;
+  gap:16px;margin-top:38px;padding:16px 24px 16px 22px;background:var(--parchment);
+  color:var(--dusty-granite);text-decoration:none;border-radius:6px;
+  box-shadow:0 10px 24px rgba(30,24,18,.28);
+  transition:transform .3s cubic-bezier(.34,1.4,.5,1),box-shadow .3s ease}
+/* The perforation, as a repeating notch down the left edge rather than an image,
+   so the stub can be any height its label needs. */
+.ab-stub::before{content:"";position:absolute;left:0;top:0;bottom:0;width:9px;
+  background:radial-gradient(circle at 0 6px,transparent 0 4.5px,var(--parchment) 5px);
+  background-size:9px 12px;background-repeat:repeat-y}
+.ab-stub:hover{transform:translateY(-3px) rotate(-.8deg);
+  box-shadow:0 16px 30px rgba(30,24,18,.34)}
+.ab-stub-no{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+  font-size:11px;letter-spacing:.10em;color:var(--accent);
+  writing-mode:vertical-rl;transform:rotate(180deg);padding-left:6px}
+.ab-stub-main{display:flex;flex-direction:column;gap:4px}
+.ab-stub .t{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;font-size:17px;
+  line-height:1.2}
+.ab-stub .s{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-size:11px;
+  color:var(--antique-gold)}
+.ab-stub-arrow{margin-left:8px;color:var(--accent);
+  transition:transform .3s cubic-bezier(.34,1.4,.5,1)}
+.ab-stub:hover .ab-stub-arrow{transform:translateY(3px)}
+@media (prefers-reduced-motion:reduce){
+  .ab-stub,.ab-stub-arrow{transition:none}
+  .ab-stub:hover{transform:none}
+}
+</style>
+<link rel="stylesheet" href="../mobile.css">
+</head>
+<body>
+
+<div id="ab-navwrap" aria-hidden="false">
+  <nav class="nav" aria-label="Primary">
+      <div class="nav-inner">
+        <div class="nav-home">
+          <a href="../about/" aria-label="About" data-tip="About">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 25.6667C20.4433 25.6667 25.6667 20.4433 25.6667 14C25.6667 7.55668 20.4433 2.33333 14 2.33333C7.55668 2.33333 2.33333 7.55668 2.33333 14C2.33333 20.4433 7.55668 25.6667 14 25.6667Z"/><path d="M14 15.1667C15.933 15.1667 17.5 13.5997 17.5 11.6667C17.5 9.73367 15.933 8.16667 14 8.16667C12.067 8.16667 10.5 9.73367 10.5 11.6667C10.5 13.5997 12.067 15.1667 14 15.1667Z"/><path d="M8.16667 24.1057V22.1667C8.16667 21.5478 8.4125 20.9543 8.85008 20.5167C9.28767 20.0792 9.88116 19.8333 10.5 19.8333H17.5C18.1188 19.8333 18.7123 20.0792 19.1499 20.5167C19.5875 20.9543 19.8333 21.5478 19.8333 22.1667V24.1057"/></svg>
+          </a>
+          <span class="label">About</span>
+        </div>
+        <div class="nav-sep"></div>
+        <div class="nav-icons">
+          <a href="../" aria-label="Home" data-tip="Home">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 28V17.3333C20 16.9797 19.8595 16.6406 19.6095 16.3905C19.3594 16.1405 19.0203 16 18.6667 16H13.3333C12.9797 16 12.6406 16.1405 12.3905 16.3905C12.1405 16.6406 12 16.9797 12 17.3333V28"/><path d="M4 13.3333C3.99991 12.9454 4.08445 12.5622 4.24772 12.2103C4.41099 11.8584 4.64906 11.5464 4.94533 11.296L14.2787 3.296C14.76 2.88921 15.3698 2.66603 16 2.66603C16.6302 2.66603 17.24 2.88921 17.7213 3.296L27.0547 11.296C27.3509 11.5464 27.589 11.8584 27.7523 12.2103C27.9156 12.5622 28.0001 12.9454 28 13.3333V25.3333C28 26.0406 27.719 26.7189 27.219 27.2189C26.7189 27.719 26.0406 28 25.3333 28H6.66667C5.95942 28 5.28115 27.719 4.78105 27.2189C4.28095 26.7189 4 26.0406 4 25.3333V13.3333Z"/></svg>
+          </a>
+          <a href="../#projects" aria-label="Projects" data-tip="Projects">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.6667 2.33333V11.6667L15.1667 8.16667L18.6667 11.6667V2.33333"/><path d="M4.66667 22.75V5.25C4.66667 4.47645 4.97396 3.73459 5.52094 3.18761C6.06792 2.64062 6.80979 2.33333 7.58333 2.33333H22.1667C22.4761 2.33333 22.7728 2.45625 22.9916 2.67504C23.2104 2.89383 23.3333 3.19058 23.3333 3.5V24.5C23.3333 24.8094 23.2104 25.1062 22.9916 25.325C22.7728 25.5438 22.4761 25.6667 22.1667 25.6667H7.58333C6.80979 25.6667 6.06792 25.3594 5.52094 24.8124C4.97396 24.2654 4.66667 23.5235 4.66667 22.75ZM4.66667 22.75C4.66667 21.9765 4.97396 21.2346 5.52094 20.6876C6.06792 20.1406 6.80979 19.8333 7.58333 19.8333H23.3333"/></svg>
+          </a>
+          <a href="../art/" aria-label="Art" data-tip="Art">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.66667 4.66667C4.66667 3.5621 5.5621 2.66667 6.66667 2.66667H21.3333C22.4379 2.66667 23.3333 3.5621 23.3333 4.66667V23.3333C23.3333 24.4379 22.4379 25.3333 21.3333 25.3333H6.66667C5.5621 25.3333 4.66667 24.4379 4.66667 23.3333V4.66667Z"/><path d="M10.5 11.0833C11.4665 11.0833 12.25 10.2998 12.25 9.33333C12.25 8.36683 11.4665 7.58333 10.5 7.58333C9.5335 7.58333 8.75 8.36683 8.75 9.33333C8.75 10.2998 9.5335 11.0833 10.5 11.0833Z"/><path d="M4.66667 19.8333L10.2083 14.2917C10.9894 13.5106 12.2556 13.5106 13.0367 14.2917L18.6667 19.9217"/><path d="M16.9167 18.1667L18.7083 16.375C19.4894 15.5939 20.7556 15.5939 21.5367 16.375L23.3333 18.1717"/></svg>
+          </a>
+          <a href="#" aria-label="Email" data-tip="Copy email" data-mail>
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M29.3333 9.33333L17.3453 16.9693C16.9385 17.2056 16.4764 17.3301 16.006 17.3301C15.5356 17.3301 15.0735 17.2056 14.6667 16.9693L2.66667 9.33333"/><path d="M26.6667 5.33333H5.33333C3.86057 5.33333 2.66667 6.52724 2.66667 8V24C2.66667 25.4728 3.86057 26.6667 5.33333 26.6667H26.6667C28.1394 26.6667 29.3333 25.4728 29.3333 24V8C29.3333 6.52724 28.1394 5.33333 26.6667 5.33333Z"/></svg>
+          </a>
+        </div>
+      </div>
+  </nav>
+</div>
+
+<div id="ab-stage">
+ <div class="ab-canvas">
+  <img id="ab-bg" src="../assets/hero/about-bg.webp" alt="" fetchpriority="high" decoding="async">
+  <div id="ab-wash" aria-hidden="true"></div>
+  <a class="ab-back" href="../" aria-label="Back to the index">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+
+  <div class="ab-page">
+    <h1 class="ab-hello">Hello world!</h1>
+    <p class="ab-aside">hover to bring<br>to life</p>
+
+    <div class="ab-cols">
+      <div class="ab-left">
+        <p class="ab-intro">I&rsquo;m Kiara. <b>/kee-ar-uh/</b><br>Welcome to the corner of the internet I actually maintain.<br><br>I&rsquo;m an engineer who kept ending up in the design conversation and eventually stopped treating that as an accident. I like the layer underneath the product: the design system, the internal platform, the tool everyone reaches for without thinking about it. I write the code and I draw the thing, which usually makes me the one asking whether the component should exist at all.</p>
+        <div class="ab-rule"></div>
+        <div class="ab-job" style="--i:0">
+          <div class="ab-job-main">
+            <p class="ab-role">Software Engineer <span class="at">at</span> Capital One</p>
+            <p class="ab-desc">Built and shipped a React and TypeScript resource-inventory platform from scratch, owning research, design and rollout. Shipped the compliance event timeline and the GraphQL endpoint behind it, and led a 12,600-line design system overhaul unifying more than a dozen pages.</p>
+          </div>
+          <p class="ab-when">2024 &ndash;</p>
+        </div>
+        <div class="ab-job" style="--i:1">
+          <div class="ab-job-main">
+            <p class="ab-role">Software Engineer Intern <span class="at">at</span> Capital One</p>
+            <p class="ab-desc">Stood up an EC2-based cloud-native deployment, and built a Spark pipeline on AWS Lambda that spins up ephemeral EMR clusters to aggregate into S3.</p>
+          </div>
+          <p class="ab-when">2023</p>
+        </div>
+        <div class="ab-job" style="--i:2">
+          <div class="ab-job-main">
+            <p class="ab-role">UI/UX Intern <span class="at">at</span> Colgate-Palmolive</p>
+            <p class="ab-desc">Led full-stack development of internal apps for the compensation, learning and people-acquisition teams, replacing manual workflows. Built a dashboard builder for executives and HR partners on top of hardware telemetry.</p>
+          </div>
+          <p class="ab-when">2022</p>
+        </div>
+        <div class="ab-job" style="--i:3">
+          <div class="ab-job-main">
+            <p class="ab-role">Software Engineer Intern <span class="at">at</span> BlackLine</p>
+            <p class="ab-desc">Built a C# API integration between the finance-automation and compliance systems so every active control could be seen in one place. Owned features end to end: design, build, test and rollout.</p>
+          </div>
+          <p class="ab-when">2022</p>
+        </div>
+        <div class="ab-job" style="--i:4">
+          <div class="ab-job-main">
+            <p class="ab-role">B.Sc. Computer Science <span class="at">at</span> Brown University</p>
+            <p class="ab-desc">Computer science, 4.0.</p>
+          </div>
+          <p class="ab-when">2020 &ndash; 2024</p>
+        </div>
+        <div class="ab-job" style="--i:5">
+          <div class="ab-job-main">
+            <p class="ab-role">Study Abroad <span class="at">at</span> Yonsei University</p>
+            <p class="ab-desc">A semester in Seoul.</p>
+          </div>
+          <p class="ab-when">2023</p>
+        </div>
+        <a class="ab-stub" href="../assets/doc/Kiara-Vong-Resume.pdf" download>
+          <span class="ab-stub-no">ADMIT ONE</span>
+          <span class="ab-stub-main">
+            <span class="t">Take the full r&eacute;sum&eacute;</span>
+            <span class="s">PDF &middot; one page &middot; updated 2026</span>
+          </span>
+          <svg class="ab-stub-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v12"/><path d="M6 14l6 6 6-6"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="ab-right">
+        <!-- Mobile only. On the desktop canvas the two columns sit side by side so
+             nothing divides them; stacked, the moonlighting list would run straight
+             on from the last role with no break at all. -->
+        <div class="ab-rule ab-rule-moon"></div>
+        <p class="ab-moon">I also moonlight as: a <a href="#" data-art="painting">bad painter</a>, a <a href="#" data-art="food">food enthusiast</a>, a NYT games semi-solver, a Stardew capitalist, an <a href="#" data-art="amc">AMC A-Lister</a>, a <a href="#" data-art="kpop">reformed K-Pop superfan</a>, a <a href="#" data-art="smiski">collector of smiskis</a>, a worldbuilder, a retired yearbook editor, a Catan loser, and a <a href="#" data-art="cats">full-time cat person</a>.</p>
+
+        <div class="ab-well">
+          <svg class="ab-dash" viewBox="0 0 591 497" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="0.5" y="0.5" width="590" height="496" rx="23.5" ry="23.5"></rect>
+          </svg>
+          <div class="ab-rest">
+            <img src="../assets/ui/about-rest.svg" alt="" aria-hidden="true">
+            <p class="ab-hint">hover over a <span>link</span></p>
+          </div>
+        <div class="ab-art" data-art="painting"
+             style="--tilt:-2.4deg;--sway:7.5s;--sway-delay:-1.2s">
+          <img src="../assets/about/pol-painting.jpg" alt="A polaroid of my own work: painting"
+               style="left:67.5px;top:-12px;width:427px;height:638.4px">
+        </div>
+        <div class="ab-art" data-art="food"
+             style="--tilt:1.8deg;--sway:8.6s;--sway-delay:-3.4s">
+          <img src="../assets/about/pol-food.jpg" alt="A polaroid of my own work: food"
+               style="left:67.5px;top:-12px;width:427px;height:638.4px">
+        </div>
+        <div class="ab-art" data-art="amc"
+             style="--tilt:-1.3deg;--sway:9.4s;--sway-delay:-0.5s">
+          <img src="../assets/about/pol-amc.jpg" alt="A polaroid of my own work: amc"
+               style="left:67.5px;top:-12px;width:427px;height:638.4px">
+        </div>
+        <div class="ab-art" data-art="kpop"
+             style="--tilt:2.6deg;--sway:7.9s;--sway-delay:-5.1s">
+          <img src="../assets/about/pol-kpop.jpg" alt="A polaroid of my own work: kpop"
+               style="left:67.5px;top:-12px;width:427px;height:638.4px">
+        </div>
+        <div class="ab-art" data-art="smiski"
+             style="--tilt:-1.9deg;--sway:8.2s;--sway-delay:-2.3s">
+          <img src="../assets/about/pol-smiski.jpg" alt="A polaroid of my own work: smiski"
+               style="left:67.5px;top:-12px;width:427px;height:638.4px">
+        </div>
+        <div class="ab-art" data-art="cats"
+             style="--tilt:1.2deg;--sway:9.1s;--sway-delay:-6.0s">
+          <img src="../assets/about/pol-cats.jpg" alt="A polaroid of my own work: cats"
+               style="left:67.5px;top:-12px;width:427px;height:638.4px">
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+
+ <div id="site-footer" data-variant="about" data-flowers="foot-about.png"></div>
+</div>
+
+<script src="../site-footer.js"></script>
+<script src="../site-nav.js"></script>
+<script>
+/* Swap the well's contents on hover. Pointer events rather than :hover so the art
+   also responds to keyboard focus, and so leaving a link restores the resting
+   state even if the pointer never crosses the well itself. */
+(function(){
+  var well = document.querySelector('.ab-well');
+  if(!well) return;
+  var arts = {};
+  well.querySelectorAll('.ab-art').forEach(function(a){ arts[a.getAttribute('data-art')] = a; });
+  var current = null;
+
+  function show(key){
+    if(current === key) return;
+    if(current && arts[current]) arts[current].classList.remove('is-on');
+    current = key;
+    if(key && arts[key]){ arts[key].classList.add('is-on'); well.classList.add('is-showing'); }
+    else { well.classList.remove('is-showing'); }
+  }
+
+  /* On a touch device "hover" means press-and-hold, so pointerenter/leave makes a
+     tap flash the art and immediately drop it. There, a tap toggles instead, and a
+     tap anywhere else clears the well. */
+  var touch = window.matchMedia &&
+    (matchMedia('(hover: none)').matches || matchMedia('(pointer: coarse)').matches);
+  document.querySelectorAll('.ab-moon a').forEach(function(link){
+    var key = link.getAttribute('data-art');
+    if(touch){
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        if(key) show(current === key ? null : key);
+      });
+    } else {
+      link.addEventListener('pointerenter', function(){ if(key) show(key); });
+      link.addEventListener('focus',        function(){ if(key) show(key); });
+      link.addEventListener('pointerleave', function(){ if(key) show(null); });
+      link.addEventListener('blur',         function(){ if(key) show(null); });
+      link.addEventListener('click', function(e){ e.preventDefault(); });
+    }
+  });
+  if(touch){
+    document.addEventListener('click', function(e){
+      if(!e.target.closest('.ab-moon a')) show(null);
+    });
+    var hint = document.querySelector('.ab-hint');
+    if(hint) hint.innerHTML = hint.innerHTML.replace(/\bhover over\b/gi,'tap').replace(/\bhover\b/gi,'tap');
+    var aside = document.querySelector('.ab-aside');
+    if(aside) aside.innerHTML = aside.innerHTML.replace(/\bhover\b/gi,'tap');
+  }
+})();
+
+/* Keep the 1440 canvas fitted on resize; the head script does the first paint. */
+(function(){
+  var W = 1440, H = 1546 + 405, stage = document.getElementById('ab-stage');
+  var navwrap = document.getElementById('ab-navwrap');
+  function fit(){
+    /* Below 760 the page is stacked by mobile.css, not scaled, so give back every
+       inline style this has written rather than leaving a stale transform behind. */
+    if (window.innerWidth <= 760) {
+      stage.style.transform = ''; stage.style.left = '';
+      if (navwrap) { navwrap.style.transform = ''; navwrap.style.left = ''; }
+      document.body.style.height = '';
+      var init = document.getElementById('ab-initial-layout');
+      if (init) init.textContent = '';
+      return;
+    }
+    var s = Math.min(window.innerWidth / W, 1);
+    stage.style.transform = 'scale(' + s + ')';
+    stage.style.left = Math.max(0, (window.innerWidth - W * s) / 2) + 'px';
+    document.body.style.height = (H * s) + 'px';
+    /* The pill follows the INDEX's scale, not this page's, so the two sit on the
+       same pixel between pages. The index's hero fits height as well as width;
+       this canvas does not, and inside it the pill would drift on any window
+       shorter than 861. */
+    if (navwrap) {
+      var hs = Math.min(window.innerWidth / W, window.innerHeight / 861, 1);
+      navwrap.style.transform = 'scale(' + hs + ')';
+      navwrap.style.left = Math.max(0, (window.innerWidth - W * hs) / 2) + 'px';
+    }
+  }
+  window.addEventListener('resize', fit, { passive: true });
+  fit();
+})();
+</script>
+<script src="../mobile.js"></script>
+</body>
+</html>

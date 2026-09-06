@@ -36,7 +36,7 @@ def demo(route, label="Open it"):
 
 # =====================================================================
 build("resource-dashboard", dict(
-    out="work/resource-dashboard.html", root="../",
+    out="work/resource-dashboard/index.html", root="../../",
     kicker=CO,
     title="Resource Dashboard",
     hero="case/cs-dash-seams.svg",
@@ -246,7 +246,7 @@ build("resource-dashboard", dict(
 
 # =====================================================================
 build("events-timeline", dict(
-    out="work/events-timeline.html", root="../",
+    out="work/events-timeline/index.html", root="../../",
     kicker=CO,
     title="Events Timeline",
     hero="case/cs-tl-carry.svg",
@@ -278,13 +278,16 @@ build("events-timeline", dict(
                  "it and do arithmetic.",
                  "A timeline answers it by being looked at. That is the whole argument "
                  "for the feature: the data did not change, the shape of it did."],
-                media.push(
+                media.stage(
                     "plate/dashboard-events-table-explored.webp",
                     "A compliance event table sorted by timestamp",
                     "The whole history, and technically complete. Working out how "
                     "long anything was in trouble means reading two rows and doing "
                     "the arithmetic yourself.",
-                    z=1.3, fx="38%", fy="55%")),
+                    plate=(2200, 682), look=(60, 250, 1000, 260),
+                    call=("Aug 18, then Aug 23",
+                          "Violated here, fixed there. The gap between them is "
+                          "the answer, and the table makes you work it out."))),
 
         '    <div id="decisions" class="cs-group">\n\n' +
         sub("carry", "Key decisions", "Colouring the gaps",
@@ -357,7 +360,7 @@ build("events-timeline", dict(
 
 # =====================================================================
 build("ui-consistency", dict(
-    out="work/ui-consistency.html", root="../",
+    out="work/ui-consistency/index.html", root="../../",
     kicker=CO,
     title="UI Consistency",
     hero="case/cs-ui-drift.svg",
@@ -392,13 +395,16 @@ build("ui-consistency", dict(
                  "forgot. A shared layer is worth building at the point where keeping "
                  "things in sync by hand costs more than the abstraction does, and we "
                  "were well past it."],
-                media.push(
+                media.stage(
                     "plate/dashboard-button-contact-sheet.webp",
                     "Every live button variant side by side on a neutral ground",
                     "One component, as many versions of it as the app actually "
                     "had. Nothing here is tidied: the spacing and the radii are "
                     "what shipped, and the mess is the argument.",
-                    z=1.3, fx="32%", fy="33%")),
+                    plate=(2200, 832), look=(90, 100, 1000, 380),
+                    call=("two of seven",
+                          "Same control, different radius, different weight, "
+                          "different idea of what a button is."))),
 
         '    <div id="decisions" class="cs-group">\n\n' +
         sub("audit", "Key decisions", "Counting what was actually there",
@@ -493,7 +499,7 @@ build("ui-consistency", dict(
 
 # =====================================================================
 build("persona-homepage", dict(
-    out="work/persona-homepage.html", root="../",
+    out="work/persona-homepage/index.html", root="../../",
     kicker=CO,
     title="Persona Homepage",
     hero="case/cs-persona-reorder.svg",

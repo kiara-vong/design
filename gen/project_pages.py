@@ -178,10 +178,13 @@ PROJECTS = [
               media.clip("dorms-browse-filter",
                          "Filtering the dorm list, then searching it by name",
                          "Six filter dimensions over the whole campus with live search on top. The narrowing is the feature."),
-              media.push("plate/dorms-reviews.webp",
-                         "A dorm's review list with star ratings",
-                         "Named in the intro of every version of this project and, until now, shown nowhere. Author names are blurred; these are real students.",
-                         z=1.2, fx="48%", fy="52%")),
+              media.stage("plate/dorms-reviews.webp",
+                          "A dorm's review list with star ratings",
+                          "Named in the intro of every version of this project and, until now, shown nowhere. Author names are blurred; these are real students.",
+                          plate=(2200, 662), look=(120, 90, 900, 460),
+                          call=("5 stars", "The rating and the words are one "
+                                "submission; the site lays them out at opposite "
+                                "ends of the card."))),
              ("how", "How it works", "Why there is a backend at all",
               ["The frontend never talks to the database. Every read and write goes "
                "through a Java server, which is the only thing holding admin "
@@ -201,10 +204,13 @@ PROJECTS = [
                ("Sign-in by redirect",
                 "Popup sign-in is silently killed by default cross-origin policy on "
                 "static hosts: the window opens, closes, and never completes.")],
-              media.push("plate/dorms-signin-gate.webp",
-                         "Google sign-in, restricted to brown.edu accounts",
-                         "The gate is what makes a review worth reading: it comes from somebody who actually lives there. Signed out, because a real account has no business in a portfolio screenshot.",
-                         z=1.5, fx="50%", fy="44%")),
+              media.stage("plate/dorms-signin-gate.webp",
+                          "Google sign-in, restricted to brown.edu accounts",
+                          "The gate is what makes a review worth reading: it comes from somebody who actually lives there. Signed out, because a real account has no business in a portfolio screenshot.",
+                          plate=(1568, 751), look=(430, 175, 710, 200),
+                          call=("brown.edu only",
+                                "The whole gate, and the reason a review here is "
+                                "worth more than one anywhere else."))),
              ("plans", "How it works", "Some dorms are more than one building",
               ["Keeney, Greg, Grad Center, New Pembroke and Young Orchard are not "
                "buildings, they are several, each with its own floors and its own set "
@@ -214,10 +220,14 @@ PROJECTS = [
                "is a small structural decision that only exists because the data was "
                "looked at rather than assumed, and it is invisible on the other "
                "twenty-five dorms, which is the correct outcome."],
-              media.push("plate/dorms-floorplans-multibuilding.webp",
-                         "Floor plans grouped into one card grid per building",
-                         "Five of the thirty dorms are several buildings. A flat list of plans is wrong for those and quietly misleading to anyone who does not already know it.",
-                         z=1.3, fx="34%", fy="50%")),
+              media.stage("plate/dorms-floorplans-multibuilding.webp",
+                          "Floor plans grouped into one card grid per building",
+                          "Five of the thirty dorms are several buildings. A flat list of plans is wrong for those and quietly misleading to anyone who does not already know it.",
+                          plate=(2200, 744),
+                          look=[(190, 150, 760, 230), (190, 400, 760, 230)],
+                          call=("one group per building",
+                                "Archibald-Bronson, then Everett-Poland. A flat "
+                                "list would run these together."))),
              ("photos", "How it works", "Photographs nobody framed",
               ["Dorm photos are phone snapshots in every orientation and resolution. "
                "Hard-cropping a tall photo into a fixed frame cuts off half the room, "
@@ -226,10 +236,13 @@ PROJECTS = [
                "itself filling the rest of the frame. Nothing is cropped, the frame "
                "stays a consistent size, and the fill reads as intentional rather than "
                "as empty space."],
-              media.push("plate/dorms-gallery-letterbox.webp",
-                         "A tall phone photo letterboxed over a blurred copy of itself",
-                         "Nothing is cropped and the frame keeps its size. What fills the rest is the same photograph, blurred and darkened.",
-                         z=1.35, fx="14%", fy="50%")),
+              media.stage("plate/dorms-gallery-letterbox.webp",
+                          "A tall phone photo letterboxed over a blurred copy of itself",
+                          "Nothing is cropped and the frame keeps its size. What fills the rest is the same photograph, blurred and darkened.",
+                          plate=(2200, 808), look=(60, 120, 560, 560),
+                          call=("the same photo",
+                                "Blurred and darkened to fill the frame, so a "
+                                "tall photo keeps its top and its bottom."))),
              ("taught", "What it taught me", "The deployment is part of the design",
               ["I had thought of hosting as something that happens after the build. It "
                "is not: the static-host constraint decided the architecture, the "
@@ -324,10 +337,13 @@ PROJECTS = [
                           "All 34 villager portraits",
                           "Thirty-four of them. A number in a sentence is an assertion, and this is why the gift lists were parsed once rather than typed out.",
                           travel="62.72%"),
-              media.push("plate/stardew-villager-abigail.webp",
-                         "A villager card: bracketed portrait, birthday, biography, loved and liked gifts",
-                         "The hearts beside Loves and Likes are the game's own friendship sprites rather than emoji, which is the sort of detail the whole pastiche rests on.",
-                         z=1.5, fx="62%", fy="75%")),
+              media.stage("plate/stardew-villager-abigail.webp",
+                          "A villager card: bracketed portrait, birthday, biography, loved and liked gifts",
+                          "The hearts beside Loves and Likes are the game's own friendship sprites rather than emoji, which is the sort of detail the whole pastiche rests on.",
+                          plate=(2200, 1100), look=(620, 610, 1000, 320),
+                          call=("the game's own heart",
+                                "A friendship sprite lifted from the game, not "
+                                "an emoji standing in for one."))),
              ("arcade", "The arcade", "Four cabinets and no game engine",
               ["Half of this project is not a guide at all. Four playable cabinets sit "
                "on the same page, each a plain canvas element with its own loop, and "
@@ -351,10 +367,13 @@ PROJECTS = [
                ("Junimo Jamboree",
                 "A four-lane rhythm game at three difficulties, with a song that does "
                 "not exist as a file.")],
-              media.push("plate/stardew-arcade-row.webp",
-                         "Four arcade cabinets side by side",
-                         "Junimo Kart, Fishing, Prairie King and Junimo Jamboree. Each is a plain canvas with its own loop and no engine under it.",
-                         z=1.35, fx="50%", fy="54%"),
+              media.stage("plate/stardew-arcade-row.webp",
+                          "Four arcade cabinets side by side",
+                          "Junimo Kart, Fishing, Prairie King and Junimo Jamboree. Each is a plain canvas with its own loop and no engine under it.",
+                          plate=(2200, 498), look=(420, 175, 1360, 300),
+                          call=("four cabinets",
+                                "One canvas each, one loop each, and no engine "
+                                "under any of them.")),
               media.clip("stardew-junimo-kart",
                          "Junimo Kart: the start line, a cleared gap, a spike hit, and the score screen",
                          "Start, a cleared jump, a spike taken wrong, the score screen it resets from. Four states standing in for the run until this one gets a real recording."),
@@ -675,7 +694,7 @@ def build(p):
         i += len(run)
     # p-stardew.html was a prefix standing in for a folder. It is a folder now.
     _gc.build(p["slug"], dict(
-        out="projects/%s.html" % p["slug"].replace("p-", ""), root="../",
+        out="projects/%s/index.html" % p["slug"].replace("p-", ""), root="../../",
         title=p["title"], kicker=p["kicker"], intro=p["intro"],
         flowers="foot-projects.png",
         hero=p["hero"], hero_alt=p["hero_alt"],

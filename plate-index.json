@@ -1,7 +1,7 @@
 {
  "dashboard-button-contact-sheet": {
-  "h": 1077,
-  "kb": 34,
+  "h": 832,
+  "kb": 36,
   "travel": 0.0,
   "w": 2200
  },
@@ -12,14 +12,14 @@
   "w": 2200
  },
  "dashboard-events-table-explored": {
-  "h": 1077,
-  "kb": 44,
+  "h": 682,
+  "kb": 47,
   "travel": 0.0,
   "w": 2200
  },
  "dashboard-export-scoped": {
-  "h": 1077,
-  "kb": 66,
+  "h": 904,
+  "kb": 72,
   "travel": 0.0,
   "w": 2200
  },
@@ -84,20 +84,20 @@
   "w": 1600
  },
  "dorms-floorplans-multibuilding": {
-  "h": 1077,
-  "kb": 28,
+  "h": 744,
+  "kb": 30,
   "travel": 0.0,
   "w": 2200
  },
  "dorms-gallery-letterbox": {
-  "h": 1077,
-  "kb": 86,
+  "h": 808,
+  "kb": 94,
   "travel": 0.0,
   "w": 2200
  },
  "dorms-reviews": {
-  "h": 1077,
-  "kb": 16,
+  "h": 662,
+  "kb": 15,
   "travel": 0.0,
   "w": 2200
  },
@@ -156,8 +156,8 @@
   "w": 1600
  },
  "stardew-arcade-row": {
-  "h": 1077,
-  "kb": 49,
+  "h": 498,
+  "kb": 52,
   "travel": 0.0,
   "w": 2200
  },
