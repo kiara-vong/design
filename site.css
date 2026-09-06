@@ -1345,6 +1345,17 @@ a.card:nth-of-type(even):hover {
    padding: 120px 42px 10px
 }
 
+/* The same floor the Art tickets hit, and it bites here below about 355px.
+   
+   A grid item defaults to min-width:auto, so a 1fr track cannot shrink below its
+   item's own min-content width. At 320 that put a 294px card in a 265px column and
+   the row ran off the right edge of the phone. Above 355 the track is wide enough
+   that the floor never applies, which is why it looked fine on every width but the
+   narrowest. */
+.reads > * {
+   min-width: 0
+}
+
 .mini {
    display: flex;
    flex-direction: column

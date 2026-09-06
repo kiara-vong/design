@@ -65,6 +65,9 @@ STEPS = [
     ("fields",    "gen.card_fields",     [], []),
     ("figures",   "gen.case_figures", [], []),
     ("archive",   "gen.tiles",    [], []),
+    # After the tiles, because a cover is the tile composed at hero size and
+    # reads tile-index.json to find each project's ground.
+    ("covers",    "gen.hero_plates", [], []),
     # Prepares the case-study and project figures: 50MB of raw PNG capture
     # down to 2.5MB of WebP, and the travel each tall one has to scroll.
     ("plates",    "gen.plates",   [], []),

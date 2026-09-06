@@ -61,6 +61,20 @@ SHARP = {
     "dorms-quiz-asked",
     "dorms-quiz-answered",
     "dorms-list",
+    "dorms-filter-3",
+}
+
+# Whole pages, kept at the width they were captured. These are not figures cut to
+# fit a slot: they are a page sitting behind a window, and the window scrolls them.
+# Being a page says nothing about resolution: a page the camera only ever sees
+# whole is a normal-width plate, and only the state the camera goes INTO needs to
+# be listed in SHARP as well. Marking all four sharp would cost a megabyte to make
+# three images that are never seen closer than half size look better at half size.
+PAGE = {
+    "dorms-filter-0",
+    "dorms-filter-1",
+    "dorms-filter-2",
+    "dorms-filter-3",
 }
 
 # Captures that are the home page's thumbnails, prepared by gen/tiles.py from the
@@ -101,6 +115,11 @@ def main():
         # Drawn at the slot's width, how far past its bottom edge does it run?
         drawn = SLOT_W * h / float(w)
         travel = round((1.0 - SLOT_H / drawn) * 100.0, 2) if drawn > SLOT_H else 0.0
+        if name in PAGE:
+            # A page is scrolled by its own machine, from its own numbers. A strip
+            # percentage computed against a slot it never sits in would be a number
+            # that looks usable and is not.
+            travel = 0.0
         index[name] = dict(w=im.size[0], h=im.size[1],
                            travel=travel if travel >= MIN_TRAVEL else 0.0,
                            kb=int(kb))

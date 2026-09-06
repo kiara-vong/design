@@ -301,8 +301,8 @@
 }
 
 /* ---------------------------------------------------------------- G. stage
-   A capture as an object on a surface, a camera over it, and a label that
-   arrives when the camera does.
+   A capture in a browser window, on a surface, with a camera over it and a label
+   that arrives when the camera does.
 
    This replaces the arrangement the other still machines use, and the reason is a
    class of bug rather than a preference.
@@ -317,23 +317,19 @@
 
    Here the capture is never cropped by the frame:
 
-     - the resting camera fits the WHOLE plate with air around it, so it reads as
-       a screen on a surface, which is what it is;
+     - it sits in a browser window, the same one the home page thumbnails use, so
+       a screenshot on this site reads as a screen everywhere it appears;
+     - the resting camera fits the whole window with air around it;
      - a move is a translate and a scale over a plate that never changes, which is
        what a camera does. Nothing is resampled and nothing leaves the file;
-     - the detail stop is scale 1, which is the plate at its authored size. The
-       assets are 2x that, so the closest framing is also the sharpest one -- the
-       opposite of a crop, which is sharpest when it is widest;
+     - the detail stop is scale 1, the plate's authored size. The assets are 2x
+       that, so the closest framing is also the sharpest -- the opposite of a
+       crop, which is sharpest when it is widest;
      - the target is a RECTANGLE IN PLATE PIXELS, computed in gen/media.py from
-       the capture's own coordinates. "The region from 40,300 to 560,700" cannot
+       the capture's own coordinates. "The region from 620,610 to 1620,930" cannot
        silently miss the way a percentage of the wrong box can;
-     - the label appears WHEN THE CAMERA ARRIVES and names what it arrived at. A
-       caption asks the reader to go and find the thing being described; this
-       points at it, at the moment it fills the frame.
-
-   The slot owns the surface and the clipping, the stage owns the plate, the
-   camera owns where it is looking. Keeping the three apart is the design: a new
-   framing is three numbers rather than a re-crop and a new file. */
+     - the camera, the state change and the label all happen TOGETHER, because
+       three things arriving on three schedules reads as three glitches. */
 .cam-stage {
    position: relative;
    width: 100%;
@@ -341,22 +337,13 @@
    background: var(--dove-ivory, #F5F2E5)
 }
 
-/* The plate. Origin 0 0 rather than the default centre, because the transforms
-   are computed from the plate's own pixel coordinates and a centre origin makes
-   that arithmetic depend on the plate's size in a way that is easy to get wrong
-   and impossible to read back.
-
-   The stroke is an outline rather than a border so it costs no layout, and it
-   sits on the stage rather than on the image so it SCALES: about 1px at the
-   resting camera, about 3px pushed all the way in, which is how a real window
-   edge behaves as you move toward it. */
-/* The window the plate moves inside. It is the whole card most of the time, and
-   NARROWER when the figure carries a label -- because positioning the plate away
+/* The window the plate moves inside. The whole card most of the time, and
+   narrower when the figure carries a label -- because positioning the plate away
    from the label is not enough on its own: a plate wider than the card is clipped
    by the CARD, so it still runs under the label and the callout ends up written
-   across the screenshot it is describing. Clipping it here instead leaves the
-   label a column of bare surface to sit on, which is the only arrangement where
-   a leader line can point AT something rather than across it. */
+   across the screenshot it describes. Clipping it here leaves the label a column
+   of bare surface, which is the only arrangement where a leader can point AT
+   something rather than across it. */
 .cam-stage .view {
    position: absolute;
    left: var(--vx, 0px);
@@ -367,6 +354,10 @@
    border-radius: 12px
 }
 
+/* The browser window. Origin 0 0 rather than the default centre, because the
+   transforms are computed from the plate's own pixel coordinates and a centre
+   origin makes that arithmetic depend on the plate's size in a way that is easy
+   to get wrong and impossible to read back. */
 .cam-stage .plate {
    position: absolute;
    left: 0;
@@ -375,15 +366,102 @@
    height: var(--ph, 810px);
    transform-origin: 0 0;
    transform: translate(var(--x0), var(--y0)) scale(var(--k0));
-   border-radius: var(--plate-r, 7px);
-   outline: 3px solid var(--plate-edge, #D8D2C2);
+   border-radius: var(--plate-r, 22px);
+   background: var(--dove-ivory, #F5F2E5);
    box-shadow: 0 16px 40px rgba(28, 24, 22, .13), 0 2px 6px rgba(28, 24, 22, .07);
    will-change: transform
 }
 
-/* Gated on .is-in, like everything else on these pages: a camera running in a
-   figure three screens below the fold is work nobody asked for and nobody sees.
-   case-study.js already sets it. */
+/* The chrome, drawn in the plate's own pixels so it scales with the camera the
+   way a real window would: a hairline at rest, a proper title bar close in. The
+   same three lights and address strip the home tiles use, at the same
+   proportions, so the two read as one idiom rather than two. */
+.cam-stage .bar {
+   position: absolute;
+   left: 0;
+   top: 0;
+   right: 0;
+   height: var(--bar, 56px);
+   background: var(--dove-ivory, #F5F2E5);
+   border-bottom: 1px solid var(--outline-stroke, #E3E1CC);
+   border-radius: var(--plate-r, 22px) var(--plate-r, 22px) 0 0
+}
+
+.cam-stage .bar i {
+   position: absolute;
+   top: 34%;
+   width: 29%;
+   aspect-ratio: 1;
+   height: auto;
+   border-radius: 50%;
+   background: #E6685C
+}
+
+/* Sized off the bar's own height so the lights stay round and correctly spaced
+   whatever the plate's width is. */
+.cam-stage .bar i {
+   width: calc(var(--bar, 56px) * .29);
+   height: calc(var(--bar, 56px) * .29)
+}
+
+.cam-stage .bar i:nth-of-type(1) {
+   left: calc(var(--bar, 56px) * .41)
+}
+
+.cam-stage .bar i:nth-of-type(2) {
+   left: calc(var(--bar, 56px) * .94);
+   background: #E8B84B
+}
+
+.cam-stage .bar i:nth-of-type(3) {
+   left: calc(var(--bar, 56px) * 1.47);
+   background: #7DC26B
+}
+
+.cam-stage .bar b {
+   position: absolute;
+   left: calc(var(--bar, 56px) * 2.23);
+   right: calc(var(--bar, 56px) * .59);
+   top: 24%;
+   height: 53%;
+   border-radius: 999px;
+   background: var(--parchment, #FDFBEF);
+   border: 1px solid var(--outline-stroke, #E3E1CC)
+}
+
+/* The screen: everything below the chrome. */
+.cam-stage .shots {
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: var(--bar, 56px);
+   bottom: 0;
+   overflow: hidden;
+   border-radius: 0 0 var(--plate-r, 22px) var(--plate-r, 22px)
+}
+
+.cam-stage .shots img {
+   position: absolute;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   display: block;
+   object-fit: cover
+}
+
+/* The first shot is the ground and never fades. Everything else stacks over it,
+   so the loop dissolves against a screen rather than against the surface: fade
+   every layer and there is one moment per cycle when the window shows through
+   empty and the whole figure blinks. It also means the resting frame is a real
+   frame rather than whatever the animation happens to leave behind -- which is
+   the test every machine in this file has to pass, and the one this machine
+   failed until now. */
+.cam-stage .shots img + img {
+   opacity: 0
+}
+
+/* Gated on .is-in, like everything else here: a camera running in a figure three
+   screens below the fold is work nobody asked for and nobody sees. */
 .is-in .cam-stage.moves .plate {
    animation: stage-look var(--dur, 13s) cubic-bezier(.4, 0, .2, 1) infinite
 }
@@ -416,7 +494,7 @@
       transform: translate(var(--x0), var(--y0)) scale(var(--k0))
    }
 
-   28%, 44% {
+   30%, 46% {
       transform: translate(var(--x1), var(--y1)) scale(var(--k1))
    }
 
@@ -429,47 +507,34 @@
    }
 }
 
-/* The shots stack at the plate's own size, so every frame of a sequence is in
-   register with every other one and the camera applies to all of them at once --
-   one move over N states, rather than N moves that have to agree. */
-.cam-stage .plate img {
-   position: absolute;
-   inset: 0;
-   width: 100%;
-   height: 100%;
-   display: block;
-   object-fit: cover;
-   border-radius: inherit;
-   opacity: 0
+/* ---- everything that arrives, arrives together ----------------------------
+   The state change and the label share one window, and that window sits inside
+   the camera's hold. Three things on three schedules reads as three glitches;
+   one thing happening reads as an argument being made. */
+.is-in .cam-stage.seq .shots img + img {
+   animation: stage-arrive var(--dur, 13s) cubic-bezier(.4, 0, .2, 1) infinite
 }
 
-/* The resting shot is named rather than assumed. It is often not the first: for a
-   sequence that ends somewhere, the state worth leaving on screen is the one it
-   ends in, and that is also the frame reduced motion keeps. */
-.cam-stage .plate img.rest {
-   opacity: 1
+.is-in .cam-stage .call {
+   animation: stage-arrive var(--dur, 13s) cubic-bezier(.4, 0, .2, 1) infinite
 }
 
-.is-in .cam-stage .plate img {
-   animation: stage-shot var(--dur, 13s) linear infinite;
-   animation-delay: calc(var(--i) * var(--dur, 13s) / var(--n))
-}
+@keyframes stage-arrive {
 
-@keyframes stage-shot {
-   0% {
+   0%, 30% {
       opacity: 0
    }
 
-   4%, 26% {
+   38%, 62% {
       opacity: 1
    }
 
-   30%, 100% {
+   70%, 100% {
       opacity: 0
    }
 }
 
-/* ---- the label that arrives with the camera -------------------------------
+/* ---- the label ------------------------------------------------------------
    Positioned in SLOT coordinates, computed alongside the camera so it lands
    beside the region rather than over it. Not a caption: a caption explains the
    figure, this names one thing inside it at the moment that thing is the frame. */
@@ -478,32 +543,9 @@
    left: var(--cx);
    top: var(--cy);
    z-index: 3;
-   width: var(--cw, 190px);
+   width: var(--cw, 166px);
    opacity: 0;
-   transform: translateY(4px);
    pointer-events: none
-}
-
-.is-in .cam-stage .call {
-   animation: stage-call var(--dur, 13s) cubic-bezier(.4, 0, .2, 1) infinite
-}
-
-@keyframes stage-call {
-
-   0%, 28% {
-      opacity: 0;
-      transform: translateY(4px)
-   }
-
-   40%, 64% {
-      opacity: 1;
-      transform: translateY(0)
-   }
-
-   74%, 100% {
-      opacity: 0;
-      transform: translateY(4px)
-   }
 }
 
 .cam-stage .call-row {
@@ -575,12 +617,11 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-   /* Resting state stated rather than inherited: the whole plate, framed, the
-      resting shot showing, no label. That is a good still, which is the test
-      every machine in this file has to pass -- and a label naming a detail
-      nobody can see would not be. */
+   /* Resting state stated rather than inherited: the whole window, framed, the
+      first shot showing, no label. A label naming a detail nobody can see would
+      not be a good still, and a good still is the requirement. */
    .is-in .cam-stage.moves .plate,
-   .is-in .cam-stage .plate img,
+   .is-in .cam-stage.seq .shots img + img,
    .is-in .cam-stage .call {
       animation: none
    }
@@ -589,12 +630,8 @@
       transform: translate(var(--x0), var(--y0)) scale(var(--k0))
    }
 
-   .cam-stage .plate img {
+   .cam-stage .shots img + img {
       opacity: 0
-   }
-
-   .cam-stage .plate img.rest {
-      opacity: 1
    }
 
    .cam-stage .call {
@@ -781,5 +818,210 @@
 
    .ann:not(.used) .ann-group:first-of-type .ann-note {
       animation: none
+   }
+}
+
+/* ---------------------------------------------------------------- H. page
+   A whole page behind a window, scrolled, filtered, and finally looked at closely.
+
+   The stage machine above holds a SCREEN: a capture the size of the window, in
+   register with the other states of itself, with a camera over it. That is the
+   right model for a screen you can see all of at once, and the wrong one for a
+   list. A list's argument is its length, and its length is exactly the part that
+   does not fit -- so a machine that only ever shows what fits has thrown the claim
+   away before it starts.
+
+   Here the window is fixed and the PAGE moves inside it, which is what a browser
+   is. That buys three things the stage cannot do:
+
+     - length reads as length. Thirty residence halls is a scroll, not a number in
+       a caption;
+     - the states are full pages of different heights rather than crops of one
+       frame, so the grid can genuinely collapse -- seventeen, four, one -- instead
+       of dissolving between three pictures of the same size;
+     - the closing look can be at a part of the page the opening framing never
+       showed, because the reel can carry it into view first. The camera and the
+       scroll are two controls, and the payoff needs both: the switches that did
+       the narrowing sit below the fold of the framing that shows the narrowing.
+
+   One loop, in order: hold, scroll the whole list down, come back, then three
+   filters land one after another and the grid falls away under them, then the
+   camera goes in on the rail that did it and holds there long enough to read.
+   The reset undoes the filters BEFORE the camera pulls out, so the wide framing at
+   the end of a cycle is the same wide framing it started with rather than a jump
+   cut on the way back. */
+.cam-stage.page .shots .reel {
+   position: absolute;
+   left: 0;
+   top: 0;
+   width: 100%;
+   will-change: transform
+}
+
+/* The pages hang from the top of the reel at the window's width and whatever
+   height they are -- overriding the stage's inset:0/cover, which would squash a
+   page four screens tall into one. Nothing is cropped and nothing is scaled to
+   fit: the reel is the scroll position, and .shots is the fold. */
+.cam-stage.page .shots img {
+   position: absolute;
+   inset: auto;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: auto;
+   object-fit: fill
+}
+
+.is-in .cam-stage.page .shots .reel {
+   animation: page-scroll var(--dur, 20s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+/* --sy is the whole page, to the footer: the stop matters because a list that
+   scrolls and then stops somewhere arbitrary reads as a long list, while one that
+   scrolls and reaches the end reads as a list of a particular length. --sr is the
+   small carry that brings the filter rail's lower half into the closing frame. */
+@keyframes page-scroll {
+   0%, 5% {
+      transform: translateY(0)
+   }
+
+   27%, 34% {
+      transform: translateY(var(--sy, 0px))
+   }
+
+   44%, 70% {
+      transform: translateY(0)
+   }
+
+   77%, 90% {
+      transform: translateY(var(--sr, 0px))
+   }
+
+   97%, 100% {
+      transform: translateY(0)
+   }
+}
+
+.is-in .cam-stage.page.moves .plate {
+   animation: page-look var(--dur, 20s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+/* Wide for the first two thirds -- the scroll and the whole narrowing happen at
+   the framing where the grid is visible, because the grid collapsing IS the
+   evidence and a close framing would crop it. Only then does the camera move, and
+   only onto the cause. */
+@keyframes page-look {
+   0%, 70% {
+      transform: translate(var(--x0), var(--y0)) scale(var(--k0))
+   }
+
+   77%, 90% {
+      transform: translate(var(--x1), var(--y1)) scale(var(--k1))
+   }
+
+   97%, 100% {
+      transform: translate(var(--x0), var(--y0)) scale(var(--k0))
+   }
+}
+
+/* ---- the filters, landing in order ---------------------------------------
+   Each state rises over the one before and STAYS, so the figure accumulates
+   rather than cycling: at 70% all three are on and the page below them is the
+   single result. A shared window with a delay cannot do this -- a delay moves the
+   end of the hold along with the start, so the earlier states would drop out from
+   under the later ones and the count would climb back up mid-argument. Four fixed
+   tracks, one per position, is less clever and actually correct.
+
+   They all leave together at 90%, which is the reset: the filters come off, the
+   list fills back in, and only then does the camera pull out. */
+.is-in .cam-stage.page .reel img:nth-of-type(2) {
+   animation: page-step-2 var(--dur, 20s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page .reel img:nth-of-type(3) {
+   animation: page-step-3 var(--dur, 20s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page .reel img:nth-of-type(4) {
+   animation: page-step-4 var(--dur, 20s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page .reel img:nth-of-type(5) {
+   animation: page-step-5 var(--dur, 20s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+@keyframes page-step-2 {
+   0%, 46% {
+      opacity: 0
+   }
+
+   50%, 90% {
+      opacity: 1
+   }
+
+   96%, 100% {
+      opacity: 0
+   }
+}
+
+@keyframes page-step-3 {
+   0%, 54% {
+      opacity: 0
+   }
+
+   58%, 90% {
+      opacity: 1
+   }
+
+   96%, 100% {
+      opacity: 0
+   }
+}
+
+@keyframes page-step-4 {
+   0%, 62% {
+      opacity: 0
+   }
+
+   66%, 90% {
+      opacity: 1
+   }
+
+   96%, 100% {
+      opacity: 0
+   }
+}
+
+@keyframes page-step-5 {
+   0%, 70% {
+      opacity: 0
+   }
+
+   74%, 90% {
+      opacity: 1
+   }
+
+   96%, 100% {
+      opacity: 0
+   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   /* The resting frame: the whole window, the unfiltered list, scrolled to the
+      top. That is the state the page is actually in when you arrive at it, which
+      is the only still here that is not a moment out of an argument. */
+   .is-in .cam-stage.page .shots .reel,
+   .is-in .cam-stage.page.moves .plate,
+   .is-in .cam-stage.page .reel img {
+      animation: none
+   }
+
+   .cam-stage.page .shots .reel {
+      transform: translateY(0)
+   }
+
+   .cam-stage.page .reel img + img {
+      opacity: 0
    }
 }

@@ -83,6 +83,30 @@
   "travel": 0.0,
   "w": 1600
  },
+ "dorms-filter-0": {
+  "h": 4312,
+  "kb": 626,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dorms-filter-1": {
+  "h": 2819,
+  "kb": 376,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dorms-filter-2": {
+  "h": 1747,
+  "kb": 113,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dorms-filter-3": {
+  "h": 2402,
+  "kb": 85,
+  "travel": 0.0,
+  "w": 2200
+ },
  "dorms-floorplans-multibuilding": {
   "h": 744,
   "kb": 30,

@@ -168,6 +168,11 @@ LOOK_PAD = 20.0
 # Room held back for a label beside the region it names.
 CALL_W, CALL_GAP = 166.0, 22.0
 
+# The window chrome, in plate pixels, as a fraction of the plate's width.
+# Proportional rather than fixed so it renders at about the same size as
+# the home tiles' own title bar whatever the capture's resolution is.
+BAR = 0.026
+
 # The detail camera never goes past 1:1. The plates are authored at 1440x810 and
 # the assets are 2x that, so scale 1 is where a capture is pixel-exact on a
 # retina screen. Past it there is nothing left to reveal and the softness starts.
@@ -247,8 +252,83 @@ def _look_scale(rects, reserve=0.0):
     return min(k, MAX_K)
 
 
-def stage(shots, alt, caption, look=None, call=None, rest=None,
-          plate=None, dur="13s", radius=7, root="../../"):
+def page(shots, alt, caption, view=(1280, 600), look=None, scroll=0,
+         dur="20s", radius=None, root="../../"):
+    """A whole page behind a window, scrolled, with states landing in order.
+
+    stage() above holds a screen: the capture is the size of the window and the
+    camera moves over it. That is wrong for a list, because a list's argument is
+    its length and its length is the part that does not fit. So here the window is
+    fixed and the PAGE moves inside it, which is what a browser is.
+
+    shots  full-page captures, in the order they happen. They are hung from the
+           same reel at the window's width, so they may be different HEIGHTS --
+           which is the point: a filtered list is a shorter page, and letting it be
+           one is the difference between a grid collapsing and three pictures
+           cross-fading. Different delivery widths are fine too; they are all drawn
+           at the window's width, so only the aspect has to be honest.
+    view   the window, in CSS pixels, at the size the captures were taken. Not
+           forced to 16:9: the fold is wherever the capture's own viewport put it,
+           and moving it would put the page's own layout out of step with itself.
+    look   the region the camera closes on at the end, in the WINDOW's pixels at
+           the `scroll` position below -- not in the page's. The window is what the
+           reader is looking through and the reel is what is behind it, so a
+           rectangle in window coordinates is the only one that can be checked by
+           looking at the figure.
+    scroll how far the page is carried down for that closing look, in page pixels
+           at the window's width. The reason this exists: the framing that shows a
+           list narrowing and the framing that shows the switches doing it are
+           usually not the same framing, and on a long rail the switches are below
+           the fold. The camera alone cannot reach them; the reel can bring them.
+    """
+    if isinstance(shots, str):
+        shots = [shots]
+    vw, vh = [float(v) for v in view]
+    n = max(len(shots), 1)
+
+    bar = round(vw * BAR)
+    radius = round(vw * 0.013) if radius is None else radius
+    pw, ph = vw, vh + bar           # the window is the viewport plus its chrome
+
+    # How far the first page runs past the fold, from its delivered aspect. Read
+    # rather than typed: the plate is resized on delivery, so any travel written by
+    # hand is a number that was true of a file that is no longer on disk.
+    sw, sh = _plate_size(shots[0])
+    sy = max(0.0, sh * (vw / float(sw)) - vh)
+
+    x0, y0, k0 = _fit(pw, ph, REST_PAD)
+    cls = "cs-media cam cam-stage page"
+    var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--dur:%s;--n:%d;'
+           '--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f;--sy:%.1fpx;--sr:%.1fpx'
+           % (pw, ph, bar, radius, dur, n, x0, y0, k0, -sy, -float(scroll)))
+
+    if look:
+        rect = (look[0], look[1] + bar, look[2], look[3])
+        k1 = _look_scale([rect])
+        lx, ly = _look(rect, pw, ph, k1)
+        cls += " moves"
+        var += ';--x1:%.1fpx;--y1:%.1fpx;--k1:%.4f' % (lx, ly, k1)
+
+    o = ['        <div class="%s" style="%s">\n' % (cls, var),
+         '          <div class="view">\n',
+         '            <div class="plate">\n',
+         '              <span class="bar" aria-hidden="true">'
+         '<i></i><i></i><i></i><b></b></span>\n',
+         '              <div class="shots">\n',
+         '                <div class="reel">\n']
+    for i, src in enumerate(shots):
+        o.append('                  <img style="--i:%d" src="%sassets/%s" '
+                 'alt="%s"%s loading="lazy">\n'
+                 % (i, root, src, esc(alt) if i == 0 else "",
+                    "" if i == 0 else ' aria-hidden="true"'))
+    o.append('                </div>\n              </div>\n'
+             '            </div>\n          </div>\n')
+    o.append('        </div>\n')
+    return _fig("".join(o), caption)
+
+
+def stage(shots, alt, caption, look=None, call=None,
+          plate=None, dur="13s", radius=None, root="../../"):
     """A capture as an object on a surface, with a camera over it.
 
     shots  one src, or several. Several stack IN REGISTER at the plate's own size
@@ -261,9 +341,9 @@ def stage(shots, alt, caption, look=None, call=None, rest=None,
     call   (label, description) for what `look` lands on. Drawn beside the region,
            arriving as the camera does. Needs `look`: a label with nothing to point
            at is a caption, and captions go underneath.
-    rest   index of the shot to hold when nothing is moving. Defaults to the first,
-           but for a sequence that ends somewhere the state worth leaving on screen
-           is usually the one it ends in.
+    The FIRST shot is the resting frame and never fades; the rest stack over it
+    and arrive with the camera. So order them so the first is the state worth
+    leaving on screen, and the later ones are what the figure is going to reveal.
     plate  the capture's authored size. 1440x810 is the house 16:9; pass real
            numbers for anything else and the arithmetic follows them.
     """
@@ -273,15 +353,19 @@ def stage(shots, alt, caption, look=None, call=None, rest=None,
         look = [look]
     pw, ph = _plate_size(shots[0], plate)
     n = max(len(shots), 1)
-    rest_i = n - 1 if rest is None and n > 1 else (rest or 0)
 
+    bar = round(pw * BAR)
+    radius = round(pw * 0.013) if radius is None else radius
+    ph += bar                       # the window is the capture plus its chrome
+    if look:
+        look = [(r[0], r[1] + bar, r[2], r[3]) for r in look]
     reserve = (CALL_W + CALL_GAP + LOOK_PAD) if (call and look) else 0.0
     view_w = SLOT_W - reserve
     x0, y0, k0 = _fit(pw, ph, REST_PAD, view_w)
-    cls = "cs-media cam cam-stage"
-    var = ('--pw:%dpx;--ph:%dpx;--plate-r:%dpx;--dur:%s;--n:%d;'
+    cls = "cs-media cam cam-stage" + (" seq" if n > 1 else "")
+    var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--dur:%s;--n:%d;'
            '--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f'
-           % (pw, ph, radius, dur, n, x0, y0, k0))
+           % (pw, ph, bar, radius, dur, n, x0, y0, k0))
     if reserve:
         var += ';--vx:0px;--vw:%.1fpx' % view_w
 
@@ -315,14 +399,16 @@ def stage(shots, alt, caption, look=None, call=None, rest=None,
 
     o = ['        <div class="%s" style="%s">\n' % (cls, var),
          '          <div class="view">\n',
-         '            <div class="plate">\n']
+         '            <div class="plate">\n',
+         '              <span class="bar" aria-hidden="true">'
+         '<i></i><i></i><i></i><b></b></span>\n',
+         '              <div class="shots">\n']
     for i, src in enumerate(shots):
-        o.append('              <img class="%s" style="--i:%d" src="%sassets/%s" '
+        o.append('                <img style="--i:%d" src="%sassets/%s" '
                  'alt="%s"%s loading="lazy">\n'
-                 % ("rest" if i == rest_i else "", i, root, src,
-                    esc(alt) if i == rest_i else "",
-                    "" if i == rest_i else ' aria-hidden="true"'))
-    o.append('            </div>\n          </div>\n')
+                 % (i, root, src, esc(alt) if i == 0 else "",
+                    "" if i == 0 else ' aria-hidden="true"'))
+    o.append('              </div>\n            </div>\n          </div>\n')
     o.append(call_html)
     o.append('        </div>\n')
     return _fig("".join(o), caption)

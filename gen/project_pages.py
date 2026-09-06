@@ -32,7 +32,7 @@ def live(href, label):
 
 PROJECTS = [
     dict(slug="p-animal-crossing", title="Island Generator", kicker="Personal",
-         hero="tile/ac.jpg",
+         hero="hero/cover-ac.webp",
          hero_alt="A low-poly 3D island with cliffs, water and scattered conifers",
          live="https://kiara-vong.github.io/animal-crossing/",
          intro=("A procedural island built tile by tile with wave function collapse. "
@@ -126,7 +126,7 @@ PROJECTS = [
          ]),
 
     dict(slug="p-dorms", title="Dorms @ Brown", kicker="Personal",
-         hero="tile/dorms.jpg",
+         hero="hero/cover-dorms.webp",
          hero_alt="The Dorms @ Brown landing page: find where you will actually want to live",
          live="https://kiara-vong.github.io/dab/",
          intro=("Before the annual housing lottery, students piece dorm information "
@@ -175,20 +175,34 @@ PROJECTS = [
                ("Sign-in",
                 "Google, restricted to brown.edu, so the reviews come from people who "
                 "actually live there.")],
-              media.clip("dorms-browse-filter",
-                         "Filtering the dorm list, then searching it by name",
+              # The narrowing, as one figure rather than two. It used to be a
+              # clip of the filters plus a still of the list, which stated the
+              # same claim twice and proved it neither time: the clip was too
+              # small to read a checkbox in and the still could not show length.
+              #
+              # So: the whole list scrolls to its own footer -- thirty halls is a
+              # scroll, not a number in a caption -- and then three switches land
+              # in order and the grid falls from thirty to seventeen to four to
+              # one underneath them. The camera holds wide through all of it,
+              # because the collapse is the evidence and a close framing would
+              # crop it, and only afterwards goes in on the rail that did it.
+              #
+              # The `scroll` there is doing real work: at the framing that shows
+              # the grid, the third switch (Private, under BATHROOM) is below the
+              # fold. The camera cannot reach past the window, so the page is
+              # carried up 228px first and all three checks land in one frame.
+              media.page(["plate/dorms-filter-0.webp",
+                          "plate/dorms-filter-1.webp",
+                          "plate/dorms-filter-2.webp",
+                          "plate/dorms-filter-3.webp"],
+                         "The dorm index, filtered: thirty residence halls, then "
+                         "seventeen with singles, then four of those on Center "
+                         "Campus, then the one with a private bathroom",
                          "The narrowing is the feature: six dimensions and a live "
-                         "search, over the whole campus."),
-              media.stage("plate/dorms-list.webp",
-                          "The dorm index: a filter rail of six dimensions beside a "
-                          "grid of all thirty residence halls",
-                          "Thirty halls, and every one of them reachable by the same "
-                          "six switches. The clip above narrows it; this is what "
-                          "there is to narrow.",
-                          look=(55, 284, 312, 660),
-                          call=("six dimensions",
-                                "Room type, location, bathroom, kitchen, year, and "
-                                "a few switches for the rest.")),
+                         "search, over the whole campus. Three of the six take "
+                         "thirty halls down to Minden.",
+                         view=(1280, 600), scroll=228,
+                         look=(0, 80, 820, 412)),
               media.stage("plate/dorms-reviews.webp",
                           "The reviews section of a dorm page: the rating summary, "
                           "the form for writing one, and a posted review",
@@ -280,7 +294,7 @@ PROJECTS = [
          ]),
 
     dict(slug="p-stardew", title="Stardew Companion", kicker="Personal",
-         hero="tile/stardew.jpg",
+         hero="hero/cover-stardew.webp",
          hero_alt="A pixel-art farm title screen with mountains, a barn and a night sky",
          live="https://kiara-vong.github.io/stardew/",
          intro=("A single-page fan guide: look up any of the 34 villagers' favourite "
@@ -447,7 +461,7 @@ PROJECTS = [
          ]),
 
     dict(slug="p-uxfolio", title="UI/UX Case Studies", kicker="Personal",
-         hero="tile/uxfolio.jpg",
+         hero="hero/cover-uxfolio.webp",
          hero_alt="A dark portfolio home page with a large introduction and case study cards",
          live="https://kiara-vong.github.io/portfolio/",
          intro=("An earlier portfolio, built around research and process rather than "
@@ -526,7 +540,7 @@ PROJECTS = [
          ]),
 
     dict(slug="p-chess", title="Chess Engine", kicker="Personal",
-         hero="tile/chess.jpg",
+         hero="hero/cover-chess.webp",
          hero_alt="A chess board at the starting position with move and perspective controls",
          live="https://kiara-vong.github.io/site/projects/chess/",
          intro=("A playable board with an opponent behind it: move generation, "
@@ -580,7 +594,7 @@ PROJECTS = [
          ]),
 
     dict(slug="p-pacman", title="Pac-Man", kicker="Personal",
-         hero="tile/pacman.jpg",
+         hero="hero/cover-pacman.webp",
          hero_alt="A Pac-Man maze in blue on black, dots laid through every corridor",
          live="https://kiara-vong.github.io/site/projects/pacman/",
          intro=("Pac-Man rebuilt in the browser: the maze, the pellets, four ghosts "
