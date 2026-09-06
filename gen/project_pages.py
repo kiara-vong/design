@@ -83,8 +83,8 @@ PROJECTS = [
          ]),
 
     dict(slug="p-dorms", title="Dorms @ Brown", kicker="Personal",
-         hero="tile/dorms.svg",
-         hero_alt="A dorm browser with filter chips, dorm cards, star ratings and a quiz callout",
+         hero="tile/dorms.jpg",
+         hero_alt="The Dorms @ Brown landing page: find where you will actually want to live",
          live="https://kiara-vong.github.io/dab/",
          intro=("Before the annual housing lottery, students piece dorm information "
                 "together from old forum posts, secondhand accounts and a housing page "
