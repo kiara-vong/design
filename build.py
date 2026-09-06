@@ -31,8 +31,13 @@ longer existed anywhere in the source. Each step declares the files it owns, and
 those are cleared before it runs, so a page that stops being generated stops
 existing.
 
-VIDEO IS NOT IN HERE. gen-video.py is a twenty-minute ffmpeg run over 1.2GB of
-source and its output changes only when a source film does. Run it by hand.
+VIDEO IS NOT IN HERE. gen/video.py is a twenty-minute ffmpeg run over 1.2GB of
+source and its output changes only when a source film does. gen/walkthroughs.py is
+the same argument at a smaller scale: it re-encodes every captured walkthrough from
+GIFs that are not in the repo. Run both by hand when new footage lands:
+
+    python -m gen.walkthroughs
+    python -m gen.video
 """
 import glob
 import os
@@ -55,6 +60,9 @@ STEPS = [
     ("shots",     "gen.card_shots",      [], []),
     ("figures",   "gen.case_figures", [], []),
     ("archive",   "gen.tiles",    [], []),
+    # Prepares the case-study and project figures: 50MB of raw PNG capture
+    # down to 2.5MB of WebP, and the travel each tall one has to scroll.
+    ("plates",    "gen.plates",   [], []),
     ("persona",   "gen.persona_art",    [], []),
     ("polaroids", "gen.polaroids",  [], []),
     # Writes gallery-index.py, which the Art pages read. This is THE ordering
@@ -136,7 +144,8 @@ def check():
                      .replace(os.sep, "/"))
     # _src is staged input and assets/demo is kept deliberately; see the README.
     orphans = sorted(x for x in (have - used)
-                     if "/_src/" not in x and not x.startswith("demo/"))
+                     if "/_src/" not in x and "/_gif/" not in x
+                     and not x.startswith("demo/"))
 
     css = check_css(pages)
 

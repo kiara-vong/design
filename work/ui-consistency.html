@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="../site.css">
 <script src="../site-motion.js"></script>
 <link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
 <style>
 /* The reference build's hero hangs 115x250 phone renders in .hero-float. These
    studies are web work, so the hero is one wide plate at the container's own size
@@ -129,13 +130,10 @@
         <p>The cost was not really aesthetic. It was that every change had to be made in every copy, and the last copy was always the one somebody forgot. A shared layer is worth building at the point where keeping things in sync by hand costs more than the abstraction does, and we were well past it.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-still">Still</span><span class="cs-tech">contact sheet</span></div>
-          <h3>Every live variant of one component, side by side</h3>
-          <p>The real inventory, cropped from the actual pages and laid out on one sheet. Buttons are the clearest case: nine near-identical things next to each other make the argument in a way no count ever does.</p>
-          <ul><li>Crop each variant at the same zoom, on a neutral ground</li><li>Keep their real spacing and radii; do not tidy them</li><li>Caption each with the surface it came from</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391 @2x</span><span><b>Format</b> PNG</span><span><b>Note</b> component chrome only, no data</span></div>
+        <div class="cs-media cam cam-push" style="--z:1.5;--fx:28%;--fy:45%;--dur:13s">
+          <img src="../assets/plate/dashboard-button-contact-sheet.webp" alt="Every live button variant side by side on a neutral ground" loading="lazy">
         </div>
+        <figcaption class="cs-caption">One component, as many versions of it as the app actually had. Nothing here is tidied: the spacing and the radii are what shipped, and the mess is the argument.</figcaption>
       </figure>
     </section>
 
@@ -160,13 +158,10 @@
         <p>The filter chips are the detail I am most pleased with. They show at full width rather than truncating, overflow collapses into a +N chip, the dropdown stays open while you are still choosing, and typing hides the chips so you get a clean search field. Four small decisions, all of them about not interrupting someone mid-thought.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-still">Still</span><span class="cs-tech">before / after, one component</span></div>
-          <h3>One table, before and after the shared layer</h3>
-          <p>The same table on the same page, captured either side of the change. Row height, header treatment, striping and border weight all move at once, which is why one component carries the story better than a token diagram.</p>
-          <ul><li>Identical data and window width in both</li><li>Same scroll position, so only the styling differs</li><li>Label BEFORE / AFTER rather than old / new</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391 @2x</span><span><b>Format</b> two PNGs, or one slider</span><span><b>Note</b> the 72px to 52px row height should be obvious</span></div>
+        <div class="cs-media cam cam-push" style="--z:1.35;--fx:50%;--fy:55%;--dur:13s">
+          <img src="../assets/plate/showcase-tables-before-after.webp" alt="One table before and after the shared layer, at identical width" loading="lazy">
         </div>
+        <figcaption class="cs-caption">Same data, same window, same scroll position. The row height is the difference anyone can see without being told what to look for.</figcaption>
       </figure>
       </div>
 
@@ -178,13 +173,10 @@
         <p>The foundation PR contained no behavioural changes at all — visual consistency only. That was deliberate: the riskiest change in the sequence is the one everything depends on, so it should also be the one with the least in it.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-still">Still</span><span class="cs-tech">variants grid</span></div>
-          <h3>The filter chip, in all four of its states</h3>
-          <p>The chip work is the detail worth showing close up: full-width labels, the +N overflow chip, the dropdown staying open, and typing hiding the chips for a clean search field. Four small decisions, one grid.</p>
-          <ul><li>State 1: one chip selected, label at full width</li><li>State 2: overflow, showing the +N chip</li><li>State 3: dropdown open mid-selection</li><li>State 4: typing, chips hidden</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391 @2x</span><span><b>Format</b> PNG, 2x2 grid</span><span><b>Note</b> crop tight to the control, not the page</span></div>
+        <div class="cs-media cam cam-strip" style="--travel:83.97%;--dur:17s">
+          <img src="../assets/plate/showcase-full-height.webp" alt="The full refactor showcase: eight sections, each with its problem and its resolution" loading="lazy">
         </div>
+        <figcaption class="cs-caption">Eight of these, and each one carries the line that justified it. The argument was written down before the pull request was opened.</figcaption>
       </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">PR 1</span><span class="d">The theme provider and global defaults. No behavioural change. Everything downstream assumes it.</span></div>

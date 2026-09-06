@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="../site.css">
 <script src="../site-motion.js"></script>
 <link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
 <style>
 /* The reference build's hero hangs 115x250 phone renders in .hero-float. These
    studies are web work, so the hero is one wide plate at the container's own size
@@ -126,6 +127,12 @@
         <p>Most student portfolios are a grid of finished screens. They show that you can make something look good, which is the least interesting thing about design work and the easiest to fake.</p>
         <p>What a reviewer actually wants is the middle: what you tried, what you threw away, and why. That is the part nobody publishes because it is the part that is unflattering.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:77.49%;--dur:17s">
+          <img src="../assets/plate/uxfolio-casestudies-index.webp" alt="The case-study index at full height" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Four studies, and the page spends its length on them rather than on a grid of finished screens.</figcaption>
+      </figure>
     </section>
 
     <section id="studies" class="cs-section">
@@ -136,6 +143,15 @@
       <div class="cs-body">
         <p>Four case studies, chosen so they do not all demonstrate the same skill. One is quantitative, one is competitive research turned into a build, one is a redesign with a sense of humour about itself, and one is a domain nobody designs for.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-deal" style="--dur:14s;--n:4">
+          <img style="--i:0" src="../assets/plate/uxfolio-fondawallet-1-problem.webp" alt="Fonda Wallet from the problem through what was tried to what shipped" loading="lazy">
+          <img style="--i:1" src="../assets/plate/uxfolio-fondawallet-2-tried.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:2" src="../assets/plate/uxfolio-fondawallet-3-iteration.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:3" src="../assets/plate/uxfolio-fondawallet-4-shipped.webp" alt="" aria-hidden="true" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Four frames of one case study, in order. This arc is what the whole format rests on.</figcaption>
+      </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">A/B Testing</span><span class="d">Two appointment-booking flows, a hypothesis, a statistical test, and a result that had to be reported whichever way it went.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Development</span><span class="d">Competitive analysis into UI design for a React film-discovery app: search, genre filtering, bookmarking.</span></div>
@@ -163,6 +179,12 @@
         <p>So the source is not what deploys. The shared pieces live once in a partials folder, the page sources reference them with include markers, and a small Node script assembles the flat static files that actually ship. The output stays framework-free; the source stops being repetitive.</p>
         <p>This site does the same thing for the same reason, with Python instead of Node and considerably more generated. That is not a coincidence, it is this project's idea kept.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/uxfolio-loader-transition.mp4" poster="../assets/video/uxfolio-loader-transition-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The loading sequence, then a page transition into a case study"></video>
+        </div>
+        <figcaption class="cs-caption">The navy screen is a designed loader. It is also what made every headless capture of this site come back as a flat rectangle.</figcaption>
+      </figure>
       </div>
 
     </div>

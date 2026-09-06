@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="../site.css">
 <script src="../site-motion.js"></script>
 <link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
 <style>
 /* The reference build's hero hangs 115x250 phone renders in .hero-float. These
    studies are web work, so the hero is one wide plate at the container's own size
@@ -129,13 +130,10 @@
         <p>A timeline answers it by being looked at. That is the whole argument for the feature: the data did not change, the shape of it did.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-still">Still</span><span class="cs-tech">explored / shipped</span></div>
-          <h3>The table on its own, before the timeline sat above it</h3>
-          <p>A capture of the events table with no timeline, so the reader meets the problem in its original form. Label it EXPLORED and pair it with the shipped version further down.</p>
-          <ul><li>Enough rows to make the date arithmetic look tedious</li><li>At least one violated-then-fixed pair several days apart</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391 @2x</span><span><b>Format</b> PNG</span><span><b>Label</b> EXPLORED, top left, mono caps</span></div>
+        <div class="cs-media cam cam-push" style="--z:1.5;--fx:34%;--fy:62%;--dur:13s">
+          <img src="../assets/plate/dashboard-events-table-explored.webp" alt="A compliance event table sorted by timestamp" loading="lazy">
         </div>
+        <figcaption class="cs-caption">The whole history, and technically complete. Working out how long anything was in trouble means reading two rows and doing the arithmetic yourself.</figcaption>
       </figure>
     </section>
 
@@ -151,13 +149,13 @@
         <p>So state carries forward: the segment between two events is coloured by the state the earlier one left behind, not by the absence of data. Drawn the naive way, the track shows two dots and a gap, which reads as “nothing was wrong” for precisely the stretch when something was.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-seq">Sequence</span><span class="cs-tech">explored vs shipped, stacked</span></div>
-          <h3>The naive track above the carry-forward track</h3>
-          <p>Two renders of the same event data, stacked, so the difference IS the figure. This is the most important image in the study: it shows the engineering decision rather than describing it.</p>
-          <ul><li>Top: dots on a plain rule, gaps uncoloured (EXPLORED)</li><li>Bottom: the same dots with state carried across the gaps (SHIPPED)</li><li>Identical dates and width in both, so they read as one comparison</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391 @2x</span><span><b>Format</b> PNG, or a loop that wipes the coloured version in</span><span><b>Label</b> EXPLORED / SHIPPED</span></div>
+        <div class="cs-media cam cam-wipe" style="--dur:11s">
+          <img src="../assets/plate/dashboard-timeline-naive.webp" alt="The same events with the gaps uncoloured, then with state carried across them" loading="lazy">
+          <img src="../assets/plate/dashboard-timeline-carryforward.webp" alt="" aria-hidden="true" loading="lazy">
+          <span class="seam"></span>
+          <span class="tag b">Explored</span><span class="tag a">Shipped</span>
         </div>
+        <figcaption class="cs-caption">Identical dates, identical width. The only difference is whether the line between two events knows what happened at the first one.</figcaption>
       </figure>
       </div>
 
@@ -176,13 +174,10 @@
         <p>They take focus now, activate on Enter or Space, close on Escape, and announce themselves properly. I am putting this in a case study rather than quietly fixing it because the reason it shipped that way is worth saying out loud: it was built with a mouse in hand and never tested any other way. Nobody decided to exclude anyone. That is exactly how it usually happens.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-video">Video / loop</span><span class="cs-tech">keyboard walkthrough</span></div>
-          <h3>Tabbing through the timeline with no mouse</h3>
-          <p>A recording with the cursor hidden and the focus ring visible, moving dot to dot and into the sortable header. Nothing demonstrates an accessibility fix like watching it work with no pointer on screen.</p>
-          <ul><li>Tab onto the first dot, ring visible</li><li>Enter to open the popover</li><li>Escape to close it</li><li>Tab to the Timestamp header, Enter to re-sort</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391</span><span><b>Format</b> muted mp4 + webm</span><span><b>Length</b> 10-14s</span><span><b>Cursor</b> hidden</span></div>
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/dashboard-keyboard-walkthrough.mp4" poster="../assets/video/dashboard-keyboard-walkthrough-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Tabbing onto a timeline dot, opening its popover and re-sorting the table, with no mouse"></video>
         </div>
+        <figcaption class="cs-caption">The focus ring is the whole figure. Both of these were mouse-only before this work.</figcaption>
       </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Reachable</span><span class="d">Every dot and sortable header is in the tab order.</span></div>

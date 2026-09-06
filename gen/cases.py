@@ -15,6 +15,7 @@ about the company's data, customers or infrastructure.
 """
 from gen.case_template import build, section, sub, NOTE, esc
 from gen.case_blocks import stats, rules, figure_raw, before_after, plate
+from gen import media
 
 CO = "Capital One"
 
@@ -92,18 +93,13 @@ build("resource-dashboard", dict(
              "first, sorted by due date, because someone arriving without a plan is "
              "usually arriving because something is due. The hierarchy explorer is one "
              "toggle away for everyone else."],
-            plate("anno", "dots-to-lines callouts",
-                      "The default view, annotated",
-                      "One clean capture of the job-focused view with four callouts "
-                      "drawn onto it: a dot on the element, a hairline out to a short "
-                      "label in the margin. Same device the reference build uses to "
-                      "explain a screen.",
-                      ["Callout: the urgency sort, and why it is the default",
-                       "Callout: the view toggle",
-                       "Callout: filters that persist across both views",
-                       "Callout: the export, scoped to what is on screen"],
-                      [("Size", "799x391 @2x"), ("Format", "PNG, no OS chrome"),
-                       ("Note", "leave ~120px clear on the right for labels")]),
+            media.wipe(
+                "plate/dashboard-view-table.webp",
+                "plate/dashboard-view-graph.webp",
+                "The same eight resources as a table and as a drill-down graph",
+                "One filtered set, two readings of it. Identical window, identical "
+                "counts, so the only thing that changes is how it is being read.",
+                before="Table", after="Graph"),
             first=True),
 
         sub("drill", "Key decisions", "Drilling without getting lost",
@@ -114,19 +110,11 @@ build("resource-dashboard", dict(
              "categories tells you where you can go; a level that lists categories with "
              "how much is in each tells you where you should go. It is a small addition "
              "that changes the drill-down from navigation into triage."],
-            plate("seq", "zoom-in sequence, four steps",
-                      "Drilling environment to region to type to resource",
-                      "Four frames of the same explorer, one per level, so the reader "
-                      "sees the descent rather than one arbitrary level. Keep the "
-                      "breadcrumb visible in every frame; it is what makes the sequence "
-                      "read as a single movement.",
-                      ["Frame 1: environments, with counts",
-                       "Frame 2: regions inside the chosen environment",
-                       "Frame 3: resource types",
-                       "Frame 4: the resources themselves"],
-                      [("Size", "799x391 @2x each"),
-                       ("Format", "4 PNGs, or one cross-fading loop"),
-                       ("Note", "same window size and scroll position in all four")])),
+            media.clip(
+                "dashboard-hierarchy-drill",
+                "Drilling from environments to regions to categories to resources",
+                "Four levels, and the breadcrumb is in every frame. It is what "
+                "makes this navigation rather than four separate pages.")),
 
         sub("export", "Key decisions", "An export at every level",
             ["Every table exports, and what it exports is exactly what you are looking "
@@ -136,7 +124,14 @@ build("resource-dashboard", dict(
              "to the thing they care about, and then need it somewhere else — a "
              "ticket, a spreadsheet, a message to the team that owns it. A dashboard "
              "that cannot hand off its own answer sends everyone back to the "
-             "reconciling-by-hand it was built to remove."]) +
+             "reconciling-by-hand it was built to remove."],
+            media.push("plate/dashboard-export-scoped.webp",
+                       "The export control beside the count of what is currently "
+                       "filtered",
+                       "What comes out is what is on screen: current filters, current "
+                       "level, nothing else. A resource's tags and its jobs list each "
+                       "have their own.",
+                       z=1.4, fx="78%", fy="76%")) +
         # The rebuild's strongest engineering claim, and the one the write-up had no
         # slot for. The data layer is a real network boundary rather than an imported
         # array: typed fetch functions behind small hooks, a mocked REST surface
@@ -159,7 +154,19 @@ build("resource-dashboard", dict(
              "wrong until it meets a real server. The same handlers run in Node for the "
              "tests, so those drive the actual fetch, loading, render, error and retry "
              "cycle instead of asserting against props."],
-            plate("video", "screen recording, DevTools visible",
+            # The five detail tabs ARE the boundary's output: one resource, five
+            # views of what came back for it. The brief below still stands, because
+            # a still of the result cannot show the request that produced it.
+            media.deal(["plate/dashboard-tab-account-details.webp",
+                        "plate/dashboard-tab-configurations.webp",
+                        "plate/dashboard-tab-compliance.webp",
+                        "plate/dashboard-tab-network.webp",
+                        "plate/dashboard-tab-tags.webp"],
+                       "The five resource-detail tabs: account, configurations, "
+                       "compliance, network and tags",
+                       "One resource, five readings of what came back for it. Every "
+                       "one of these arrived over the boundary described above."),
+            after=plate("video", "screen recording, DevTools visible",
                   "The requests are real",
                   "Open the Network tab and reload. Genuine fetch calls with latency, "
                   "skeletons while they are in flight, and an error state that "
@@ -226,15 +233,13 @@ build("events-timeline", dict(
                  "it and do arithmetic.",
                  "A timeline answers it by being looked at. That is the whole argument "
                  "for the feature: the data did not change, the shape of it did."],
-                plate("still", "explored / shipped",
-                      "The table on its own, before the timeline sat above it",
-                      "A capture of the events table with no timeline, so the reader "
-                      "meets the problem in its original form. Label it EXPLORED and "
-                      "pair it with the shipped version further down.",
-                      ["Enough rows to make the date arithmetic look tedious",
-                       "At least one violated-then-fixed pair several days apart"],
-                      [("Size", "799x391 @2x"), ("Format", "PNG"),
-                       ("Label", "EXPLORED, top left, mono caps")])),
+                media.push(
+                    "plate/dashboard-events-table-explored.webp",
+                    "A compliance event table sorted by timestamp",
+                    "The whole history, and technically complete. Working out how "
+                    "long anything was in trouble means reading two rows and doing "
+                    "the arithmetic yourself.",
+                    z=1.5, fx="34%", fy="62%")),
 
         '    <div id="decisions" class="cs-group">\n\n' +
         sub("carry", "Key decisions", "Colouring the gaps",
@@ -246,17 +251,13 @@ build("events-timeline", dict(
              "the state the earlier one left behind, not by the absence of data. Drawn "
              "the naive way, the track shows two dots and a gap, which reads as "
              "“nothing was wrong” for precisely the stretch when something was."],
-            plate("seq", "explored vs shipped, stacked",
-                      "The naive track above the carry-forward track",
-                      "Two renders of the same event data, stacked, so the difference "
-                      "IS the figure. This is the most important image in the study: it "
-                      "shows the engineering decision rather than describing it.",
-                      ["Top: dots on a plain rule, gaps uncoloured (EXPLORED)",
-                       "Bottom: the same dots with state carried across the gaps (SHIPPED)",
-                       "Identical dates and width in both, so they read as one comparison"],
-                      [("Size", "799x391 @2x"),
-                       ("Format", "PNG, or a loop that wipes the coloured version in"),
-                       ("Label", "EXPLORED / SHIPPED")]),
+            media.wipe(
+                "plate/dashboard-timeline-naive.webp",
+                "plate/dashboard-timeline-carryforward.webp",
+                "The same events with the gaps uncoloured, then with state carried "
+                "across them",
+                "Identical dates, identical width. The only difference is whether "
+                "the line between two events knows what happened at the first one."),
             first=True),
 
         sub("collapse", "Key decisions", "When two things happen at once",
@@ -278,18 +279,12 @@ build("events-timeline", dict(
              "saying out loud: it was built with a mouse in hand and never tested any "
              "other way. Nobody decided to exclude anyone. That is exactly how it "
              "usually happens."],
-            fig=plate("video", "keyboard walkthrough",
-                      "Tabbing through the timeline with no mouse",
-                      "A recording with the cursor hidden and the focus ring visible, "
-                      "moving dot to dot and into the sortable header. Nothing "
-                      "demonstrates an accessibility fix like watching it work with no "
-                      "pointer on screen.",
-                      ["Tab onto the first dot, ring visible",
-                       "Enter to open the popover",
-                       "Escape to close it",
-                       "Tab to the Timestamp header, Enter to re-sort"],
-                      [("Size", "799x391"), ("Format", "muted mp4 + webm"),
-                       ("Length", "10-14s"), ("Cursor", "hidden")]),
+            fig=media.clip(
+                "dashboard-keyboard-walkthrough",
+                "Tabbing onto a timeline dot, opening its popover and re-sorting "
+                "the table, with no mouse",
+                "The focus ring is the whole figure. Both of these were mouse-only "
+                "before this work."),
             after=rules([
                 ("Reachable", "Every dot and sortable header is in the tab order."),
                 ("Operable", "Enter or Space activates; Escape closes the popover."),
@@ -352,17 +347,13 @@ build("ui-consistency", dict(
                  "forgot. A shared layer is worth building at the point where keeping "
                  "things in sync by hand costs more than the abstraction does, and we "
                  "were well past it."],
-                plate("still", "contact sheet",
-                      "Every live variant of one component, side by side",
-                      "The real inventory, cropped from the actual pages and laid out "
-                      "on one sheet. Buttons are the clearest case: nine near-identical "
-                      "things next to each other make the argument in a way no count "
-                      "ever does.",
-                      ["Crop each variant at the same zoom, on a neutral ground",
-                       "Keep their real spacing and radii; do not tidy them",
-                       "Caption each with the surface it came from"],
-                      [("Size", "799x391 @2x"), ("Format", "PNG"),
-                       ("Note", "component chrome only, no data")])),
+                media.push(
+                    "plate/dashboard-button-contact-sheet.webp",
+                    "Every live button variant side by side on a neutral ground",
+                    "One component, as many versions of it as the app actually "
+                    "had. Nothing here is tidied: the spacing and the radii are "
+                    "what shipped, and the mess is the argument.",
+                    z=1.5, fx="28%", fy="45%")),
 
         '    <div id="decisions" class="cs-group">\n\n' +
         sub("audit", "Key decisions", "Counting what was actually there",
@@ -392,17 +383,12 @@ build("ui-consistency", dict(
              "dropdown stays open while you are still choosing, and typing hides the "
              "chips so you get a clean search field. Four small decisions, all of them "
              "about not interrupting someone mid-thought."],
-            plate("still", "before / after, one component",
-                      "One table, before and after the shared layer",
-                      "The same table on the same page, captured either side of the "
-                      "change. Row height, header treatment, striping and border weight "
-                      "all move at once, which is why one component carries the story "
-                      "better than a token diagram.",
-                      ["Identical data and window width in both",
-                       "Same scroll position, so only the styling differs",
-                       "Label BEFORE / AFTER rather than old / new"],
-                      [("Size", "799x391 @2x"), ("Format", "two PNGs, or one slider"),
-                       ("Note", "the 72px to 52px row height should be obvious")])),
+            media.push(
+                "plate/showcase-tables-before-after.webp",
+                "One table before and after the shared layer, at identical width",
+                "Same data, same window, same scroll position. The row height is "
+                "the difference anyone can see without being told what to look for.",
+                z=1.35, fx="50%", fy="55%")),
 
         sub("prs", "Key decisions", "Ten pull requests, in dependency order",
             ["208 files across 9 commits is not a reviewable change. It is a change "
@@ -418,18 +404,13 @@ build("ui-consistency", dict(
              "consistency only. That was deliberate: the riskiest change in the "
              "sequence is the one everything depends on, so it should also be the one "
              "with the least in it."],
-            fig=plate("still", "variants grid",
-                      "The filter chip, in all four of its states",
-                      "The chip work is the detail worth showing close up: full-width "
-                      "labels, the +N overflow chip, the dropdown staying open, and "
-                      "typing hiding the chips for a clean search field. Four small "
-                      "decisions, one grid.",
-                      ["State 1: one chip selected, label at full width",
-                       "State 2: overflow, showing the +N chip",
-                       "State 3: dropdown open mid-selection",
-                       "State 4: typing, chips hidden"],
-                      [("Size", "799x391 @2x"), ("Format", "PNG, 2x2 grid"),
-                       ("Note", "crop tight to the control, not the page")]),
+            fig=media.strip(
+                "plate/showcase-full-height.webp",
+                "The full refactor showcase: eight sections, each with its problem "
+                "and its resolution",
+                "Eight of these, and each one carries the line that justified it. "
+                "The argument was written down before the pull request was opened.",
+                travel="83.97%"),
             after=rules([
                 ("PR 1", "The theme provider and global defaults. No behavioural "
                          "change. Everything downstream assumes it."),

@@ -5,11 +5,19 @@ __pycache__/
 #   _preview.html  the hero background picker
 #   _mobile.html   horizontal-overflow audit
 #   _resize.html
-_hit.html   live-resize audit
+_hit.html
+
+# Raw capture GIFs. gen/walkthroughs.py turns them into the mp4s that ship;
+# committing both pays twice for the same frames.
+assets/video/_gif/   live-resize audit
 _preview.html
 _mobile.html
 _resize.html
 _hit.html
+
+# Raw capture GIFs. gen/walkthroughs.py turns them into the mp4s that ship;
+# committing both pays twice for the same frames.
+assets/video/_gif/
 
 # One-shot scripts at the ROOT only. Anchored, because an unanchored _*.py also
 # swallowed gen/__init__.py and content/__init__.py, without which `python -m gen.x`

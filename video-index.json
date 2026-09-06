@@ -1,0 +1,106 @@
+{
+ "dashboard-filters-persist": {
+  "h": 612,
+  "kb": 716,
+  "needs_motion": false,
+  "seconds": 12.8,
+  "states": 12,
+  "w": 1280
+ },
+ "dashboard-hierarchy-drill": {
+  "h": 612,
+  "kb": 690,
+  "needs_motion": false,
+  "seconds": 18.0,
+  "states": 19,
+  "w": 1280
+ },
+ "dashboard-keyboard-walkthrough": {
+  "h": 612,
+  "kb": 271,
+  "needs_motion": false,
+  "seconds": 10.5,
+  "states": 8,
+  "w": 1280
+ },
+ "dorms-browse-filter": {
+  "h": 612,
+  "kb": 718,
+  "needs_motion": false,
+  "seconds": 8.0,
+  "states": 6,
+  "w": 1280
+ },
+ "dorms-quiz": {
+  "h": 614,
+  "kb": 676,
+  "needs_motion": false,
+  "seconds": 11.1,
+  "states": 10,
+  "w": 1280
+ },
+ "island-generator-building": {
+  "h": 612,
+  "kb": 1234,
+  "needs_motion": true,
+  "seconds": 26.2,
+  "states": 45,
+  "w": 1280
+ },
+ "island-generator-steering": {
+  "h": 612,
+  "kb": 378,
+  "needs_motion": false,
+  "seconds": 11.7,
+  "states": 9,
+  "w": 1280
+ },
+ "stardew-fishing": {
+  "h": 612,
+  "kb": 1155,
+  "needs_motion": true,
+  "seconds": 13.8,
+  "states": 13,
+  "w": 1280
+ },
+ "stardew-gift-lookup": {
+  "h": 674,
+  "kb": 760,
+  "needs_motion": false,
+  "seconds": 12.9,
+  "states": 10,
+  "w": 1280
+ },
+ "stardew-junimo-jamboree": {
+  "h": 612,
+  "kb": 412,
+  "needs_motion": true,
+  "seconds": 5.7,
+  "states": 3,
+  "w": 1280
+ },
+ "stardew-junimo-kart": {
+  "h": 612,
+  "kb": 680,
+  "needs_motion": true,
+  "seconds": 7.3,
+  "states": 4,
+  "w": 1280
+ },
+ "stardew-prairie-king": {
+  "h": 612,
+  "kb": 561,
+  "needs_motion": true,
+  "seconds": 8.4,
+  "states": 5,
+  "w": 1280
+ },
+ "uxfolio-loader-transition": {
+  "h": 612,
+  "kb": 1095,
+  "needs_motion": false,
+  "seconds": 17.2,
+  "states": 21,
+  "w": 1280
+ }
+}

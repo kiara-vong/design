@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="../site.css">
 <script src="../site-motion.js"></script>
 <link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
 <style>
 /* The reference build's hero hangs 115x250 phone renders in .hero-float. These
    studies are web work, so the hero is one wide plate at the container's own size
@@ -127,6 +128,20 @@
         <p>Everything about this game is documented somewhere. The problem is that the documentation is a wiki, and a wiki is optimised for completeness rather than for the question you actually have, which is almost always “what does this one person want”, asked while the game is paused.</p>
         <p>So the whole design brief was: one page, no navigation, answer that question in under three seconds.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/stardew-gift-lookup.mp4" poster="../assets/video/stardew-gift-lookup-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Searching a villager and opening their gift card"></video>
+        </div>
+        <figcaption class="cs-caption">Type a name, open the card, read the two lists. This is the question the wiki answers in four clicks and a lot of scrolling.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-deal" style="--dur:14s;--n:3">
+          <img style="--i:0" src="../assets/plate/stardew-didyouknow-1.webp" alt="The Did You Know card, showing three different facts" loading="lazy">
+          <img style="--i:1" src="../assets/plate/stardew-didyouknow-2.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:2" src="../assets/plate/stardew-didyouknow-3.webp" alt="" aria-hidden="true" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">What replaced a contact form that went nowhere. A fan guide does not need a get in touch box; it needs one more thing worth knowing.</figcaption>
+      </figure>
     </section>
 
     <div class="cs-group">
@@ -140,6 +155,18 @@
         <p>The thing that makes it feel like the game is not any single asset. It is the palette, the chunky border radii, the drop shadows on the panels and the specific weight of the type. Get those right and hand-drawn elements read as belonging; get them wrong and a real asset still looks pasted in.</p>
         <p>No build step is a constraint I set on purpose. A fan guide that needs npm install to change a gift list is a fan guide that stops being updated.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:63.99%;--dur:17s">
+          <img src="../assets/plate/stardew-locations-both-tiers.webp" alt="The six main buildings as full boxes, the smaller spots as an icon row beneath" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Both tiers in one frame, which is the only way the tiering reads as a decision rather than as inconsistency.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:39.39%;--dur:17s">
+          <img src="../assets/plate/stardew-explore-valley-popup.webp" alt="The Explore the Valley popup, scrolled through its full height" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">The outdoor areas are one long scrollable panel rather than a box each, because they are places to wander through rather than buildings to visit.</figcaption>
+      </figure>
       </div>
 
       <div class="cs-sub" id="data">
@@ -148,11 +175,23 @@
         <p>The gift lists are game data, so a one-time Node script parsed them out of a mirrored fan site rather than my typing 34 characters' worth of preferences by hand. Portraits, item icons and location photos come from the same source and the official wiki, used the way a fan guide typically uses them.</p>
         <p>Game code is a different category, and the arcade below draws the line in both directions. Prairie King's shooter logic is an original recreation, because the original is somebody's work in a way a gift list is not. The fishing catch-bar, on the other hand, is a deliberate port of a specific open reference implementation at its own constants, because approximating it did not feel right and matching it exactly was the entire point.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:62.72%;--dur:17s">
+          <img src="../assets/plate/stardew-villagers-grid.webp" alt="All 34 villager portraits" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Thirty-four of them. A number in a sentence is an assertion, and this is why the gift lists were parsed once rather than typed out.</figcaption>
+      </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Facts are facts</span><span class="d">What a character likes is not authored; it is looked up. Scraping it once beats retyping it 34 times.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Sprites are borrowed, and credited</span><span class="d">Non-commercial fan use, the same footing as any fan wiki, and named as such.</span></div>
         <div class="cs-rule"><span class="n">03</span><span class="t">Logic is written, or ported on purpose</span><span class="d">Recreated where it belongs to someone, ported exactly where the reference is open and the fidelity IS the feature.</span></div>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.5;--fx:62%;--fy:68%;--dur:13s">
+          <img src="../assets/plate/stardew-villager-abigail.webp" alt="A villager card: bracketed portrait, birthday, biography, loved and liked gifts" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">The hearts beside Loves and Likes are the game's own friendship sprites rather than emoji, which is the sort of detail the whole pastiche rests on.</figcaption>
+      </figure>
       </div>
 
     </div>
@@ -168,6 +207,12 @@
         <p>Half of this project is not a guide at all. Four playable cabinets sit on the same page, each a plain canvas element with its own loop, and none of them uses a framework or an engine.</p>
         <p>They are also the reason the page does not cost anything while you are reading it. All four pause their render loop through an IntersectionObserver the moment they scroll out of view, and the rhythm game suspends its audio context at the same instant, so closing the modal actually stops the music rather than leaving it playing under everything else.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.5;--fx:22%;--fy:50%;--dur:13s">
+          <img src="../assets/plate/stardew-arcade-row.webp" alt="Four arcade cabinets side by side" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Junimo Kart, Fishing, Prairie King and Junimo Jamboree. Each is a plain canvas with its own loop and no engine under it.</figcaption>
+      </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Junimo Kart</span><span class="d">A runner. Jump the spikes and the gaps, collect stars, and beat a best score that survives a reload.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Fishing</span><span class="d">Cast, bite and result on canvas, with the catch-bar minigame itself built as a DOM overlay so its physics can run at the source's native 20ms tick rather than once a frame.</span></div>
@@ -183,6 +228,12 @@
         <p>Note judgment and the falling-note animation are both timed off the audio context's own clock rather than animation-frame timestamps, which is the difference between a rhythm game that feels tight and one that feels slightly wrong in a way players cannot name. Because the whole chart is known up front, every oscillator is scheduled in one pass at load instead of through the lookahead scheduler that Web Audio sequencing usually needs.</p>
         <p>Difficulty changes note density and timing windows. It does not change the song.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-strip" style="--travel:36.64%;--dur:17s">
+          <img src="../assets/plate/stardew-jamboree-difficulty.webp" alt="The difficulty select, with a best score kept per difficulty" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Three difficulties over one generated song. What changes is note density and the timing windows, not the music.</figcaption>
+      </figure>
       </div>
 
     </div>
@@ -197,6 +248,12 @@
         <p>The sharpest version of that lesson was numeric. The first pass at the catch-bar ran its physics once per animation frame, which at 60fps came out about 20% faster than intended, and every constant I then re-tuned by feel took it further from the thing I was trying to match. The fix was not a better constant, it was running the loop at the tick rate the original used.</p>
         <p>The other one was structural. The popups rendered off-screen for a day because the page's parallax puts a perspective on the main element, which quietly makes it the containing block for any fixed-position child instead of the viewport. The modals had to live outside it in the DOM. Nothing about the symptom pointed at the cause.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/stardew-fishing.mp4" poster="../assets/video/stardew-fishing-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The cast, the bite, and the catch bar"></video>
+        </div>
+        <figcaption class="cs-caption">The catch bar is the ported one, and the thing that ran about 20 per cent fast until its physics moved to the tick rate the original used.</figcaption>
+      </figure>
     </section>
 
   </main>

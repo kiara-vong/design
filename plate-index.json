@@ -1,0 +1,254 @@
+{
+ "dashboard-button-contact-sheet": {
+  "h": 605,
+  "kb": 26,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-default-annotated": {
+  "h": 979,
+  "kb": 47,
+  "travel": 0.0,
+  "w": 2200
+ },
+ "dashboard-events-table-explored": {
+  "h": 496,
+  "kb": 31,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-export-scoped": {
+  "h": 904,
+  "kb": 72,
+  "travel": 0.0,
+  "w": 2200
+ },
+ "dashboard-jobs-list": {
+  "h": 899,
+  "kb": 36,
+  "travel": 12.9,
+  "w": 1600
+ },
+ "dashboard-tab-account-details": {
+  "h": 307,
+  "kb": 20,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-tab-compliance": {
+  "h": 307,
+  "kb": 16,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-tab-configurations": {
+  "h": 307,
+  "kb": 16,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-tab-network": {
+  "h": 307,
+  "kb": 18,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-tab-tags": {
+  "h": 307,
+  "kb": 9,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-timeline-carryforward": {
+  "h": 328,
+  "kb": 11,
+  "travel": 0.0,
+  "w": 2200
+ },
+ "dashboard-timeline-naive": {
+  "h": 239,
+  "kb": 7,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-view-graph": {
+  "h": 766,
+  "kb": 36,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dashboard-view-table": {
+  "h": 766,
+  "kb": 57,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dorms-floorplans-multibuilding": {
+  "h": 469,
+  "kb": 17,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dorms-gallery-letterbox": {
+  "h": 808,
+  "kb": 94,
+  "travel": 0.0,
+  "w": 2200
+ },
+ "dorms-reviews": {
+  "h": 482,
+  "kb": 10,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "dorms-signin-gate": {
+  "h": 751,
+  "kb": 17,
+  "travel": 0.0,
+  "w": 1568
+ },
+ "island-generator-finished": {
+  "h": 766,
+  "kb": 21,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "island-generator-stage1-empty": {
+  "h": 766,
+  "kb": 17,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "island-generator-stage2-quarter": {
+  "h": 766,
+  "kb": 18,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "island-generator-stage3-threequarter": {
+  "h": 766,
+  "kb": 18,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "island-generator-stage4-complete": {
+  "h": 766,
+  "kb": 21,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "resource-detail-full": {
+  "h": 2773,
+  "kb": 149,
+  "travel": 71.77,
+  "w": 1600
+ },
+ "showcase-full-height": {
+  "h": 3908,
+  "kb": 191,
+  "travel": 83.97,
+  "w": 1280
+ },
+ "showcase-tables-before-after": {
+  "h": 766,
+  "kb": 46,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "stardew-arcade-row": {
+  "h": 362,
+  "kb": 35,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "stardew-didyouknow-1": {
+  "h": 740,
+  "kb": 35,
+  "travel": 13.11,
+  "w": 1314
+ },
+ "stardew-didyouknow-2": {
+  "h": 740,
+  "kb": 37,
+  "travel": 13.11,
+  "w": 1314
+ },
+ "stardew-didyouknow-3": {
+  "h": 740,
+  "kb": 32,
+  "travel": 13.11,
+  "w": 1314
+ },
+ "stardew-explore-valley-popup": {
+  "h": 1292,
+  "kb": 229,
+  "travel": 39.39,
+  "w": 1600
+ },
+ "stardew-jamboree-difficulty": {
+  "h": 1011,
+  "kb": 37,
+  "travel": 36.64,
+  "w": 1309
+ },
+ "stardew-location-popup-saloon": {
+  "h": 1058,
+  "kb": 69,
+  "travel": 25.98,
+  "w": 1600
+ },
+ "stardew-locations-both-tiers": {
+  "h": 2174,
+  "kb": 288,
+  "travel": 63.99,
+  "w": 1600
+ },
+ "stardew-villager-abigail": {
+  "h": 1100,
+  "kb": 96,
+  "travel": 0.0,
+  "w": 2200
+ },
+ "stardew-villagers-grid": {
+  "h": 2100,
+  "kb": 257,
+  "travel": 62.72,
+  "w": 1600
+ },
+ "style-guide-full": {
+  "h": 3992,
+  "kb": 128,
+  "travel": 84.31,
+  "w": 1280
+ },
+ "uxfolio-casestudies-index": {
+  "h": 3479,
+  "kb": 111,
+  "travel": 77.49,
+  "w": 1600
+ },
+ "uxfolio-fondawallet-1-problem": {
+  "h": 766,
+  "kb": 44,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "uxfolio-fondawallet-2-tried": {
+  "h": 766,
+  "kb": 41,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "uxfolio-fondawallet-3-iteration": {
+  "h": 766,
+  "kb": 64,
+  "travel": 0.0,
+  "w": 1600
+ },
+ "uxfolio-fondawallet-4-shipped": {
+  "h": 766,
+  "kb": 24,
+  "travel": 0.0,
+  "w": 1600
+ }
+}

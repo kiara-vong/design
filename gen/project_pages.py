@@ -18,6 +18,7 @@ import io
 
 from gen import nav as _nv
 from gen import case_template as _gc
+from gen import media
 from gen.case_blocks import rules
 
 section, sub, esc = _gc.section, _gc.sub, _gc.esc
@@ -54,7 +55,10 @@ PROJECTS = [
                "The collapse step is easy. Propagation is not: when a cell settles, every "
                "neighbour's option set narrows, and theirs after that. Getting that to "
                "terminate, stay correct, and run fast enough to watch is the actual "
-               "problem, and no description had made that clear."]),
+               "problem, and no description had made that clear."],
+              media.clip("island-generator-building",
+                         "The solver filling an empty grid tile by tile",
+                         "Empty to finished. Every tile placed is the most constrained cell that was left, which is the heuristic the whole thing rests on.")),
              ("how", "How it works", "Adjacency is the whole ruleset",
               ["The solver takes no map. Its entire input is a set of tiles and, for "
                "each, what is allowed on each of its edges. Everything the output looks "
@@ -74,7 +78,13 @@ PROJECTS = [
                 "drain to a fixed point before the next collapse."),
                ("Backtrack cheaply",
                 "When a cell runs out of options, rewind to the last one that still had "
-                "a choice. Most of the work is choosing where to look next.")]),
+                "a choice. Most of the work is choosing where to look next.")],
+              media.deal(["plate/island-generator-stage1-empty.webp",
+                          "plate/island-generator-stage2-quarter.webp",
+                          "plate/island-generator-stage3-threequarter.webp",
+                          "plate/island-generator-stage4-complete.webp"],
+                         "One generation at four stages, from an empty grid to a finished island",
+                         "Same camera in all four, so what changes is only how much has been decided. This is the still version of the clip above, and what reduced motion gets.")),
              ("grid", "How it works", "Three edges, not four",
               ["The island is a triangular grid rather than a square one, which is the "
                "decision the whole tile set rests on. Three edges instead of four means "
@@ -89,7 +99,10 @@ PROJECTS = [
                "Generation is also steerable rather than purely automatic. Clicking any "
                "cell forces a specific tile there and re-propagates outward from it, so "
                "the solver can be pushed toward a coastline or a cliff and then left to "
-               "resolve everything the choice implies."]),
+               "resolve everything the choice implies."],
+              media.clip("island-generator-steering",
+                         "Forcing a tile mid-generation and watching the constraint propagate outward",
+                         "One click fixes a cell, and everything that choice implies resolves around it.")),
              ("pipeline", "How it works", "Blender to browser",
               ["The pieces are modelled in Blender and exported as glTF, then loaded and "
                "instanced through react-three-fiber, which lets the scene graph be "
@@ -98,7 +111,11 @@ PROJECTS = [
                "and React renders it, so the algorithm never touches the renderer.",
                "Rock and foliage colour is done in custom GLSL vertex shaders rather "
                "than baked into the models, which is what keeps a few hand-modelled "
-               "pieces from reading as the same object repeated across the island."]),
+               "pieces from reading as the same object repeated across the island."],
+              media.push("plate/island-generator-finished.webp",
+                         "A finished island: cliffs, water, beaches and scattered conifers",
+                         "Nothing here is placed by hand. The rock and foliage colour is shader work, which is what stops a few modelled pieces reading as one object repeated.",
+                         z=1.4, fx="52%", fy="46%")),
              ("taught", "What it taught me", "Constraint propagation, everywhere after",
               ["The thing I did not expect is how often this shape turns up once you "
                "have built it once. A design system's token layers are a constraint "
@@ -157,7 +174,14 @@ PROJECTS = [
                 "as a ranked shortlist."),
                ("Sign-in",
                 "Google, restricted to brown.edu, so the reviews come from people who "
-                "actually live there.")]),
+                "actually live there.")],
+              media.clip("dorms-browse-filter",
+                         "Filtering the dorm list, then searching it by name",
+                         "Six filter dimensions over the whole campus with live search on top. The narrowing is the feature."),
+              media.push("plate/dorms-reviews.webp",
+                         "A dorm's review list with star ratings",
+                         "Named in the intro of every version of this project and, until now, shown nowhere. Author names are blurred; these are real students.",
+                         z=1.4, fx="40%", fy="52%")),
              ("how", "How it works", "Why there is a backend at all",
               ["The frontend never talks to the database. Every read and write goes "
                "through a Java server, which is the only thing holding admin "
@@ -176,7 +200,11 @@ PROJECTS = [
                 "meet over HTTP."),
                ("Sign-in by redirect",
                 "Popup sign-in is silently killed by default cross-origin policy on "
-                "static hosts: the window opens, closes, and never completes.")]),
+                "static hosts: the window opens, closes, and never completes.")],
+              media.push("plate/dorms-signin-gate.webp",
+                         "Google sign-in, restricted to brown.edu accounts",
+                         "The gate is what makes a review worth reading: it comes from somebody who actually lives there. Signed out, because a real account has no business in a portfolio screenshot.",
+                         z=1.5, fx="50%", fy="44%")),
              ("plans", "How it works", "Some dorms are more than one building",
               ["Keeney, Greg, Grad Center, New Pembroke and Young Orchard are not "
                "buildings, they are several, each with its own floors and its own set "
@@ -185,7 +213,11 @@ PROJECTS = [
                "So the plans render as grouped card grids, one group per building. It "
                "is a small structural decision that only exists because the data was "
                "looked at rather than assumed, and it is invisible on the other "
-               "twenty-five dorms, which is the correct outcome."]),
+               "twenty-five dorms, which is the correct outcome."],
+              media.push("plate/dorms-floorplans-multibuilding.webp",
+                         "Floor plans grouped into one card grid per building",
+                         "Five of the thirty dorms are several buildings. A flat list of plans is wrong for those and quietly misleading to anyone who does not already know it.",
+                         z=1.35, fx="30%", fy="50%")),
              ("photos", "How it works", "Photographs nobody framed",
               ["Dorm photos are phone snapshots in every orientation and resolution. "
                "Hard-cropping a tall photo into a fixed frame cuts off half the room, "
@@ -193,7 +225,11 @@ PROJECTS = [
                "The gallery letterboxes the full photo over a blurred, darkened copy of "
                "itself filling the rest of the frame. Nothing is cropped, the frame "
                "stays a consistent size, and the fill reads as intentional rather than "
-               "as empty space."]),
+               "as empty space."],
+              media.push("plate/dorms-gallery-letterbox.webp",
+                         "A tall phone photo letterboxed over a blurred copy of itself",
+                         "Nothing is cropped and the frame keeps its size. What fills the rest is the same photograph, blurred and darkened.",
+                         z=1.45, fx="50%", fy="50%")),
              ("taught", "What it taught me", "The deployment is part of the design",
               ["I had thought of hosting as something that happens after the build. It "
                "is not: the static-host constraint decided the architecture, the "
@@ -202,7 +238,10 @@ PROJECTS = [
                "Client-side routing on a project path needed an explicit basename and "
                "the redirect trick for deep links, because there is no server to "
                "rewrite a URL. That is a design decision that arrived from the "
-               "infrastructure, and I would now go looking for those earlier."]),
+               "infrastructure, and I would now go looking for those earlier."],
+              media.clip("dorms-quiz",
+                         "Answering the quiz and landing on a ranked shortlist",
+                         "Thirty dorms in, a shortlist worth touring out, over a container on a free tier that sleeps between visits.")),
          ]),
 
     dict(slug="p-stardew", title="Stardew Companion", kicker="Personal",
@@ -229,7 +268,15 @@ PROJECTS = [
                "rather than for the question you actually have, which is almost always "
                "“what does this one person want”, asked while the game is paused.",
                "So the whole design brief was: one page, no navigation, answer that "
-               "question in under three seconds."]),
+               "question in under three seconds."],
+              media.clip("stardew-gift-lookup",
+                         "Searching a villager and opening their gift card",
+                         "Type a name, open the card, read the two lists. This is the question the wiki answers in four clicks and a lot of scrolling."),
+              media.deal(["plate/stardew-didyouknow-1.webp",
+                          "plate/stardew-didyouknow-2.webp",
+                          "plate/stardew-didyouknow-3.webp"],
+                         "The Did You Know card, showing three different facts",
+                         "What replaced a contact form that went nowhere. A fan guide does not need a get in touch box; it needs one more thing worth knowing.")),
              ("how", "How it works", "Borrowing a visual language without stealing assets",
               ["The thing that makes it feel like the game is not any single asset. It "
                "is the palette, the chunky border radii, the drop shadows on the panels "
@@ -238,7 +285,15 @@ PROJECTS = [
                "pasted in.",
                "No build step is a constraint I set on purpose. A fan guide that needs "
                "npm install to change a gift list is a fan guide that stops being "
-               "updated."]),
+               "updated."],
+              media.strip("plate/stardew-locations-both-tiers.webp",
+                          "The six main buildings as full boxes, the smaller spots as an icon row beneath",
+                          "Both tiers in one frame, which is the only way the tiering reads as a decision rather than as inconsistency.",
+                          travel="63.99%"),
+              media.strip("plate/stardew-explore-valley-popup.webp",
+                          "The Explore the Valley popup, scrolled through its full height",
+                          "The outdoor areas are one long scrollable panel rather than a box each, because they are places to wander through rather than buildings to visit.",
+                          travel="39.39%")),
              ("data", "How it works", "Facts, sprites and code are not the same thing",
               ["The gift lists are game data, so a one-time Node script parsed them out "
                "of a mirrored fan site rather than my typing 34 characters' worth of "
@@ -260,7 +315,15 @@ PROJECTS = [
                 "as such."),
                ("Logic is written, or ported on purpose",
                 "Recreated where it belongs to someone, ported exactly where the "
-                "reference is open and the fidelity IS the feature.")]),
+                "reference is open and the fidelity IS the feature.")],
+              media.strip("plate/stardew-villagers-grid.webp",
+                          "All 34 villager portraits",
+                          "Thirty-four of them. A number in a sentence is an assertion, and this is why the gift lists were parsed once rather than typed out.",
+                          travel="62.72%"),
+              media.push("plate/stardew-villager-abigail.webp",
+                         "A villager card: bracketed portrait, birthday, biography, loved and liked gifts",
+                         "The hearts beside Loves and Likes are the game's own friendship sprites rather than emoji, which is the sort of detail the whole pastiche rests on.",
+                         z=1.5, fx="62%", fy="68%")),
              ("arcade", "The arcade", "Four cabinets and no game engine",
               ["Half of this project is not a guide at all. Four playable cabinets sit "
                "on the same page, each a plain canvas element with its own loop, and "
@@ -283,7 +346,11 @@ PROJECTS = [
                 "to fire."),
                ("Junimo Jamboree",
                 "A four-lane rhythm game at three difficulties, with a song that does "
-                "not exist as a file.")]),
+                "not exist as a file.")],
+              media.push("plate/stardew-arcade-row.webp",
+                         "Four arcade cabinets side by side",
+                         "Junimo Kart, Fishing, Prairie King and Junimo Jamboree. Each is a plain canvas with its own loop and no engine under it.",
+                         z=1.5, fx="22%", fy="50%")),
              ("rhythm", "The arcade", "One source for the song and the chart",
               ["Junimo Jamboree has no audio track. A short hand-written motif is "
                "arranged into a sixteen-measure structure at load, and that same "
@@ -299,7 +366,11 @@ PROJECTS = [
                "load instead of through the lookahead scheduler that Web Audio "
                "sequencing usually needs.",
                "Difficulty changes note density and timing windows. It does not change "
-               "the song."]),
+               "the song."],
+              media.strip("plate/stardew-jamboree-difficulty.webp",
+                          "The difficulty select, with a best score kept per difficulty",
+                          "Three difficulties over one generated song. What changes is note density and the timing windows, not the music.",
+                          travel="36.64%")),
              ("taught", "What it taught me", "Ports have tick rates",
               ["Matching an existing visual language closely is much harder than "
                "designing freely, and much better practice. You cannot fall back on "
@@ -315,7 +386,10 @@ PROJECTS = [
                "because the page's parallax puts a perspective on the main element, "
                "which quietly makes it the containing block for any fixed-position "
                "child instead of the viewport. The modals had to live outside it in the "
-               "DOM. Nothing about the symptom pointed at the cause."]),
+               "DOM. Nothing about the symptom pointed at the cause."],
+              media.clip("stardew-fishing",
+                         "The cast, the bite, and the catch bar",
+                         "The catch bar is the ported one, and the thing that ran about 20 per cent fast until its physics moved to the tick rate the original used.")),
          ]),
 
     dict(slug="p-uxfolio", title="UI/UX Case Studies", kicker="Personal",
@@ -340,7 +414,11 @@ PROJECTS = [
                "about design work and the easiest to fake.",
                "What a reviewer actually wants is the middle: what you tried, what you "
                "threw away, and why. That is the part nobody publishes because it is "
-               "the part that is unflattering."]),
+               "the part that is unflattering."],
+              media.strip("plate/uxfolio-casestudies-index.webp",
+                          "The case-study index at full height",
+                          "Four studies, and the page spends its length on them rather than on a grid of finished screens.",
+                          travel="77.49%")),
              ("studies", "The four", "Four problems, deliberately unalike",
               ["Four case studies, chosen so they do not all demonstrate the same "
                "skill. One is quantitative, one is competitive research turned into a "
@@ -357,7 +435,13 @@ PROJECTS = [
                 "useful and knowing enough to be funny."),
                ("Fonda Wallet",
                 "A mobile finance tool for restaurant owners, centralising revenue and "
-                "expenses. The least glamorous brief and the most interesting one.")]),
+                "expenses. The least glamorous brief and the most interesting one.")],
+              media.deal(["plate/uxfolio-fondawallet-1-problem.webp",
+                          "plate/uxfolio-fondawallet-2-tried.webp",
+                          "plate/uxfolio-fondawallet-3-iteration.webp",
+                          "plate/uxfolio-fondawallet-4-shipped.webp"],
+                         "Fonda Wallet from the problem through what was tried to what shipped",
+                         "Four frames of one case study, in order. This arc is what the whole format rests on.")),
              ("how", "How it works", "Process as the artefact",
               ["Every case study leads with the problem and spends most of its length "
                "on the decisions, with the final screens arriving last and briefly. "
@@ -377,7 +461,10 @@ PROJECTS = [
                "repetitive.",
                "This site does the same thing for the same reason, with Python instead "
                "of Node and considerably more generated. That is not a coincidence, it "
-               "is this project's idea kept."]),
+               "is this project's idea kept."],
+              media.clip("uxfolio-loader-transition",
+                         "The loading sequence, then a page transition into a case study",
+                         "The navy screen is a designed loader. It is also what made every headless capture of this site come back as a flat rectangle.")),
              ("taught", "What it taught me", "The format that survived",
               ["This is the direct ancestor of the case studies on this site: problem, "
                "then the two or three choices that were genuinely hard, then what "
@@ -487,9 +574,33 @@ PROJECTS = [
 
 
 def _parts(sec):
-    """(anchor, label, h2, escaped paragraphs, optional rules table)."""
-    after = rules(sec[4]) if len(sec) > 4 else None
-    return sec[0], sec[1], sec[2], [esc(x) for x in sec[3]], after
+    """(anchor, label, h2, escaped paragraphs, rules table, figure).
+
+    A section is (anchor, label, h2, paragraphs) with two optional tails: a list of
+    (title, description) pairs that becomes the bordered rules table, and a block of
+    figure markup from gen/media.py.
+
+    Read by SHAPE rather than by position. A rules table is a list of pairs and a
+    figure is a string of markup, so either can be given, in either order, and a
+    section that wants only a figure does not have to pass None for rules it does
+    not have. Parsing these by position put a figure in the rules slot, and the
+    failure was rules() trying to enumerate a string of HTML.
+
+    A section may carry two figures. The first sits above the rules table and the
+    second below it, which is the order they read in: the figure that shows what the
+    section is about, then the constraints, then a figure showing a consequence.
+    """
+    after, figs = None, []
+    for extra in sec[4:]:
+        if not extra:
+            continue
+        elif isinstance(extra, (list, tuple)):
+            after = rules(extra)
+        else:
+            figs.append(extra)
+    if len(figs) > 1:
+        after = (after or "") + "".join(figs[1:])
+    return sec[0], sec[1], sec[2], [esc(x) for x in sec[3]], after, (figs or [None])[0]
 
 
 def build(p):
@@ -516,13 +627,14 @@ def build(p):
         while i + len(run) < len(secs) and secs[i + len(run)][1] == secs[i][1]:
             run.append(secs[i + len(run)])
         if len(run) == 1:
-            anchor, label, h2, paras, after = _parts(run[0])
-            blocks.append(section(anchor, label, h2, paras, after=after))
+            anchor, label, h2, paras, after, fig = _parts(run[0])
+            blocks.append(section(anchor, label, h2, paras, fig=fig, after=after))
         else:
             group = ['    <div class="cs-group">\n\n']
             for n, sec in enumerate(run):
-                anchor, label, h2, paras, after = _parts(sec)
-                group.append(sub(anchor, label, h2, paras, first=(n == 0), after=after))
+                anchor, label, h2, paras, after, fig = _parts(sec)
+                group.append(sub(anchor, label, h2, paras, fig=fig,
+                                 first=(n == 0), after=after))
             group.append('    </div>\n\n')
             blocks.append("".join(group))
         i += len(run)

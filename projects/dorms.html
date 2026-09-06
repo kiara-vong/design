@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="../site.css">
 <script src="../site-motion.js"></script>
 <link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
 <style>
 /* The reference build's hero hangs 115x250 phone renders in .hero-float. These
    studies are web work, so the hero is one wide plate at the container's own size
@@ -138,6 +139,12 @@
         <p>Thirty dorms, filterable down to the few worth walking to. The filters are the ones people actually argue about in March: room type, location on campus, whether the bathroom is shared and how, kitchen access, class year, amenities, with live search by name over the top of all of it.</p>
         <p>A dorm's own page then has to answer the question the filters cannot, which is what the place is like. Photo gallery, floor plans, room features, an embedded campus map, an average rating, and reviews from people who lived there.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/dorms-browse-filter.mp4" poster="../assets/video/dorms-browse-filter-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Filtering the dorm list, then searching it by name"></video>
+        </div>
+        <figcaption class="cs-caption">Six filter dimensions over the whole campus with live search on top. The narrowing is the feature.</figcaption>
+      </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Browse and filter</span><span class="d">Six filter dimensions and live name search, applied to the whole campus at once.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Dorm pages</span><span class="d">Photos, plans, features, map and rating, which is more than the official housing page has ever shown in one place.</span></div>
@@ -145,6 +152,12 @@
         <div class="cs-rule"><span class="n">04</span><span class="t">The quiz</span><span class="d">A few questions about what you care about, and thirty dorms come back as a ranked shortlist.</span></div>
         <div class="cs-rule"><span class="n">05</span><span class="t">Sign-in</span><span class="d">Google, restricted to brown.edu, so the reviews come from people who actually live there.</span></div>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.4;--fx:40%;--fy:52%;--dur:13s">
+          <img src="../assets/plate/dorms-reviews.webp" alt="A dorm's review list with star ratings" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Named in the intro of every version of this project and, until now, shown nowhere. Author names are blurred; these are real students.</figcaption>
+      </figure>
     </section>
 
     <div class="cs-group">
@@ -158,6 +171,12 @@
         <p>The frontend never talks to the database. Every read and write goes through a Java server, which is the only thing holding admin credentials; the client holds a public config good for sign-in and photo upload and nothing else.</p>
         <p>That split is what forced the deployment shape. GitHub Pages serves static files only, so the server needed a real host and runs as a container elsewhere, with the service-account key passed in as an environment variable rather than a file, because most container platforms have no friendly way to drop in a raw secret.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.5;--fx:50%;--fy:44%;--dur:13s">
+          <img src="../assets/plate/dorms-signin-gate.webp" alt="Google sign-in, restricted to brown.edu accounts" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">The gate is what makes a review worth reading: it comes from somebody who actually lives there. Signed out, because a real account has no business in a portfolio screenshot.</figcaption>
+      </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">One credential holder</span><span class="d">Admin keys live on the server. The client gets a public config and no more.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Static front, hosted back</span><span class="d">A static host cannot run a server, so the two deploy separately and meet over HTTP.</span></div>
@@ -171,6 +190,12 @@
         <p>Keeney, Greg, Grad Center, New Pembroke and Young Orchard are not buildings, they are several, each with its own floors and its own set of plans. A flat list of floor plans is wrong for those five and quietly misleading for anyone who does not already know that.</p>
         <p>So the plans render as grouped card grids, one group per building. It is a small structural decision that only exists because the data was looked at rather than assumed, and it is invisible on the other twenty-five dorms, which is the correct outcome.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.35;--fx:30%;--fy:50%;--dur:13s">
+          <img src="../assets/plate/dorms-floorplans-multibuilding.webp" alt="Floor plans grouped into one card grid per building" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Five of the thirty dorms are several buildings. A flat list of plans is wrong for those and quietly misleading to anyone who does not already know it.</figcaption>
+      </figure>
       </div>
 
       <div class="cs-sub" id="photos">
@@ -179,6 +204,12 @@
         <p>Dorm photos are phone snapshots in every orientation and resolution. Hard-cropping a tall photo into a fixed frame cuts off half the room, which is the half you wanted.</p>
         <p>The gallery letterboxes the full photo over a blurred, darkened copy of itself filling the rest of the frame. Nothing is cropped, the frame stays a consistent size, and the fill reads as intentional rather than as empty space.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.45;--fx:50%;--fy:50%;--dur:13s">
+          <img src="../assets/plate/dorms-gallery-letterbox.webp" alt="A tall phone photo letterboxed over a blurred copy of itself" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Nothing is cropped and the frame keeps its size. What fills the rest is the same photograph, blurred and darkened.</figcaption>
+      </figure>
       </div>
 
     </div>
@@ -192,6 +223,12 @@
         <p>I had thought of hosting as something that happens after the build. It is not: the static-host constraint decided the architecture, the auth flow and the routing, and every one of those is visible to the person using it.</p>
         <p>Client-side routing on a project path needed an explicit basename and the redirect trick for deep links, because there is no server to rewrite a URL. That is a design decision that arrived from the infrastructure, and I would now go looking for those earlier.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/dorms-quiz.mp4" poster="../assets/video/dorms-quiz-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Answering the quiz and landing on a ranked shortlist"></video>
+        </div>
+        <figcaption class="cs-caption">Thirty dorms in, a shortlist worth touring out, over a container on a free tier that sleeps between visits.</figcaption>
+      </figure>
     </section>
 
   </main>

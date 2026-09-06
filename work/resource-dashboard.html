@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="../site.css">
 <script src="../site-motion.js"></script>
 <link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
 <style>
 /* The reference build's hero hangs 115x250 phone renders in .hero-float. These
    studies are web work, so the hero is one wide plate at the container's own size
@@ -152,13 +153,13 @@
         <p>Rather than average them into one compromised view, the dashboard has two and makes the default the urgent one. The job-focused view opens first, sorted by due date, because someone arriving without a plan is usually arriving because something is due. The hierarchy explorer is one toggle away for everyone else.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-still">Annotated still</span><span class="cs-tech">dots-to-lines callouts</span></div>
-          <h3>The default view, annotated</h3>
-          <p>One clean capture of the job-focused view with four callouts drawn onto it: a dot on the element, a hairline out to a short label in the margin. Same device the reference build uses to explain a screen.</p>
-          <ul><li>Callout: the urgency sort, and why it is the default</li><li>Callout: the view toggle</li><li>Callout: filters that persist across both views</li><li>Callout: the export, scoped to what is on screen</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391 @2x</span><span><b>Format</b> PNG, no OS chrome</span><span><b>Note</b> leave ~120px clear on the right for labels</span></div>
+        <div class="cs-media cam cam-wipe" style="--dur:11s">
+          <img src="../assets/plate/dashboard-view-table.webp" alt="The same eight resources as a table and as a drill-down graph" loading="lazy">
+          <img src="../assets/plate/dashboard-view-graph.webp" alt="" aria-hidden="true" loading="lazy">
+          <span class="seam"></span>
+          <span class="tag b">Table</span><span class="tag a">Graph</span>
         </div>
+        <figcaption class="cs-caption">One filtered set, two readings of it. Identical window, identical counts, so the only thing that changes is how it is being read.</figcaption>
       </figure>
       </div>
 
@@ -169,13 +170,10 @@
         <p>The counts are the part that earns its place. A level that only lists categories tells you where you can go; a level that lists categories with how much is in each tells you where you should go. It is a small addition that changes the drill-down from navigation into triage.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-seq">Sequence</span><span class="cs-tech">zoom-in sequence, four steps</span></div>
-          <h3>Drilling environment to region to type to resource</h3>
-          <p>Four frames of the same explorer, one per level, so the reader sees the descent rather than one arbitrary level. Keep the breadcrumb visible in every frame; it is what makes the sequence read as a single movement.</p>
-          <ul><li>Frame 1: environments, with counts</li><li>Frame 2: regions inside the chosen environment</li><li>Frame 3: resource types</li><li>Frame 4: the resources themselves</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391 @2x each</span><span><b>Format</b> 4 PNGs, or one cross-fading loop</span><span><b>Note</b> same window size and scroll position in all four</span></div>
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/dashboard-hierarchy-drill.mp4" poster="../assets/video/dashboard-hierarchy-drill-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Drilling from environments to regions to categories to resources"></video>
         </div>
+        <figcaption class="cs-caption">Four levels, and the breadcrumb is in every frame. It is what makes this navigation rather than four separate pages.</figcaption>
       </figure>
       </div>
 
@@ -185,6 +183,12 @@
         <p>Every table exports, and what it exports is exactly what you are looking at: current filters, current level, nothing else.</p>
         <p>This sounds like a checkbox feature and was one of the most-used things in the tool. People do not live in dashboards. They come in, narrow down to the thing they care about, and then need it somewhere else — a ticket, a spreadsheet, a message to the team that owns it. A dashboard that cannot hand off its own answer sends everyone back to the reconciling-by-hand it was built to remove.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.4;--fx:78%;--fy:76%;--dur:13s">
+          <img src="../assets/plate/dashboard-export-scoped.webp" alt="The export control beside the count of what is currently filtered" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">What comes out is what is on screen: current filters, current level, nothing else. A resource's tags and its jobs list each have their own.</figcaption>
+      </figure>
       </div>
 
       <div class="cs-sub" id="data">
@@ -193,6 +197,16 @@
         <p>Every screen here fetches. The data layer is typed fetch functions behind small hooks that track loading, error and refetch, with a mocked REST surface behind them at the service-worker level rather than an imported array pretending to be a response.</p>
         <p>That distinction is why the loading skeletons and the retry banner exist at all. A component handed its data synchronously has no in-flight state to design, no failure to recover from, and no way to find out it was wrong until it meets a real server. The same handlers run in Node for the tests, so those drive the actual fetch, loading, render, error and retry cycle instead of asserting against props.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-deal" style="--dur:14s;--n:5">
+          <img style="--i:0" src="../assets/plate/dashboard-tab-account-details.webp" alt="The five resource-detail tabs: account, configurations, compliance, network and tags" loading="lazy">
+          <img style="--i:1" src="../assets/plate/dashboard-tab-configurations.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:2" src="../assets/plate/dashboard-tab-compliance.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:3" src="../assets/plate/dashboard-tab-network.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:4" src="../assets/plate/dashboard-tab-tags.webp" alt="" aria-hidden="true" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">One resource, five readings of what came back for it. Every one of these arrived over the boundary described above.</figcaption>
+      </figure>
       <figure class="cs-figure">
         <div class="cs-plate">
           <div class="cs-plate-top"><span class="cs-kind is-video">Video / loop</span><span class="cs-tech">screen recording, DevTools visible</span></div>

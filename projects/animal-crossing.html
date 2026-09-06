@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="../site.css">
 <script src="../site-motion.js"></script>
 <link rel="stylesheet" href="../case-study.css">
+<link rel="stylesheet" href="../camera.css">
 <style>
 /* The reference build's hero hangs 115x250 phone renders in .hero-float. These
    studies are web work, so the hero is one wide plate at the container's own size
@@ -126,6 +127,12 @@
         <p>I had read the wave function collapse write-ups and could have described the idea accurately at a whiteboard. Then I tried to implement it and found I understood the idea and none of the engineering, which is a gap that only appears when you build the thing.</p>
         <p>The collapse step is easy. Propagation is not: when a cell settles, every neighbour's option set narrows, and theirs after that. Getting that to terminate, stay correct, and run fast enough to watch is the actual problem, and no description had made that clear.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/island-generator-building.mp4" poster="../assets/video/island-generator-building-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The solver filling an empty grid tile by tile"></video>
+        </div>
+        <figcaption class="cs-caption">Empty to finished. Every tile placed is the most constrained cell that was left, which is the heuristic the whole thing rests on.</figcaption>
+      </figure>
     </section>
 
     <div class="cs-group">
@@ -139,6 +146,15 @@
         <p>The solver takes no map. Its entire input is a set of tiles and, for each, what is allowed on each of its edges. Everything the output looks like is emergent from those constraints.</p>
         <p>That is what makes it worth building rather than reading about. The design surface is not the picture, it is the ruleset, and the relationship between the two is not obvious in either direction. Tightening one edge rule changes the character of the whole island, and wanting a particular look means reasoning backwards to the constraints that would produce it.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-deal" style="--dur:14s;--n:4">
+          <img style="--i:0" src="../assets/plate/island-generator-stage1-empty.webp" alt="One generation at four stages, from an empty grid to a finished island" loading="lazy">
+          <img style="--i:1" src="../assets/plate/island-generator-stage2-quarter.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:2" src="../assets/plate/island-generator-stage3-threequarter.webp" alt="" aria-hidden="true" loading="lazy">
+          <img style="--i:3" src="../assets/plate/island-generator-stage4-complete.webp" alt="" aria-hidden="true" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Same camera in all four, so what changes is only how much has been decided. This is the still version of the clip above, and what reduced motion gets.</figcaption>
+      </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Lowest entropy first</span><span class="d">Always collapse the most constrained cell. Pick randomly instead and the solver spends its time backtracking out of contradictions it walked into with its eyes open.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Propagate, then stop</span><span class="d">A settled cell narrows its neighbours, and theirs. The queue has to drain to a fixed point before the next collapse.</span></div>
@@ -153,6 +169,12 @@
         <p>The cost is a coordinate system that is genuinely harder to reason about. Each tile has three rotations rather than four, neighbours alternate orientation across a row, and every adjacency rule has to be stated against the right edge of the right rotation. That bookkeeping is where the bugs lived.</p>
         <p>Generation is also steerable rather than purely automatic. Clicking any cell forces a specific tile there and re-propagates outward from it, so the solver can be pushed toward a coastline or a cliff and then left to resolve everything the choice implies.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-clip">
+          <video src="../assets/video/island-generator-steering.mp4" poster="../assets/video/island-generator-steering-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Forcing a tile mid-generation and watching the constraint propagate outward"></video>
+        </div>
+        <figcaption class="cs-caption">One click fixes a cell, and everything that choice implies resolves around it.</figcaption>
+      </figure>
       </div>
 
       <div class="cs-sub" id="pipeline">
@@ -161,6 +183,12 @@
         <p>The pieces are modelled in Blender and exported as glTF, then loaded and instanced through react-three-fiber, which lets the scene graph be declarative JSX instead of imperative Three.js calls. That matters more than it sounds for a generator: the solver produces a list of placements and React renders it, so the algorithm never touches the renderer.</p>
         <p>Rock and foliage colour is done in custom GLSL vertex shaders rather than baked into the models, which is what keeps a few hand-modelled pieces from reading as the same object repeated across the island.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-push" style="--z:1.4;--fx:52%;--fy:46%;--dur:13s">
+          <img src="../assets/plate/island-generator-finished.webp" alt="A finished island: cliffs, water, beaches and scattered conifers" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Nothing here is placed by hand. The rock and foliage colour is shader work, which is what stops a few modelled pieces reading as one object repeated.</figcaption>
+      </figure>
       </div>
 
     </div>

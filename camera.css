@@ -1,0 +1,298 @@
+/* camera.css -- the reusable camera machines.
+   =========================================================================
+   Planned in CAPTURE.md Part 4 and built here. Every one of them takes a flat,
+   static asset and supplies all of the movement itself, which is the whole approach
+   the reference build uses and the reason its cards feel alive while holding
+   screenshots that never move.
+
+   Three rules hold for all of them.
+
+   1. The asset is flat. Nothing here interpolates, re-crops or re-encodes anything;
+      the file on disk is a still or a plain clip, and the machine is the camera.
+   2. A slot configures a machine with custom properties, never by editing keyframes.
+      --z, --fx, --fy, --travel, --dur, --i, --n. If a slot needs a new keyframe
+      block, it is a new machine, not a variant.
+   3. Every machine has a defined resting state that is a good still, because
+      prefers-reduced-motion disables the animation and that frame is what is left.
+      A machine whose resting frame is meaningless is a broken machine.
+
+   The two that already existed, tile-scroll and tile-pan, stay in index.html: they
+   are wired to the drawn browser frame around them and are not general.  */
+
+/* ---------------------------------------------------------------- A. push
+   Frame the whole thing, hold, move in on one part, hold, come back.
+
+   The direct answer to wanting the recorded zoom-ins the reference appears to have.
+   It never recorded one. It pushed a transform into a still.
+
+   The long holds at both ends are the machine. Without them this is a slow
+   continuous drift that never lets anyone read either framing; with them it is a
+   wide shot, a decision to look closer, and a detail. --fx/--fy name the point worth
+   looking at, as percentages of the image. */
+.cam {
+   position: relative;
+   width: 100%;
+   height: 100%;
+   overflow: hidden
+}
+
+.cam > img,
+.cam > video {
+   position: absolute;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   display: block
+}
+
+.cam-push > img {
+   transform-origin: var(--fx, 50%) var(--fy, 50%);
+   animation: push var(--dur, 12s) cubic-bezier(.4, 0, .2, 1) infinite;
+   will-change: transform
+}
+
+@keyframes push {
+   0%, 14% {
+      transform: scale(1)
+   }
+
+   34%, 66% {
+      transform: scale(var(--z, 1.45))
+   }
+
+   86%, 100% {
+      transform: scale(1)
+   }
+}
+
+/* ---------------------------------------------------------------- B. strip
+   A tall still scrolling behind a fixed frame.
+
+   --travel is A PERCENTAGE OF THE IMAGE'S OWN HEIGHT, never a pixel count. That
+   distinction is the whole of a bug this repeats from the home tiles: the values
+   were once measured in the capture's own 776px space and applied against a 322px
+   render, so every one was about 2.8x too large and the picture ran clean past its
+   own bottom edge and held there, which reads as the thumbnail cutting off.
+
+   gen/tiles.py computes it as (1 - windowHeight / renderedImageHeight) * 100 rather
+   than anyone measuring it by hand, and build.py checks the page against what it
+   computed. */
+.cam-strip > img {
+   position: static;
+   width: 100%;
+   height: auto;
+   object-fit: unset;
+   animation: strip var(--dur, 15s) cubic-bezier(.4, 0, .2, 1) infinite;
+   will-change: transform
+}
+
+@keyframes strip {
+   0%, 14% {
+      transform: translateY(0)
+   }
+
+   44%, 60% {
+      transform: translateY(calc(var(--travel, 0%) * -1))
+   }
+
+   90%, 100% {
+      transform: translateY(0)
+   }
+}
+
+/* ---------------------------------------------------------------- C. deal
+   N stills at identical framing, cross-fading with holds.
+
+   The base layer never fades. Everything stacks over it, so the loop point dissolves
+   against a screen rather than against the card, which is the detail naive
+   cross-fades get wrong: fade every layer out and there is one moment per cycle when
+   the ground shows through and the whole figure blinks.
+
+   Each layer sets --i, the container sets --n. The resting state is the first frame,
+   so a sequence doubles as its own still. */
+.cam-deal > img {
+   opacity: 0;
+   animation: deal var(--dur, 12s) linear infinite;
+   animation-delay: calc(var(--i) * var(--dur, 12s) / var(--n))
+}
+
+.cam-deal > img:first-child {
+   opacity: 1;
+   animation: none
+}
+
+@keyframes deal {
+   0% {
+      opacity: 0
+   }
+
+   4%, 26% {
+      opacity: 1
+   }
+
+   30%, 100% {
+      opacity: 0
+   }
+}
+
+/* ---------------------------------------------------------------- D. wipe
+   Before and after under a travelling seam.
+
+   Better than a cross-fade for a comparison, and the reason is specific: two
+   near-identical tables dissolving into each other reads as a rendering glitch,
+   while a seam moving across reads as one picture being pulled back to show another.
+   The rule at the seam is what the eye follows; without it the boundary is invisible
+   wherever the two images happen to agree.
+
+   Resting state parks the seam at the middle with both halves visible, which is a
+   perfectly good still and the one reduced motion gets. */
+.cam-wipe > img:last-child {
+   clip-path: inset(0 0 0 var(--x, 50%));
+   animation: wipe var(--dur, 11s) cubic-bezier(.45, 0, .25, 1) infinite
+}
+
+.cam-wipe .seam {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: var(--x, 50%);
+   width: 2px;
+   background: var(--parchment, #FDFBEF);
+   box-shadow: 0 0 0 1px rgba(45, 40, 38, .22);
+   animation: seam var(--dur, 11s) cubic-bezier(.45, 0, .25, 1) infinite;
+   z-index: 2;
+   pointer-events: none
+}
+
+@keyframes wipe {
+   0%, 12% {
+      clip-path: inset(0 0 0 88%)
+   }
+
+   46%, 62% {
+      clip-path: inset(0 0 0 12%)
+   }
+
+   96%, 100% {
+      clip-path: inset(0 0 0 88%)
+   }
+}
+
+@keyframes seam {
+   0%, 12% {
+      left: 88%
+   }
+
+   46%, 62% {
+      left: 12%
+   }
+
+   96%, 100% {
+      left: 88%
+   }
+}
+
+/* The two labels a wipe needs, because BEFORE and AFTER is the whole argument and a
+   caption underneath makes the reader hold both halves in their head to use it. */
+.cam-wipe .tag {
+   position: absolute;
+   top: 12px;
+   z-index: 3;
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-size: 11px;
+   letter-spacing: .04em;
+   text-transform: uppercase;
+   padding: 4px 9px;
+   border-radius: 5px;
+   background: rgba(253, 251, 239, .93);
+   color: var(--dusty-granite, #5C5651);
+   box-shadow: 0 1px 3px rgba(45, 40, 38, .16)
+}
+
+.cam-wipe .tag.b {
+   left: 12px
+}
+
+.cam-wipe .tag.a {
+   right: 12px
+}
+
+/* ---------------------------------------------------------------- E. stagger
+   Not a camera over one still but a reveal across many.
+
+   site-motion.js already adds .is-in on scroll and site.css already staggers type
+   with char-in and rise-in; this is the same idea pointed at a grid. The count is
+   the point. Thirty-four portraits arriving one after another says "all 34" more
+   convincingly than the sentence does, and a contact sheet of component variants
+   arriving one at a time makes the reader count them without being asked.
+
+   An animation rather than a transition, deliberately: a transition would sit on
+   these elements forever and compete with anything they do on hover. That exact
+   collision cost the project cards their hover lift. */
+.cam-stagger > * {
+   opacity: 0
+}
+
+.is-in.cam-stagger > *,
+.cam-stagger.is-in > * {
+   animation: cam-rise .5s cubic-bezier(.22, .7, .3, 1) backwards;
+   animation-delay: calc(var(--i, 0) * var(--step, 60ms));
+   opacity: 1
+}
+
+@keyframes cam-rise {
+   from {
+      opacity: 0;
+      transform: translateY(8px)
+   }
+}
+
+/* ---------------------------------------------------------------- video
+   A clip in a media slot. Muted, looping, inline, and it plays itself.
+
+   preload="metadata" and a poster on every one: the poster is the clip's own first
+   frame, which is also the frame it dissolves back to, so a paused clip and a
+   playing one agree with each other rather than looking like two different assets.
+
+   The clips are walkthroughs assembled from state captures, so there is no audio to
+   carry and nothing is lost by muting. Muted is also the only way a browser will
+   autoplay at all. */
+.cam-clip > video {
+   background: var(--dove-ivory, #F6F2E6)
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   .cam-push > img,
+   .cam-strip > img,
+   .cam-deal > img,
+   .cam-wipe > img:last-child,
+   .cam-wipe .seam,
+   .is-in.cam-stagger > *,
+   .cam-stagger.is-in > * {
+      animation: none
+   }
+
+   /* Resting states, stated rather than inherited, because "no animation" leaves
+      each machine wherever its unanimated declarations happen to put it. */
+   .cam-deal > img {
+      opacity: 0
+   }
+
+   .cam-deal > img:first-child {
+      opacity: 1
+   }
+
+   .cam-wipe > img:last-child {
+      clip-path: inset(0 0 0 50%)
+   }
+
+   .cam-wipe .seam {
+      left: 50%
+   }
+
+   .cam-stagger > * {
+      opacity: 1
+   }
+}

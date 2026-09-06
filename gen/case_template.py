@@ -119,6 +119,7 @@ PAGE = """<!doctype html>
 <link rel="stylesheet" href="{root}site.css">
 <script src="{root}site-motion.js"></script>
 <link rel="stylesheet" href="{root}case-study.css">
+<link rel="stylesheet" href="{root}camera.css">
 <style>
 /* The reference build's hero hangs 115x250 phone renders in .hero-float. These
    studies are web work, so the hero is one wide plate at the container's own size
