@@ -39,17 +39,20 @@ def esc(s):
 
 
 COLOR = {
-    "water-drop": "var(--ink-blue)", "smoke": "var(--accent)",
-    "rheoscopic": "var(--co-complete)", "sandsketch": "var(--co-nike)",
-    "films": "var(--co-ballertv)",
-    "canvas": "var(--accent)", "pens": "var(--tag-green)",
-    "sketches": "var(--ink-blue)", "hatch": "var(--slate)",
-    "still-life": "var(--co-complete)",
-    "football": "var(--accent)", "cheer": "var(--co-flo-recruit)",
-    "powderpuff": "var(--co-nike)", "swim": "var(--ink-blue)",
-    "nature": "var(--moss)",
-    "fantasy": "var(--co-flo-recruit)", "flashcards": "var(--co-ballertv)",
-    "graphics": "var(--slate)", "yearbook": "var(--moss)",
+    # One feature colour per category, spread across the seven so no two adjacent
+    # tickets on the index share one. All seven are the same lightness, so this is a
+    # question of hue only.
+    "water-drop": "var(--ink-blue)",   "smoke": "var(--feat-clay)",
+    "rheoscopic": "var(--feat-plum)",  "sandsketch": "var(--feat-ochre)",
+    "films": "var(--feat-indigo)",
+    "canvas": "var(--feat-clay)",      "pens": "var(--feat-olive)",
+    "sketches": "var(--feat-indigo)",  "hatch": "var(--slate)",
+    "still-life": "var(--feat-plum)",
+    "football": "var(--feat-clay)",    "cheer": "var(--feat-fern)",
+    "powderpuff": "var(--feat-ochre)", "swim": "var(--feat-teal)",
+    "nature": "var(--feat-olive)",
+    "fantasy": "var(--feat-plum)",     "flashcards": "var(--feat-indigo)",
+    "graphics": "var(--slate)",        "yearbook": "var(--feat-fern)",
 }
 
 

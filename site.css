@@ -144,10 +144,28 @@
    /* Library footer ground, Figma 358:1253; also the Microsoft chip */
    /* Mini-project company chips, Figma 454:1141. WhatsApp reuses --tag-green and
      Microsoft --ink-blue, both already at the exact hex the design specifies. */
-   --co-complete: #8460C6;
-   --co-flo-recruit: #D96797;
-   --co-ballertv: #6889E1;
-   --co-nike: #EB804E;
+   /* Feature colours: the accents that separate one art category, tag or callout
+      from the next.
+
+      These replace four tokens named --feat-plum, --feat-clay, --feat-indigo
+      and --feat-ochre, which were the reference designer's client brands. Two of them
+      also fought the blue accent: --feat-indigo #6889E1 sat almost on top of it, and
+      --feat-ochre #EB804E was the old orange accent still in circulation.
+
+      The set is chosen the way the accent was: one lightness, one chroma, hues spread
+      evenly. All seven sit at L* 52 and chroma 30, so no chip outshouts its
+      neighbour. The old set ran L* 36 to 65 and chroma 9 to 66, which is why Nike
+      shouted and slate disappeared.
+
+      Three more are defined than are currently used. They are here so a new category
+      takes one from the family rather than inventing a colour. */
+   --feat-clay: #AC6B60;
+   --feat-ochre: #98764A;
+   --feat-olive: #708350;
+   --feat-fern: #518863;
+   --feat-teal: #168A8D;
+   --feat-indigo: #4A81AE;
+   --feat-plum: #9C6D96;
    /* Payments Home only. Named for the case study, not the site: another case study
      should define its own pair rather than inherit these.
 
@@ -1424,19 +1442,19 @@ a.card:nth-of-type(even):hover {
 }
 
 .mini-tag.co-complete {
-   color: var(--co-complete)
+   color: var(--feat-plum)
 }
 
 .mini-tag.co-flo {
-   color: var(--co-flo-recruit)
+   color: var(--feat-clay)
 }
 
 .mini-tag.co-baller {
-   color: var(--co-ballertv)
+   color: var(--feat-indigo)
 }
 
 .mini-tag.co-nike {
-   color: var(--co-nike)
+   color: var(--feat-ochre)
 }
 
 .mini-tag.co-personal {
@@ -1621,16 +1639,25 @@ a.card:nth-of-type(even):hover {
    }
 }
 
-/* Footer plant cursor + click-to-plant stamps */
+/* Footer plant cursor + click-to-plant stamps.
+
+   The hotspot is 12 31: the bottom centre of a 24x32 sprout, which is the base of
+   the stem. That has to match where site-footer.js anchors the stamp, because the
+   click point is the ground the plant grows out of, not a point on the drawing.
+
+   It was 18 29 against a 28x40 image: a point in mid-air beside the stem, so every
+   click and every hover in the footer registered 11px above and 4px left of where
+   the cursor looked like it was pointing. The image was also over the 32px limit
+   above which Windows ignores a custom cursor entirely. */
 #footer {
-   cursor: url("assets/ui/plant-cursor.svg") 18 29, auto
+   cursor: url("assets/ui/plant-cursor.svg") 12 31, auto
 }
 
 /* The About footer is pale, and the light cursor all but vanished on it. Same
    sprout, drawn in the moss the dark stamps use, so what you are holding matches
    what you plant. */
 #footer.is-about {
-   cursor: url("assets/ui/plant-cursor-dark.svg") 18 29, auto
+   cursor: url("assets/ui/plant-cursor-dark.svg") 12 31, auto
 }
 
 .foot-right a {

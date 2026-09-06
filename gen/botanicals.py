@@ -74,11 +74,22 @@ for name, pal in (("", LIGHT), ("-dark", DARK)):
         io.open("assets/ui/plant%s-%s.svg" % (name, size), "w", encoding="utf-8").write(
             sprig(w, h, pal, pairs))
 
-# The cursor. Kept small and with its hotspot at the top-left of the artwork,
-# because CSS cursor hotspots default there and a tall sprig would otherwise
-# point from empty space well above the stem.
+# The cursor. 24x32, and the size is a hard constraint rather than a preference:
+# Windows silently refuses a CSS cursor larger than 32px in either dimension and
+# falls back to the default arrow. This was 28x40, so on a good many machines the
+# custom cursor never appeared at all, which is the kind of bug that looks like
+# "it works for me".
+#
+# The hotspot goes in site.css and must be the BASE of the stem, bottom centre,
+# because that is where site-footer.js plants the stamp: .plant-stamp img is
+# left:0;bottom:0;translate(-50%,0), so the click point is the ground the plant
+# grows up from. It was 18 29, which is neither the base nor the tip but a point in
+# mid-air to the right of the stem, so every click landed 11px above and 4px left of
+# where the cursor appeared to be pointing.
+CURSOR_W, CURSOR_H = 24, 32
 for name, pal in (("plant-cursor", LIGHT), ("plant-cursor-dark", DARK)):
-    io.open("assets/ui/%s.svg" % name, "w", encoding="utf-8").write(sprig(28, 40, pal, 2))
+    io.open("assets/ui/%s.svg" % name, "w", encoding="utf-8").write(
+        sprig(CURSOR_W, CURSOR_H, pal, 2))
 
 # Footer flowers. site.css cuts these with object-fit:none and three
 # object-position offsets (0, -122.504px, -245.007px) out of a 120px-wide column,

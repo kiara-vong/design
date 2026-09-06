@@ -683,7 +683,7 @@ body.lens-open { overflow: hidden; }
   font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:11px;
   letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .cs-kind.is-video{background:var(--ink-blue)}
-.cs-kind.is-seq{background:var(--co-complete)}
+.cs-kind.is-seq{background:var(--feat-plum)}
 .cs-kind.is-still{background:var(--tag-green)}
 .cs-tech{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:12px;
   color:var(--antique-gold)}
