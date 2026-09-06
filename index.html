@@ -376,11 +376,14 @@ window.__hl = (function () {
 
 /* The prompt panel, in fractions of the artwork.
 
-   Re-measured against the second artwork, and the tilt reversed with it. This laptop
-   leans the other way: the "Clawed" wordmark and both handwritten lines rise to the
-   right, about 4.5 degrees, so the rotation is COUNTER-clockwise where the previous
-   drawing wanted +10.5. Measured off a percentage grid drawn over the file rather
-   than guessed, which is what the two wrong guesses on the last one cost.
+   +6.7 degrees, CLOCKWISE, and this is the third time this value has been wrong by
+   guessing at it from a picture. It is measured now, and the measurement is the only
+   thing that should ever set it: take the darkest row per column across the box's
+   top border, its bottom border and the "Clawed" baseline, fit a line to each, and
+   read the slope. The two reliable ones both come out at +6.71 degrees. Eyeballing a
+   drawn line inside a drawn laptop that is itself at an angle gets the SIGN wrong,
+   which is what happened here and what looks worst: a panel tilted the wrong way
+   reads as broken rather than as slightly off.
 
    The panel is opaque because it has to cover the prompt the illustrator painted in.
    #F8F0DB is that screen's paper sampled out of the file, and its variance is low
@@ -390,7 +393,7 @@ window.__hl = (function () {
    Its RIGHT edge is set by the cat avatar painted inside the box at about 63%, not
    by the box border at 71%, and its BOTTOM by the box's own lower rule. Widen or
    deepen it and it starts covering one or the other. */
-.mascot-prompt{position:absolute;left:40.6%;top:49%;width:20.4%;height:10.4%;
+.mascot-prompt{position:absolute;left:40.2%;top:48.6%;width:23.2%;height:10.6%;
   padding:0 0.4cqw;box-sizing:border-box;background:#F8F0DB;
   /* The patch is FEATHERED, not butted up against the drawing.
 
@@ -404,7 +407,7 @@ window.__hl = (function () {
      Which is why the box below is SMALLER than the area it has to cover. The halo
      does the last few pixels on each side. */
   box-shadow:0 0 9px 5px #F8F0DB;
-  transform:rotate(-4.5deg);transform-origin:50% 50%;
+  transform:rotate(6.7deg);transform-origin:50% 50%;
   pointer-events:none;overflow:hidden;
   display:flex;align-items:center;flex-wrap:wrap;
   font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
@@ -512,7 +515,7 @@ window.__hl = (function () {
         <a class="card card-resource-dashboard" href="work/resource-dashboard.html" aria-label="Resource Dashboard — Capital One case study">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
           <div class="card-photo">
-            <img class="cp-field" src="assets/cards/field-plat.svg" alt="">
+            <img class="cp-field" src="assets/cards/field-plat.webp" alt="">
             <div class="shot resource-dashboard">
               <div class="cast">
                 <img class="base" src="assets/cards/shot-dashboard.svg" alt="A cloud resource dashboard with filters, a drill-down explorer and an export action">
@@ -533,7 +536,7 @@ window.__hl = (function () {
         <a class="card card-events-timeline" href="work/events-timeline.html" aria-label="Events Timeline — Capital One case study">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
           <div class="card-photo">
-            <img class="cp-field" src="assets/cards/field-gql.svg" alt="">
+            <img class="cp-field" src="assets/cards/field-gql.webp" alt="">
             <div class="shot events-timeline">
               <div class="cast">
                 <img class="base" src="assets/cards/shot-timeline.svg" alt="A compliance event timeline with coloured state runs between dated event dots">
@@ -557,7 +560,7 @@ window.__hl = (function () {
         <a class="card card-ui-consistency" href="work/ui-consistency.html" aria-label="UI Consistency — Capital One case study">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
           <div class="card-photo">
-            <img class="cp-field" src="assets/cards/field-ds.svg" alt="">
+            <img class="cp-field" src="assets/cards/field-ds.webp" alt="">
             <div class="shot ds">
               <div class="cast">
                 <img class="base" src="assets/cards/shot-ds-base.svg" alt="">
@@ -581,7 +584,7 @@ window.__hl = (function () {
         <div class="card card-persona-homepage">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
           <div class="card-photo ps-photo">
-            <img class="cp-field" src="assets/cards/field-persona.svg" alt="">
+            <img class="cp-field" src="assets/cards/field-persona.webp" alt="">
             <div class="shot persona-homepage">
               <div class="cast">
                 <img class="base" src="assets/cards/shot-persona.svg" alt="A homepage rearranging itself as the selected persona changes">

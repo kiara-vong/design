@@ -58,6 +58,8 @@ STEPS = [
     ("botanicals", "gen.botanicals",       [], []),
     ("work",      "gen.work_cards",       [], []),
     ("shots",     "gen.card_shots",      [], []),
+    # Painting grounds for the four work cards, from assets/hero/_src.
+    ("fields",    "gen.card_fields",     [], []),
     ("figures",   "gen.case_figures", [], []),
     ("archive",   "gen.tiles",    [], []),
     # Prepares the case-study and project figures: 50MB of raw PNG capture

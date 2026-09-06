@@ -112,7 +112,9 @@ def field(name, top, bot, dot):
     body += '<rect width="529" height="304" fill="url(#v)"/>'
     save(name, body, 529, 304)
 
-field("field-ds",   "#F8F9DD", "#E9EBC4", "#8D9934")
-field("field-plat", "#DCE9F2", "#C3D8E9", "#1F597B")
-field("field-gql",  "#E4F0DE", "#CDE2C6", "#649F25")
+# The four generated fields are gone. They were flat tinted panels drawn to sit
+# quietly behind a screenshot, and they were the last procedural texture on a site
+# whose interest comes from photographs, drawings and type. gen/card_fields.py cuts
+# paintings for those four slots now, from the same folder the hero, the About
+# ground, the footer band and the project thumbnails come from.
 
