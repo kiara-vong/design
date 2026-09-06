@@ -669,11 +669,20 @@ def plain_section(anchor, label, h2, inner):
 
 
 def plate(media, title, blurb, key, extra=""):
+    """A figure and its caption. A falsy blurb gives the title alone.
+
+    Title-only is what the studio galleries already do, for the reason written above
+    them: a paragraph under every picture turns a wall into a reading exercise, and
+    the writing that matters is already above it in Context and Method. The films
+    were the last place still carrying a runtime and a description under each entry,
+    and there was no reason for them to be the exception.
+    """
+    tail = (' &mdash; %s' % (extra + esc(blurb))) if blurb else ""
     return ('      <figure class="cs-figure ac-plate">\n%s'
-            '        <figcaption class="cs-caption"><span class="t">%s</span>%s '
-            '&mdash; %s</figcaption>\n'
+            '        <figcaption class="cs-caption"><span class="t">%s</span>%s'
+            '%s</figcaption>\n'
             '      </figure>\n'
-            % (media, esc(title), award(key), extra + esc(blurb)))
+            % (media, esc(title), award(key), tail))
 
 
 def build_category(cat):
@@ -709,7 +718,10 @@ def build_category(cat):
                          '          Your browser cannot play this film. '
                          '<a href="../assets/video/%s.mp4">Download it instead.</a>\n'
                          '        </video>\n' % (pslug, w, h, stem, stem))
-                extra = '<span class="runs">%s</span> &middot; ' % esc(dur)
+                # Title only, like every other gallery on the site. dur is still
+                # read, because carrying a runtime is what marks this entry as a
+                # film rather than a still.
+                extra, blurb = "", None
             else:
                 media = ('        <img src="../assets/art/%s.jpg" alt="%s" loading="lazy" '
                          'width="%d" height="%d">\n' % (pslug, esc(title), w, h))
