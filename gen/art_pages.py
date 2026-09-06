@@ -117,7 +117,7 @@ __NAV__
 
 __CONTENT__
 
-<div id="site-footer"></div>
+<div id="site-footer" data-flowers="foot-art.png"></div>
 
 <script src="../site-footer.js"></script>
 <script src="../site-nav.js"></script>

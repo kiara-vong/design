@@ -106,7 +106,7 @@ body{background:var(--parchment)}
    other top-level section. Ink to ink that reads as 211px against the sections' 206,
    because the footer contributes 51px of its own interior air on the far side. */
 .cs-main{position:relative;width:799px;margin-left:320px;padding:38px 0 160px;
-  display:flex;flex-direction:column;gap:160px}
+  display:flex;flex-direction:column;gap:130px}
 
 /* ----- Overview ----- */
 .cs-overview{display:flex;flex-direction:column;gap:60px;align-items:flex-end;width:100%}

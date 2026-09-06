@@ -314,10 +314,31 @@ window.__hl = (function () {
    thumbnail still animates; only the affordance is withheld. The toast says why,
    and it appears on hover only, so the card reads as a normal card until you
    reach for it. */
+/* The toast IS the cursor.
+
+   The reference build's coming-soon card does this and it is the best small idea on
+   that page: instead of a label sitting in the middle explaining that the card does
+   not open, the label picks itself up and follows your pointer, so reaching for the
+   card is the thing that answers you. The real cursor is hidden underneath it.
+
+   Sparks are dropped at the toast's position as it moves and decay where they were
+   left, so the mark belongs to the PATH rather than to the pointer. A glow pinned to
+   the cursor reads as a smudge riding on top of the picture; a wake reads as
+   something having been dragged through it.
+
+   Green rather than the reference's persimmon, because the accent is green here, and
+   emitted per distance travelled rather than per frame: move fast and the trail is
+   long, hold still and nothing accumulates. */
 .card-persona{cursor:default}
-.ps-photo{position:relative}
-.ps-toast{position:absolute;left:50%;top:50%;z-index:3;
-  transform:translate(-50%,-50%) scale(.94);
+.ps-photo{position:relative;cursor:none;--mx:264.5px;--my:152px;--rot:0deg}
+/* Explicit width and height rather than inset:0. A canvas is a replaced element, so
+   inset alone leaves it at its intrinsic attribute size instead of stretching to the
+   box, and every spark would be painted at double scale and mostly outside the card. */
+.ps-trail{position:absolute;left:0;top:0;width:529px;height:304px;
+  display:block;pointer-events:none;z-index:2}
+.ps-toast{position:absolute;left:0;top:0;z-index:3;
+  transform:translate(calc(var(--mx) - 50%),calc(var(--my) - 50%))
+            rotate(var(--rot,0deg)) scale(.94);
   background:var(--parchment);border:1px solid var(--outline-stroke);
   border-radius:14px;padding:10px 18px;white-space:nowrap;
   font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:16px;
@@ -325,12 +346,20 @@ window.__hl = (function () {
   box-shadow:0 8px 20px rgba(45,40,38,.14);
   transition:opacity .28s ease,transform .32s cubic-bezier(.34,1.4,.5,1),visibility 0s linear .28s}
 .card-persona:hover .ps-toast{opacity:1;visibility:visible;
-  transform:translate(-50%,-50%) scale(1);transition-delay:0s,0s,0s}
+  transform:translate(calc(var(--mx) - 50%),calc(var(--my) - 50%))
+            rotate(var(--rot,0deg)) scale(1);transition-delay:0s,0s,0s}
+/* Tight follow while the pointer is inside; the long, overshooting glide home is the
+   base transition above. An object with mass arrives slightly past where it is going
+   and settles back, which is the difference between this and a UI element sliding. */
+.ps-photo.is-live .ps-toast{transition:opacity .28s ease,transform .07s linear,
+  visibility 0s linear}
 /* The thumbnail dims behind it, so the toast stays legible over a busy diagram. */
 .card-persona .shot{transition:filter .28s ease}
 .card-persona:hover .shot{filter:saturate(.55) brightness(.94)}
 @media (prefers-reduced-motion:reduce){
   .ps-toast,.card-persona .shot{transition:none}
+  .ps-trail{display:none}
+  .ps-photo{cursor:default}
 }
 
 /* The one emphasis in the bio. Italic in the body face rather than a
@@ -598,6 +627,7 @@ window.__hl = (function () {
                 <img class="base" src="assets/cards/shot-persona.svg" alt="A homepage rearranging itself as the selected persona changes">
               </div>
             </div>
+            <canvas class="ps-trail" width="1058" height="608" aria-hidden="true"></canvas>
             <span class="ps-toast">Coming soon!</span>
           </div>
           <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
@@ -736,7 +766,7 @@ window.__hl = (function () {
   </section>
 
   <!-- ===== FOOTER ===== -->
-  <div id="site-footer"></div>
+  <div id="site-footer" data-flowers="foot-home.png"></div>
 
 </div>
 
@@ -796,6 +826,142 @@ window.__hl = (function () {
   step();
 })();
 
+</script>
+
+<script>
+/* The Coming soon toast follows the pointer, and leaves a wake.
+
+   Ported from the reference build's own coming-soon card, which is the best small
+   idea on that page: rather than a label in the middle explaining that this card
+   does not open, the label picks itself up and follows your pointer, so reaching for
+   the card IS what answers you.
+
+   Only for real pointers. On a touch screen there is nothing to follow, the toast
+   should stay put, and cursor:none would hide nothing anyway. */
+(function () {
+  var photo = document.querySelector('.ps-photo');
+  if (!photo) return;
+  var reduce = window.matchMedia &&
+               matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if (reduce) return;
+  if (window.matchMedia && !matchMedia('(hover:hover) and (pointer:fine)').matches) {
+    photo.style.cursor = 'default';
+    return;
+  }
+
+  function track(e) {
+    var r = photo.getBoundingClientRect();
+    var s = (r.width / photo.offsetWidth) || 1;
+    photo.style.setProperty('--mx', ((e.clientX - r.left) / s).toFixed(1) + 'px');
+    photo.style.setProperty('--my', ((e.clientY - r.top) / s).toFixed(1) + 'px');
+  }
+
+  /* Sparks in the toast's wake. Dropped at the pointer and left where they fell, so
+     they mark the path rather than following it: a glow pinned to the cursor reads
+     as a smudge riding on top of the picture, while a wake reads as something having
+     been dragged through it.
+
+     Spawned per distance travelled, not per frame, so a flick throws a shower and
+     holding still accumulates nothing. */
+  var cv = photo.querySelector('.ps-trail');
+  var ctx = cv && cv.getContext ? cv.getContext('2d') : null;
+  var sparks = [], lastX = null, lastY = null, running = false;
+  var SPARK = '100,159,37';                       /* --accent, #649F25 */
+
+  function emit(x, y, speed) {
+    if (!ctx) return;
+    var f = Math.min(speed || 0, 14) / 14;
+    var n = 2 + (f > 0.45 ? 1 : 0) + (Math.random() < 0.4 ? 1 : 0);
+    while (n--) {
+      sparks.push({ x: x * 2 + (Math.random() - 0.5) * 40,
+                    y: y * 2 + (Math.random() - 0.5) * 40,
+                    r: (2.2 + Math.random() * 2.6) * (1 + f * 0.6),
+                    a: 0.55 + f * 0.28,
+                    t0: performance.now(), dur: 520 + Math.random() * 620 });
+    }
+    if (!running) { running = true; requestAnimationFrame(burn); }
+  }
+
+  function burn(now) {
+    for (var k = sparks.length - 1; k >= 0; k--) {
+      var s = sparks[k], u = (now - s.t0) / s.dur;
+      ctx.clearRect(s.x - 8, s.y - 8, 16, 16);
+      if (u >= 1) { sparks.splice(k, 1); continue; }
+      /* A brief hold, then a long fade, so the tail thins out behind the toast. */
+      var a = u < 0.15 ? u / 0.15 : 1 - (u - 0.15) / 0.85;
+      ctx.fillStyle = 'rgba(' + SPARK + ',' + (a * s.a).toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, 6.2832);
+      ctx.fill();
+    }
+    if (sparks.length) requestAnimationFrame(burn);
+    else running = false;
+  }
+
+  /* Momentum. The toast banks in the direction it is travelling and levels out when
+     it stops, which is the difference between a cursor and an object being dragged.
+     The tilt tracks a SMOOTHED horizontal velocity, so a jittery mouse does not make
+     it twitch.
+
+     Its own rAF, because the browser stops sending pointermove the instant you hold
+     still: without a loop the toast would freeze mid-lean and stay there. */
+  var rot = 0, vx = 0, lastT = 0, velX = null, relaxing = false;
+  var MAX_TILT = 9;
+
+  function relax(now) {
+    if (now - lastT > 55) vx *= 0.80;            /* no recent movement: bleed it off */
+    var target = Math.max(-MAX_TILT, Math.min(MAX_TILT, vx * 0.55));
+    rot += (target - rot) * 0.18;
+    if (Math.abs(rot) < 0.05 && Math.abs(vx) < 0.05) {
+      rot = vx = 0;
+      photo.style.setProperty('--rot', '0deg');
+      relaxing = false;
+      return;
+    }
+    photo.style.setProperty('--rot', rot.toFixed(2) + 'deg');
+    requestAnimationFrame(relax);
+  }
+
+  photo.addEventListener('pointerenter', function (e) {
+    photo.classList.add('is-live');
+    track(e);
+    var r = photo.getBoundingClientRect(), sc = (r.width / photo.offsetWidth) || 1;
+    lastX = velX = (e.clientX - r.left) / sc;
+    lastY = (e.clientY - r.top) / sc;
+    lastT = performance.now();
+  });
+
+  photo.addEventListener('pointermove', function (e) {
+    track(e);
+    var r = photo.getBoundingClientRect(), sc = (r.width / photo.offsetWidth) || 1;
+    var x = (e.clientX - r.left) / sc, y = (e.clientY - r.top) / sc;
+    var now = performance.now();
+
+    if (velX !== null) {
+      var dt = Math.max(8, now - lastT);
+      var inst = (x - velX) / dt * 16;           /* design px per frame */
+      vx = vx * 0.55 + inst * 0.45;
+      if (!relaxing) { relaxing = true; requestAnimationFrame(relax); }
+    }
+    velX = x; lastT = now;
+
+    if (lastX !== null) {
+      var d = Math.hypot(x - lastX, y - lastY);
+      if (d > 11) { emit(x, y, Math.abs(vx)); lastX = x; lastY = y; }
+    } else { lastX = x; lastY = y; }
+  }, { passive: true });
+
+  /* Dropping the two properties returns the toast to the centre defaults in the
+     stylesheet, and .is-live going with them swaps the tight follow back for the
+     long, overshooting glide home. Sparks already out keep decaying where they are. */
+  photo.addEventListener('pointerleave', function () {
+    photo.classList.remove('is-live');
+    lastX = lastY = velX = null;
+    vx = 0;                                      /* relax() unwinds the lean */
+    photo.style.removeProperty('--mx');
+    photo.style.removeProperty('--my');
+  });
+})();
 </script>
 <script src="mobile.js"></script>
 </body>

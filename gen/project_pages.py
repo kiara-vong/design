@@ -642,6 +642,7 @@ def build(p):
     _gc.build(p["slug"], dict(
         out="projects/%s.html" % p["slug"].replace("p-", ""), root="../",
         title=p["title"], kicker=p["kicker"], intro=p["intro"],
+        flowers="foot-projects.png",
         hero=p["hero"], hero_alt=p["hero_alt"],
         nav=p["nav"], meta=p["meta"], sections=blocks))
 

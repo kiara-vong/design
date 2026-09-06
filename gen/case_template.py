@@ -182,7 +182,7 @@ PAGE = """<!doctype html>
 
 {sections}  </main>
 
-  <div id="site-footer"></div>
+  <div id="site-footer" data-flowers="{flowers}"></div>
 
  </div>
 </div>
@@ -246,6 +246,8 @@ def build(slug, spec):
         back_label=esc(spec.get("back_label", "Back to home")),
         root=root,
         nav_pill=_nv.nav(spec.get("pill", "index"), "  ", root),
+        # Work write-ups get foliage and no cat; the personal projects get one.
+        flowers=spec.get("flowers", "foot-work.png"),
         sections=secs))
     print("wrote", out)
 

@@ -92,89 +92,12 @@ for name, pal in (("plant-cursor", LIGHT), ("plant-cursor-dark", DARK)):
         sprig(CURSOR_W, CURSOR_H, pal, 2))
 
 
-# The link cursor. One leaf, tip at the top left where an arrow's point would be, so
-# it is a pointer first and a leaf second. The hand cursor already says "link"; this
-# says it in the site's own handwriting, and it is the only cursor change that
-# happens anywhere except the footer.
-#
-# The halo is not decoration. A cursor crosses cream pages, dark photographs and the
-# blue footer band in one movement, and a single-colour shape disappears against one
-# of them. Drawing the same path twice, once stroked wide in the opposite tone,
-# gives it an edge everywhere. Two versions rather than one because the footer is
-# dark enough that only a pale leaf reads on it.
-#
-# 24x32 for the same reason as the plant cursor: Windows silently ignores a CSS
-# cursor larger than 32px in either dimension and shows the default arrow instead.
-# The hotspot is the tip, 3 4, and it goes in site.css.
-def pointer(fill, halo):
-    tipx, tipy, bx, by = 3.0, 4.0, 19.0, 27.0
-    ang = math.degrees(math.atan2(tipy - by, tipx - bx))
-    ln = math.hypot(tipx - bx, tipy - by)
-    blade = leaf(bx, by, ln, ang, fill, curl=.19)
-    edge = blade.replace('fill="%s"' % fill,
-                         'fill="%s" stroke="%s" stroke-width="3.2" '
-                         'stroke-linejoin="round"' % (halo, halo))
-    return svg(CURSOR_W, CURSOR_H,
-               edge +
-               '<circle cx="%.1f" cy="%.1f" r="3.6" fill="%s"/>' % (bx, by, halo) +
-               blade +
-               '<circle cx="%.1f" cy="%.1f" r="2.2" fill="%s"/>' % (bx, by, fill))
+# The link cursor used to be drawn here: one leaf, tip at the top left, with a halo
+# so it read on any ground. It is one of the hand-drawn icons now, the clover from
+# the third row of the sheet, cut by gen/icons.py. Same idea, her hand instead of
+# this file's primitives.
 
-
-for name, fill, halo in (("link-cursor", "#43728A", "#FDFBEF"),
-                         ("link-cursor-pale", "#FFF6D8", "#22384A")):
-    io.open("assets/ui/%s.svg" % name, "w", encoding="utf-8").write(pointer(fill, halo))
-
-# Footer flowers. site.css cuts these with object-fit:none and three
-# object-position offsets (0, -122.504px, -245.007px) out of a 120px-wide column,
-# so the file has to be a SPRITE of three distinct 120x110.5 tiles stacked, not one
-# picture. The first pass shipped a single 230x150 cluster: tile 1 rendered a crop of
-# it and tiles 2 and 3 landed past the bottom edge and came back empty, which is why
-# the footer showed a few loose stems. The About and Library variants are read with
-# object-fit:contain instead and want a single tile, so they get one.
-TILE_W, TILE_H, TILE_GAP = 120.0, 110.504, 122.504
-
-def posy(w, h, p, seed, n=5):
-    """One compact bouquet, sized to fill a 120x110 tile."""
-    rr = random.Random(seed)
-    parts, base = [], h - 4
-    for i in range(n):
-        t = (i + .5) / float(n)
-        x = w * (0.13 + 0.74 * t)
-        top = h * (0.50 - 0.34 * math.sin(t * math.pi)) + rr.uniform(-5, 5)
-        lean = (x - w / 2.0) * 0.20
-        parts.append('<path d="M %.1f %.1f Q %.1f %.1f %.1f %.1f" stroke="%s" '
-                     'stroke-width="4.2" stroke-linecap="round" fill="none"/>'
-                     % (x, base, x - lean, (base + top) * .55, x, top, p["stem"]))
-        ly = base - (base - top) * .42
-        parts.append(leaf(x, ly, w * .125, 202, p["leaf"]))
-        parts.append(leaf(x, ly, w * .125, -22, p["leaf"]))
-        parts.append(bloom(x, top, w * 0.078, p))
-    return "".join(parts)
-
-# Each footer variant paints a different ground, so each needs its own palette
-# rather than the generic LIGHT/DARK pair: the first pass drew accent-coloured blooms on
-# the accent footer and they simply were not there. The rule for all three is the
-# same -- stem and leaf in a green that holds against the ground, blooms in the
-# palette's lightest value, and the bloom core in the GROUND colour, so the middle
-# of each flower reads as a hole punched back through to the footer.
-# On the deep blue band. The core was the accent itself, which was legible on
-# orange and vanishes on blue, so it takes the new-leaf green instead; stem and
-# leaf lift a step because the ground under them is darker than it was.
-ON_ACCENT = dict(stem="#CBDA79", leaf="#A8B44E", bloom="#FFF6D8", core="#E4F56F")
-ON_PEAR      = dict(stem="#749F25", leaf="#8D9934", bloom="#FDFBEF", core="#E2F085")
-ON_INK       = dict(stem="#8DA85E", leaf="#6E8548", bloom="#E2F085", core="#1F597B")
-
-sprite = []
-for k in range(3):
-    sprite.append('<g transform="translate(0,%.3f)">%s</g>'
-                  % (k * TILE_GAP, posy(TILE_W, TILE_H, ON_ACCENT, 31 + k, 4 + k)))
-io.open("assets/ui/footer-flowers.svg", "w", encoding="utf-8").write(
-    svg(TILE_W, TILE_GAP * 2 + TILE_H, "".join(sprite)))
-
-# Single tiles: these two are read with object-fit:contain, not as a sprite.
-io.open("assets/ui/foot-flower-about.svg", "w", encoding="utf-8").write(
-    svg(TILE_W, TILE_H, posy(TILE_W, TILE_H, ON_PEAR, 31, 5)))
-io.open("assets/ui/foot-flower-alt.svg", "w", encoding="utf-8").write(
-    svg(TILE_W, TILE_H, posy(TILE_W, TILE_H, ON_INK, 32, 5)))
+# The footer flowers used to be generated here as a three-tile sprite plus two
+# single-tile variants. They are the hand-drawn ones now: gen/icons.py cuts them out
+# of one sheet and assembles a different trio per page.
 print("art written")

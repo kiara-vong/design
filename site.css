@@ -1625,28 +1625,39 @@ a.card:nth-of-type(even):hover {
 
 /* Each flower tile is the same SVG cropped to one cell. A soft breeze gusts down
    the column (top leads) — each turns around its own centre, with lulls between gusts. */
+/* A BACKGROUND rather than an <img>, and the reason is resolution.
+
+   object-fit:none maps one image pixel to one CSS pixel, so with it the strip has to
+   be 120 wide natural and is therefore 1x: soft on every modern screen, against a
+   site whose every other asset is 2x. background-size lets a 240-wide strip be drawn
+   into a 120px box, which is the same crop at twice the detail.
+
+   One request instead of three, as a side effect: the three tiles now share one
+   background rather than each loading the sprite again. */
 .flowers .fl {
    width: 120px;
    height: 110.504px;
-   object-fit: none;
    display: block;
+   background-image: var(--strip);
+   background-size: 120px auto;
+   background-repeat: no-repeat;
    transform-origin: 50% 50%;
    animation: flower-wind 6s ease-in-out infinite;
    will-change: transform
 }
 
 .flowers .fl.f1 {
-   object-position: 0 0;
+   background-position: 0 0;
    animation-delay: -.5s
 }
 
 .flowers .fl.f2 {
-   object-position: 0 -122.504px;
+   background-position: 0 -122.504px;
    animation-delay: -.25s
 }
 
 .flowers .fl.f3 {
-   object-position: 0 -245.007px;
+   background-position: 0 -245.007px;
    animation-delay: 0s
 }
 
@@ -1695,6 +1706,9 @@ a.card:nth-of-type(even):hover {
    click and every hover in the footer registered 11px above and 4px left of where
    the cursor looked like it was pointing. The image was also over the 32px limit
    above which Windows ignores a custom cursor entirely. */
+/* The footer keeps its own sprout, not the clover the links use. The cursor here is
+   the thing you plant by clicking, so what you are holding has to match what you
+   leave behind; swapping in the clover broke that for no gain. */
 #footer {
    cursor: url("assets/ui/plant-cursor.svg") 12 31, auto
 }
@@ -1706,6 +1720,11 @@ a.card:nth-of-type(even):hover {
    whole surface, links included, so the one region with a custom cursor was the one
    region where a link looked like everything else.
 
+   The artwork is the clover from the icon sheet, third row second item, which means
+   the cursor and the flowers under the quote come from the same hand. Hotspot at
+   11 30, the base of its stem, matching the plant cursor's convention: the point you
+   are aiming with is where the thing grows from.
+
    Set on a[href] rather than a:hover, because a cursor is only ever seen on hover
    and the extra state buys nothing. It also has to name the attribute: a bare <a>
    without an href is not a link and should not claim to be one.
@@ -1716,13 +1735,13 @@ a.card:nth-of-type(even):hover {
    needing to outrank an id. The pale version is a separate rule because the band is
    dark enough that the ink-blue leaf disappears into it. */
 a[href] {
-   cursor: url("assets/ui/link-cursor.svg") 3 4, pointer
+   cursor: url("assets/ui/link-cursor.png") 11 30, pointer
 }
 
 #footer a[href],
 .cs-hero a[href],
 #hero a[href] {
-   cursor: url("assets/ui/link-cursor-pale.svg") 3 4, pointer
+   cursor: url("assets/ui/link-cursor-pale.png") 11 30, pointer
 }
 
 .plant-layer {

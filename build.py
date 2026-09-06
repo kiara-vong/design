@@ -56,6 +56,9 @@ STEPS = [
     ("grounds",   "gen.grounds",    [], []),
     ("frames",    "gen.frames",     [], []),
     ("botanicals", "gen.botanicals",       [], []),
+    # Cuts 23 hand-drawn icons out of one sheet, then builds the five footer
+    # strips and the link cursor from them.
+    ("icons",     "gen.icons",     [], []),
     ("work",      "gen.work_cards",       [], []),
     ("shots",     "gen.card_shots",      [], []),
     # Painting grounds for the four work cards, from assets/hero/_src.
@@ -137,17 +140,25 @@ def check():
 
     used = set()
     for f in pages + glob.glob("*.css") + glob.glob("*.js"):
-        used |= set(re.findall(r"assets/([A-Za-z0-9_./-]+)",
-                               open(f, encoding="utf-8").read()))
+        src = open(f, encoding="utf-8").read()
+        used |= set(re.findall(r"assets/([A-Za-z0-9_./-]+)", src))
+        # Assets whose path is assembled at runtime are invisible to the scan above.
+        # site-footer.js builds 'assets/ui/' + the data-flowers attribute, so the
+        # filename appears in the page and the folder appears only in the script.
+        used |= set("ui/" + m for m in re.findall(r'data-flowers="([^"]+)"', src))
     have = set()
     for root, _, files in os.walk("assets"):
         for x in files:
             have.add(os.path.relpath(os.path.join(root, x), "assets")
                      .replace(os.sep, "/"))
     # _src is staged input and assets/demo is kept deliberately; see the README.
+    # ui/icon holds the 23 cut sprites. They are the palette the footer strips are
+    # assembled FROM rather than assets any page links, so they are source in the
+    # same sense _src is: keeping them means a different trio is a one-line change
+    # in gen/icons.py instead of a re-cut.
     orphans = sorted(x for x in (have - used)
                      if "/_src/" not in x and "/_gif/" not in x
-                     and not x.startswith("demo/"))
+                     and not x.startswith(("demo/", "ui/icon/")))
 
     css = check_css(pages)
 

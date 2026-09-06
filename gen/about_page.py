@@ -286,7 +286,7 @@ PAGE = '''<!doctype html>
   </div>
  </div>
 
- <div id="site-footer" data-variant="about"></div>
+ <div id="site-footer" data-variant="about" data-flowers="foot-about.png"></div>
 </div>
 
 <script src="site-footer.js"></script>

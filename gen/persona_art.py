@@ -78,7 +78,8 @@ def field():
             body += ('<circle cx="%.0f" cy="%.0f" r="1.8" fill="#8460C6" '
                      'opacity=".22"/>' % (34 + i * 58, 30 + j * 62))
     body += '<rect width="529" height="304" fill="url(#v)"/>'
-    save("field-persona", body, 529, 304)
+    # The flat field this used to draw is gone: the four work cards sit on
+    # paintings now, cut by gen/card_fields.py.
 
 
 def card_shot():
