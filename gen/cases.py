@@ -13,10 +13,25 @@ and their outcomes, name the employer, never the internal system. Every metric
 below is about her own work -- files touched, PRs cut, review order -- rather than
 about the company's data, customers or infrastructure.
 """
-from gen.case_template import build, section, sub, NOTE
+from gen.case_template import build, section, sub, NOTE, esc
 from gen.case_blocks import stats, rules, figure_raw, before_after, plate
 
 CO = "Capital One"
+
+# A public rebuild of the surface three of these four case studies describe. Written
+# from scratch in React and TypeScript, with every name, ARN, account ID and owner
+# email invented and no proprietary code in it, so it can be linked where the work
+# itself cannot. Each case points at the route that shows its own part.
+#
+# The column is labelled Rebuilt rather than Live, because calling a scrubbed
+# recreation the live product would be a small lie in the one place a reader is most
+# entitled to take a claim at face value.
+DEMO = "https://kiara-vong.github.io/resource-dashboard/"
+
+
+def demo(route, label="Open it"):
+    return ('<a class="touch" href="%s%s" target="_blank" rel="noopener">%s</a>'
+            % (DEMO, route, esc(label)))
 
 # =====================================================================
 build("resource-dashboard", dict(
@@ -34,6 +49,7 @@ build("resource-dashboard", dict(
           ("Stack", "React, TypeScript,<br>MUI, AG Grid"),
           ("Scope", "IA, components,<br>end-to-end flows"),
           ("Status", "Shipped to<br>enterprise users"),
+          ("Rebuilt", demo("#/resources")),
           ("Note", NOTE)],
     nav=[("overview", "Overview", False),
          ("context", "Context", False),
@@ -155,6 +171,7 @@ build("events-timeline", dict(
           ("Stack", "React, TypeScript"),
           ("Scope", "Timeline, events table,<br>accessibility pass"),
           ("Status", "Shipped in beta"),
+          ("Rebuilt", demo("#/resources/res-05")),
           ("Note", NOTE)],
     nav=[("overview", "Overview", False),
          ("context", "Context", False),
@@ -277,6 +294,7 @@ build("ui-consistency", dict(
           ("Stack", "React, TypeScript,<br>MUI theming"),
           ("Scope", "208 files,<br>9 commits, 10 PRs"),
           ("Status", "Shipped"),
+          ("Rebuilt", demo("#/showcase")),
           ("Note", NOTE)],
     nav=[("overview", "Overview", False),
          ("context", "Context", False),

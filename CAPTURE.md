@@ -1,9 +1,15 @@
 # Capture request
 
-Everything the site is still waiting on, in one list. Forty-six briefs: six project
-thumbnails, thirty across the four live sites, ten case-study plates. Three of the
-thumbnails are already correct and marked no action, and two live-site stills double
-as thumbnails, so it is forty-one distinct shoots.
+Everything the site is still waiting on, in one list. Fifty-five briefs: six
+project thumbnails, thirty across the four live sites, nineteen for the dashboard
+demo. Three thumbnails are already correct and marked no action, two live-site stills
+double as thumbnails, and one plate is a drawing rather than a capture, so it is
+forty-nine distinct shoots.
+
+There are five live sites to record, not four. The work case studies used to be
+unshowable because they describe an internal tool; there is now a public rebuild of
+it with invented data, so Part 3 records like any other site rather than being a list
+of things to reconstruct.
 
 The live-site captures are drawn from each project's own README, so the list is the
 feature set as each project describes itself, not as the portfolio currently
@@ -339,89 +345,193 @@ without one, capture the signed-out state only.
 
 ---
 
-# Part 3 -- Case studies
+# Part 3 -- The dashboard demo
 
-Ten slots, already written into the four `work/` pages as briefs with their sizes.
-Each renders at the exact size of the finished asset, so anything that does not fit
-the slot on the page will not fit when it is filled.
+The three work case studies describe an internal tool, which for a long time meant
+they could not be shown at all. That is no longer true. There is a public rebuild:
 
-**These four are the only confidential ones in this document.** They are captures of
-an internal tool, and the rule does not bend: **mock data only, and no internal
-product name, no internal URLs, no repository or pull-request links, and no employer
-brand hex values anywhere in frame.** Crop past the nav rail if a product logo lives
-there. If a capture cannot be taken without one of those in shot, skip it and say so.
+**kiara-vong.github.io/resource-dashboard**
 
-There is no README for this one and no public live site, so unlike Part 2 these
-briefs come from the case-study pages themselves rather than from source.
+A from-scratch React and TypeScript recreation of the surface, with every name, ARN,
+account ID and owner email invented and no proprietary code in it. It records like
+any other live site in Part 2, and four routes cover three of the four case studies.
 
-## Resource Dashboard
+| Route | What it serves |
+| --- | --- |
+| `#/resources` | Resource Dashboard: filters, hierarchy and table views, export |
+| `#/resources/:id` | Resource Details, the compliance timeline, and the jobs list |
+| `#/showcase` | UI Redesign / Consistency: eight before/after sections |
+| `#/style-guide` | The design-system reference half of the same case study |
 
-### 3.1 VIDEO -- the three-tool reconciliation *(8-12s loop, cursor visible)*
-The workflow before the dashboard existed. Proves the claim that the cost was in the
-seams between tools, rather than asserting it.
-1. Window 1: ownership lookup, paste an identifier
-2. Window 2: the compliance job list, find the same resource
-3. Window 3: the inventory, confirm what it actually is
-4. End on all three open at once
+### Two consequences worth stating plainly
 
-**`assets/demo/` already holds ten cropped frames from the internal demo video.** If
-they cover this sequence, this plate can be assembled from them without recording
-anything. Ask before publishing employer video.
+**Do not use `assets/demo/`.** Those ten frames are cropped from an internal demo
+video of the real tool. They were the only option when nothing else existed. A
+scrubbed rebuild exists now, so publishing internal frames is a risk taken for no
+gain. Shoot the demo instead, and delete that folder once its slots are filled.
 
-### 3.2 SEQUENCE -- drilling four levels *(4 PNGs @2x, or one cross-fading loop)*
-Environment, then region, then type, then the resource. Keep the breadcrumb visible
-in every frame; it is what makes four images read as one movement. Same window size
-and scroll position throughout.
-**Feeds:** `deal` plus `cursor`.
+**The old rule still governs anything shot anywhere else:** mock data only, and no
+internal product name, no internal URLs, no repository or pull-request links, and no
+employer brand hex values anywhere in frame. The demo satisfies all of that by
+construction, which is the whole reason it exists.
 
-### 3.3 ANNOTATED STILL -- the default view *(PNG @2x, no OS chrome)*
-One clean capture with four callouts: the urgency sort and why it is the default, the
-view toggle, filters that persist across both views, and the export scoped to what is
-on screen. **Leave about 120px clear on the right** for the labels.
+### Before you record
+
+The demo is a `HashRouter` app served from a static host, and its data comes through
+Mock Service Worker, a real service worker intercepting real `fetch` calls. Two
+practical consequences:
+
+- **Hard-reload once before recording** (Ctrl+Shift+R). A stale service worker is the
+  one thing that makes this app look broken on camera.
+- **The loading skeletons are real and so is the latency.** The mock layer adds
+  artificial delay on purpose. Do not cut it out; 3.5 exists to show it.
+
+---
+
+## Resource Dashboard, at `#/resources`
+
+### 3.1 DIAGRAM, not a capture -- the three-tool reconciliation
+The one plate in this document that cannot be recorded. It shows the workflow
+*before* the dashboard existed, spread across three internal tools, and there is
+nothing public to point a camera at.
+
+Draw it instead: three browser frames, an identifier travelling between them, and the
+count of windows it takes to answer one question. It is a stronger artefact than a
+screen recording would have been, because the argument is the number of windows
+rather than any one screen. I can draw this as an SVG in the site's own hand; say the
+word.
+
+### 3.2 VIDEO -- the hierarchy drill, four levels *(10-12s, cursor visible)*
+Environments, then regions, then categories, then the resources themselves. Keep the
+breadcrumb visible in every frame; it is what makes four screens read as one
+movement. End by clicking the breadcrumb root to spring back, which shows the drill
+is navigation rather than four separate pages.
+**Proves:** the progressive drill-down, and that each level counts what is beneath it.
+
+### 3.3 SEQUENCE -- the same set, two views *(2 PNGs @2x, identical window)*
+Graph view and table view of an identical filtered set, same window size, same scroll
+position, with the resource count visible in both. The argument is that these are two
+readings of one dataset rather than two features, and it only lands if nothing else
+in the frame changes.
+**Feeds:** `wipe`, with the seam travelling between them.
+
+### 3.4 ANNOTATED STILL -- the default view *(PNG @2x, no OS chrome)*
+One clean capture with four callouts: the Category, Region and Environment filters;
+the Table and Graph toggle; the "Resources with Jobs Only" toggle, which is a second
+data source joined in rather than a filter over the first; and Export, scoped to
+whatever is on screen rather than to everything. **Leave about 120px clear on the
+right** for the labels.
 **Feeds:** `push`, pushing in on each callout in turn.
 
-## Events Timeline
+### 3.5 VIDEO -- the network boundary *(10-14s, DevTools open)* **new slot**
+The feature with the strongest engineering claim and no slot on any page yet. Open
+the Network tab, reload, and let it show real `fetch` calls to `/api/resources`,
+`/api/resources/:id` and `/api/events`, with the loading skeletons on screen while
+they are in flight. Then throw one: MSW's error path gives a retryable banner that
+actually recovers.
 
-### 3.4 STILL -- the table alone *(PNG @2x, label EXPLORED)*
-Before the timeline sat above it. Needs enough rows to make the date arithmetic look
-tedious, and at least one violated-then-fixed pair several days apart.
+The point is that this is a genuine request boundary with loading and error states
+built against it, not an imported array pretending to be data. A still cannot say
+that and prose asking to be believed is worse.
+**Needs:** a new plate on the Resource Dashboard case study. Worth adding one.
 
-### 3.5 SEQUENCE -- naive vs carry-forward *(PNGs @2x, or a wipe)*
-Two tracks stacked. Top: dots on a plain rule, gaps uncoloured (EXPLORED). Bottom:
-the same dots with state carried across the gaps (SHIPPED). Identical dates and width
-in both, so they read as one comparison rather than two pictures.
+### 3.6 VIDEO -- filters persist, then reset *(6-8s, cursor visible)*
+Apply two filters in table view, switch to graph, show the filters still applied and
+the counts agreeing, then hit Reset. Small, and it is the difference between a view
+toggle and two separate screens.
+
+### 3.7 STILL -- the export *(PNG @2x)* **optional**
+The Export button with the filtered count beside it, and the downloaded CSV open
+next to it. Only worth shooting if the case study keeps its claim that export is
+scoped to the current filter.
+
+---
+
+## Resource Details and the timeline, at `#/resources/:id`
+
+### 3.8 STILL -- the whole detail page, full height *(tall PNG, 1280 wide)*
+One scroll capture of everything: the ARN and its metadata grid, the Organization
+and Ownership panel, the five tabs, the Resource Timeline, and the Jobs List. This is
+the establishing shot for everything below it, and it is also the best single answer
+to "what does this thing actually do".
+**Feeds:** `strip`.
+
+### 3.9 SEQUENCE -- the five tabs *(5 PNGs @2x, identical crop)*
+Account Details, Configurations, Compliance, Network, Tags. Crop to the tab strip and
+the panel under it, not the page. Same crop in all five so they cross-fade cleanly.
+**Feeds:** `deal`.
+
+### 3.10 STILL -- the events table alone *(PNG @2x, label EXPLORED)*
+Crop to the table, timeline excluded, which is the state the case study is arguing
+against. It needs enough rows to make the date arithmetic look tedious, and at least
+one violated-then-fixed pair several days apart. The demo's sample data already has
+both: the Aug 3 violation resolved Aug 8, and the Aug 18 violation resolved Aug 21.
+
+### 3.11 SEQUENCE -- naive vs carry-forward *(2 PNGs @2x, or a wipe)*
+Two tracks stacked. Top: the dots on a plain rule with the gaps uncoloured, which is
+the explored version. Bottom: the same dots with compliance state carried across the
+gaps, so the connecting line is red between a violation and its fix and green either
+side. Identical dates and identical width in both.
+
+The demo renders the shipped half already, including the "Compliant since Aug 21"
+badge. The naive half has to be faked, and the honest way to do it is to crop the
+shipped one and grey the line rather than to redraw the picture.
 **Feeds:** `wipe`.
 
-### 3.6 VIDEO -- keyboard walkthrough *(10-14s, cursor HIDDEN)*
+### 3.12 STILL -- a grouped dot, open *(PNG @2x)*
+Adjacent same-day events collapse into one dot with a multi-event popover. Capture
+one open, with the dot's own colour still visible behind it.
+**Proves:** that the timeline stays readable when a day has four events on it.
+
+### 3.13 VIDEO -- keyboard walkthrough *(10-14s, cursor HIDDEN)*
 The whole timeline with no mouse. Tab onto the first dot with the focus ring visible,
 Enter to open the popover, Escape to close, Tab to the Timestamp header, Enter to
-re-sort. This is the accessibility claim and it cannot be made with a still.
+re-sort. This is the accessibility claim and it cannot be made with a still. The dots
+and the sortable header were mouse-only before this work, so the capture is the
+evidence that they are not any more.
 
-## UI Redesign / Consistency
+### 3.14 STILL -- the jobs list *(PNG @2x)* **optional**
+Its own Category and Source filters, criticality chips, and a second Export. Worth a
+frame if the case study wants to claim the page is more than one table.
 
-### 3.7 STILL -- contact sheet of one component *(PNG @2x)*
-Every live variant side by side, each cropped at the same zoom on a neutral ground.
-**Keep their real spacing and radii. Do not tidy them**, the mess is the argument.
-Caption each with the surface it came from. Component chrome only, no data.
-**Feeds:** `stagger`, so the variants arrive one at a time and the count lands.
+---
 
-### 3.8 STILL -- before and after *(two PNGs @2x, or a slider)*
-One table, identical data, identical window width, identical scroll position, so only
-the styling differs. The 72px to 52px row height should be obvious. Label BEFORE and
-AFTER rather than old and new.
+## UI Redesign / Consistency, at `#/showcase` and `#/style-guide`
+
+### 3.15 STILL -- the showcase, full height *(tall PNG, 1280 wide)*
+All eight sections in one scroll capture: MUI Theme Foundation, Tables, Buttons,
+Filters and Toolbar, Navigation Sidebar, Tooltips, Page Titles and Typography, Cards
+and Charts. Each carries its own Problem and Resolution line, which is the case
+study's argument already written down.
+**Feeds:** `strip`.
+
+### 3.16 STILL -- one section, before and after *(PNG @2x)*
+Tables is the best of the eight: the row-height change is the one difference anybody
+can see without being told. Crop to that section alone, both halves in frame, labels
+included.
 **Feeds:** `wipe`.
 
-### 3.9 STILL -- filter chip, four states *(PNG @2x, 2x2 grid)*
-One chip selected at full width; overflow showing the +N chip; dropdown open
-mid-selection; typing with chips hidden. **Crop tight to the control**, not the page.
+### 3.17 STILL -- contact sheet of one component *(PNG @2x)*
+Every live variant of one component side by side at the same zoom on a neutral
+ground. **Keep their real spacing and radii. Do not tidy them**, the mess is the
+argument. Buttons or Filters both work. Caption each with the surface it came from.
+**Feeds:** `stagger`, so the variants arrive one at a time and the count lands.
 
-## Persona Homepage -- after the first build ships
+### 3.18 STILL -- the style guide *(tall PNG, 1280 wide)*
+Brand colours, typography scale, components and their states. The reference half of
+the same case study, and the thing that turns "we made it consistent" into something
+checkable.
+**Feeds:** `strip`.
 
-### 3.10 SEQUENCE -- three orderings *(PNGs @2x, or a 3-state loop)*
+---
+
+## Persona Homepage -- nothing to shoot yet
+
+### 3.19 SEQUENCE -- three orderings *(PNGs @2x, or a 3-state loop)*
 Operator, Owner and Newcomer at the same window width, with one block tinted
 identically in all three so the eye can track it moving. Persona switcher visible and
-in its selected state.
-**Feeds:** `deal`.
+in its selected state. **Waits for the first build to ship.** It is the one route the
+demo does not have.
 
 ---
 
@@ -619,7 +729,11 @@ the moment it is recorded.
 **Then the arcade**, 2.8 to 2.13, which is a whole half of the Stardew project that
 the portfolio does not currently mention at all.
 
-**Then the case studies**, in this order: 3.1, 3.3, 3.6. Those three carry the most
-argument. The remaining stills are useful but the pages hold without them.
+**Then the dashboard demo**, in this order: 3.8, 3.2, 3.5, 3.13. The full-height
+detail page is one capture that fills the most slots; the drill and the network
+boundary carry the most argument; the keyboard walkthrough is the one claim a still
+cannot make. 3.5 needs a new plate on the page, which I can add.
 
-**Not yet:** 3.10, which waits for the persona homepage to ship.
+**Not yet:** 3.19, which waits for the persona homepage to ship.
+
+**Retire:** `assets/demo/`, once its slots are filled from the demo instead.
