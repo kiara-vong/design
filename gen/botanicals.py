@@ -91,6 +91,40 @@ for name, pal in (("plant-cursor", LIGHT), ("plant-cursor-dark", DARK)):
     io.open("assets/ui/%s.svg" % name, "w", encoding="utf-8").write(
         sprig(CURSOR_W, CURSOR_H, pal, 2))
 
+
+# The link cursor. One leaf, tip at the top left where an arrow's point would be, so
+# it is a pointer first and a leaf second. The hand cursor already says "link"; this
+# says it in the site's own handwriting, and it is the only cursor change that
+# happens anywhere except the footer.
+#
+# The halo is not decoration. A cursor crosses cream pages, dark photographs and the
+# blue footer band in one movement, and a single-colour shape disappears against one
+# of them. Drawing the same path twice, once stroked wide in the opposite tone,
+# gives it an edge everywhere. Two versions rather than one because the footer is
+# dark enough that only a pale leaf reads on it.
+#
+# 24x32 for the same reason as the plant cursor: Windows silently ignores a CSS
+# cursor larger than 32px in either dimension and shows the default arrow instead.
+# The hotspot is the tip, 3 4, and it goes in site.css.
+def pointer(fill, halo):
+    tipx, tipy, bx, by = 3.0, 4.0, 19.0, 27.0
+    ang = math.degrees(math.atan2(tipy - by, tipx - bx))
+    ln = math.hypot(tipx - bx, tipy - by)
+    blade = leaf(bx, by, ln, ang, fill, curl=.19)
+    edge = blade.replace('fill="%s"' % fill,
+                         'fill="%s" stroke="%s" stroke-width="3.2" '
+                         'stroke-linejoin="round"' % (halo, halo))
+    return svg(CURSOR_W, CURSOR_H,
+               edge +
+               '<circle cx="%.1f" cy="%.1f" r="3.6" fill="%s"/>' % (bx, by, halo) +
+               blade +
+               '<circle cx="%.1f" cy="%.1f" r="2.2" fill="%s"/>' % (bx, by, fill))
+
+
+for name, fill, halo in (("link-cursor", "#43728A", "#FDFBEF"),
+                         ("link-cursor-pale", "#FFF6D8", "#22384A")):
+    io.open("assets/ui/%s.svg" % name, "w", encoding="utf-8").write(pointer(fill, halo))
+
 # Footer flowers. site.css cuts these with object-fit:none and three
 # object-position offsets (0, -122.504px, -245.007px) out of a 120px-wide column,
 # so the file has to be a SPRITE of three distinct 120x110.5 tiles stacked, not one

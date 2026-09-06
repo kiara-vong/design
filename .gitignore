@@ -4,10 +4,12 @@ __pycache__/
 # Scratch, not part of the site.
 #   _preview.html  the hero background picker
 #   _mobile.html   horizontal-overflow audit
-#   _resize.html   live-resize audit
+#   _resize.html
+_hit.html   live-resize audit
 _preview.html
 _mobile.html
 _resize.html
+_hit.html
 
 # One-shot scripts at the ROOT only. Anchored, because an unanchored _*.py also
 # swallowed gen/__init__.py and content/__init__.py, without which `python -m gen.x`

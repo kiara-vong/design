@@ -138,14 +138,61 @@ def check():
     orphans = sorted(x for x in (have - used)
                      if "/_src/" not in x and not x.startswith("demo/"))
 
+    css = check_css(pages)
+
     print("\n%d pages" % len(pages))
     for b in bad:
         print("  BROKEN  " + b)
     for o in orphans:
         print("  ORPHAN  assets/" + o)
-    if not bad and not orphans:
-        print("  every link, anchor and asset resolves; no orphans")
-    return 1 if bad else 0
+    for c in css:
+        print("  CSS     " + c)
+    if not bad and not orphans and not css:
+        print("  every link, anchor and asset resolves; no orphans; CSS balances")
+    return 1 if (bad or css) else 0
+
+
+def check_css(pages):
+    """Braces balance in every stylesheet and every inline <style>.
+
+    Worth a check of its own because the failure is silent and destructive. A stray
+    `}` at the top level is a parse error, and CSS error recovery does not stop at
+    it: the parser treats the brace as the start of a bogus rule and keeps consuming
+    until it has swallowed the next `{...}` block, so the RULE AFTER the stray brace
+    disappears. Nothing is logged, the page still renders, and the only symptom is
+    one rule quietly not working.
+
+    That happened here. An orphaned `}` left behind by a deleted hover rule ate
+    `.mini{position:relative; transition:transform .35s ...}`, which is why the
+    project cards lost their hover easing and fell back to the scroll entrance's
+    much slower, staggered transition.
+    """
+    out = []
+    for f in sorted(glob.glob("*.css")) + pages:
+        src = open(f, encoding="utf-8").read()
+        blocks = ([src] if f.endswith(".css")
+                  else re.findall(r"<style[^>]*>(.*?)</style>", src, re.S))
+        for n, b in enumerate(blocks):
+            b = re.sub(r"/\*.*?\*/", "", b, flags=re.S)
+            # Quoted strings can hold braces (content:"}" and url() data) and must
+            # not count. Nothing else in this codebase's CSS does.
+            b = re.sub(r'"[^"\n]*"|\'[^\'\n]*\'', '""', b)
+            where = f if f.endswith(".css") else "%s <style> #%d" % (f, n + 1)
+            depth = line = 1
+            for ch in b:
+                if ch == "\n":
+                    line += 1
+                elif ch == "{":
+                    depth += 1
+                elif ch == "}":
+                    depth -= 1
+                    if depth < 1:
+                        out.append("%s: stray } at line %d (eats the next rule)"
+                                   % (where, line))
+                        depth = 1
+            if depth > 1:
+                out.append("%s: %d unclosed { at end of block" % (where, depth - 1))
+    return out
 
 
 def main():

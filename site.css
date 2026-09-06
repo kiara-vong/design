@@ -1488,24 +1488,43 @@ a.card:nth-of-type(even):hover {
    then the photograph faded in on top of it. Conceptually that was a picture developing
    into its frame, but the second ramp is a large luminance jump, cream ground to a
    full-bleed photograph, and six of those going off on an irregular rhythm read as
-   flashing rather than as arriving. The frame and its picture now come in together. */
-.pt .mini {
+   flashing rather than as arriving. The frame and its picture now come in together.
+
+   The entrance is an ANIMATION, not a transition, and that is load-bearing rather
+   than stylistic. A transition lives on the element forever and competes for the
+   same property the hover uses. It used to: this rule set transform over .6s with a
+   .08s and .16s stagger down the row, and being two classes it outranked the hover's
+   own .35s in index.html. So hovering a card did nothing for up to 160ms, then
+   drifted for 600ms on the arrival curve, and leaving did the same again. Sweeping
+   the mouse across the grid left several cards still moving from earlier hovers,
+   which read as the whole grid glitching at once.
+
+   An animation ends. Without a forwards fill it hands the element back afterwards,
+   so the hover transition owns transform from then on. `backwards` covers the
+   stagger delay with the from-state, which is what stops a card flashing in at full
+   opacity while it waits its turn. */
+.pt .mini:not(.is-in) {
    opacity: 0;
-   transform: translateY(10px);
-   transition: opacity .6s ease, transform .6s cubic-bezier(.22, .7, .3, 1)
+   transform: translateY(10px)
 }
 
 .pt .mini.is-in {
-   opacity: 1;
-   transform: none
+   animation: mini-in .6s cubic-bezier(.22, .7, .3, 1) backwards
 }
 
-.pt .reads .mini:nth-child(3n+2) {
-   transition-delay: .08s
+.pt .reads .mini.is-in:nth-child(3n+2) {
+   animation-delay: .08s
 }
 
-.pt .reads .mini:nth-child(3n+3) {
-   transition-delay: .16s
+.pt .reads .mini.is-in:nth-child(3n+3) {
+   animation-delay: .16s
+}
+
+@keyframes mini-in {
+   from {
+      opacity: 0;
+      transform: translateY(10px)
+   }
 }
 
 /* Hover. The rule that keeps this off the case studies' territory: a.card moves as an
@@ -1660,8 +1679,30 @@ a.card:nth-of-type(even):hover {
    cursor: url("assets/ui/plant-cursor-dark.svg") 12 31, auto
 }
 
-.foot-right a {
-   cursor: pointer
+/* Links get their own cursor, everywhere.
+
+   The point is that the icon CHANGES when you are over something clickable, and in
+   two places it was not changing at all: the footer painted a plant cursor over its
+   whole surface, links included, so the one region with a custom cursor was the one
+   region where a link looked like everything else.
+
+   Set on a[href] rather than a:hover, because a cursor is only ever seen on hover
+   and the extra state buys nothing. It also has to name the attribute: a bare <a>
+   without an href is not a link and should not claim to be one.
+
+   Specificity note. #footer's rule sets the cursor on the footer and every
+   descendant INHERITS it, and inheritance loses to any rule that matches the element
+   itself, whatever its specificity. So a[href] wins inside the footer without
+   needing to outrank an id. The pale version is a separate rule because the band is
+   dark enough that the ink-blue leaf disappears into it. */
+a[href] {
+   cursor: url("assets/ui/link-cursor.svg") 3 4, pointer
+}
+
+#footer a[href],
+.cs-hero a[href],
+#hero a[href] {
+   cursor: url("assets/ui/link-cursor-pale.svg") 3 4, pointer
 }
 
 .plant-layer {

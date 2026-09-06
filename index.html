@@ -161,11 +161,15 @@ window.__hl = (function () {
   .card-photo .plat .s4{opacity:1}
 }
 
-/* The fox is the hover target for the speech bubble, the way the original's rabbit was. */
-}
+/* There was a stray closing brace here, left behind when a hover rule was removed,
+   with an orphaned comment above it. CSS does not report that: a `}` at top level is
+   an error, and the recovery consumes what follows it as one bogus rule. What
+   followed was `.mini{position:relative; transition:transform .35s ...}`, so the
+   card's hover transition was being discarded before it ever reached the CSSOM. The
+   lift snapped instead of easing, and the only transition left on the card was the
+   scroll entrance's .6s with its .08s/.16s column stagger, which is what made a row
+   of cards lag the pointer and keep moving after it had gone. */
 
-/* Project tiles link out to the running project. The anchor wraps the whole card
-   rather than the title alone, so the target is the thing you are looking at. */
 /* The card is no longer one big anchor. It could not be: the Demo chip is a link
    too, and a link inside a link is invalid and behaves unpredictably.
 
@@ -192,7 +196,7 @@ window.__hl = (function () {
    and shipped as a tofu box on these very cards once already. */
 .mini-tag.demo{display:inline-flex;align-items:center;
   border-color:var(--accent);color:var(--accent);font-weight:500;
-  text-decoration:none;cursor:pointer;
+  text-decoration:none;
   transition:background .2s ease,color .2s ease,border-color .2s ease}
 .mini-tag.demo .ext{width:9px;height:9px;margin-left:5px;flex:none;
   fill:none;stroke:currentColor;stroke-width:1.7;
@@ -202,29 +206,19 @@ window.__hl = (function () {
 /* No ::after arrow here. U+2197 has no glyph in Apercu Mono and rendered as a
    tofu box on the archive tiles once already. If this ever wants a mark, it has
    to be an inline SVG, not a codepoint. */
-/* The lift, and it has to name .is-in as well.
-
-   site.css runs the entrance on this same element: `.pt .mini{transform:translateY(10px)}`
-   settling to `.pt .mini.is-in{transform:none}`. That second rule is three classes,
-   and a plain `.mini:hover` is two, so once a card had finished arriving the entrance
-   won and the card stopped lifting entirely. Nothing looked broken; the hover just
-   silently did nothing.
-
-   It only became a collision when the hover moved onto .mini. It used to sit on
-   .mini-link, which was a different element from the one the entrance animates, and
-   .mini-link is now only the title's anchor.
-
-   Both selectors are needed: .is-in is absent under prefers-reduced-motion, where
-   site-motion.js never adds .pt and the entrance rules do not apply at all. */
-.mini:hover,
-.mini.is-in:hover{transform:translateY(-5px)}
-.mini:nth-child(even):hover,
-.mini.is-in:nth-child(even):hover{transform:translateY(-5px) rotate(.5deg)}
+/* The lift. This owns transform on .mini, and it only gets to because site.css's
+   scroll entrance runs on the same element as an animation rather than a transition.
+   A transition there would sit on the element permanently and outrank this, which it
+   did: the entrance's .6s timing and its .08s/.16s column stagger were being applied
+   to the hover, so a card lagged up to 160ms behind the pointer and then took .6s to
+   move. Keep the entrance an animation and this stays a clean .35s. */
+.mini:hover{transform:translateY(-5px)}
+.mini:nth-child(even):hover{transform:translateY(-5px) rotate(.5deg)}
 .mini:hover .mini-title{color:var(--accent)}
 .mini-title{transition:color .25s ease}
 @media (prefers-reduced-motion:reduce){
   .mini{transition:none}
-  .mini:hover,.mini.is-in:hover{transform:none}
+  .mini:hover{transform:none}
 }
 
 /* ----- Project tiles -----
