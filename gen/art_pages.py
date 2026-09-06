@@ -294,9 +294,20 @@ CSS_INDEX = """
     margin-bottom:24px;width:max-content}
   /* The arrow leaves the corner and joins the flow, since a fixed arrow over a
      full-bleed band on a 375px screen sits on the title. */
-  .ap-back{position:static;display:block;margin:16px 0 0 20px}
-  .ai-shell{padding:24px 20px 96px}      /* 96 is room for the fixed bar */
-  .ai-hero{min-height:auto;padding:64px 20px 44px}
+  /* The arrow stays OVER the band on a phone rather than sitting above it.
+  
+     Dropping it into the flow was giving it 16px of margin and 28px of height, and
+     with the shell's own 24px of padding that was 68px of bare parchment above the
+     painting: a white bar across the top of the one page whose whole opening move is
+     a full-bleed painted ground. About does not have it, because its ground starts
+     at the top of the document and the arrow sits on top of the ground.
+  
+     So the arrow goes back to being fixed, the shell loses its top padding, and the
+     band takes that space as its own padding instead, which keeps the type clear of
+     the arrow without putting anything above the picture. */
+  .ap-back{position:fixed;left:16px;top:14px;margin:0}
+  .ai-shell{padding:0 20px 96px}         /* 96 is room for the fixed bar */
+  .ai-hero{min-height:auto;padding:84px 20px 44px}
   .ai-title{font-size:44px}
   .ai-grid.big,.ai-grid.small{grid-template-columns:1fr}
   .ai-intro{font-size:15.5px}
