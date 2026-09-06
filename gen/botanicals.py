@@ -9,8 +9,19 @@ rather than two drawings that have to be kept in sync by hand.
 import io, math, random
 
 # Palette keys match the CSS custom properties they stand in for.
-LIGHT = dict(stem="#749F25", leaf="#8D9934", bloom="#5690AE", core="#FFEDBC")
-DARK  = dict(stem="#E2F085", leaf="#C8D665", bloom="#FFEDBC", core="#5690AE")
+# Retuned for the blue accent. The bloom used to be the accent itself, which worked
+# when the accent was persimmon: a hot orange flower on parchment. A blue flower on
+# cream reads as cold and slightly wrong, because nothing in a garden is that colour.
+#
+# So the roles swap. The bloom goes to the palette's own warm cream and the accent
+# moves to the CORE, where it is a small blue centre inside a pale flower -- which is
+# a thing that exists, and which ties the botanicals to the rest of the site without
+# asking the eye to accept a blue petal.
+# On parchment the bloom cannot be cream: #FFF3D2 on #FDFBEF is a two-value
+# difference and the flowers simply disappeared, leaving bare stems. Warm gold reads
+# as a flower on that ground, and the blue core is what ties it to the accent.
+LIGHT = dict(stem="#6F9A2E", leaf="#8D9934", bloom="#E9C46A", core="#43728A")
+DARK  = dict(stem="#E2F085", leaf="#C8D665", bloom="#FFF6D8", core="#7FB0C8")
 
 def svg(w, h, body):
     return ('<svg width="%g" height="%g" viewBox="0 0 %g %g" fill="none" '

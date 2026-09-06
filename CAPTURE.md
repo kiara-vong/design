@@ -26,14 +26,44 @@ Chrome window with no tabs, address bar, bookmarks or extension icons:
 The separate `--user-data-dir` is what removes the profile avatar and every
 extension button. It does more for how professional this looks than any editing.
 
-**Video:** 30fps, muted, H.264 mp4. 8 to 12 seconds unless a brief says otherwise,
-which is shorter than it feels while recording. Start and end on the same frame so
-it loops without a visible cut; record a few seconds spare at each end and trim to
-matching frames.
+## Record flat. The camera is CSS.
+
+This is the most important instruction here and the easiest to get wrong.
+
+The reference build this site is modelled on does **not** record zooms, pans or
+cross-fades. It captures a flat, static asset and then moves a camera over it with
+CSS keyframes. `case-study.css` still carries that machinery: `wa-follow` pans and
+zooms across a phone screen following a conversation, `ds-scroll` runs a tall
+documentation strip behind fixed chrome, `tile-scroll` and `tile-pan` drive the six
+project thumbnails.
+
+That approach wins on every axis. It stays sharp at any zoom because it is a
+transform over a still, not a re-encode of one. It is a fraction of the file size. It
+can be retimed later without re-recording. And it never has a cursor drifting or a
+frame the encoder smeared.
+
+**So: do not zoom while recording. Do not pan while recording. Do not add motion in
+an editor.** Hold the frame still and let the interface be the only thing that moves.
+Where a brief wants a camera move, capture the widest state as one flat asset and say
+so; the movement is written afterwards as keyframes, and I will write them.
+
+Two cases genuinely need video rather than a still with a camera over it: something
+animating in the product itself (a state transition, a loading sequence), or a
+keyboard walkthrough where focus moves. Those are 2.1 and 2.6, and they are marked.
+
+**Video spec where it is needed:** 30fps, muted, H.264 mp4. 8 to 12 seconds unless a
+brief says otherwise, which is shorter than it feels while recording. Start and end on
+the same frame so it loops without a visible cut; record a few seconds spare at each
+end and trim to matching frames.
 
 **Cursor:** straight lines, and pause about half a second before every click. Real
 usage is jittery and reads as nervous on replay. Two briefs want the cursor hidden;
 they say so.
+
+**Anything that wants a zoom-in, a push, a reveal or a cross-fade:** capture the
+flat states, one PNG each, at the same window size and scroll position. Frames that
+do not line up cannot be cross-faded, and that is the single most common reason a
+sequence has to be reshot.
 
 **Stills:** PNG at 2x. Add `--force-device-scale-factor=2` for real pixels rather
 than an upscale.

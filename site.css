@@ -753,7 +753,6 @@ section {
    line-height: 1.4;
    color: var(--antique-gold);
    white-space: nowrap;
-   cursor: pointer;
    pointer-events: auto;
    transition: color .35s ease
 }
@@ -835,15 +834,10 @@ section {
 }
 
 /* Rabbit + bubble */
-.mascot {
-   position: absolute;
-   left: 16px;
-   top: 461px;
-   width: 400px;
-   height: 400px;
-   object-fit: cover;
-   cursor: pointer
-}
+/* The artwork is placed and sized by index.html, which owns it: this rule was a
+   400px square left over from the reference build's portrait photo. All that
+   survived of it was cursor:pointer, which put a hand over 565 sample points of
+   empty hero background and linked to nothing. Deleted rather than corrected. */
 
 /* Sparkle motifs (real pixels lifted from the image) — cycle one at a time, looping */
 /* Shifted right and up, clear of the artwork. They were pinned to the mascot's

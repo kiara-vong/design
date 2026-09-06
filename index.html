@@ -338,7 +338,12 @@ window.__hl = (function () {
    the panel was 267,604 at 114x42 inside a picture at 56,418 at 530x410. Re-measure
    with a grid over the artwork if it ever changes, then divide again. */
 .mascot-wrap{position:absolute;left:56px;top:418px;width:530px;height:410px;
-  container-type:inline-size;cursor:pointer}
+  container-type:inline-size}
+/* No cursor:pointer on the artwork. It is a 530x410 rectangle whose corners are
+   transparent, so the pointer appeared over a wide band of empty hero background and
+   promised a click that goes nowhere -- the largest hit area on the page, and a dead
+   one. Hovering still skips to the next prompt; it just no longer advertises itself
+   as a link. */
 .mascot{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .mascot-cap,.mascot-label{display:none}
 
