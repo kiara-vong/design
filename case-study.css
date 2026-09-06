@@ -279,6 +279,14 @@ body{background:var(--parchment)}
    its card, so proximity alone binds it to the image above (20px up vs 32px
    down) without inflating the gap that follows. */
 .cs-figure{display:flex;flex-direction:column;gap:20px;align-items:flex-start;width:100%;margin:0}
+
+/* Screenshot cards reveal as they scroll into view: a soft fade with a slight rise,
+   once per figure, mirroring the Impact callout and the before/after ledger below.
+   Gated on .pt (site-motion.js), not a bare opacity:0 -- so a page whose script
+   never runs, or a reduced-motion visitor, sees every screenshot in place from
+   first paint instead of hidden for good. See the .cs-figure IO in case-study.js. */
+.cs-figure{transition:opacity .5s ease,transform .55s cubic-bezier(.22,.8,.3,1)}
+.pt .cs-figure:not(.is-in){opacity:0;transform:translateY(16px)}
 .cs-caption{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:14px;line-height:normal;
   color:var(--antique-gold);text-align:center;width:100%;margin:0}
 
@@ -526,6 +534,18 @@ body{background:var(--parchment)}
   color:var(--dusty-granite);flex:none;width:190px}
 .cs-rule .d{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;
   color:var(--muted)}
+
+/* The rows settle into place, one after another, the same beat as the Impact
+   callout's stats. Same .pt gate as the screenshot cards above: hidden only once
+   motion is confirmed running, so a script failure or prefers-reduced-motion both
+   leave every row visible rather than stuck at opacity 0. */
+.cs-rule{transition:opacity .45s ease,transform .5s cubic-bezier(.22,.8,.3,1)}
+.pt .cs-rules:not(.is-in) .cs-rule{opacity:0;transform:translateY(10px)}
+.cs-rules.is-in .cs-rule:nth-child(2){transition-delay:.06s}
+.cs-rules.is-in .cs-rule:nth-child(3){transition-delay:.12s}
+.cs-rules.is-in .cs-rule:nth-child(4){transition-delay:.18s}
+.cs-rules.is-in .cs-rule:nth-child(5){transition-delay:.24s}
+.cs-rules.is-in .cs-rule:nth-child(6){transition-delay:.30s}
 
 /* ============================ FIGURE LENS ============================
    Not inside mobile.css, and that placement is load-bearing. The lens is opened from a

@@ -246,6 +246,26 @@
   io.observe(el);
 })();
 
+/* Screenshot cards and numbered-rule blocks: same once-only reveal, extended to the
+   two content blocks that appear on nearly every case study (the framed screenshots
+   and the numbered-principles table) but never had one wired up. Each .cs-figure
+   fires on its own; a .cs-rules block fires once and its rows stagger via the
+   nth-child delays in case-study.css. No entry point here for reduced motion or a
+   missing IntersectionObserver -- both leave the content visible already, since the
+   hidden state in the stylesheet only applies once .pt (site-motion.js) is set. */
+(function(){
+  var els = [].slice.call(document.querySelectorAll('.cs-figure, .cs-rules'));
+  if(!els.length || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      e.target.classList.add('is-in');
+      io.unobserve(e.target);
+    });
+  }, {threshold:.25, rootMargin:'0px 0px -10% 0px'});
+  els.forEach(function(el){ io.observe(el); });
+})();
+
 /* Annotated stills: point at a label, the picture pushes in on what it names.
    ---------------------------------------------------------------------------
    The zoom target lives on the LABEL, as --x/--y/--z, and the transform runs on the

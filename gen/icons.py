@@ -148,7 +148,24 @@ def cut(im, box, pad=10):
     crop = im.crop((x0, y0, x1, y1))
     e = energy(crop, CUT_BLUR, CUT_CLOSE)
     w, h = crop.size
-    m = bytearray(1 if v > CUT_TH else 0 for v in e.getdata())
+
+    # OPEN the mask before anything else uses it, and this is the fog.
+    #
+    # The gaps between a daisy's stems are not empty in the energy map: the sheet's
+    # grain and the drawing's own scatter leave isolated specks above the threshold
+    # all through them. At full resolution they are single pixels and invisible.
+    # Scaled down to the 120px the footer draws, they average together into a haze
+    # with an alpha around 60 to 180, which is the pale fill that survived every
+    # attempt to fix this by moving the threshold: the specks are as bright as the
+    # drawing, because they ARE the drawing's grain.
+    #
+    # An opening -- erode, then dilate by the same amount -- deletes any group too
+    # small to survive the erosion and restores everything that did. Speckle goes,
+    # stems keep their width.
+    mask = Image.frombytes("L", (w, h),
+                           bytes(255 if v > CUT_TH else 0 for v in e.getdata()))
+    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
+    m = bytearray(1 if v else 0 for v in mask.getdata())
 
     # Ground is whatever the border can reach through the holes. Everything the
     # flood cannot reach is inside the drawing and stays opaque, which is what keeps
@@ -218,7 +235,7 @@ def cut(im, box, pad=10):
     # mask IN by a pixel lands the edge inside the drawing's own ink instead, and
     # half a pixel of blur is enough to keep it from stair-stepping.
     a = Image.frombytes("L", (w, h), bytes(255 if v else 0 for v in out))
-    a = a.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.5))
+    a = a.filter(ImageFilter.GaussianBlur(0.5))
     sprite = crop.convert("RGBA")
     sprite.putalpha(a)
     return sprite.crop(sprite.getbbox() or (0, 0, w, h))
