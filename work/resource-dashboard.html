@@ -56,6 +56,7 @@
     <a class="sub" href="#two-views">Two views over one dataset</a>
     <a class="sub" href="#drill">Drilling without getting lost</a>
     <a class="sub" href="#export">An export at every level</a>
+    <a class="sub" href="#data">A real boundary</a>
     <a href="#impact">What changed</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -184,6 +185,23 @@
         <p>Every table exports, and what it exports is exactly what you are looking at: current filters, current level, nothing else.</p>
         <p>This sounds like a checkbox feature and was one of the most-used things in the tool. People do not live in dashboards. They come in, narrow down to the thing they care about, and then need it somewhere else — a ticket, a spreadsheet, a message to the team that owns it. A dashboard that cannot hand off its own answer sends everyone back to the reconciling-by-hand it was built to remove.</p>
       </div>
+      </div>
+
+      <div class="cs-sub" id="data">
+        <h2 class="cs-h2">A real boundary, not a prop</h2>
+      <div class="cs-body">
+        <p>Every screen here fetches. The data layer is typed fetch functions behind small hooks that track loading, error and refetch, with a mocked REST surface behind them at the service-worker level rather than an imported array pretending to be a response.</p>
+        <p>That distinction is why the loading skeletons and the retry banner exist at all. A component handed its data synchronously has no in-flight state to design, no failure to recover from, and no way to find out it was wrong until it meets a real server. The same handlers run in Node for the tests, so those drive the actual fetch, loading, render, error and retry cycle instead of asserting against props.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-plate">
+          <div class="cs-plate-top"><span class="cs-kind is-video">Video / loop</span><span class="cs-tech">screen recording, DevTools visible</span></div>
+          <h3>The requests are real</h3>
+          <p>Open the Network tab and reload. Genuine fetch calls with latency, skeletons while they are in flight, and an error state that recovers. No still can make this claim and no sentence should be asked to carry it alone.</p>
+          <ul><li>Network tab open, reload, the endpoints resolve in turn</li><li>Loading skeletons on screen while they are in flight</li><li>Force one to fail; the retry banner appears</li><li>Click retry and let it recover</li></ul>
+          <div class="cs-spec"><span><b>Size</b> 799x391</span><span><b>Format</b> muted mp4 + webm</span><span><b>Length</b> 10-14s</span><span><b>Cursor</b> visible</span><span><b>Source</b> the public rebuild, not the internal tool</span></div>
+        </div>
+      </figure>
       </div>
 
     </div>

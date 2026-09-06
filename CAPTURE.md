@@ -433,7 +433,8 @@ actually recovers.
 The point is that this is a genuine request boundary with loading and error states
 built against it, not an imported array pretending to be data. A still cannot say
 that and prose asking to be believed is worse.
-**Needs:** a new plate on the Resource Dashboard case study. Worth adding one.
+**Slot:** "A real boundary, not a prop", the fourth key decision on the Resource
+Dashboard page. Added, and waiting on this capture.
 
 ### 3.6 VIDEO -- filters persist, then reset *(6-8s, cursor visible)*
 Apply two filters in table view, switch to graph, show the filters still applied and
@@ -732,7 +733,7 @@ the portfolio does not currently mention at all.
 **Then the dashboard demo**, in this order: 3.8, 3.2, 3.5, 3.13. The full-height
 detail page is one capture that fills the most slots; the drill and the network
 boundary carry the most argument; the keyboard walkthrough is the one claim a still
-cannot make. 3.5 needs a new plate on the page, which I can add.
+cannot make.
 
 **Not yet:** 3.19, which waits for the persona homepage to ship.
 

@@ -57,6 +57,7 @@ build("resource-dashboard", dict(
          ("two-views", "Two views over one dataset", True),
          ("drill", "Drilling without getting lost", True),
          ("export", "An export at every level", True),
+         ("data", "A real boundary", True),
          ("impact", "What changed", False)],
     sections=(
         section("context", "Context",
@@ -136,6 +137,41 @@ build("resource-dashboard", dict(
              "ticket, a spreadsheet, a message to the team that owns it. A dashboard "
              "that cannot hand off its own answer sends everyone back to the "
              "reconciling-by-hand it was built to remove."]) +
+        # The rebuild's strongest engineering claim, and the one the write-up had no
+        # slot for. The data layer is a real network boundary rather than an imported
+        # array: typed fetch functions behind small hooks, a mocked REST surface
+        # intercepted at the service-worker level, artificial latency, loading
+        # skeletons, and an error path that retries. The same handlers run in Node for
+        # the tests, so the suite drives the boundary the browser drives.
+        #
+        # It sits after the export rather than among the product decisions above it,
+        # because it is not a decision about what the tool should do. It is what makes
+        # the loading and error states in every screen above built and tested rather
+        # than assumed.
+        sub("data", "Key decisions", "A real boundary, not a prop",
+            ["Every screen here fetches. The data layer is typed fetch functions behind "
+             "small hooks that track loading, error and refetch, with a mocked REST "
+             "surface behind them at the service-worker level rather than an imported "
+             "array pretending to be a response.",
+             "That distinction is why the loading skeletons and the retry banner exist "
+             "at all. A component handed its data synchronously has no in-flight state "
+             "to design, no failure to recover from, and no way to find out it was "
+             "wrong until it meets a real server. The same handlers run in Node for the "
+             "tests, so those drive the actual fetch, loading, render, error and retry "
+             "cycle instead of asserting against props."],
+            plate("video", "screen recording, DevTools visible",
+                  "The requests are real",
+                  "Open the Network tab and reload. Genuine fetch calls with latency, "
+                  "skeletons while they are in flight, and an error state that "
+                  "recovers. No still can make this claim and no sentence should be "
+                  "asked to carry it alone.",
+                  ["Network tab open, reload, the endpoints resolve in turn",
+                   "Loading skeletons on screen while they are in flight",
+                   "Force one to fail; the retry banner appears",
+                   "Click retry and let it recover"],
+                  [("Size", "799x391"), ("Format", "muted mp4 + webm"),
+                   ("Length", "10-14s"), ("Cursor", "visible"),
+                   ("Source", "the public rebuild, not the internal tool")])) +
         '    </div>\n\n',
 
         section("impact", "Impact", "From three tools to one",
