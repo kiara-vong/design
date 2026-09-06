@@ -1738,11 +1738,13 @@ a[href] {
    cursor: url("assets/ui/link-cursor.png") 11 30, pointer
 }
 
-#footer a[href],
-.cs-hero a[href],
-#hero a[href] {
-   cursor: url("assets/ui/link-cursor-pale.png") 11 30, pointer
-}
+/* One clover, everywhere, with no outline.
+   
+   There used to be a second copy here with a cream halo, for the dark footer band
+   and the hero photograph. It was legible and it looked like a sticker: a white edge
+   that the same cursor does not have two hundred pixels further up the page, which
+   makes the cursor itself look like it changed. Consistency wins over contrast for
+   something this small and this constantly in view. */
 
 .plant-layer {
    position: absolute;

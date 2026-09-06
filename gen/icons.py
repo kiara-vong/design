@@ -36,6 +36,20 @@ ICONS = os.path.join(OUT, "icon")
 K, TH, MIN_BLOB = 4, 6, 120
 BLUR = 9
 
+# The CUT uses a different key from the segmentation, and it has to.
+#
+# Each sprite on the sheet sits on a soft light glow. At the wide blur radius that
+# finds the sprites reliably, that glow reads as texture and is keyed IN, which put a
+# pale fog inside every drawing: most visible between a daisy's stems, and obvious
+# against the dark footer band. Raising the threshold does not fix it, because a
+# cream petal and a cream glow are equally bright and the petals erode first.
+#
+# What separates them is FREQUENCY. The glow is a smooth gradient; the drawing is
+# crayon stipple. A small blur radius differences out only the finest texture, which
+# the drawing has everywhere and the glow has nowhere. Three is where the fog goes
+# and the petals stay whole; two leaves haze and four starts biting into them.
+CUT_BLUR, CUT_TH, CUT_CLOSE = 3, 5, 3
+
 # Delivery. The tile is 120 x 110.504 in CSS; 2x keeps it sharp on a retina screen.
 TILE_W, TILE_H = 240.0, 221.008
 PITCH = 245.008
@@ -55,15 +69,30 @@ STRIPS = {
     "foot-work":     [(3, 1), (3, 6), (3, 7)],   # sprig, daisies, bow: foliage only
 }
 
-# The link and footer cursor. Third row, second item.
+# The link cursor. Third row, second item.
 CURSOR_AT = (3, 2)
 CURSOR_W, CURSOR_H = 24, 32
 
 
-def energy(im):
-    """Texture, not colour: |image - heavy blur|, closed enough to bridge stipple."""
-    d = ImageChops.difference(im, im.filter(ImageFilter.GaussianBlur(BLUR)))
-    return d.convert("L").filter(ImageFilter.MaxFilter(5))
+
+def energy(im, blur=None, close=5):
+    """Texture, not colour: |image - blur|, closed enough to bridge stipple.
+
+    The radius decides WHICH texture. Wide finds whole sprites against the ground;
+    narrow finds only the crayon grain, which is what separates a drawing from the
+    soft glow the sheet paints behind it.
+
+    The CLOSING filter is the other half, and it is what put a pale fog between a
+    daisy's stems. Dilating the energy bridges gaps in the stipple, which is exactly
+    what segmentation wants -- a sprite should come back as one blob. But it also
+    bridges the real gaps BETWEEN the stems, which are only a few pixels wide, so the
+    whole space between them was marked as drawing and filled with the sheet's own
+    glow. Five closes those gaps; three leaves them open and still holds the stipple
+    together.
+    """
+    r = BLUR if blur is None else blur
+    d = ImageChops.difference(im, im.filter(ImageFilter.GaussianBlur(r))).convert("L")
+    return d.filter(ImageFilter.MaxFilter(close)) if close > 1 else d
 
 
 def blobs(mask, w, h):
@@ -117,9 +146,9 @@ def cut(im, box, pad=10):
     x0 = max(0, box[0] - pad); y0 = max(0, box[1] - pad)
     x1 = min(W, box[2] + pad); y1 = min(H, box[3] + pad)
     crop = im.crop((x0, y0, x1, y1))
-    e = energy(crop)
+    e = energy(crop, CUT_BLUR, CUT_CLOSE)
     w, h = crop.size
-    m = bytearray(1 if v > TH else 0 for v in e.getdata())
+    m = bytearray(1 if v > CUT_TH else 0 for v in e.getdata())
 
     # Ground is whatever the border can reach through the holes. Everything the
     # flood cannot reach is inside the drawing and stays opaque, which is what keeps
@@ -142,9 +171,39 @@ def cut(im, box, pad=10):
             j = ny * w + nx
             if 0 <= nx < w and 0 <= ny < h and not seen[j] and not m[j]:
                 seen[j] = 1; q.append((nx, ny))
-    for i in range(w * h):
-        if not seen[i]:
-            out[i] = 1
+    # Fill only the SMALL enclosed gaps.
+    #
+    # Filling every region the border cannot reach was wrong for this artwork, and
+    # wrong in the most visible way: a spray of daisies encloses big pockets of empty
+    # ground between its own stems, ringed by flowers above and leaves at the sides,
+    # so the flood could not get in and every one of those pockets was filled solid
+    # with the sheet's own wash. On the dark footer band it read as a pale fog inside
+    # the drawing, which is exactly the "fill in around the transparent background"
+    # that made these look wrong.
+    #
+    # Small pockets still want filling: a flat patch inside a black cat has no texture
+    # for the energy mask to find and would otherwise be punched through. So the test
+    # is area. Under a fiftieth of the crop it is a gap in the drawing; over it, it is
+    # ground the drawing happens to surround.
+    LIMIT = max(60, int(w * h * 0.02))
+    filled = bytearray(w * h)
+    for sy in range(h):
+        for sx in range(w):
+            i = sy * w + sx
+            if seen[i] or m[i] or filled[i]:
+                continue
+            q2 = deque([(sx, sy)]); filled[i] = 1; cells = [i]
+            while q2:
+                x, y = q2.popleft()
+                for dx, dy in ((1,0),(-1,0),(0,1),(0,-1)):
+                    nx, ny = x + dx, y + dy
+                    j = ny * w + nx
+                    if (0 <= nx < w and 0 <= ny < h and not seen[j]
+                            and not m[j] and not filled[j]):
+                        filled[j] = 1; q2.append((nx, ny)); cells.append(j)
+            if len(cells) <= LIMIT:
+                for j in cells:
+                    out[j] = 1
 
     # Keep only the biggest piece. Each sprite sits close enough to its neighbours
     # that the crop catches a tick or two of the drawing beside it, and a stray mark
@@ -190,6 +249,34 @@ def _largest(m, w, h):
     return keep
 
 
+def bleed(im, rounds=6):
+    """Push the drawing's colour outward into its transparent margin.
+
+    This is the halo. A cut sprite still carries the sheet's colour wash in every
+    pixel it made transparent, because keying only changes alpha. Nothing shows while
+    the image is drawn at its own size, since those pixels have alpha 0. The moment it
+    is RESIZED, though, the resampler averages neighbouring pixels channel by channel
+    and has no idea some of them are meant to be invisible, so the wash bleeds back in
+    along every edge as a coloured fringe. It is drawn twice here, once when the strip
+    is assembled and once by the browser scaling 240 into 120, so it compounds.
+
+    Fixing the alpha cannot help; the colour underneath has to change. Each round
+    blurs the picture and keeps the blur only where the image is transparent, which
+    walks the edge colour outward a pixel at a time. Then a resample finds the
+    drawing's own colour on both sides of its edge and has nothing foreign to mix in.
+    """
+    im = im.convert("RGBA")
+    a = im.getchannel("A")
+    solid = a.point(lambda v: 255 if v > 0 else 0)
+    rgb = im.convert("RGB")
+    for _ in range(rounds):
+        rgb = Image.composite(rgb, rgb.filter(ImageFilter.BoxBlur(1)), solid)
+        solid = solid.filter(ImageFilter.MaxFilter(3))
+    out = rgb.convert("RGBA")
+    out.putalpha(a)
+    return out
+
+
 def fit(sprite, box_w, box_h):
     """Scale a sprite to sit inside one tile without touching its edges."""
     w, h = sprite.size
@@ -216,7 +303,7 @@ def main():
     sprites, index = {}, {}
     for ri, row in enumerate(grid, 1):
         for ci, box in enumerate(row, 1):
-            s = cut(im, box)
+            s = bleed(cut(im, box))
             sprites[(ri, ci)] = s
             name = "r%dc%d" % (ri, ci)
             s.save(os.path.join(ICONS, name + ".png"))
@@ -240,14 +327,6 @@ def main():
     cw = int(round(CURSOR_H * cur.size[0] / float(cur.size[1])))
     cur = cur.resize((min(CURSOR_W, cw), CURSOR_H), Image.LANCZOS)
     cur.save(os.path.join(OUT, "link-cursor.png"))
-    # A second one for dark grounds. The footer band is a dark painting and a
-    # mid-green clover sinks into it, so that copy gets a cream outline: the alpha
-    # spread wide behind the drawing, filled with the page's parchment.
-    halo = cur.getchannel("A").filter(ImageFilter.MaxFilter(5))
-    pale = Image.new("RGBA", cur.size, (0, 0, 0, 0))
-    pale.paste(Image.new("RGBA", cur.size, (253, 251, 239, 255)), (0, 0), halo)
-    pale.alpha_composite(cur)
-    pale.save(os.path.join(OUT, "link-cursor-pale.png"))
     print("  link-cursor.png %dx%d  <- r%dc%d"
           % ((CURSOR_W, CURSOR_H) + CURSOR_AT))
 
