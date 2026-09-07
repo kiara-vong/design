@@ -41,9 +41,11 @@
 
   /* ======================= HOME ======================= */
 
-  /* No bottom padding: Calcifer is the last thing in the hero and the 40px that used
-     to sit under him read as him being cut off short of the edge rather than standing
-     on it. He is clipped by the 28px bottom radius, which is the intent. */
+  /* 28px of bottom padding, matching the top. This was 0 for a while, on the
+     argument that the cats are the last thing in the hero and space under them read
+     as them being cut off short of the edge rather than standing on it. With the
+     drawing lifted that argument no longer holds: it now ends well above the fold,
+     and zero padding put the bottom radius through the grass instead of around it. */
   /* z-index 3 so the fixed bar inside it can outrank the footer. The bar carries
      z-index 60, but #hero is z-index 2 and positioned, so it opens a stacking context
      and that 60 only ranks the bar WITHIN the hero. The footer is also z-index 2 and
@@ -57,7 +59,7 @@
     z-index: 3;
     height: auto !important;
     min-height: 0;
-    padding: 28px 20px 0;
+    padding: 28px 20px;
     box-sizing: border-box;
   }
   .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
