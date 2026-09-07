@@ -18,7 +18,10 @@
     if (vw > MOBILE) {
       root.style.removeProperty('--card-k');
       root.style.removeProperty('--well-k');
-      root.style.removeProperty('--nav-k');
+      /* --nav-k stays. site-motion.js publishes it on every page (hero-derived
+         on the home page, viewport-derived elsewhere) so the pill is the same
+         size site-wide; removing it here would wipe that value the moment the
+         viewport crossed the breakpoint. */
       return;
     }
     var col = vw - 40;                       /* page padding, 20px each side */

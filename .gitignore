@@ -47,3 +47,25 @@ assets/fonts/
 # copies in assets/tile/_src ARE tracked, so a fresh clone still builds; the
 # scrub step is a no-op when this folder is absent.
 assets/tile/_src/_persona/
+
+# scratch bundles
+_all.tgz
+_c.tgz
+_m.tgz
+_chk.tgz
+_w.tgz
+_ab.tgz
+_t.tar
+_steps_tmp.tar
+_probe.tgz
+_probe_tmp/
+_figs.txt
+_pair1.png
+_capsheet.png
+edge-strips.png
+f_*.html
+stardew-full-overview.png
+sd-top.png
+_persona/
+zoom-audit/
+slot-audit/

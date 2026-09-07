@@ -39,6 +39,12 @@ ARROW = ('<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">'
          '<path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg>')
 
 
+# The one repository all three rebuilds are served from. Named here rather than
+# derived from DEMO: the Pages URL and the repository do not share a name for
+# this one, so a rule would be a guess dressed as a convention.
+DEMO_SRC = "https://github.com/kiara-vong/resource-dashboard"
+
+
 def demo_cta(route, label="Open the rebuild"):
     """The rebuild, as a thing you can hit rather than a cell in a table.
 
@@ -54,8 +60,9 @@ def demo_cta(route, label="Open the rebuild"):
             '          <a href="%s" target="_blank" rel="noopener">'
             '<span>%s</span>%s</a>\n'
             '          <span class="cs-cta-url">A public rebuild of the internal '
-            'tool, with the data scrubbed</span>\n'
-            '        </div>\n' % (href, esc(label), ARROW))
+            'tool, with the data scrubbed &middot; '
+            '<a href="%s" target="_blank" rel="noopener">source</a></span>\n'
+            '        </div>\n' % (href, esc(label), ARROW, DEMO_SRC))
 
 def repo_cta(url, label, note, src=None):
     """Same button, pointed at a rebuild that is deployed on its own.

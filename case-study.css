@@ -190,33 +190,46 @@ body{background:var(--parchment)}
    needed the same thing for the same reason -- a colour that is right for 14px of
    link text is too light across a filled area. */
 .cs-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.cs-cta a{display:inline-flex;align-items:center;gap:10px;padding:13px 20px 13px 22px;
+.cs-cta>a{display:inline-flex;align-items:center;gap:10px;padding:13px 20px 13px 22px;
   border-radius:999px;background:var(--accent-deep);color:var(--parchment);
   font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
   font-size:15px;line-height:1;text-decoration:none;
   box-shadow:0 1px 2px rgba(45,40,38,.16),0 8px 20px rgba(76,122,28,.22);
   transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s cubic-bezier(.4,0,.2,1),
     background .16s ease}
-.cs-cta a:hover{background:#456F19;transform:translateY(-2px);
+.cs-cta>a:hover{background:#456F19;transform:translateY(-2px);
   box-shadow:0 2px 4px rgba(45,40,38,.18),0 12px 26px rgba(76,122,28,.30)}
-.cs-cta a:active{transform:translateY(0);
+.cs-cta>a:active{transform:translateY(0);
   box-shadow:0 1px 2px rgba(45,40,38,.16),0 4px 10px rgba(76,122,28,.20)}
-.cs-cta a:focus-visible{outline:2px solid var(--dusty-granite);outline-offset:3px}
+.cs-cta>a:focus-visible{outline:2px solid var(--dusty-granite);outline-offset:3px}
 /* The arrow leaves before the button does, which is the whole gesture: the button
    presses down and the arrow goes on ahead. */
-.cs-cta a svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;
+.cs-cta>a svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;
   stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
   transition:transform .16s cubic-bezier(.4,0,.2,1)}
-.cs-cta a:hover svg{transform:translate(2px,-2px)}
+.cs-cta>a:hover svg{transform:translate(2px,-2px)}
 /* Where it goes, said plainly. A reader deciding whether to follow a link wants
    to know, and github.io is part of the claim: these are live and hosted, not
    screenshots of something that once ran. */
 .cs-cta-url{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;
   font-size:13px;color:var(--muted);word-break:break-all}
+/* The source link sits IN that line rather than beside the button. It is the
+   second thing a reader might want and not the first, and two green pills side by
+   side would say the opposite: a repository is where you go after you have looked
+   at the thing, not instead of looking at it. Hence a plain underlined link at the
+   size of the URL it follows, which is also why the button rule above had to stop
+   being a descendant selector. */
+.cs-cta-url a{color:inherit;text-decoration:underline;
+  text-underline-offset:3px;text-decoration-thickness:1px;
+  text-decoration-color:var(--outline-stroke);
+  transition:color .16s ease,text-decoration-color .16s ease}
+.cs-cta-url a:hover{color:var(--accent-deep);text-decoration-color:currentColor}
+.cs-cta-url a:focus-visible{outline:2px solid var(--dusty-granite);outline-offset:2px;
+  border-radius:3px}
 @media (prefers-reduced-motion: reduce){
-  .cs-cta a,.cs-cta a svg{transition:none}
-  .cs-cta a:hover{transform:none}
-  .cs-cta a:hover svg{transform:none}
+  .cs-cta>a,.cs-cta>a svg{transition:none}
+  .cs-cta>a:hover{transform:none}
+  .cs-cta>a:hover svg{transform:none}
 }
 .cs-meta{border:1px solid var(--outline-stroke);border-radius:12px;padding:16px 24px;display:flex;gap:32px;width:100%;box-sizing:border-box}
 .cs-meta .col{flex:1 1 0;display:flex;flex-direction:column;gap:8px;min-width:0}

@@ -37,7 +37,28 @@ ARROW = ('<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">'
          '<path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg>')
 
 
-def cta(href, label):
+# Every project on this site is a public repository, and the Pages URL says which
+# one: user.github.io/<repo>/ is served from github.com/user/<repo>. Two of them
+# are pages inside one repo rather than repos of their own, so the map has to be
+# written down for those; the rest are derived, because a table of six entries
+# that could be five plus a rule is a table with five chances to fall out of date.
+SRC_USER = "kiara-vong"
+SRC_REPO = {
+    "site/projects/chess": "site",
+    "site/projects/pacman": "site",
+}
+
+
+def source_of(href):
+    """The repository behind a Pages URL, or None if it is not one."""
+    tail = href.split("github.io/", 1)[-1].strip("/") if "github.io/" in href else ""
+    if not tail:
+        return None
+    repo = SRC_REPO.get(tail, tail.split("/")[0])
+    return "https://github.com/%s/%s" % (SRC_USER, repo)
+
+
+def cta(href, label, src=None):
     """The live link, as the thing it actually is.
 
     It used to be the fourth of five columns in the meta box, set at 14px between
@@ -49,13 +70,23 @@ def cta(href, label):
     follow a link wants to know where it goes, and github.io is itself part of the
     claim: these are live and they are hosted, not screenshots of something that
     once ran.
+
+    And the source beside it. Half of what these pages argue is about HOW the
+    thing is built -- one movement system behind four ghosts, a beatmap and its
+    audio scheduled from the same marks, five static pages assembled from partials
+    -- and every one of those claims is checkable in a repository the reader can
+    open. A page that makes an argument about code and then does not offer the
+    code is asking to be taken on trust it does not have to ask for.
     """
     host = href.split("//", 1)[-1].rstrip("/")
+    src = source_of(href) if src is None else src
+    tail = ('%s &middot; <a href="%s" target="_blank" rel="noopener">source</a>'
+            % (esc(host), src)) if src else esc(host)
     return ('        <div class="cs-cta">\n'
             '          <a href="%s" target="_blank" rel="noopener">'
             '<span>%s</span>%s</a>\n'
             '          <span class="cs-cta-url">%s</span>\n'
-            '        </div>\n' % (href, esc(label), ARROW, esc(host)))
+            '        </div>\n' % (href, esc(label), ARROW, tail))
 
 
 PROJECTS = [

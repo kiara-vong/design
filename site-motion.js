@@ -1,3 +1,19 @@
+
+/* --nav-k on pages that do not carry a hero. The home page overwrites this from
+   the hero measurer above; everywhere else this rule is the only one that runs,
+   so the pill on a project or case-study page opens at the same size a reader
+   was just looking at rather than at 100% because nothing set the variable. */
+(function () {
+  var root = document.documentElement;
+  function apply() {
+    if (window.innerWidth <= 760) { return; }        /* mobile.js owns it here */
+    if (document.querySelector('#hero')) { return; } /* the hero measurer owns it there */
+    var k = Math.min(window.innerWidth / 1440, window.innerHeight / 861, 1);
+    root.style.setProperty('--nav-k', k.toFixed(4));
+  }
+  apply();
+  window.addEventListener('resize', apply, { passive: true });
+})();
 /* Page-level motion, shared across the site.
 
    1. Landing on a case study: the title reveals word by word, each word fading
