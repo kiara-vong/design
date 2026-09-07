@@ -1724,29 +1724,25 @@ a.card:nth-of-type(even):hover {
    cursor: url("assets/ui/plant-cursor.svg") 12 31, auto
 }
 
-/* Links get their own cursor, everywhere.
+/* Links get their own cursor, everywhere: the raised-finger hand from the
+   hand-painted set, at hotspot 18 2 (the tip of the finger).
 
    The point is that the icon CHANGES when you are over something clickable, and in
    two places it was not changing at all: the footer painted a plant cursor over its
    whole surface, links included, so the one region with a custom cursor was the one
    region where a link looked like everything else.
 
-   The artwork is the clover from the icon sheet, third row second item, which means
-   the cursor and the flowers under the quote come from the same hand. Hotspot at
-   11 30, the base of its stem, matching the plant cursor's convention: the point you
-   are aiming with is where the thing grows from.
-
-   Set on a[href] rather than a:hover, because a cursor is only ever seen on hover
-   and the extra state buys nothing. It also has to name the attribute: a bare <a>
-   without an href is not a link and should not claim to be one.
-
-   Specificity note. #footer's rule sets the cursor on the footer and every
-   descendant INHERITS it, and inheritance loses to any rule that matches the element
-   itself, whatever its specificity. So a[href] wins inside the footer without
-   needing to outrank an id. The pale version is a separate rule because the band is
-   dark enough that the ink-blue leaf disappears into it. */
+   This rule is on a[href], which has to keep winning over two things: #footer's
+   inherited plant cursor (inheritance always loses to a rule matching the element
+   itself, so a[href] takes footer links without outranking an id), AND the
+   element-level default cursor set on :root further down. That second one is why
+   the :root arrow rule alone was not enough to change link cursors -- a[href] is
+   more specific than the plain-element selectors there, so THIS is the rule that
+   decides what a link shows. It used to point at link-cursor.png, a clover from an
+   older icon sheet, which is the cursor that kept surviving every change to the
+   block below. */
 a[href] {
-   cursor: url("assets/ui/link-cursor.png") 11 30, pointer
+   cursor: url("assets/ui/cursor-point-v2.png") 18 2, pointer
 }
 
 /* One clover, everywhere, with no outline.
@@ -3782,7 +3778,10 @@ a[href] {
    Restricted to those rather than a wider net -- turning every card into a
    pointer target reads as everything on the page being clickable, and half
    the cards on this site are not. */
-a, button, summary,
+/* Buttons and the other interactive things that are not <a href>. Links get
+   their point cursor from the a[href] rule higher up, which outranks a bare
+   `a` here, so `a` is left off this list to keep one rule per job. */
+button, summary,
 [role="button"], [role="link"], [role="menuitem"], [role="tab"],
 label[for],
 input[type="submit"], input[type="reset"], input[type="button"],
