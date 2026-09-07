@@ -3748,51 +3748,62 @@ a[href] {
    }
 }
 
+
 /* -------------------------------------------------------- scrollbar
    The site's ground is parchment, and the browser's default scrollbar is a slab
    of neutral grey painted onto it. It reads as a piece of the browser sitting
-   on top of the page rather than a piece of the page, and long scrolls on the
-   art gallery and case studies make it the second most visible element on
-   screen for as long as they last.
+   on top of the page rather than a piece of the page.
+
+   So this borrows the vocabulary the nav pill is drawn in: translucent, with a
+   whisper of colour under it. The track disappears into parchment (no ivory
+   strip, no line down the side); the thumb is the accent green at eight
+   percent, which on parchment reads as a warm shadow rather than as a green
+   bar. Hovering it lifts the alpha, so a reader can find and grab it without
+   the resting state having to shout.
 
    Firefox and the WebKit family use different properties, and the standardised
-   ones do not cover all the WebKit machinery, so both spellings are set: the
-   standard for Firefox and any browser that later ships it, ::-webkit-* for
-   Chromium and Safari. Everything is a token already in the palette, so this
-   moves with the palette and nothing else has to change with it.
-
-   The track is dove-ivory (the wash colour cards already sit on) and the thumb
-   is antique-gold at rest, dusty-granite on hover. Antique-gold is the same
-   line colour the footer's meta ticks are drawn in, so a reader knows this
-   already reads as a piece of the page. */
+   ones do not cover thumb:hover, so both spellings are set. Values are rgba
+   rather than tokens because the tint IS the alpha here, and a variable
+   holding a colour at one opacity cannot also hold it at another. */
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--antique-gold) var(--dove-ivory);
+  /* Firefox does not resolve currentColor here and does not thin an rgb() with
+     alpha, so this is written explicitly: accent green at .16 on the thumb, and
+     the ivory wash on the track so a scroll on a white surface still has one. */
+  scrollbar-color: rgba(100, 159, 37, .22) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
+  background: transparent;
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--dove-ivory);
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--antique-gold);
-  border: 3px solid var(--dove-ivory);
+  /* Accent at rest, dropping to accent-deep on hover. Alpha is what does the
+     work: at .14 the tint reads as a whisper of green under the parchment, at
+     .32 it holds the eye long enough to be grabbed. No border ring: the ring
+     was what said "pill", and a pill does not sit inside glass. */
+  background: rgba(100, 159, 37, .14);
   border-radius: 999px;
+  transition: background .18s ease;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--dusty-granite);
+  background: rgba(76, 122, 28, .32);
 }
 
-/* Corner where a horizontal track meets a vertical one, on the pages where a
-   figure overflows sideways and the outer scroll runs down: the default is a
-   grey square that agrees with neither track. */
+*::-webkit-scrollbar-thumb:active {
+  background: rgba(76, 122, 28, .44);
+}
+
+/* The corner tile at the foot of a page whose figure also scrolls sideways.
+   Transparent, so parchment shows through where the two tracks meet. */
 *::-webkit-scrollbar-corner {
-  background: var(--dove-ivory);
+  background: transparent;
 }
