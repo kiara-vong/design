@@ -3750,33 +3750,31 @@ a[href] {
 
 
 /* -------------------------------------------------------- scrollbar
-   The site's ground is parchment, and the browser's default scrollbar is a slab
-   of neutral grey painted onto it. It reads as a piece of the browser sitting
-   on top of the page rather than a piece of the page.
+   Same vocabulary as the nav pill: transparent, blurred, and drawn only by a
+   pale stroke round its edge. The nav paints its stroke as a pseudo-element
+   carrying a 45deg gradient masked to the border; a scrollbar thumb accepts
+   no pseudo-element, so the same idea is landed with two inset shadows layered
+   instead -- a stronger one at the top-left, a softer full ring round it. Not
+   the exact gradient the nav wears, but enough to read as the same glass.
 
-   So this borrows the vocabulary the nav pill is drawn in: translucent, with a
-   whisper of colour under it. The track disappears into parchment (no ivory
-   strip, no line down the side); the thumb is the accent green at eight
-   percent, which on parchment reads as a warm shadow rather than as a green
-   bar. Hovering it lifts the alpha, so a reader can find and grab it without
-   the resting state having to shout.
+   The track disappears into whatever is behind it (parchment, an ivory wash,
+   the accent band at the foot of a page) so there is no strip painted down the
+   side and no dark tram-line under the thumb.
 
-   Firefox and the WebKit family use different properties, and the standardised
-   ones do not cover thumb:hover, so both spellings are set. Values are rgba
-   rather than tokens because the tint IS the alpha here, and a variable
-   holding a colour at one opacity cannot also hold it at another. */
+   Firefox has no backdrop blur on the scrollbar and no way to write a gradient
+   stroke, so it gets the closest fallback: the accent green at low alpha on a
+   transparent track. The property is set with rgb() and one alpha stop because
+   Firefox's parser does not accept an rgba() thumb colour written any other
+   way in every version. */
 
 * {
   scrollbar-width: thin;
-  /* Firefox does not resolve currentColor here and does not thin an rgb() with
-     alpha, so this is written explicitly: accent green at .16 on the thumb, and
-     the ivory wash on the track so a scroll on a white surface still has one. */
   scrollbar-color: rgba(100, 159, 37, .22) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background: transparent;
 }
 
@@ -3784,26 +3782,39 @@ a[href] {
   background: transparent;
 }
 
+/* The pill itself. No fill, just the blur and the two-layer stroke. Rounded
+   fully so it reads as a pill at every length: the thumb shortens as the page
+   grows, and a fixed corner radius would round the ends less on long pages
+   and more on short ones. */
 *::-webkit-scrollbar-thumb {
-  /* Accent at rest, dropping to accent-deep on hover. Alpha is what does the
-     work: at .14 the tint reads as a whisper of green under the parchment, at
-     .32 it holds the eye long enough to be grabbed. No border ring: the ring
-     was what said "pill", and a pill does not sit inside glass. */
-  background: rgba(100, 159, 37, .14);
+  background: transparent;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border-radius: 999px;
-  transition: background .18s ease;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .42),
+    inset 1px 1px 0 0 rgba(255, 255, 255, .30);
+  transition: box-shadow .18s ease, background .18s ease;
 }
 
+/* Hover picks up the stroke rather than filling the pill. Same behaviour the
+   nav pill has: it does not gain a background on hover, it gains presence. */
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(76, 122, 28, .32);
+  background: rgba(255, 255, 255, .06);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .62),
+    inset 1px 1px 0 0 rgba(255, 255, 255, .44);
 }
 
 *::-webkit-scrollbar-thumb:active {
-  background: rgba(76, 122, 28, .44);
+  background: rgba(255, 255, 255, .10);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .74),
+    inset 1px 1px 0 0 rgba(255, 255, 255, .54);
 }
 
-/* The corner tile at the foot of a page whose figure also scrolls sideways.
-   Transparent, so parchment shows through where the two tracks meet. */
+/* Where a horizontal figure-scroller meets the page scroll. Transparent, so
+   whatever is behind the two tracks shows through the gap between them. */
 *::-webkit-scrollbar-corner {
   background: transparent;
 }
