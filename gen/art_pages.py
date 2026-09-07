@@ -504,16 +504,19 @@ PROSE = {
    # the gear train driving itself, the fluid drawing its own currents.
    film=dict(src="rheoscopic", poster="rh-run", dur="0:18",
              title="The piece, running",
-             cap="The gear train under its own drive, the rheoscopic fluid drawing "
-                 "the flow inside each cylinder. The banding is the no-slip "
-                 "condition made visible: fluid at the wall keeps pace with the "
-                 "wall, fluid at the centre lags, and the shear between them is the "
-                 "pattern. It looks like the bands on a gas giant for the same "
-                 "reason.",
+             cap="The gear train under its own drive, the printed cylinders "
+                 "turning empty so the mechanism reads clearly. It runs off a "
+                 "single input, the tooth counts setting how fast each cylinder "
+                 "turns against its neighbour.",
              clips=[dict(src="rheoscopic-clip", poster="rh-clip", dur="0:02",
-                         title="Up close",
-                         cap="The same train from the table, the cylinders in blue "
-                             "and pink.")])),
+                         title="The fluid running",
+                         cap="The same train with the rheoscopic fluid in the "
+                             "cylinders, drawing the flow as they turn. The banding "
+                             "is the no-slip condition made visible: fluid at the "
+                             "wall keeps pace with the wall, fluid at the centre "
+                             "lags, and the shear between them is the pattern. It "
+                             "looks like the bands on a gas giant for the same "
+                             "reason.")])),
  "sandsketch": dict(
    picks=["ss-3", "ss-1", "ss-4"],
    # The count in the credit strip should say what the page holds, and for these two

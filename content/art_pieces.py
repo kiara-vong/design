@@ -134,7 +134,7 @@ CATEGORIES = [
              ("rh-run", SRC + "rheo/run.jpg", "The piece, running",
               "The gear train running under its own drive."),
              ("rh-clip", SRC + "rheo/clip.jpg", "The piece, up close",
-              "The same train from the table, the cylinders in blue and pink."),
+              "The same train with the fluid running, the cylinders in blue and pink."),
              ("rh-final", SRC + "rheo/image5.jpg", "The piece, running",
               "The whole piece from above, one cylinder full of moving fluid."),
              ("rh-hand", SRC + "rheo/hand.jpg", "A cylinder in hand",
