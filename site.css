@@ -1742,7 +1742,7 @@ a.card:nth-of-type(even):hover {
    older icon sheet, which is the cursor that kept surviving every change to the
    block below. */
 a[href] {
-   cursor: url("assets/ui/cursor-point-v2.png") 18 2, pointer
+   cursor: url("assets/ui/cursor-point-v2.png") 19 2, pointer
 }
 
 /* One clover, everywhere, with no outline.
@@ -3765,10 +3765,10 @@ a[href] {
      resize (24, 23) -- centre.
      move   (23, 23) -- centre.
 
-   The point icon had a daisy painted on the palm; at rendered cursor size the
-   hand, the daisy and the thumb collapsed into three blobs that read as a
-   clover. The daisy is inpainted with the palm's own texture, so the browser
-   only ever sees a hand with a raised finger. */
+   The point icon is a raised-finger hand with a daisy on the palm. Earlier the
+   daisy was blamed for a clover the reader kept seeing and painted out, but the
+   real clover was link-cursor.png winning on the a[href] rule above; with that
+   fixed the daisy is back where it belongs. */
 
 :root {
   cursor: url("assets/ui/cursor-arrow-v2.png") 18 6, auto;
@@ -3786,7 +3786,7 @@ button, summary,
 label[for],
 input[type="submit"], input[type="reset"], input[type="button"],
 input[type="checkbox"], input[type="radio"], select {
-  cursor: url("assets/ui/cursor-point-v2.png") 18 2, pointer;
+  cursor: url("assets/ui/cursor-point-v2.png") 19 2, pointer;
 }
 
 /* Things a reader is meant to pick up. The persona-homepage demo has grips
