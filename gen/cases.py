@@ -34,8 +34,32 @@ def demo(route, label="Open it"):
     return ('<a class="touch" href="%s%s" target="_blank" rel="noopener">%s</a>'
             % (DEMO, route, esc(label)))
 
+
+ARROW = ('<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">'
+         '<path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg>')
+
+
+def demo_cta(route, label="Open the rebuild"):
+    """The rebuild, as a thing you can hit rather than a cell in a table.
+
+    Same button the project pages carry, and deliberately NOT the same word. The
+    projects say "live" because they are; this is a scrubbed recreation of an
+    internal tool, and calling it live would be a small lie in the one place a
+    reader is most entitled to take a claim at face value. So the button says
+    rebuild, and the line under it says what that means -- once, here, instead of
+    a caveat the reader has to go looking for.
+    """
+    href = DEMO + route
+    return ('        <div class="cs-cta">\n'
+            '          <a href="%s" target="_blank" rel="noopener">'
+            '<span>%s</span>%s</a>\n'
+            '          <span class="cs-cta-url">A public rebuild of the internal '
+            'tool, with the data scrubbed</span>\n'
+            '        </div>\n' % (href, esc(label), ARROW))
+
 # =====================================================================
 build("resource-dashboard", dict(
+    cta=demo_cta("#/resources", "Open the rebuild"),
     out="work/resource-dashboard/index.html", root="../../",
     kicker=CO,
     title="Resource Dashboard",
@@ -43,14 +67,15 @@ build("resource-dashboard", dict(
     hero_alt="A cloud resource dashboard with filters, a drill-down graph view and an export action",
     intro=("Engineers responsible for cloud resources had no single place to see "
            "them. Answering “what do I own, and what needs attention” meant "
-           "three tools and a spreadsheet. I designed and built the dashboard that "
-           "replaced that: one surface, two ways through it, and an export at every "
-           "level."),
+           "three tools and a spreadsheet. I owned the dashboard that replaced "
+           "that end to end, from research and requirements through design, build "
+           "and enterprise release: one surface, two ways through it, and an "
+           "export at every level. The demo linked above is a simplified, "
+           "scrubbed recreation of it, rebuilt in public with invented data."),
     meta=[("Role", "Design engineer,<br>front end"),
           ("Stack", "React, TypeScript,<br>MUI, AG Grid"),
           ("Scope", "IA, components,<br>end-to-end flows"),
-          ("Status", "Shipped to<br>enterprise users"),
-          ("Rebuilt", demo("#/resources")),
+          ("Status", "Released to all<br>enterprise users"),
           ("Note", NOTE)],
     nav=[("overview", "Overview", False),
          ("context", "Context", False),
@@ -71,17 +96,7 @@ build("resource-dashboard", dict(
                  "every individual tool works, and the entire cost sits in the seams "
                  "between them. It never gets filed as a bug because no single step is "
                  "wrong. It just quietly taxes everyone who has to do it."],
-                plate("video", "workflow demo, looping",
-                      "The three-tool reconciliation, before the dashboard existed",
-                      "A screen recording of the old workflow, so the reader feels the "
-                      "cost instead of being told about it. Cut it tight: the point is "
-                      "how many windows it takes to answer one question.",
-                      ["Window 1: ownership lookup, paste an identifier",
-                       "Window 2: the compliance job list, find the same resource",
-                       "Window 3: the inventory, confirm what it actually is",
-                       "End on all three open at once"],
-                      [("Size", "799x391"), ("Format", "muted mp4 + webm, or animated webp"),
-                       ("Length", "8-12s, seamless loop"), ("Cursor", "visible")])),
+""),
 
         '    <div id="decisions" class="cs-group">\n\n' +
         sub("two-views", "Key decisions", "Two views over one dataset",
@@ -93,7 +108,30 @@ build("resource-dashboard", dict(
              "first, sorted by due date, because someone arriving without a plan is "
              "usually arriving because something is due. The hierarchy explorer is one "
              "toggle away for everyone else."],
-            media.annotated(
+            # Two views over one dataset, shown as the thing that connects them:
+            # the click. It opens on the graph, goes in close enough that a press
+            # is a press rather than two pixels, presses the toggle, and cuts --
+            # a page swap is instantaneous and a cross-fade would say it was not
+            # -- to the table, which then scrolls its full height.
+            #
+            # The graph page fits its window with nothing below the fold, so the
+            # ordinary flow timeline would spend a third of its loop scrolling
+            # something that does not scroll. `still` gives that time to the two
+            # beats this version actually has.
+            media.flow(
+                ["plate/dashboard-graph-page.webp",
+                 "plate/dashboard-table-page.webp"],
+                "The dashboard in graph view, the Table toggle pressed, and the "
+                "same filtered set as a table scrolled through all eight rows",
+                "One dataset, two readings, and the toggle between them. Same "
+                "search, same filters, same eight resources: what changes is "
+                "whether you are looking at the shape of what you own or at the "
+                "list of what it wants from you.",
+                view=(1280, 673), still=True,
+                press=(1100, 90, 158, 34), press_pad=6, press_bg="#F5F5F5",
+                look=(400, 60, 880, 180)),
+            first=True,
+            after=media.annotated(
                 "plate/dashboard-default-annotated.webp",
                 "The dashboard's default view, with its filters, view toggle, jobs "
                 "filter and export called out",
@@ -115,29 +153,8 @@ build("resource-dashboard", dict(
                  ("export", "Export",
                   "Scoped to what is on screen: current filters, current "
                   "level, nothing else.",
-                  "86%", "91%", "2.2", "68%")]),
-            first=True,
-            after=media.clip(
-                "dashboard-filters-persist",
-                "Filters applied in the table view, still applied after switching "
-                "to the graph view",
-                "Set a filter, switch views, and it's still set. \u201cPersists across "
-                "the toggle\u201d is a claim about behaviour a callout can\u2019t make on its "
-                "own; this is what it looks like happening.")
-            + media.push(
-                "plate/dashboard-jobs-list.webp",
-                "The default view: resources with an outstanding job, sorted by "
-                "due date",
-                "What actually opens first. Not the hierarchy and not a blank table, "
-                "but the subset of what you own that needs something from you today, "
-                "oldest due date on top.",
-                z=1.25, fx="62%", fy="51%")
-            + media.deal(
-                ["plate/dashboard-view-table.webp", "plate/dashboard-view-graph.webp"],
-                "The dashboard's table view, rows sorted by column",
-                "Table and graph, same dataset. The table is what stays on screen "
-                "when the toggle is left alone, which is why it comes first here "
-                "too.")),
+                  "86%", "91%", "2.2", "68%")])),
+
 
         sub("drill", "Key decisions", "Drilling without getting lost",
             ["The explorer goes environment, then region, then type, then the resource "
@@ -147,11 +164,37 @@ build("resource-dashboard", dict(
              "categories tells you where you can go; a level that lists categories with "
              "how much is in each tells you where you should go. It is a small addition "
              "that changes the drill-down from navigation into triage."],
-            media.clip(
-                "dashboard-hierarchy-drill",
-                "Drilling from environments to regions to categories to resources",
-                "Four levels, and the breadcrumb is in every frame. It is what "
-                "makes this navigation rather than four separate pages.")),
+            # The route, clicked out rather than laid out. Four stills in a row
+            # would leave the reader working out what was pressed between them,
+            # which is the one thing this figure exists to supply.
+            #
+            # No camera moves. The route is the figure, and going in and out of
+            # it four times turns a path into a series of destinations -- what
+            # the reader is meant to follow is the line through the levels, not
+            # each level in isolation. So the clicks carry it, and they squash
+            # harder and leave a ring because at this framing a card is forty-five
+            # pixels and a subtle press would be invisible.
+            #
+            # Each press box is a rectangle in its screen's own pixels, read off
+            # the capture. The categories screen is the one that runs past its
+            # window, so it scrolls to its foot first: ELB is at the bottom of it,
+            # and cutting straight there would skip the counts on the way down.
+            media.walk(
+                [dict(page="plate/dashboard-drill-1-envs.webp",
+                      press=(550, 329, 107, 107)),
+                 dict(page="plate/dashboard-drill-2-regions.webp",
+                      press=(550, 335, 107, 107)),
+                 dict(page="plate/dashboard-drill-3-categories.webp", scroll=True,
+                      press=(621, 1215, 107, 107)),
+                 dict(page="plate/dashboard-drill-4-resource.webp")],
+                "Drilling from environments to prod, to us-east-1, past four "
+                "categories to ELB, and into the load balancer itself",
+                "Four levels, three clicks, and the breadcrumb in every frame. "
+                "The counts are what turn this from navigation into triage: a "
+                "level that lists categories tells you where you can go, and a "
+                "level that lists them with how much is in each tells you where "
+                "you should.",
+                view=(1280, 673), press_bg="#F9FAFC", press_pad=14)),
 
         sub("export", "Key decisions", "An export at every level",
             ["Every table exports, and what it exports is exactly what you are looking "
@@ -162,13 +205,33 @@ build("resource-dashboard", dict(
              "ticket, a spreadsheet, a message to the team that owns it. A dashboard "
              "that cannot hand off its own answer sends everyone back to the "
              "reconciling-by-hand it was built to remove."],
-            media.push("plate/dashboard-export-scoped.webp",
-                       "The export control beside the count of what is currently "
-                       "filtered",
-                       "What comes out is what is on screen: current filters, current "
-                       "level, nothing else. A resource's tags and its jobs list each "
-                       "have their own.",
-                       z=1.2, fx="50%", fy="60%")) +
+            # One framing, not a pan. The pan was wrong for a reason worth
+            # writing down: it went in on the rows, then travelled to the file,
+            # and at no point were the two things it is comparing on screen
+            # together. A comparison you have to hold in memory between two shots
+            # is not a comparison, it is two shots -- and the ends of both frames
+            # were cut mid-line, which is what made it look broken rather than
+            # tight.
+            #
+            # So the rectangle is drawn around the ARGUMENT instead: the two rows
+            # at the top, the sentence, the filename, and the three lines of the
+            # file, from the card's own left edge down. Everything the claim needs
+            # is in one frame at once, and both ARNs can be read off against each
+            # other without the figure moving at all.
+            #
+            # Delivered at the capture's own 3232 rather than the usual 2200,
+            # since a resampled monospace glyph is exactly the thing that cannot
+            # be recovered later.
+            media.stage("plate/dashboard-export-scoped.webp",
+                        "Two filtered rows on screen, and the downloaded file "
+                        "below containing those same two rows",
+                        "What comes out is what is on screen: current filters, "
+                        "current level, nothing else. Both ARNs are in the frame "
+                        "twice, once in the table and once in the file, which is "
+                        "the only way that claim gets checked rather than taken "
+                        "on trust.",
+                        plate=(1616, 664),
+                        look=(20, 155, 860, 470))) +
         # The rebuild's strongest engineering claim, and the one the write-up had no
         # slot for. The data layer is a real network boundary rather than an imported
         # array: typed fetch functions behind small hooks, a mocked REST surface
@@ -194,36 +257,26 @@ build("resource-dashboard", dict(
             # The five detail tabs ARE the boundary's output: one resource, five
             # views of what came back for it. The brief below still stands, because
             # a still of the result cannot show the request that produced it.
-            media.deal(["plate/dashboard-tab-account-details.webp",
-                        "plate/dashboard-tab-configurations.webp",
-                        "plate/dashboard-tab-compliance.webp",
-                        "plate/dashboard-tab-network.webp",
-                        "plate/dashboard-tab-tags.webp"],
-                       "The five resource-detail tabs: account, configurations, "
-                       "compliance, network and tags",
-                       "One resource, five readings of what came back for it. Every "
-                       "one of these arrived over the boundary described above."),
-            after=media.strip(
+
+            # strip() before, which scrolled it behind a fixed frame at half
+            # size: a page whose whole subject is how much it answers, shown at a
+            # size where none of the answers can be read. It is a page, so it gets
+            # the page machine -- the window holds still, the page scrolls behind
+            # it the way a page does, and at the end the camera goes to 1:1 on the
+            # metadata block, where each field is one value that came back over
+            # the boundary this section is about.
+            media.page(
                 "plate/resource-detail-full.webp",
-                "One resource detail page, scrolled through its full height: "
-                "header, tabs and the active tab's content in one continuous view",
-                "The five tabs above, in the page they actually live in rather "
-                "than cropped to just their content. Same boundary, same "
-                "resource, the context the tab-by-tab view leaves out.",
-                travel="71.77%")
-            + plate("video", "screen recording, DevTools visible",
-                  "The requests are real",
-                  "Open the Network tab and reload. Genuine fetch calls with latency, "
-                  "skeletons while they are in flight, and an error state that "
-                  "recovers. No still can make this claim and no sentence should be "
-                  "asked to carry it alone.",
-                  ["Network tab open, reload, the endpoints resolve in turn",
-                   "Loading skeletons on screen while they are in flight",
-                   "Force one to fail; the retry banner appears",
-                   "Click retry and let it recover"],
-                  [("Size", "799x391"), ("Format", "muted mp4 + webm"),
-                   ("Length", "10-14s"), ("Cursor", "visible"),
-                   ("Source", "the public rebuild, not the internal tool")])) +
+                "One resource detail page scrolled through its full height: "
+                "identifiers and metadata, ownership, five tabs, a compliance "
+                "timeline and the jobs outstanding against it",
+                "One resource, top to bottom, at the length it actually is. "
+                "Every field on the way down is a value that arrived over the "
+                "boundary described above, with a skeleton in its place while it "
+                "was in flight. The page is long because that is the answer: this "
+                "is what it takes to stop somebody opening a second tool.",
+                view=(1600, 820), look=(115, 50, 720, 340), dur="20s")
+) +
         '    </div>\n\n',
 
         section("impact", "Impact", "From three tools to one",
@@ -246,27 +299,30 @@ build("resource-dashboard", dict(
 
 # =====================================================================
 build("events-timeline", dict(
+    cta=demo_cta("#/resources/res-05", "Open the rebuild"),
     out="work/events-timeline/index.html", root="../../",
     kicker=CO,
     title="Events Timeline",
     hero="case/cs-tl-carry.svg",
     hero_alt="A compliance event timeline with coloured state segments and dated event dots",
-    intro=("A resource's compliance history was a table of rows sorted by date, which "
-           "is technically the whole story and practically unreadable. I designed the "
-           "timeline that sits above it: a single track where you can see, at a glance, "
-           "how long something has been in trouble and when it stopped being."),
-    meta=[("Role", "Design engineer,<br>front end"),
-          ("Stack", "React, TypeScript"),
-          ("Scope", "Timeline, events table,<br>accessibility pass"),
-          ("Status", "Shipped in beta"),
-          ("Rebuilt", demo("#/resources/res-05")),
+    intro=("A resource's compliance history was a table of rows sorted by date, "
+           "which is technically the whole story and practically unreadable. I "
+           "built the feature that sits above it end to end, the GraphQL API and "
+           "the interface both: a time-scaled track where a glance tells you what "
+           "state a resource is in, how long it has been in it, and what the "
+           "automated remediation did along the way. The demo linked above is a "
+           "simplified, scrubbed recreation of it."),
+    meta=[("Role", "Design engineer,<br>API and interface"),
+          ("Stack", "React, TypeScript,<br>GraphQL"),
+          ("Scope", "Schema, resolvers,<br>timeline, events table"),
+          ("Status", "Released in beta,<br>expanding to more<br>dashboards"),
           ("Note", NOTE)],
     nav=[("overview", "Overview", False),
          ("context", "Context", False),
          ("decisions", "Key decisions", False),
          ("carry", "Colouring the gaps", True),
          ("collapse", "When two things happen at once", True),
-         ("keys", "Making it work without a mouse", True),
+         ("table", "What a column can be", True),
          ("impact", "What changed", False)],
     sections=(
         section("context", "Context",
@@ -276,15 +332,29 @@ build("events-timeline", dict(
                  "the third of August”. It was “how long has this been "
                  "broken”, and a table answers that only if you are willing to read "
                  "it and do arithmetic.",
-                 "A timeline answers it by being looked at. That is the whole argument "
-                 "for the feature: the data did not change, the shape of it did."],
+                 "A timeline answers it by being looked at. That is the whole "
+                 "argument for the feature: the data did not change, the shape of "
+                 "it did.",
+                 "What it answers now is a different question from the one the "
+                 "table answered. Not “is this compliant right now”, which a chip "
+                 "can say in four words, but “how did it get into this state, and "
+                 "what did the automation do about it”. The chip at the top right "
+                 "gives the state and how long it has held: conformant since a "
+                 "date, or in violation for four days, with the timer resetting "
+                 "the moment a fix lands so there is no ambiguity about whether "
+                 "it did."],
                 media.stage(
                     "plate/dashboard-events-table-explored.webp",
                     "A compliance event table sorted by timestamp",
                     "The whole history, and technically complete. Working out how "
                     "long anything was in trouble means reading two rows and doing "
                     "the arithmetic yourself.",
-                    plate=(2200, 682), look=(60, 250, 1000, 260),
+                    # The callout names two rows and the old rectangle framed
+                    # neither of them together: it ran from y 250 to 510, which
+                    # holds Aug 23 and Aug 20 and cuts Aug 18 clean off. A label
+                    # pointing at something outside the frame is worse than no
+                    # label, because the reader trusts it and goes looking.
+                    plate=(2200, 682), look=(40, 310, 760, 270),
                     call=("Aug 18, then Aug 23",
                           "Violated here, fixed there. The gap between them is "
                           "the answer, and the table makes you work it out."))),
@@ -298,14 +368,31 @@ build("events-timeline", dict(
              "So state carries forward: the segment between two events is coloured by "
              "the state the earlier one left behind, not by the absence of data. Drawn "
              "the naive way, the track shows two dots and a gap, which reads as "
-             "“nothing was wrong” for precisely the stretch when something was."],
-            media.wipe(
+             "“nothing was wrong” for precisely the stretch when something was.",
+             "The track is time-scaled, so where a dot sits horizontally is when "
+             "it happened, and the colours are semantic rather than per-event: "
+             "red while the resource was in violation, green while it was "
+             "conformant, amber across an automated change of any kind. Three "
+             "colours covering a dozen event types is a decision that has to be "
+             "made once and defended afterwards, and the defence is that a reader "
+             "scanning a track is asking about state, not about which of six "
+             "words the change was called."],
+            # A drag rather than a travelling seam, and framed whole rather than
+            # cropped. The old machine filled the card with object-fit:cover, and
+            # this widget is 6.7 times wider than it is tall -- so what a reader
+            # actually saw was the middle third of a timeline whose whole point is
+            # its ends. Now the window holds the entire track, and the line the
+            # reader drags is the one they can stop wherever they doubt it.
+            media.slider(
                 "plate/dashboard-timeline-naive.webp",
                 "plate/dashboard-timeline-carryforward.webp",
-                "The same events with the gaps uncoloured, then with state carried "
-                "across them",
-                "Identical dates, identical width. The only difference is whether "
-                "the line between two events knows what happened at the first one."),
+                "The same events with the gaps left uncoloured, and the same "
+                "events with the state of the earlier one carried across them",
+                "Identical dates, identical width, the same six events. The only "
+                "difference is whether the line between two of them knows what "
+                "happened at the first one.",
+                tags=("gaps left empty", "state carried forward"),
+                plate=(2200, 328)),
             first=True),
 
         sub("collapse", "Key decisions", "When two things happen at once",
@@ -315,32 +402,41 @@ build("events-timeline", dict(
              "all of them. The alternative was letting them overlap, which looks like a "
              "rendering bug, or spacing them evenly, which lies about when they "
              "happened. Collapsing keeps the position honest and moves the detail one "
-             "interaction away, where there is room for it."]),
+             "interaction away, where there is room for it.",
+             "The badge is a count, and it opens a card listing every event that "
+             "landed at that moment. Clicking one of them scrolls to its row in "
+             "the table below, which is the part that makes the two halves one "
+             "feature rather than a chart with a table under it. Clusters are "
+             "usually a fleet-wide change arriving everywhere at once, so the "
+             "count is information in itself."],
+            # Drawn rather than captured, because two of the three options never
+            # shipped: there is no screenshot of the overlap bug and there never
+            # should be. A section that weighs three answers and picks one needs
+            # the reader to have seen the ones it turned down.
+            media.flat("case/cs-tl-collapse.svg",
+                       "Four events on one day drawn where they happened, "
+                       "overlapping into a single smear, beside the same four "
+                       "collapsed into one dot that opens a list of them",
+                       "Left is honest and unreadable. Right keeps the position "
+                       "exactly as honest and moves the four events one "
+                       "interaction away, which is the only version where both "
+                       "the when and the what survive.")),
 
-        sub("keys", "Key decisions", "Making it work without a mouse",
-            ["The first version of the dots and the sortable table headers were "
-             "mouse-only. Everything worked, and none of it could be reached from a "
-             "keyboard.",
-             "They take focus now, activate on Enter or Space, close on Escape, and "
-             "announce themselves properly. I am putting this in a case study rather "
-             "than quietly fixing it because the reason it shipped that way is worth "
-             "saying out loud: it was built with a mouse in hand and never tested any "
-             "other way. Nobody decided to exclude anyone. That is exactly how it "
-             "usually happens."],
-            fig=media.clip(
-                "dashboard-keyboard-walkthrough",
-                "Tabbing onto a timeline dot, opening its popover and re-sorting "
-                "the table, with no mouse",
-                "The focus ring is the whole figure. Both of these were mouse-only "
-                "before this work."),
-            after=rules([
-                ("Reachable", "Every dot and sortable header is in the tab order."),
-                ("Operable", "Enter or Space activates; Escape closes the popover."),
-                ("Announced", "State is exposed, so the sort direction and the "
-                              "open/closed state are not purely visual."),
-            ])) +
-        '    </div>\n\n',
-
+        sub("table", "Key decisions", "What a column can be asked to do",
+            ["The table under the track is not a fallback. It is where the "
+             "specifics live, and two of its columns do more than report a field.",
+             "The quantification column renders financial events as money. The "
+             "underlying value is a metric string, and every reader of it was "
+             "doing the same conversion in their head to answer the same "
+             "question, which is what a remediation actually saved. Doing that "
+             "conversion once, in the column, is a smaller change than it sounds "
+             "and it is the difference between a number and an answer.",
+             "The requirement column is a link out to the control the event was "
+             "raised against. It exists because the alternative was a reader "
+             "copying an identifier into a second system, which is the exact "
+             "behaviour this whole dashboard was built to remove. Every column "
+             "sorts, and the filters above narrow by event type, status and "
+             "timeframe."]) +
         section("impact", "Impact", "The same data, now legible",
                 ["The question the feature exists to answer, how long and is it fixed, "
                  "went from a read-and-calculate to a glance. The table is "
@@ -360,27 +456,31 @@ build("events-timeline", dict(
 
 # =====================================================================
 build("ui-consistency", dict(
+    cta=demo_cta("#/showcase", "Open the showcase"),
     out="work/ui-consistency/index.html", root="../../",
     kicker=CO,
     title="UI Consistency",
     hero="case/cs-ui-drift.svg",
     hero_alt="Nine slightly different buttons on the left, the same nine identical on the right",
     intro=("The app had grown a dozen local dialects of the same interface: inline "
-           "styles instead of tokens, four table layouts, three ways to say “no "
-           "data”. I audited it, designed the shared layer underneath, and cut the "
-           "208-file change into ten pull requests a human could actually review."),
+           "styles instead of tokens, four table layouts, three different ways to "
+           "say \u201cno data\u201d. I inventoried it, designed the shared layer "
+           "underneath, and cut a 231-file, 12,600-line change across twelve pages "
+           "into twenty-four pull requests a human could actually review \u2014 with "
+           "a Cypress suite under it, so review was not the only thing standing "
+           "between a refactor this size and a regression."),
     meta=[("Role", "Design engineer,<br>system owner"),
-          ("Stack", "React, TypeScript,<br>MUI theming"),
-          ("Scope", "208 files,<br>9 commits, 10 PRs"),
-          ("Status", "Shipped"),
-          ("Rebuilt", demo("#/showcase")),
+          ("Stack", "React, TypeScript,<br>MUI, Cypress"),
+          ("Scope", "231 files, 12,600 lines,<br>12+ pages"),
+          ("Status", "Shipped,<br>no regressions"),
           ("Note", NOTE)],
     nav=[("overview", "Overview", False),
          ("context", "Context", False),
          ("decisions", "Key decisions", False),
          ("audit", "Counting what was actually there", True),
          ("theme", "One theme, no inline styles", True),
-         ("prs", "Ten pull requests, in dependency order", True),
+         ("prs", "Twenty-four pull requests, in order", True),
+         ("tests", "The net under the refactor", True),
          ("impact", "What changed", False)],
     sections=(
         section("context", "Context",
@@ -388,8 +488,8 @@ build("ui-consistency", dict(
                 ["Each one was a reasonable local decision. A team needed a table, the "
                  "existing one was close but not right, and copying it was ten minutes "
                  "against a week of negotiation. Enough reasonable local decisions "
-                 "later, nobody could tell you what the product's table looked like, "
-                 "because the honest answer was that it depended on the page.",
+                 "later, nobody could tell you what the product\u2019s table looked "
+                 "like, because the honest answer was that it depended on the page.",
                  "The cost was not really aesthetic. It was that every change had to be "
                  "made in every copy, and the last copy was always the one somebody "
                  "forgot. A shared layer is worth building at the point where keeping "
@@ -413,71 +513,115 @@ build("ui-consistency", dict(
              "already shipping, with no judgement attached, before proposing anything.",
              "That order mattered more than it sounds. Two of the variants I would have "
              "deleted on sight turned out to be load-bearing, solving a real constraint "
-             "the canonical component could not. They became part of that component's "
+             "the canonical component could not. They became part of that component\u2019s "
              "API rather than exceptions to it. Designing first and reconciling later "
              "produces a system that is correct in isolation and wrong in the product, "
-             "which is the usual way these fail."],
+             "which is the usual way these fail.",
+             "The inventory became a page. Every component that had drifted got a card: "
+             "what was wrong, what replaced it, how many files it touched, what it "
+             "blocked. Reviewers read that page before they read a diff \u2014 and so "
+             "did the people who had written the variants I was proposing to delete."],
+            media.page(
+                "plate/showcase-full-height.webp",
+                "The refactor showcase, scrolled: eight components, each with the "
+                "version that shipped before and the version that replaced it",
+                "The inventory, written down before anything was designed. Each card "
+                "carries the problem, the resolution, and the line that says what it "
+                "costs to review. The length of the page is the finding. (This is the "
+                "public rebuild, which condenses the change to eight representative "
+                "components; the real one ran to twenty-four pull requests.)",
+                view=(1200, 580), scroll=900, look=(100, 158, 1064, 319),
+                dur="34s"),
             first=True),
 
         sub("theme", "Key decisions", "One theme, no inline styles",
             ["The foundation is a single theme provider wrapping the app, with tokens "
              "for colour, typography, spacing and radius. Components inherit from it "
-             "instead of carrying their own inline values.",
+             "instead of carrying their own inline values, and the fifty-odd hardcoded "
+             "hex literals scattered through the tree stopped being editable one file "
+             "at a time.",
              "Underneath that, the shared pieces: one toolbar with search, filter chips "
              "and actions in a single row; one footer with the count on the left and "
-             "export on the right; real empty and not-found states instead of the "
-             "inline “no data” text that had been written separately on every "
-             "page. Tables lost twenty pixels of row height, gained proper header "
+             "export on the right; real empty, error and not-found states instead of "
+             "the inline \u201cno data\u201d text that had been written separately on "
+             "every page. Tables lost twenty pixels of row height, gained proper header "
              "treatment and zebra striping, and dropped to a subtler border.",
              "The filter chips are the detail I am most pleased with. They show at full "
              "width rather than truncating, overflow collapses into a +N chip, the "
              "dropdown stays open while you are still choosing, and typing hides the "
              "chips so you get a clean search field. Four small decisions, all of them "
              "about not interrupting someone mid-thought."],
-            media.push(
-                "plate/showcase-tables-before-after.webp",
-                "One table before and after the shared layer, at identical width",
-                "Same data, same window, same scroll position. The row height is "
-                "the difference anyone can see without being told what to look for.",
-                z=1.4, fx="74%", fy="56%"),
-            after=media.strip(
+            media.slider(
+                "plate/ui-tables-before.webp", "plate/ui-tables-after.webp",
+                "One table before and after the shared layer, the two frames "
+                "stacked in register with a seam the reader drags",
+                "Drag the seam. Same three rows, same three columns, same width, "
+                "cut from the showcase so the headers land on the same line. "
+                "Twenty pixels off the row height, a header that stopped "
+                "shouting, and a footer that finally says how many there are and "
+                "where to get the rest.",
+                tags=("before", "after"), start=46,
+                handle="Reveal the table after the shared layer",
+                plate=(966, 560)),
+            after=media.page(
                 "plate/style-guide-full.webp",
                 "The full style guide: colour, typography, spacing and radius "
                 "tokens, then every shared component built on them",
-                "Every token on one page, in order, so a change to a value is a "
-                "single edit against something you can point a reviewer at "
-                "instead of an inline style hunted down file by file.",
-                travel="84.31%")),
+                "Every token on one page, in order, and then every component that "
+                "reads them. A change to a value becomes one edit against "
+                "something you can point a reviewer at, instead of an inline "
+                "style hunted down file by file.",
+                view=(1200, 580), scroll=633, look=(100, 147, 700, 192),
+                dur="30s")),
 
-        sub("prs", "Key decisions", "Ten pull requests, in dependency order",
-            ["208 files across 9 commits is not a reviewable change. It is a change "
+        sub("prs", "Key decisions", "Twenty-four pull requests, in dependency order",
+            ["231 files and 12,600 lines is not a reviewable change. It is a change "
              "that gets approved without being read, which is the same as not being "
              "reviewed, on a diff touching every page in the app.",
-             "So it went out as ten pull requests of fifteen files or fewer, ordered so "
-             "each could merge on its own. The theme provider had to land first because "
-             "everything else assumes it. The shared table and filter components went "
-             "second because the page-level work consumes them. After that the "
-             "remaining seven were independent and could go in parallel, in any order, "
+             "So it went out as twenty-four pull requests of fifteen files or fewer, "
+             "ordered so each could merge on its own. The theme provider had to land "
+             "first because everything else assumes it. The shared table and filter "
+             "components went second because the page-level work consumes them. After "
+             "that the rest were independent and could go in parallel, in any order, "
              "by whoever had time.",
              "The foundation PR contained no behavioural changes at all. Visual "
              "consistency only. That was deliberate: the riskiest change in the "
              "sequence is the one everything depends on, so it should also be the one "
              "with the least in it."],
-            fig=media.strip(
-                "plate/showcase-full-height.webp",
-                "The full refactor showcase: eight sections, each with its problem "
-                "and its resolution",
-                "Eight of these, and each one carries the line that justified it. "
-                "The argument was written down before the pull request was opened.",
-                travel="83.97%"),
+            fig=media.stage(
+                "plate/ui-pr-anatomy.webp",
+                "One card from the showcase: the change, the reason, and a line "
+                "giving its file count, its risk and what it blocks",
+                "Every pull request was written up before it was opened. The line "
+                "under the resolution is the part reviewers actually used: how big "
+                "it is, how much it can break, and what is waiting on it.",
+                plate=(2228, 795), look=(44, 268, 720, 44),
+                call=("what a reviewer needs",
+                      "Size, risk and dependency, on one line, next to the "
+                      "change rather than in a ticket.")),
             after=rules([
                 ("PR 1", "The theme provider and global defaults. No behavioural "
                          "change. Everything downstream assumes it."),
                 ("PR 2", "Shared table, toolbar and filter components, consumed by "
                          "every page-level PR that follows."),
-                ("PRs 3–10", "Page-level adoption. Independent of each other, "
-                                  "reviewable in parallel, mergeable in any order."),
+                ("PRs 3\u201324", "Page-level adoption, plus the new primitives. "
+                                   "Independent of each other, reviewable in "
+                                   "parallel, mergeable in any order."),
             ])) +
+
+        sub("tests", "Key decisions", "The net under the refactor",
+            ["A refactor makes a promise that is hard to check: nothing behaves "
+             "differently. On a diff this wide, nobody can hold that in their head, "
+             "and \u201cit looked fine when I clicked around\u201d is not evidence \u2014 "
+             "it is the absence of it.",
+             "So the Cypress suite grew alongside the change rather than after it, to "
+             "roughly 85% of the critical flows: the paths people take every day, "
+             "asserted before the shared components went in and re-run after each "
+             "pull request. Where a spec had to change, that was the signal to stop "
+             "and look, because a passing test that needed rewriting is a behaviour "
+             "change wearing a costume.",
+             "It shipped with no regressions, which is the claim I would otherwise "
+             "have had no honest way to make."]) +
         '    </div>\n\n',
 
         section("impact", "Impact", "One product, one language",
@@ -486,15 +630,16 @@ build("ui-consistency", dict(
                  "app.",
                  "The result I care about most is quieter than the file count: design "
                  "review stopped spending its first ten minutes establishing which "
-                 "version of a component we were looking at. The system's real output "
-                 "is the argument it makes unnecessary."],
-                fig=stats("208 files · 9 commits · 10 pull requests", [
-                    ("208", "0", "files changed", "across the whole application"),
-                    ("10", "0", "reviewable pull requests",
+                 "version of a component we were looking at. The system\u2019s real "
+                 "output is the argument it makes unnecessary."],
+                fig=stats("231 files \u00b7 12,600 lines \u00b7 24 pull requests", [
+                    ("231", "0", "files changed",
+                     "twelve pages and the shared layer under them"),
+                    ("24", "0", "reviewable pull requests",
                      "15 files or fewer, dependency-ordered"),
-                    ("1", "0", "theme provider",
-                     "replacing inline styles throughout"),
-                ], note="Riskiest PR&nbsp; <b>The one with no behaviour in it</b>")),
+                    ("85", "0", "% of critical flows covered",
+                     "Cypress specs written alongside the change"),
+                ], note="Regressions after release&nbsp; <b>None</b>")),
     )))
 
 # =====================================================================
@@ -504,54 +649,148 @@ build("persona-homepage", dict(
     title="Persona Homepage",
     hero="case/cs-persona-reorder.svg",
     hero_alt="A homepage rearranging itself as the selected persona changes",
-    intro=("A homepage serving several kinds of user, each of whom needs a different "
-           "half of it. I am designing the customisation model: what it means for a "
-           "page to reorder itself around who is looking, which defaults have to be "
-           "right before anyone touches a setting, and how a page earns the right to "
-           "move."),
-    meta=[("Role", "Design engineer"),
-          ("Stack", "React, TypeScript"),
-          ("Scope", "In progress"),
-          ("Status", "Coming soon"),
+    intro=("A homepage serving several kinds of user, each of whom needs a "
+           "different half of it. I am designing and building the customisation "
+           "model: what a page opens as when it knows who is looking, what it "
+           "lets you move, and where the line is between a layout somebody owns "
+           "and a layout nobody can support. In progress, shipping behind a flag "
+           "this quarter."),
+    meta=[("Role", "Design engineer,<br>API and interface"),
+          ("Stack", "React, TypeScript,<br>GraphQL"),
+          ("Scope", "Research, personas,<br>widget model, build"),
+          ("Status", "In build behind<br>a feature flag"),
           ("Note", NOTE)],
     nav=[("overview", "Overview", False),
          ("context", "Context", False),
+         ("decisions", "Key decisions", False),
+         ("personas", "Two, not five", True),
+         ("scope", "Scope is the persona", True),
+         ("widgets", "A catalog you cannot get wrong", True),
+         ("ship", "Shipping it invisibly", True),
          ("thinking", "Where my head is", False)],
     sections=(
         section("context", "Context",
                 "One homepage, several jobs",
-                ["The people arriving at this page do not want the same things. Some "
-                 "have a task and want the shortest path to it. Some are checking on "
-                 "something they own. Some are new and do not yet know what the tool is "
-                 "for. Today they all get the same page, which means it is sized for "
-                 "the average of them and ideal for none.",
-                 "The obvious answer is to let people customise it. The obvious answer "
-                 "is also how you end up with a page most users never touch and a small "
-                 "minority configure into something unsupportable."]),
+                ["The people arriving at this page do not want the same things. "
+                 "Some own one application and want the shortest path to what it "
+                 "needs today. Some run a division and want the shape of all of "
+                 "it. Today they get the same page, tuned for the first group, so "
+                 "everyone else lands and immediately starts filtering.",
+                 "The obvious answer is to let people customise it. The obvious "
+                 "answer is also how you end up with a page most users never "
+                 "touch and a small minority configure into something nobody can "
+                 "support."],
+                media.stage("plate/persona-home-leader.webp",
+                            "The homepage as it opens for someone responsible for "
+                            "a whole division: a maturity score, its trend, and "
+                            "what the automation has done lately",
+                            "What a division lead opens to. Nothing here was "
+                            "chosen by them; it is what the page decided to show "
+                            "somebody with their scope, and the argument of this "
+                            "project is that getting that right matters more than "
+                            "any setting.")),
+
+        '    <div id="decisions" class="cs-group">\n\n' +
+        sub("personas", "Key decisions", "Two personas, not five",
+            ["The proposal I inherited had five roles, and the version before "
+             "that had three. The first workshop collapsed them to two, and the "
+             "reasoning is the part worth keeping: the first release ships "
+             "widgets that already exist on the current dashboards, and five "
+             "roles cannot be told apart by widgets none of them have yet. A "
+             "five-way split is a promise the product cannot cash.",
+             "So there are two. Somebody scoped to one application or account, "
+             "and somebody scoped to many, a division, or all of them. The finer "
+             "split is written down and waiting for the role-specific widgets "
+             "that would make it mean something.",
+             "The persona is also not read off a job title. It is inferred from a "
+             "scope the user has confirmed: on a first visit the page shows what "
+             "it detected about them and asks them to correct it before anything "
+             "is saved. Applying it silently was on the table and the workshop "
+             "turned it down, which I think was right. A page that quietly "
+             "rearranges itself around a guess about you is a page you cannot "
+             "argue with."],
+            first=True),
+
+        sub("scope", "Key decisions", "Scope is the persona",
+            ["Every widget declares which scope dimensions it can answer for. "
+             "Effective scope resolves widget-first, then the page, then a "
+             "default from the profile, so one widget can be pinned to a single "
+             "application while the rest of the page follows the division.",
+             "The interesting case is the mismatch: the page is scoped by "
+             "something a widget does not accept. Two easy answers were "
+             "available and both are wrong. Applying it silently makes the widget "
+             "lie about what it is showing; dropping it silently makes it lie "
+             "about what it was asked. So it ignores the dimension and says so on "
+             "its own chip. A visible inconsistency the reader can reason about "
+             "beats an invisible one they cannot."],
+            media.stage("plate/persona-home-edit.webp",
+                        "The same homepage in edit mode, its widgets showing drag "
+                        "handles and the page scope set to a single application",
+                        "Edit mode, and the scope chips along the top. Those "
+                        "chips are the persona: the page does not ask who you "
+                        "are, it asks what you are responsible for, and the "
+                        "layout follows from the answer.")),
+
+        sub("widgets", "Key decisions", "A catalog you cannot get wrong",
+            ["The widget catalog is a typed array in code, one file per widget, "
+             "and it validates itself at module load: duplicate identifiers and "
+             "malformed scope declarations throw before anything renders. A "
+             "JSON file and a server-fetched catalog were both considered and "
+             "both rejected, because both turn a compile error into a runtime "
+             "one and then need a fallback for the case where the catalog is "
+             "missing, and a fallback catalog is a second source of truth "
+             "pretending to be a safety net.",
+             "Layouts are personal and named. Customise anything and the page "
+             "creates one for you rather than silently mutating the preset, so "
+             "the preset stays available to go back to. The larger version of "
+             "this feature, with sharing and cloning and a roles model, needs a "
+             "backend and a permissions story that phase one does not have, and "
+             "saying so out loud was cheaper than discovering it in the build."],
+            media.stage("plate/persona-catalog.webp",
+                        "The widget catalog open over the homepage, its widgets "
+                        "grouped by category with a search field and an add "
+                        "control on each card",
+                        "The catalog, and the shape of the promise: everything "
+                        "in here is a real widget with a declared scope, because "
+                        "the list is code that refuses to load if it is wrong.")),
+
+        sub("ship", "Key decisions", "Shipping it where nobody can see it",
+            ["The new homepage is a separate route behind a flag that is off in "
+             "production, and the existing homepage is untouched, byte for byte. "
+             "That is deliberate: this arrives as roughly forty small pull "
+             "requests over a quarter, and the cost of a regression on the page "
+             "everybody already uses is far higher than the cost of running two "
+             "routes for three months.",
+             "If the flag resolves off, or the client that evaluates it fails "
+             "outright, the new route redirects to the old one. The failure mode "
+             "of a half-finished homepage should be the homepage that already "
+             "works, and that has to be designed rather than hoped for."]) +
+        '    </div>\n\n',
 
         section("thinking", "Where my head is",
                 "The defaults are the product",
-                ["The thing I keep coming back to is that customisation is not the "
-                 "feature. The default is the feature, and customisation is what you "
-                 "offer the people the default cannot serve. If the starting layout is "
-                 "right for most people, very few will change it, and that is the "
-                 "success case, not a sign the feature failed.",
-                 "So the work is mostly research and defaults, not settings screens. "
-                 "Which persona does the page open as, and how does it decide? What "
-                 "moves, and what is fixed because moving it would break the "
-                 "orientation of everyone who has learned where it is? How does the "
-                 "page change without the change itself being disorienting?",
+                ["The thing I keep coming back to is that customisation is not "
+                 "the feature. The default is the feature, and customisation is "
+                 "what you offer the people the default cannot serve. If the "
+                 "starting layout is right for most people, very few will change "
+                 "it, and that is the success case rather than a sign the feature "
+                 "failed.",
+                 "So most of the work has been research, personas and defaults, "
+                 "not settings screens. Which layout does the page open as, and "
+                 "how does it decide? What moves, and what is fixed because "
+                 "moving it would break the orientation of everyone who has "
+                 "learned where it is? Two rounds of structured feedback are "
+                 "built into the plan for exactly that, because the answer is not "
+                 "something I can reason my way to alone.",
                  "Write-up to follow once it ships."],
-                fig=plate("seq", "variants, three personas",
-                      "The same homepage, three orderings",
-                      "Once there is something to capture: the same page rendered for "
-                      "three personas, side by side, with one block colour-tracked "
-                      "across all three so the reader can follow it moving.",
-                      ["Operator, Owner and Newcomer, same window width",
-                       "One block tinted identically in all three",
-                       "The persona switcher visible and in its selected state"],
-                      [("Size", "799x391 @2x"), ("Format", "PNG, or a 3-state loop"),
-                       ("When", "after the first build ships")]),
+                fig=media.stage("plate/persona-home-contributor.webp",
+                                "The homepage as it opens for someone who owns a "
+                                "single application: alerts first, then cost, "
+                                "then the jobs outstanding against it",
+                                "The other default. Same page, same widgets "
+                                "available, different opening hand: what is "
+                                "broken, what it costs, what it wants from you "
+                                "today."),
                 after=rules([
                     ("Default first", "The starting layout has to be right for the "
                                       "majority before any control is offered."),

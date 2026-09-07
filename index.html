@@ -24,8 +24,12 @@
      reached, well down the body, while the fonts discovered in the stylesheet have
      already started. It is the one asset on this page worth naming up here. -->
 <link rel="preload" as="image" href="assets/hero/hero-bg.webp" fetchpriority="high">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- The type is this site's own and sits on this origin, so there is nobody to
+     preconnect to. These two are the faces the first screen sets: the 80px display
+     italic in the hero and the body face under it. Discovered in the stylesheet
+     they would queue behind it, and swap would show both in Georgia first. -->
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/giverny-italic.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/clover-400.woff2" crossorigin>
 <link rel="stylesheet" href="site.css">
 
 <!-- After the stylesheet: site.css sets html,body to parchment, but on iOS
@@ -354,7 +358,7 @@ window.__hl = (function () {
             rotate(var(--rot,0deg)) scale(.94);
   background:var(--parchment);border:1px solid var(--outline-stroke);
   border-radius:14px;padding:10px 18px;white-space:nowrap;
-  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:16px;
+  font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:16px;
   color:var(--accent);pointer-events:none;
   box-shadow:0 8px 20px rgba(45,40,38,.14);
   /* Visible at rest, not on hover.
@@ -417,7 +421,7 @@ window.__hl = (function () {
    construction rather than by luck: the break is a <br>, so it lands in the same
    place at every width instead of moving with the box. */
 .mascot-cap{position:absolute;left:44px;top:456px;width:420px;pointer-events:none;
-  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-size:11.5px;
+  font-family:'Thistle',ui-monospace,monospace;font-size:11.5px;
   line-height:1.5;color:var(--sage);transform:rotate(-2.4deg);text-align:left;
   display:block}
 
@@ -457,7 +461,7 @@ window.__hl = (function () {
   transform:rotate(6.7deg);transform-origin:50% 50%;
   pointer-events:none;overflow:hidden;
   display:flex;align-items:center;flex-wrap:wrap;
-  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+  font-family:'Thistle',ui-monospace,monospace;font-weight:500;
   font-size:2.08cqw;line-height:1.28;color:#4A4438}
 /* The caret is ::after on the TEXT, not a sibling.
 

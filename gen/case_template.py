@@ -114,8 +114,12 @@ PAGE = """<!doctype html>
 <link rel="apple-touch-icon" href="{root}assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{{background:#FDFBEF}}</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- The type is served from this origin now, so there is no third party to open a
+     connection to. The two faces every one of these pages sets before anything else
+     are named here: discovered in the stylesheet they queue behind it, and a case
+     study is a wall of text whose first paint is the title and the opening paragraph. -->
+<link rel="preload" as="font" type="font/woff2" href="{root}assets/fonts/giverny-italic.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="{root}assets/fonts/clover-400.woff2" crossorigin>
 <link rel="stylesheet" href="{root}site.css">
 <script src="{root}site-motion.js"></script>
 <link rel="stylesheet" href="{root}case-study.css">
@@ -133,8 +137,16 @@ PAGE = """<!doctype html>
    a phone, which is the ordering rule the whole site follows. */
 .cs-hero .hero-float .cs-heroimg{{position:absolute;inset:0;width:100%;height:100%;
   display:block;object-fit:cover}}
+/* contain rather than cover: a diagram cropped at the edges is a diagram missing
+   an edge, and these are drawn to fit the slot exactly, so the two agree except
+   when a figure arrives at some other aspect and would otherwise lose its ends. */
 .cs-media .cs-flat{{position:absolute;inset:0;width:100%;height:100%;display:block;
-  object-fit:cover}}
+  object-fit:contain}}
+/* A diagram is not a screen, so it gets no browser chrome. Everything else that
+   holds a picture on this site does; putting a title bar around a drawing claims
+   it is a screenshot, and the reader spends a moment looking for the application
+   it came out of. */
+.cs-media.cs-diagram{{background:var(--dove-ivory)}}
 /* The pill, fixed over the page the way it is on About. A case study is a long
    scroll and the section list on the left only moves within this page; the pill is
    how you get off it.
@@ -258,7 +270,7 @@ def build(slug, spec):
 def note(root=""):
     """The confidentiality line in every case study's meta strip.
 
-    "let me know" copies the address rather than linking home. Sending someone to the
+    "let me know!" copies the address rather than linking home. Sending someone to the
     index to hunt for a contact link is one step too many at the exact moment they
     have decided to ask, and the site already knows how to hand over an address: the
     footer and the nav pill both do it. This uses the same data-mail hook, and
@@ -269,7 +281,7 @@ def note(root=""):
     """
     del root                      # the address travels with the link now
     return ('If you want to know more, <a class="touch" href="#" data-mail>'
-            'let me know</a>')
+            'let me know!</a>')
 
 
 # Two levels, because every page that carries this note now lives in its own

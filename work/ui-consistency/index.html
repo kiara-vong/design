@@ -4,14 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>UI Consistency · Kiara Vong</title>
-<meta name="description" content="The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three ways to say “no data”. I au">
+<meta name="description" content="The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three different ways to say “no d">
 <meta name="theme-color" content="#649F25">
 <link rel="icon" href="../../assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- The type is served from this origin now, so there is no third party to open a
+     connection to. The two faces every one of these pages sets before anything else
+     are named here: discovered in the stylesheet they queue behind it, and a case
+     study is a wall of text whose first paint is the title and the opening paragraph. -->
+<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -29,8 +33,16 @@
    a phone, which is the ordering rule the whole site follows. */
 .cs-hero .hero-float .cs-heroimg{position:absolute;inset:0;width:100%;height:100%;
   display:block;object-fit:cover}
+/* contain rather than cover: a diagram cropped at the edges is a diagram missing
+   an edge, and these are drawn to fit the slot exactly, so the two agree except
+   when a figure arrives at some other aspect and would otherwise lose its ends. */
 .cs-media .cs-flat{position:absolute;inset:0;width:100%;height:100%;display:block;
-  object-fit:cover}
+  object-fit:contain}
+/* A diagram is not a screen, so it gets no browser chrome. Everything else that
+   holds a picture on this site does; putting a title bar around a drawing claims
+   it is a screenshot, and the reader spends a moment looking for the application
+   it came out of. */
+.cs-media.cs-diagram{background:var(--dove-ivory)}
 /* The pill, fixed over the page the way it is on About. A case study is a long
    scroll and the section list on the left only moves within this page; the pill is
    how you get off it.
@@ -56,7 +68,8 @@
     <a href="#decisions">Key decisions</a>
     <a class="sub" href="#audit">Counting what was actually there</a>
     <a class="sub" href="#theme">One theme, no inline styles</a>
-    <a class="sub" href="#prs">Ten pull requests, in dependency order</a>
+    <a class="sub" href="#prs">Twenty-four pull requests, in order</a>
+    <a class="sub" href="#tests">The net under the refactor</a>
     <a href="#impact">What changed</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -107,14 +120,17 @@
           <h1 class="cs-title">UI Consistency</h1>
         </div>
         <div class="cs-headgroup">
-        <p class="cs-intro">The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three ways to say “no data”. I audited it, designed the shared layer underneath, and cut the 208-file change into ten pull requests a human could actually review.</p>
+        <p class="cs-intro">The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three different ways to say “no data”. I inventoried it, designed the shared layer underneath, and cut a 231-file, 12,600-line change across twelve pages into twenty-four pull requests a human could actually review — with a Cypress suite under it, so review was not the only thing standing between a refactor this size and a regression.</p>
+        <div class="cs-cta">
+          <a href="https://kiara-vong.github.io/resource-dashboard/#/showcase" target="_blank" rel="noopener"><span>Open the showcase</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg></a>
+          <span class="cs-cta-url">A public rebuild of the internal tool, with the data scrubbed</span>
+        </div>
         <div class="cs-meta">
           <div class="col"><span class="lbl">Role</span><span class="val">Design engineer,<br>system owner</span></div>
-          <div class="col"><span class="lbl">Stack</span><span class="val">React, TypeScript,<br>MUI theming</span></div>
-          <div class="col"><span class="lbl">Scope</span><span class="val">208 files,<br>9 commits, 10 PRs</span></div>
-          <div class="col"><span class="lbl">Status</span><span class="val">Shipped</span></div>
-          <div class="col"><span class="lbl">Rebuilt</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/resource-dashboard/#/showcase" target="_blank" rel="noopener">Open it</a></span></div>
-          <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know</a></span></div>
+          <div class="col"><span class="lbl">Stack</span><span class="val">React, TypeScript,<br>MUI, Cypress</span></div>
+          <div class="col"><span class="lbl">Scope</span><span class="val">231 files, 12,600 lines,<br>12+ pages</span></div>
+          <div class="col"><span class="lbl">Status</span><span class="val">Shipped,<br>no regressions</span></div>
+          <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know!</a></span></div>
         </div>
         </div>
       </div>
@@ -126,7 +142,7 @@
         <h2 class="cs-h2">Nobody set out to build four table layouts</h2>
       </div>
       <div class="cs-body">
-        <p>Each one was a reasonable local decision. A team needed a table, the existing one was close but not right, and copying it was ten minutes against a week of negotiation. Enough reasonable local decisions later, nobody could tell you what the product's table looked like, because the honest answer was that it depended on the page.</p>
+        <p>Each one was a reasonable local decision. A team needed a table, the existing one was close but not right, and copying it was ten minutes against a week of negotiation. Enough reasonable local decisions later, nobody could tell you what the product’s table looked like, because the honest answer was that it depended on the page.</p>
         <p>The cost was not really aesthetic. It was that every change had to be made in every copy, and the last copy was always the one somebody forgot. A shared layer is worth building at the point where keeping things in sync by hand costs more than the abstraction does, and we were well past it.</p>
       </div>
       <figure class="cs-figure">
@@ -157,48 +173,105 @@
       </div>
       <div class="cs-body">
         <p>The instinct is to design the target state and then go find everything that does not match it. I did the opposite: inventoried every variant already shipping, with no judgement attached, before proposing anything.</p>
-        <p>That order mattered more than it sounds. Two of the variants I would have deleted on sight turned out to be load-bearing, solving a real constraint the canonical component could not. They became part of that component's API rather than exceptions to it. Designing first and reconciling later produces a system that is correct in isolation and wrong in the product, which is the usual way these fail.</p>
+        <p>That order mattered more than it sounds. Two of the variants I would have deleted on sight turned out to be load-bearing, solving a real constraint the canonical component could not. They became part of that component’s API rather than exceptions to it. Designing first and reconciling later produces a system that is correct in isolation and wrong in the product, which is the usual way these fail.</p>
+        <p>The inventory became a page. Every component that had drifted got a card: what was wrong, what replaced it, how many files it touched, what it blocked. Reviewers read that page before they read a diff — and so did the people who had written the variants I was proposing to delete.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage page solo moves" style="--pw:1200px;--ph:611px;--bar:31px;--plate-r:16px;--dur:34s;--n:1;--x0:105.9px;--y0:46.0px;--k0:0.4894;--sy:-2783.3px;--sr:-900.0px;--x1:-51.3px;--y1:-44.9px;--k1:0.7133">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <div class="reel">
+                  <img style="--i:0" src="../../assets/plate/showcase-full-height.webp" alt="The refactor showcase, scrolled: eight components, each with the version that shipped before and the version that replaced it" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cs-caption">The inventory, written down before anything was designed. Each card carries the problem, the resolution, and the line that says what it costs to review. The length of the page is the finding. (This is the public rebuild, which condenses the change to eight representative components; the real one ran to twenty-four pull requests.)</figcaption>
+      </figure>
       </div>
 
       <div class="cs-sub" id="theme">
         <h2 class="cs-h2">One theme, no inline styles</h2>
       <div class="cs-body">
-        <p>The foundation is a single theme provider wrapping the app, with tokens for colour, typography, spacing and radius. Components inherit from it instead of carrying their own inline values.</p>
-        <p>Underneath that, the shared pieces: one toolbar with search, filter chips and actions in a single row; one footer with the count on the left and export on the right; real empty and not-found states instead of the inline “no data” text that had been written separately on every page. Tables lost twenty pixels of row height, gained proper header treatment and zebra striping, and dropped to a subtler border.</p>
+        <p>The foundation is a single theme provider wrapping the app, with tokens for colour, typography, spacing and radius. Components inherit from it instead of carrying their own inline values, and the fifty-odd hardcoded hex literals scattered through the tree stopped being editable one file at a time.</p>
+        <p>Underneath that, the shared pieces: one toolbar with search, filter chips and actions in a single row; one footer with the count on the left and export on the right; real empty, error and not-found states instead of the inline “no data” text that had been written separately on every page. Tables lost twenty pixels of row height, gained proper header treatment and zebra striping, and dropped to a subtler border.</p>
         <p>The filter chips are the detail I am most pleased with. They show at full width rather than truncating, overflow collapses into a +N chip, the dropdown stays open while you are still choosing, and typing hides the chips so you get a clean search field. Four small decisions, all of them about not interrupting someone mid-thought.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-push" style="--z:1.4;--fx:74%;--fy:56%;--dur:13s">
-          <img src="../../assets/plate/showcase-tables-before-after.webp" alt="One table before and after the shared layer, at identical width" loading="lazy">
+        <div class="cs-media cam cam-stage cam-slide" style="--pw:966px;--ph:585px;--bar:25px;--plate-r:13px;--n:2;--x0:152.6px;--y0:46.0px;--k0:0.5111;--s:46;--wx:152.6px;--wy:58.8px;--ww:493.7px;--wh:286.2px">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img src="../../assets/plate/ui-tables-before.webp" alt="One table before and after the shared layer, the two frames stacked in register with a seam the reader drags" loading="lazy">
+                <img src="../../assets/plate/ui-tables-after.webp" alt="" aria-hidden="true" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <span class="slide-tag left">before</span>
+          <span class="slide-tag right">after</span>
+          <span class="slide-line" aria-hidden="true"><i></i></span>
+          <input class="slide-range" type="range" min="0" max="100" value="46" aria-label="Reveal the table after the shared layer">
         </div>
-        <figcaption class="cs-caption">Same data, same window, same scroll position. The row height is the difference anyone can see without being told what to look for.</figcaption>
+        <figcaption class="cs-caption">Drag the seam. Same three rows, same three columns, same width, cut from the showcase so the headers land on the same line. Twenty pixels off the row height, a header that stopped shouting, and a footer that finally says how many there are and where to get the rest.</figcaption>
       </figure>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-strip" style="--travel:84.31%;--dur:17s">
-          <img src="../../assets/plate/style-guide-full.webp" alt="The full style guide: colour, typography, spacing and radius tokens, then every shared component built on them" loading="lazy">
+        <div class="cs-media cam cam-stage page solo moves" style="--pw:1200px;--ph:611px;--bar:31px;--plate-r:16px;--dur:30s;--n:1;--x0:105.9px;--y0:46.0px;--k0:0.4894;--sy:-2876.0px;--sr:-633.0px;--x1:-50.5px;--y1:-78.5px;--k1:1.0000">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <div class="reel">
+                  <img style="--i:0" src="../../assets/plate/style-guide-full.webp" alt="The full style guide: colour, typography, spacing and radius tokens, then every shared component built on them" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <figcaption class="cs-caption">Every token on one page, in order, so a change to a value is a single edit against something you can point a reviewer at instead of an inline style hunted down file by file.</figcaption>
+        <figcaption class="cs-caption">Every token on one page, in order, and then every component that reads them. A change to a value becomes one edit against something you can point a reviewer at, instead of an inline style hunted down file by file.</figcaption>
       </figure>
       </div>
 
       <div class="cs-sub" id="prs">
-        <h2 class="cs-h2">Ten pull requests, in dependency order</h2>
+        <h2 class="cs-h2">Twenty-four pull requests, in dependency order</h2>
       <div class="cs-body">
-        <p>208 files across 9 commits is not a reviewable change. It is a change that gets approved without being read, which is the same as not being reviewed, on a diff touching every page in the app.</p>
-        <p>So it went out as ten pull requests of fifteen files or fewer, ordered so each could merge on its own. The theme provider had to land first because everything else assumes it. The shared table and filter components went second because the page-level work consumes them. After that the remaining seven were independent and could go in parallel, in any order, by whoever had time.</p>
+        <p>231 files and 12,600 lines is not a reviewable change. It is a change that gets approved without being read, which is the same as not being reviewed, on a diff touching every page in the app.</p>
+        <p>So it went out as twenty-four pull requests of fifteen files or fewer, ordered so each could merge on its own. The theme provider had to land first because everything else assumes it. The shared table and filter components went second because the page-level work consumes them. After that the rest were independent and could go in parallel, in any order, by whoever had time.</p>
         <p>The foundation PR contained no behavioural changes at all. Visual consistency only. That was deliberate: the riskiest change in the sequence is the one everything depends on, so it should also be the one with the least in it.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-strip" style="--travel:83.97%;--dur:17s">
-          <img src="../../assets/plate/showcase-full-height.webp" alt="The full refactor showcase: eight sections, each with its problem and its resolution" loading="lazy">
+        <div class="cs-media cam cam-stage moves" style="--pw:2228px;--ph:853px;--bar:58px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:100.0px;--k0:0.2240;--vx:0px;--vw:591.0px;--x1:-13.7px;--y1:-70.8px;--k1:0.7653">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img style="--i:0" src="../../assets/plate/ui-pr-anatomy.webp" alt="One card from the showcase: the change, the reason, and a line giving its file count, its risk and what it blocks" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <div class="call" style="--cx:613.0px;--cy:169.5px;--cw:166px">
+            <div class="call-row"><span class="call-line"></span><span class="call-note">what a reviewer needs</span></div>
+            <p class="call-desc">Size, risk and dependency, on one line, next to the change rather than in a ticket.</p>
+          </div>
         </div>
-        <figcaption class="cs-caption">Eight of these, and each one carries the line that justified it. The argument was written down before the pull request was opened.</figcaption>
+        <figcaption class="cs-caption">Every pull request was written up before it was opened. The line under the resolution is the part reviewers actually used: how big it is, how much it can break, and what is waiting on it.</figcaption>
       </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">PR 1</span><span class="d">The theme provider and global defaults. No behavioural change. Everything downstream assumes it.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">PR 2</span><span class="d">Shared table, toolbar and filter components, consumed by every page-level PR that follows.</span></div>
-        <div class="cs-rule"><span class="n">03</span><span class="t">PRs 3–10</span><span class="d">Page-level adoption. Independent of each other, reviewable in parallel, mergeable in any order.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">PRs 3–24</span><span class="d">Page-level adoption, plus the new primitives. Independent of each other, reviewable in parallel, mergeable in any order.</span></div>
+      </div>
+      </div>
+
+      <div class="cs-sub" id="tests">
+        <h2 class="cs-h2">The net under the refactor</h2>
+      <div class="cs-body">
+        <p>A refactor makes a promise that is hard to check: nothing behaves differently. On a diff this wide, nobody can hold that in their head, and “it looked fine when I clicked around” is not evidence — it is the absence of it.</p>
+        <p>So the Cypress suite grew alongside the change rather than after it, to roughly 85% of the critical flows: the paths people take every day, asserted before the shared components went in and re-run after each pull request. Where a spec had to change, that was the signal to stop and look, because a passing test that needed rewriting is a behaviour change wearing a costume.</p>
+        <p>It shipped with no regressions, which is the claim I would otherwise have had no honest way to make.</p>
       </div>
       </div>
 
@@ -211,17 +284,17 @@
       </div>
       <div class="cs-body">
         <p>Every page now renders from one theme, and a change to a shared component is one edit rather than a search-and-replace across the app.</p>
-        <p>The result I care about most is quieter than the file count: design review stopped spending its first ten minutes establishing which version of a component we were looking at. The system's real output is the argument it makes unnecessary.</p>
+        <p>The result I care about most is quieter than the file count: design review stopped spending its first ten minutes establishing which version of a component we were looking at. The system’s real output is the argument it makes unnecessary.</p>
       </div>
       <figure class="cs-figure">
         <div class="stats">
-          <p class="stats-eyebrow"><span></span>208 files · 9 commits · 10 pull requests</p>
+          <p class="stats-eyebrow"><span></span>231 files · 12,600 lines · 24 pull requests</p>
           <div class="stats-row">
-            <div class="stat"><span class="stat-n" data-to="208">0</span><span class="stat-l">files changed</span><span class="stat-d">across the whole application</span></div>
-            <div class="stat"><span class="stat-n" data-to="10">0</span><span class="stat-l">reviewable pull requests</span><span class="stat-d">15 files or fewer, dependency-ordered</span></div>
-            <div class="stat"><span class="stat-n" data-to="1">0</span><span class="stat-l">theme provider</span><span class="stat-d">replacing inline styles throughout</span></div>
+            <div class="stat"><span class="stat-n" data-to="231">0</span><span class="stat-l">files changed</span><span class="stat-d">twelve pages and the shared layer under them</span></div>
+            <div class="stat"><span class="stat-n" data-to="24">0</span><span class="stat-l">reviewable pull requests</span><span class="stat-d">15 files or fewer, dependency-ordered</span></div>
+            <div class="stat"><span class="stat-n" data-to="85">0</span><span class="stat-l">% of critical flows covered</span><span class="stat-d">Cypress specs written alongside the change</span></div>
           </div>
-          <p class="stats-note">Riskiest PR&nbsp; <b>The one with no behaviour in it</b></p>
+          <p class="stats-note">Regressions after release&nbsp; <b>None</b></p>
         </div>
       </figure>
     </section>

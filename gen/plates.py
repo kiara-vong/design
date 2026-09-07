@@ -39,7 +39,11 @@ QUALITY = 82
 
 # The slot every one of these is drawn in, in CSS pixels. .cs-media, from
 # case-study.css, and the number the travel below is computed against.
-SLOT_W, SLOT_H = 799.0, 391.0
+# 365 rather than 391 because the figures sit in a browser window now: the card is
+# still 799x391, but 26px of it is the title bar and the image gets what is left.
+# A travel percentage measured against a frame the image no longer sits in is a
+# number that looks right and scrolls the picture clean past its own end.
+SLOT_W, SLOT_H = 799.0, 365.0
 
 # A tall capture only becomes a strip if there is enough below the fold to be worth
 # moving. Under this much travel the movement reads as drift rather than as scrolling
@@ -48,11 +52,21 @@ MIN_TRAVEL = 12.0
 
 # Plates the push machine crops into, which want the extra resolution.
 SHARP = {
+    # Two whole pages the window scrolls AND the camera closes on. The look
+    # lands on 11px token labels, so the delivery has to hold up at the far
+    # end of the move rather than only at the resting framing.
+    "showcase-full-height",
+    "style-guide-full",
+    "persona-home-leader",
+    "persona-home-edit",
+    "persona-catalog",
+    "persona-home-contributor",
     "dashboard-default-annotated",
     "dashboard-export-scoped",
     "dorms-gallery-letterbox",
     "stardew-villager-abigail",
     "dashboard-timeline-carryforward",
+    "dashboard-timeline-naive",
     "dashboard-events-table-explored",
     "dorms-floorplans-multibuilding",
     "dashboard-button-contact-sheet",
@@ -65,6 +79,11 @@ SHARP = {
     "dorms-detail",
     "dorms-quiz-page",
     "island-generator-tiles",
+    "dashboard-graph-page",
+    "dashboard-drill-1-envs",
+    "dashboard-drill-2-regions",
+    "dashboard-drill-3-categories",
+    "dashboard-drill-4-resource",
 }
 
 # Whole pages, kept at the width they were captured. These are not figures cut to
@@ -73,7 +92,20 @@ SHARP = {
 # whole is a normal-width plate, and only the state the camera goes INTO needs to
 # be listed in SHARP as well. Marking all four sharp would cost a megabyte to make
 # three images that are never seen closer than half size look better at half size.
+NATIVE = {
+    "resource-detail-full",
+    "dashboard-export-scoped",
+}
+
 PAGE = {
+    "showcase-full-height",
+    "style-guide-full",
+    "dashboard-drill-1-envs",
+    "dashboard-drill-2-regions",
+    "dashboard-drill-3-categories",
+    "dashboard-drill-4-resource",
+    "dashboard-graph-page",
+    "dashboard-table-page",
     "dorms-detail",
     "dorms-quiz-page",
     "dorms-quiz-results",
@@ -109,7 +141,13 @@ def main():
             continue
         im = Image.open(os.path.join(SRC, f)).convert("RGB")
         w, h = im.size
-        target = SHARP_WIDTH if name in SHARP else WIDTH
+        # Two plates the camera goes all the way to 1:1 on, and where 2200 would
+        # be an upscale at exactly the framing that matters. Delivered at the
+        # capture's own width instead: the point of those two figures is reading
+        # an ARN and a line of CSV, and a resampled glyph is the one thing that
+        # cannot be recovered later.
+        target = (w if name in NATIVE else
+                  SHARP_WIDTH if name in SHARP else WIDTH)
         if w > target:
             im = im.resize((target, int(round(h * target / float(w)))), Image.LANCZOS)
         w, h = im.size

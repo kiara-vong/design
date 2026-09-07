@@ -10,8 +10,12 @@
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- The type is served from this origin now, so there is no third party to open a
+     connection to. The two faces every one of these pages sets before anything else
+     are named here: discovered in the stylesheet they queue behind it, and a case
+     study is a wall of text whose first paint is the title and the opening paragraph. -->
+<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -29,8 +33,16 @@
    a phone, which is the ordering rule the whole site follows. */
 .cs-hero .hero-float .cs-heroimg{position:absolute;inset:0;width:100%;height:100%;
   display:block;object-fit:cover}
+/* contain rather than cover: a diagram cropped at the edges is a diagram missing
+   an edge, and these are drawn to fit the slot exactly, so the two agree except
+   when a figure arrives at some other aspect and would otherwise lose its ends. */
 .cs-media .cs-flat{position:absolute;inset:0;width:100%;height:100%;display:block;
-  object-fit:cover}
+  object-fit:contain}
+/* A diagram is not a screen, so it gets no browser chrome. Everything else that
+   holds a picture on this site does; putting a title bar around a drawing claims
+   it is a screenshot, and the reader spends a moment looking for the application
+   it came out of. */
+.cs-media.cs-diagram{background:var(--dove-ivory)}
 /* The pill, fixed over the page the way it is on About. A case study is a long
    scroll and the section list on the left only moves within this page; the pill is
    how you get off it.
@@ -108,14 +120,17 @@
           <h1 class="cs-title">Resource Dashboard</h1>
         </div>
         <div class="cs-headgroup">
-        <p class="cs-intro">Engineers responsible for cloud resources had no single place to see them. Answering “what do I own, and what needs attention” meant three tools and a spreadsheet. I designed and built the dashboard that replaced that: one surface, two ways through it, and an export at every level.</p>
+        <p class="cs-intro">Engineers responsible for cloud resources had no single place to see them. Answering “what do I own, and what needs attention” meant three tools and a spreadsheet. I owned the dashboard that replaced that end to end, from research and requirements through design, build and enterprise release: one surface, two ways through it, and an export at every level. The demo linked above is a simplified, scrubbed recreation of it, rebuilt in public with invented data.</p>
+        <div class="cs-cta">
+          <a href="https://kiara-vong.github.io/resource-dashboard/#/resources" target="_blank" rel="noopener"><span>Open the rebuild</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg></a>
+          <span class="cs-cta-url">A public rebuild of the internal tool, with the data scrubbed</span>
+        </div>
         <div class="cs-meta">
           <div class="col"><span class="lbl">Role</span><span class="val">Design engineer,<br>front end</span></div>
           <div class="col"><span class="lbl">Stack</span><span class="val">React, TypeScript,<br>MUI, AG Grid</span></div>
           <div class="col"><span class="lbl">Scope</span><span class="val">IA, components,<br>end-to-end flows</span></div>
-          <div class="col"><span class="lbl">Status</span><span class="val">Shipped to<br>enterprise users</span></div>
-          <div class="col"><span class="lbl">Rebuilt</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/resource-dashboard/#/resources" target="_blank" rel="noopener">Open it</a></span></div>
-          <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know</a></span></div>
+          <div class="col"><span class="lbl">Status</span><span class="val">Released to all<br>enterprise users</span></div>
+          <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know!</a></span></div>
         </div>
         </div>
       </div>
@@ -130,15 +145,6 @@
         <p>The data already existed. Ownership lived in one system, compliance jobs in another, the resource inventory in a third, and the way you answered a question about your own infrastructure was to open all three and reconcile them by hand.</p>
         <p>That is a shape of problem I keep running into: nothing is broken, every individual tool works, and the entire cost sits in the seams between them. It never gets filed as a bug because no single step is wrong. It just quietly taxes everyone who has to do it.</p>
       </div>
-      <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-video">Video / loop</span><span class="cs-tech">workflow demo, looping</span></div>
-          <h3>The three-tool reconciliation, before the dashboard existed</h3>
-          <p>A screen recording of the old workflow, so the reader feels the cost instead of being told about it. Cut it tight: the point is how many windows it takes to answer one question.</p>
-          <ul><li>Window 1: ownership lookup, paste an identifier</li><li>Window 2: the compliance job list, find the same resource</li><li>Window 3: the inventory, confirm what it actually is</li><li>End on all three open at once</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391</span><span><b>Format</b> muted mp4 + webm, or animated webp</span><span><b>Length</b> 8-12s, seamless loop</span><span><b>Cursor</b> visible</span></div>
-        </div>
-      </figure>
     </section>
 
     <div id="decisions" class="cs-group">
@@ -152,6 +158,23 @@
         <p>Two groups of people arrive at a tool like this with genuinely different questions. One has a job to do today and wants the shortest path to it. The other is exploring, and needs to understand the shape of what they own.</p>
         <p>Rather than average them into one compromised view, the dashboard has two and makes the default the urgent one. The job-focused view opens first, sorted by due date, because someone arriving without a plan is usually arriving because something is due. The hierarchy explorer is one toggle away for everyone else.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage page flow still moves" style="--pw:1280px;--ph:706px;--bar:33px;--plate-r:17px;--dur:22s;--n:2;--press-bg:#F5F5F5;--x0:128.5px;--y0:46.0px;--k0:0.4235;--sy:-0.2px;--sy2:-315.8px;--x1:-325.0px;--y1:0.0px;--k1:0.8625">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <div class="reel">
+                  <img style="--i:0" src="../../assets/plate/dashboard-graph-page.webp" alt="The dashboard in graph view, the Table toggle pressed, and the same filtered set as a table scrolled through all eight rows" loading="lazy">
+                  <img style="--i:1" src="../../assets/plate/dashboard-table-page.webp" alt="" aria-hidden="true" loading="lazy">
+                  <span class="press" aria-hidden="true" style="left:1094.0px;top:84.0px;width:170.0px;height:46.0px"><i style="left:6px;top:6px;width:158.0px;height:34.0px;background-image:url(../../assets/plate/dashboard-graph-page.webp);background-size:1280px auto;background-position:-1100.0px -90.0px"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cs-caption">One dataset, two readings, and the toggle between them. Same search, same filters, same eight resources: what changes is whether you are looking at the shape of what you own or at the list of what it wants from you.</figcaption>
+      </figure>
       <figure class="cs-figure">
         <div class="cs-media cam ann">
           <div class="ann-group" data-k="filters" style="--t:5%;--x:35%;--y:26%;--z:2.1">
@@ -170,28 +193,9 @@
             <div class="ann-row"><span class="ann-line"></span><span class="ann-note">Export</span></div>
             <p class="ann-desc">Scoped to what is on screen: current filters, current level, nothing else.</p>
           </div>
-          <div class="ann-view"><img src="../../assets/plate/dashboard-default-annotated.webp" alt="The dashboard's default view, with its filters, view toggle, jobs filter and export called out" loading="lazy"></div>
+          <div class="ann-view framed"><span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span><div class="win"><img src="../../assets/plate/dashboard-default-annotated.webp" alt="The dashboard's default view, with its filters, view toggle, jobs filter and export called out" loading="lazy"></div></div>
         </div>
         <figcaption class="cs-caption">Point at a label and the picture goes there. Four controls, and the argument for each is that it survives the switch between views.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-clip">
-          <video src="../../assets/video/dashboard-filters-persist.mp4" poster="../../assets/video/dashboard-filters-persist-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Filters applied in the table view, still applied after switching to the graph view"></video>
-        </div>
-        <figcaption class="cs-caption">Set a filter, switch views, and it's still set. “Persists across the toggle” is a claim about behaviour a callout can’t make on its own; this is what it looks like happening.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-push" style="--z:1.25;--fx:62%;--fy:51%;--dur:13s">
-          <img src="../../assets/plate/dashboard-jobs-list.webp" alt="The default view: resources with an outstanding job, sorted by due date" loading="lazy">
-        </div>
-        <figcaption class="cs-caption">What actually opens first. Not the hierarchy and not a blank table, but the subset of what you own that needs something from you today, oldest due date on top.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-deal" style="--dur:14s;--n:2">
-          <img style="--i:0" src="../../assets/plate/dashboard-view-table.webp" alt="The dashboard's table view, rows sorted by column" loading="lazy">
-          <img style="--i:1" src="../../assets/plate/dashboard-view-graph.webp" alt="" aria-hidden="true" loading="lazy">
-        </div>
-        <figcaption class="cs-caption">Table and graph, same dataset. The table is what stays on screen when the toggle is left alone, which is why it comes first here too.</figcaption>
       </figure>
       </div>
 
@@ -202,10 +206,25 @@
         <p>The counts are the part that earns its place. A level that only lists categories tells you where you can go; a level that lists categories with how much is in each tells you where you should go. It is a small addition that changes the drill-down from navigation into triage.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-clip">
-          <video src="../../assets/video/dashboard-hierarchy-drill.mp4" poster="../../assets/video/dashboard-hierarchy-drill-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Drilling from environments to regions to categories to resources"></video>
+        <div class="cs-media cam cam-stage page cam-walk" style="--pw:1280px;--ph:706px;--bar:33px;--plate-r:17px;--dur:28s;--n:4;--press-bg:#F9FAFC;--x0:128.5px;--y0:46.0px;--k0:0.4235;--sy3:-808.3px">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <div class="reel">
+                  <img style="--i:0" src="../../assets/plate/dashboard-drill-1-envs.webp" alt="Drilling from environments to prod, to us-east-1, past four categories to ELB, and into the load balancer itself" loading="lazy">
+                  <img style="--i:1" src="../../assets/plate/dashboard-drill-2-regions.webp" alt="" aria-hidden="true" loading="lazy">
+                  <img style="--i:2" src="../../assets/plate/dashboard-drill-3-categories.webp" alt="" aria-hidden="true" loading="lazy">
+                  <img style="--i:3" src="../../assets/plate/dashboard-drill-4-resource.webp" alt="" aria-hidden="true" loading="lazy">
+                  <span class="press s1" aria-hidden="true" style="left:536.0px;top:315.0px;width:135.0px;height:135.0px"><i style="left:14px;top:14px;width:107.0px;height:107.0px;background-image:url(../../assets/plate/dashboard-drill-1-envs.webp);background-size:1280px auto;background-position:-550.0px -329.0px"></i></span>
+                  <span class="press s2" aria-hidden="true" style="left:536.0px;top:321.0px;width:135.0px;height:135.0px"><i style="left:14px;top:14px;width:107.0px;height:107.0px;background-image:url(../../assets/plate/dashboard-drill-2-regions.webp);background-size:1280px auto;background-position:-550.0px -335.0px"></i></span>
+                  <span class="press s3" aria-hidden="true" style="left:607.0px;top:1201.0px;width:135.0px;height:135.0px"><i style="left:14px;top:14px;width:107.0px;height:107.0px;background-image:url(../../assets/plate/dashboard-drill-3-categories.webp);background-size:1280px auto;background-position:-621.0px -1215.0px"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <figcaption class="cs-caption">Four levels, and the breadcrumb is in every frame. It is what makes this navigation rather than four separate pages.</figcaption>
+        <figcaption class="cs-caption">Four levels, three clicks, and the breadcrumb in every frame. The counts are what turn this from navigation into triage: a level that lists categories tells you where you can go, and a level that lists them with how much is in each tells you where you should.</figcaption>
       </figure>
       </div>
 
@@ -216,10 +235,17 @@
         <p>This sounds like a checkbox feature and was one of the most-used things in the tool. People do not live in dashboards. They come in, narrow down to the thing they care about, and then need it somewhere else. A ticket, a spreadsheet, a message to the team that owns it. A dashboard that cannot hand off its own answer sends everyone back to the reconciling-by-hand it was built to remove.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-push" style="--z:1.2;--fx:50%;--fy:60%;--dur:13s">
-          <img src="../../assets/plate/dashboard-export-scoped.webp" alt="The export control beside the count of what is currently filtered" loading="lazy">
+        <div class="cs-media cam cam-stage moves" style="--pw:1616px;--ph:706px;--bar:42px;--plate-r:21px;--dur:13s;--n:1;--x0:57.3px;--y0:46.0px;--k0:0.4235;--x1:20.0px;--y1:-127.1px;--k1:0.7468">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img style="--i:0" src="../../assets/plate/dashboard-export-scoped.webp" alt="Two filtered rows on screen, and the downloaded file below containing those same two rows" loading="lazy">
+              </div>
+            </div>
+          </div>
         </div>
-        <figcaption class="cs-caption">What comes out is what is on screen: current filters, current level, nothing else. A resource's tags and its jobs list each have their own.</figcaption>
+        <figcaption class="cs-caption">What comes out is what is on screen: current filters, current level, nothing else. Both ARNs are in the frame twice, once in the table and once in the file, which is the only way that claim gets checked rather than taken on trust.</figcaption>
       </figure>
       </div>
 
@@ -230,29 +256,19 @@
         <p>That distinction is why the loading skeletons and the retry banner exist at all. A component handed its data synchronously has no in-flight state to design, no failure to recover from, and no way to find out it was wrong until it meets a real server. The same handlers run in Node for the tests, so those drive the actual fetch, loading, render, error and retry cycle instead of asserting against props.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-deal" style="--dur:14s;--n:5">
-          <img style="--i:0" src="../../assets/plate/dashboard-tab-account-details.webp" alt="The five resource-detail tabs: account, configurations, compliance, network and tags" loading="lazy">
-          <img style="--i:1" src="../../assets/plate/dashboard-tab-configurations.webp" alt="" aria-hidden="true" loading="lazy">
-          <img style="--i:2" src="../../assets/plate/dashboard-tab-compliance.webp" alt="" aria-hidden="true" loading="lazy">
-          <img style="--i:3" src="../../assets/plate/dashboard-tab-network.webp" alt="" aria-hidden="true" loading="lazy">
-          <img style="--i:4" src="../../assets/plate/dashboard-tab-tags.webp" alt="" aria-hidden="true" loading="lazy">
+        <div class="cs-media cam cam-stage page solo moves" style="--pw:1600px;--ph:862px;--bar:42px;--plate-r:21px;--dur:20s;--n:1;--x0:122.0px;--y0:46.0px;--k0:0.3469;--sy:-1990.2px;--sr:-0.0px;--x1:-75.5px;--y1:-66.5px;--k1:1.0000">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <div class="reel">
+                  <img style="--i:0" src="../../assets/plate/resource-detail-full.webp" alt="One resource detail page scrolled through its full height: identifiers and metadata, ownership, five tabs, a compliance timeline and the jobs outstanding against it" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <figcaption class="cs-caption">One resource, five readings of what came back for it. Every one of these arrived over the boundary described above.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-strip" style="--travel:71.77%;--dur:17s">
-          <img src="../../assets/plate/resource-detail-full.webp" alt="One resource detail page, scrolled through its full height: header, tabs and the active tab's content in one continuous view" loading="lazy">
-        </div>
-        <figcaption class="cs-caption">The five tabs above, in the page they actually live in rather than cropped to just their content. Same boundary, same resource, the context the tab-by-tab view leaves out.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-plate">
-          <div class="cs-plate-top"><span class="cs-kind is-video">Video / loop</span><span class="cs-tech">screen recording, DevTools visible</span></div>
-          <h3>The requests are real</h3>
-          <p>Open the Network tab and reload. Genuine fetch calls with latency, skeletons while they are in flight, and an error state that recovers. No still can make this claim and no sentence should be asked to carry it alone.</p>
-          <ul><li>Network tab open, reload, the endpoints resolve in turn</li><li>Loading skeletons on screen while they are in flight</li><li>Force one to fail; the retry banner appears</li><li>Click retry and let it recover</li></ul>
-          <div class="cs-spec"><span><b>Size</b> 799x391</span><span><b>Format</b> muted mp4 + webm</span><span><b>Length</b> 10-14s</span><span><b>Cursor</b> visible</span><span><b>Source</b> the public rebuild, not the internal tool</span></div>
-        </div>
+        <figcaption class="cs-caption">One resource, top to bottom, at the length it actually is. Every field on the way down is a value that arrived over the boundary described above, with a skeleton in its place while it was in flight. The page is long because that is the answer: this is what it takes to stop somebody opening a second tool.</figcaption>
       </figure>
       </div>
 

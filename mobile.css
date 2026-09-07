@@ -745,7 +745,7 @@
      interactions land differently -- About reveals in place, Library opens a card -- but
      the sentence is the same object on both. */
   .ab-hint { font-size: 28px !important; }
-  .lb-hint span { font-family: 'Space Grotesk'; font-weight: 700; color: var(--new-leaf-green); }
+  .lb-hint span { font-family: 'Clover'; font-weight: 700; color: var(--new-leaf-green); }
 
   /* The silhouette is a desktop object: it marks where a hover ticket will land, and
      there is no hover here. The hint survives on its own, in flow between the

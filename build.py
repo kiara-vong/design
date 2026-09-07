@@ -49,6 +49,12 @@ import sys
 #   owns  -- glob patterns this step is the only writer of. Cleared before it runs,
 #            so nothing it stops emitting can survive as a stale file.
 #   needs -- steps that must have run first, for a real data dependency only.
+#
+# NOT here, on purpose: gen/fonts.py, which cuts the four typefaces and rewrites the
+# @font-face block in site.css. It is the one generator that needs the network, and a
+# build that cannot run on a plane is a build that fails at the worst moment. Its
+# output is committed, so a clone has the fonts already. Run it by hand, with
+# `python -m gen.fonts`, when a cut or a family changes.
 STEPS = [
     # ---- artwork: SVGs and cut images, no HTML ----
     # The two full-bleed grounds. Deliberately first: everything else on the site
@@ -72,6 +78,9 @@ STEPS = [
     # down to 2.5MB of WebP, and the travel each tall one has to scroll.
     ("plates",    "gen.plates",   [], []),
     ("picks",     "gen.quiz_picks", [], []),
+    # Cuts the before/after specimens and the pull-request card out of the
+    # refactor showcase capture, so the crops are measured rather than typed.
+    ("pairs",     "gen.ui_pairs",  [], []),
     ("persona",   "gen.persona_art",    [], []),
     ("polaroids", "gen.polaroids",  [], []),
     # Writes gallery-index.py, which the Art pages read. This is THE ordering
@@ -167,9 +176,12 @@ def check():
     # assembled FROM rather than assets any page links, so they are source in the
     # same sense _src is: keeping them means a different trio is a one-line change
     # in gen/icons.py instead of a re-cut.
+    # The OFL texts are the one kind of unreferenced file that has to stay: the
+    # licence the four typefaces are cut under requires it to travel with them, and
+    # no page links a licence. Deleting them as orphans would be deleting the terms.
     orphans = sorted(x for x in (have - used)
                      if "/_src/" not in x and "/_gif/" not in x
-                     and not x.startswith(("demo/", "ui/icon/")))
+                     and not x.startswith(("demo/", "ui/icon/", "fonts/OFL-")))
 
     css = check_css(pages)
 

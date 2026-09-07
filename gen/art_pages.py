@@ -196,29 +196,29 @@ CSS_INDEX = """
   background:linear-gradient(105deg,rgba(38,28,18,.62),rgba(38,28,18,.24) 62%,
     rgba(38,28,18,.50))}
 .ai-head{position:relative;z-index:2;max-width:760px}
-.ai-kicker{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+.ai-kicker{font-family:'Thistle',ui-monospace,monospace;font-weight:500;
   font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#F5C9A8}
-.ai-title{margin-top:14px;font-family:'Kyoto','Newsreader',Georgia,serif;font-weight:500;
+.ai-title{margin-top:14px;font-family:'Giverny',Georgia,serif;font-weight:500;
   font-style:italic;font-size:74px;line-height:.98;color:var(--parchment)}
-.ai-intro{margin-top:20px;font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;
+.ai-intro{margin-top:20px;font-family:'Clover',system-ui,sans-serif;font-weight:400;
   font-size:17px;line-height:1.65;color:rgba(253,251,239,.86)}
-.ai-count{margin-top:16px;font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;
+.ai-count{margin-top:16px;font-family:'Thistle',ui-monospace,monospace;
   font-weight:500;font-size:13px;color:#E2F085}
 
 .ai-sec{margin-top:66px}
 .ai-sechead{display:flex;align-items:baseline;gap:16px;margin-bottom:32px}
-.ai-sechead h2{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;font-size:24px;
+.ai-sechead h2{font-family:'Laurel',Georgia,serif;font-weight:500;font-size:24px;
   color:var(--dusty-granite);white-space:nowrap}
-.ai-sechead .n{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-size:13px;
+.ai-sechead .n{font-family:'Thistle',ui-monospace,monospace;font-size:13px;
   color:var(--antique-gold);white-space:nowrap}
-.ai-sechead .dots{flex:1;overflow:hidden;font-family:'Newsreader',serif;font-style:italic;
+.ai-sechead .dots{flex:1;overflow:hidden;font-family:'Giverny',serif;font-style:italic;
   font-weight:300;font-size:13px;color:var(--outline-stroke);white-space:nowrap;letter-spacing:1px}
 
 .ai-sub{display:flex;align-items:baseline;gap:14px;margin:44px 0 22px}
 .ai-sub:first-of-type{margin-top:0}
-.ai-sub h3{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;font-size:17px;
+.ai-sub h3{font-family:'Laurel',Georgia,serif;font-weight:500;font-size:17px;
   color:var(--dusty-granite);white-space:nowrap}
-.ai-sub .n{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-size:11px;
+.ai-sub .n{font-family:'Thistle',ui-monospace,monospace;font-size:11px;
   letter-spacing:.1em;color:var(--antique-gold);white-space:nowrap}
 .ai-sub .rule{flex:1;height:1px;background:linear-gradient(90deg,
   rgba(120,105,85,.30),rgba(120,105,85,0))}
@@ -253,9 +253,9 @@ CSS_INDEX = """
   filter:drop-shadow(0 16px 26px rgba(52,46,42,.20))}
 .ai-ticket:nth-child(even):hover{transform:translateY(-8px) rotate(1.2deg)}
 .ai-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.ai-serial{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+.ai-serial{font-family:'Thistle',ui-monospace,monospace;font-weight:500;
   font-size:14px;color:var(--accent)}
-.ai-kind{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+.ai-kind{font-family:'Thistle',ui-monospace,monospace;font-weight:500;
   font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sw)}
 .ai-win{margin-top:12px;border-radius:7px;overflow:hidden;background:var(--dove-ivory);
   border:1px solid var(--outline-stroke)}
@@ -264,23 +264,23 @@ CSS_INDEX = """
 .ai-win img{display:block;width:100%;height:100%;object-fit:cover;
   transition:transform .5s cubic-bezier(.4,0,.2,1)}
 .ai-ticket:hover .ai-win img{transform:scale(1.045)}
-.ai-perf{margin:16px -8px 14px;font-family:'Newsreader',serif;font-style:italic;
+.ai-perf{margin:16px -8px 14px;font-family:'Giverny',serif;font-style:italic;
   font-weight:300;font-size:12px;line-height:1;color:var(--antique-gold);
   white-space:nowrap;overflow:hidden;letter-spacing:1px}
 .ai-stub{display:flex;align-items:flex-start;gap:14px}
-.ai-admit{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+.ai-admit{font-family:'Thistle',ui-monospace,monospace;font-weight:500;
   font-size:9.5px;letter-spacing:.16em;color:var(--sw);writing-mode:vertical-rl;
   transform:rotate(180deg);flex:none;padding-top:2px}
 .ai-meta{flex:1;min-width:0}
-.ai-name{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;line-height:1.24;
+.ai-name{font-family:'Laurel',Georgia,serif;font-weight:500;line-height:1.24;
   color:var(--dusty-granite)}
 .ai-grid.big .ai-name{font-size:26px}
 .ai-grid.small .ai-name{font-size:19px}
-.ai-note{margin-top:8px;font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;
+.ai-note{margin-top:8px;font-family:'Clover',system-ui,sans-serif;font-weight:400;
   font-size:14px;line-height:1.55;color:var(--muted)}
 .ai-tags{margin-top:12px;display:flex;flex-wrap:wrap;gap:7px}
 .ai-tag{background:var(--cream);border:1px solid var(--outline-stroke);border-radius:10px;
-  padding:5px 10px;font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;
+  padding:5px 10px;font-family:'Thistle',ui-monospace,monospace;
   font-weight:500;font-size:11px;color:var(--sw)}
 .ai-tag.mut{color:var(--muted)}
 @media (prefers-reduced-motion:reduce){
@@ -584,12 +584,12 @@ CSS_CAT = """
    and centred ragged type at that length is genuinely harder to read -- so left,
    on a measure, with real leading. */
 .ac-plate .cs-caption{text-align:left;max-width:660px;line-height:1.65}
-.cs-caption .t{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;
+.cs-caption .t{font-family:'Laurel',Georgia,serif;font-weight:500;
   font-size:17px;color:var(--dusty-granite)}
 .cs-caption .d{color:var(--antique-gold)}
 /* controls, but no autoplay and no loop: these have sound and a running time, and
    a portfolio that starts making noise at you is a portfolio you close. */
-.ac-plate .runs{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;
+.ac-plate .runs{font-family:'Thistle',ui-monospace,monospace;
   color:var(--antique-gold)}
 
 /* Where a piece has been published, that goes on the piece. It is the one claim on
@@ -597,7 +597,7 @@ CSS_CAT = """
 .ac-award{display:inline-flex;align-items:center;gap:7px;margin-top:10px;
   padding:5px 11px 5px 9px;border-radius:999px;
   background:rgba(226,240,133,.34);border:1px solid rgba(140,150,70,.42);
-  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+  font-family:'Thistle',ui-monospace,monospace;font-weight:500;
   font-size:11px;letter-spacing:.06em;color:#5C6326;white-space:nowrap}
 .ac-award::before{content:"";width:6px;height:6px;border-radius:50%;
   background:#8C9646;flex:none}
@@ -647,9 +647,9 @@ CSS_CAT = """
 .f-tape .ac-frame::before{left:-22px;transform:rotate(-42deg)}
 .f-tape .ac-frame::after{right:-22px;transform:rotate(42deg)}
 .ac-label{margin-top:14px;padding-left:12px;border-left:2px solid #C8D665}
-.ac-label .t{display:block;font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;
+.ac-label .t{display:block;font-family:'Laurel',Georgia,serif;font-weight:500;
   font-size:15px;line-height:1.3;color:var(--dusty-granite)}
-.ac-label .b{display:block;margin-top:7px;font-family:'Diatype','Inter',system-ui,sans-serif;
+.ac-label .b{display:block;margin-top:7px;font-family:'Clover',system-ui,sans-serif;
   font-weight:400;font-size:13px;line-height:1.55;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){
   .ac-frame{transition:none}.ac-work:hover .ac-frame{transform:none}

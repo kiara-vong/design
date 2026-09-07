@@ -32,7 +32,7 @@ def panel(x, y, w, h, name, order, scale=1.0):
          rect(x, y, w, 26 * scale, WASH, 10),
          rect(x, y + 16 * scale, w, 10 * scale, WASH)]
     o.append(text(x + 12, y + 18 * scale, name, 11 * scale, INK,
-                  "'Inter',sans-serif", 700))
+                  "'Clover',sans-serif", 700))
     # A persona switcher, with this one selected.
     o.append(rect(x + w - 54 * scale, y + 7 * scale, 44 * scale, 13 * scale,
                   MUT, 7 * scale, op=.22))
@@ -45,7 +45,7 @@ def panel(x, y, w, h, name, order, scale=1.0):
         o.append(rect(x + 10 * scale, yy, w - 20 * scale, bh, col, 6, op=.16))
         o.append(rect(x + 10 * scale, yy, 3.5 * scale, bh, col, 2))
         o.append(text(x + 20 * scale, yy + 12 * scale, label, 9 * scale, col,
-                      "'Inter',sans-serif", 700))
+                      "'Clover',sans-serif", 700))
         if bh > 22 * scale:
             o.append(bar(x + 20 * scale, yy + 18 * scale, (w - 56) * scale,
                          5 * scale, LINE))
@@ -55,10 +55,10 @@ def panel(x, y, w, h, name, order, scale=1.0):
 
 def fig_reorder():
     o = [rect(0, 0, FW, FH, PAPER)]
-    o.append(text(28, 40, "The same blocks, ranked differently",
-                  17, INK, "'Fraunces',serif", 600))
-    o.append(text(28, 62, "colour follows one block across the three panels",
-                  12, MUT, "'JetBrains Mono',monospace", 400))
+    # No caption across the top. This is the cover of a page whose kicker,
+    # headline and intro sit two centimetres below it saying the same thing with
+    # more room to say it in, and a caption inside a cover image is a caption
+    # competing with the headline above it.
     for i, (name, order) in enumerate(PERSONAS):
         o.append(panel(28 + i * 254, 84, 224, 252, name, order, scale=1.02))
     return "".join(o)
@@ -86,7 +86,7 @@ def card_shot():
     """The home-page thumbnail, authored in the shared 1200x700 cast."""
     o = [rect(0, 0, W, H, "#EFECFF")]
     o.append(text(40, 52, "ONE PAGE, THREE ORDERINGS", 17, "#8460C6",
-                  "'JetBrains Mono',monospace", 500))
+                  "'Thistle',monospace", 500))
     for i, (name, order) in enumerate(PERSONAS):
         o.append(panel(40 + i * 380, 128, 340, 452, name, order, scale=1.62))
     save("shot-persona", "".join(o), W, H)

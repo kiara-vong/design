@@ -4,14 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Events Timeline · Kiara Vong</title>
-<meta name="description" content="A resource's compliance history was a table of rows sorted by date, which is technically the whole story and practically unreadable. I designed the ti">
+<meta name="description" content="A resource's compliance history was a table of rows sorted by date, which is technically the whole story and practically unreadable. I built the featu">
 <meta name="theme-color" content="#649F25">
 <link rel="icon" href="../../assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- The type is served from this origin now, so there is no third party to open a
+     connection to. The two faces every one of these pages sets before anything else
+     are named here: discovered in the stylesheet they queue behind it, and a case
+     study is a wall of text whose first paint is the title and the opening paragraph. -->
+<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -29,8 +33,16 @@
    a phone, which is the ordering rule the whole site follows. */
 .cs-hero .hero-float .cs-heroimg{position:absolute;inset:0;width:100%;height:100%;
   display:block;object-fit:cover}
+/* contain rather than cover: a diagram cropped at the edges is a diagram missing
+   an edge, and these are drawn to fit the slot exactly, so the two agree except
+   when a figure arrives at some other aspect and would otherwise lose its ends. */
 .cs-media .cs-flat{position:absolute;inset:0;width:100%;height:100%;display:block;
-  object-fit:cover}
+  object-fit:contain}
+/* A diagram is not a screen, so it gets no browser chrome. Everything else that
+   holds a picture on this site does; putting a title bar around a drawing claims
+   it is a screenshot, and the reader spends a moment looking for the application
+   it came out of. */
+.cs-media.cs-diagram{background:var(--dove-ivory)}
 /* The pill, fixed over the page the way it is on About. A case study is a long
    scroll and the section list on the left only moves within this page; the pill is
    how you get off it.
@@ -56,7 +68,7 @@
     <a href="#decisions">Key decisions</a>
     <a class="sub" href="#carry">Colouring the gaps</a>
     <a class="sub" href="#collapse">When two things happen at once</a>
-    <a class="sub" href="#keys">Making it work without a mouse</a>
+    <a class="sub" href="#table">What a column can be</a>
     <a href="#impact">What changed</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -107,14 +119,17 @@
           <h1 class="cs-title">Events Timeline</h1>
         </div>
         <div class="cs-headgroup">
-        <p class="cs-intro">A resource's compliance history was a table of rows sorted by date, which is technically the whole story and practically unreadable. I designed the timeline that sits above it: a single track where you can see, at a glance, how long something has been in trouble and when it stopped being.</p>
+        <p class="cs-intro">A resource's compliance history was a table of rows sorted by date, which is technically the whole story and practically unreadable. I built the feature that sits above it end to end, the GraphQL API and the interface both: a time-scaled track where a glance tells you what state a resource is in, how long it has been in it, and what the automated remediation did along the way. The demo linked above is a simplified, scrubbed recreation of it.</p>
+        <div class="cs-cta">
+          <a href="https://kiara-vong.github.io/resource-dashboard/#/resources/res-05" target="_blank" rel="noopener"><span>Open the rebuild</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg></a>
+          <span class="cs-cta-url">A public rebuild of the internal tool, with the data scrubbed</span>
+        </div>
         <div class="cs-meta">
-          <div class="col"><span class="lbl">Role</span><span class="val">Design engineer,<br>front end</span></div>
-          <div class="col"><span class="lbl">Stack</span><span class="val">React, TypeScript</span></div>
-          <div class="col"><span class="lbl">Scope</span><span class="val">Timeline, events table,<br>accessibility pass</span></div>
-          <div class="col"><span class="lbl">Status</span><span class="val">Shipped in beta</span></div>
-          <div class="col"><span class="lbl">Rebuilt</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/resource-dashboard/#/resources/res-05" target="_blank" rel="noopener">Open it</a></span></div>
-          <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know</a></span></div>
+          <div class="col"><span class="lbl">Role</span><span class="val">Design engineer,<br>API and interface</span></div>
+          <div class="col"><span class="lbl">Stack</span><span class="val">React, TypeScript,<br>GraphQL</span></div>
+          <div class="col"><span class="lbl">Scope</span><span class="val">Schema, resolvers,<br>timeline, events table</span></div>
+          <div class="col"><span class="lbl">Status</span><span class="val">Released in beta,<br>expanding to more<br>dashboards</span></div>
+          <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know!</a></span></div>
         </div>
         </div>
       </div>
@@ -128,9 +143,10 @@
       <div class="cs-body">
         <p>The events were all there, sorted by timestamp, each one accurate. But the question people actually had was never “what happened on the third of August”. It was “how long has this been broken”, and a table answers that only if you are willing to read it and do arithmetic.</p>
         <p>A timeline answers it by being looked at. That is the whole argument for the feature: the data did not change, the shape of it did.</p>
+        <p>What it answers now is a different question from the one the table answered. Not “is this compliant right now”, which a chip can say in four words, but “how did it get into this state, and what did the automation do about it”. The chip at the top right gives the state and how long it has held: conformant since a date, or in violation for four days, with the timer resetting the moment a fix lands so there is no ambiguity about whether it did.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:739px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:111.7px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-13.1px;--y1:-16.2px;--k1:0.5510">
+        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:739px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:111.7px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-9.0px;--y1:-144.8px;--k1:0.7250">
           <div class="view">
             <div class="plate">
               <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
@@ -139,7 +155,7 @@
               </div>
             </div>
           </div>
-          <div class="call" style="--cx:613.0px;--cy:198.6px;--cw:166px">
+          <div class="call" style="--cx:613.0px;--cy:193.2px;--cw:166px">
             <div class="call-row"><span class="call-line"></span><span class="call-note">Aug 18, then Aug 23</span></div>
             <p class="call-desc">Violated here, fixed there. The gap between them is the answer, and the table makes you work it out.</p>
           </div>
@@ -158,24 +174,25 @@
       <div class="cs-body">
         <p>Events are discrete and compliance is continuous, and that mismatch is the whole engineering problem. A resource that was violated on the 3rd and fixed on the 8th generates two events and five days of nothing, and those five days are the part that matters most.</p>
         <p>So state carries forward: the segment between two events is coloured by the state the earlier one left behind, not by the absence of data. Drawn the naive way, the track shows two dots and a gap, which reads as “nothing was wrong” for precisely the stretch when something was.</p>
+        <p>The track is time-scaled, so where a dot sits horizontally is when it happened, and the colours are semantic rather than per-event: red while the resource was in violation, green while it was conformant, amber across an automated change of any kind. Three colours covering a dozen event types is a decision that has to be made once and defended afterwards, and the defence is that a reader scanning a track is asking about state, not about which of six words the change was called.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-stage cam-wipe" style="--pw:1600px;--ph:281px;--bar:42px;--plate-r:21px;--n:2;--x0:46.0px;--y0:133.4px;--k0:0.4419;--s:50;--wx:46.0px;--wy:152.0px;--ww:707.0px;--wh:105.6px">
+        <div class="cs-media cam cam-stage cam-slide" style="--pw:2200px;--ph:385px;--bar:57px;--plate-r:29px;--n:2;--x0:46.0px;--y0:133.6px;--k0:0.3214;--s:50;--wx:46.0px;--wy:152.0px;--ww:707.0px;--wh:105.4px">
           <div class="view">
             <div class="plate">
               <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
               <div class="shots">
-                <img src="../../assets/plate/dashboard-timeline-naive.webp" alt="The same events with the gaps uncoloured, then with state carried across them" loading="lazy">
+                <img src="../../assets/plate/dashboard-timeline-naive.webp" alt="The same events with the gaps left uncoloured, and the same events with the state of the earlier one carried across them" loading="lazy">
                 <img src="../../assets/plate/dashboard-timeline-carryforward.webp" alt="" aria-hidden="true" loading="lazy">
               </div>
             </div>
           </div>
-          <span class="wipe-tag left">before</span>
-          <span class="wipe-tag right">after</span>
-          <span class="wipe-line" aria-hidden="true"><i></i></span>
-          <input class="wipe-range" type="range" min="0" max="100" value="50" aria-label="Reveal the finished island">
+          <span class="slide-tag left">gaps left empty</span>
+          <span class="slide-tag right">state carried forward</span>
+          <span class="slide-line" aria-hidden="true"><i></i></span>
+          <input class="slide-range" type="range" min="0" max="100" value="50" aria-label="Reveal the after state">
         </div>
-        <figcaption class="cs-caption">Identical dates, identical width. The only difference is whether the line between two events knows what happened at the first one.</figcaption>
+        <figcaption class="cs-caption">Identical dates, identical width, the same six events. The only difference is whether the line between two of them knows what happened at the first one.</figcaption>
       </figure>
       </div>
 
@@ -184,29 +201,24 @@
       <div class="cs-body">
         <p>Events cluster. An automated fix fires, fails, retries and succeeds, and at any sensible zoom those are four dots occupying the same pixel.</p>
         <p>Adjacent same-day events collapse into one dot that opens a popover with all of them. The alternative was letting them overlap, which looks like a rendering bug, or spacing them evenly, which lies about when they happened. Collapsing keeps the position honest and moves the detail one interaction away, where there is room for it.</p>
-      </div>
-      </div>
-
-      <div class="cs-sub" id="keys">
-        <h2 class="cs-h2">Making it work without a mouse</h2>
-      <div class="cs-body">
-        <p>The first version of the dots and the sortable table headers were mouse-only. Everything worked, and none of it could be reached from a keyboard.</p>
-        <p>They take focus now, activate on Enter or Space, close on Escape, and announce themselves properly. I am putting this in a case study rather than quietly fixing it because the reason it shipped that way is worth saying out loud: it was built with a mouse in hand and never tested any other way. Nobody decided to exclude anyone. That is exactly how it usually happens.</p>
+        <p>The badge is a count, and it opens a card listing every event that landed at that moment. Clicking one of them scrolls to its row in the table below, which is the part that makes the two halves one feature rather than a chart with a table under it. Clusters are usually a fleet-wide change arriving everywhere at once, so the count is information in itself.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-clip">
-          <video src="../../assets/video/dashboard-keyboard-walkthrough.mp4" poster="../../assets/video/dashboard-keyboard-walkthrough-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Tabbing onto a timeline dot, opening its popover and re-sorting the table, with no mouse"></video>
+        <div class="cs-media cs-diagram">
+          <img class="cs-flat" src="../../assets/case/cs-tl-collapse.svg" alt="Four events on one day drawn where they happened, overlapping into a single smear, beside the same four collapsed into one dot that opens a list of them" loading="lazy">
         </div>
-        <figcaption class="cs-caption">The focus ring is the whole figure. Both of these were mouse-only before this work.</figcaption>
+        <figcaption class="cs-caption">Left is honest and unreadable. Right keeps the position exactly as honest and moves the four events one interaction away, which is the only version where both the when and the what survive.</figcaption>
       </figure>
-      <div class="cs-rules">
-        <div class="cs-rule"><span class="n">01</span><span class="t">Reachable</span><span class="d">Every dot and sortable header is in the tab order.</span></div>
-        <div class="cs-rule"><span class="n">02</span><span class="t">Operable</span><span class="d">Enter or Space activates; Escape closes the popover.</span></div>
-        <div class="cs-rule"><span class="n">03</span><span class="t">Announced</span><span class="d">State is exposed, so the sort direction and the open/closed state are not purely visual.</span></div>
-      </div>
       </div>
 
-    </div>
+      <div class="cs-sub" id="table">
+        <h2 class="cs-h2">What a column can be asked to do</h2>
+      <div class="cs-body">
+        <p>The table under the track is not a fallback. It is where the specifics live, and two of its columns do more than report a field.</p>
+        <p>The quantification column renders financial events as money. The underlying value is a metric string, and every reader of it was doing the same conversion in their head to answer the same question, which is what a remediation actually saved. Doing that conversion once, in the column, is a smaller change than it sounds and it is the difference between a number and an answer.</p>
+        <p>The requirement column is a link out to the control the event was raised against. It exists because the alternative was a reader copying an identifier into a second system, which is the exact behaviour this whole dashboard was built to remove. Every column sorts, and the filters above narrow by event type, status and timeframe.</p>
+      </div>
+      </div>
 
     <section id="impact" class="cs-section">
       <div class="cs-sechead">

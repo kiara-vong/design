@@ -358,7 +358,7 @@
   });
 })();
 
-/* Before/after wipe: a range input drives a clip-path, and that is the whole thing.
+/* Before/after slider: a range input drives a clip-path, and that is the whole thing.
    ---------------------------------------------------------------------------
    The control is a real <input type="range"> laid over the window at zero opacity
    rather than a div with a pointermove handler, which means drag, touch, arrow
@@ -366,11 +366,11 @@
    being reimplemented one at a time and got wrong for somebody. All this has to do
    is copy the value onto the container, where the CSS is waiting for it. */
 (function () {
-  var figs = [].slice.call(document.querySelectorAll('.cam-wipe'));
+  var figs = [].slice.call(document.querySelectorAll('.cam-slide'));
   if (!figs.length) return;
 
   figs.forEach(function (fig) {
-    var range = fig.querySelector('.wipe-range');
+    var range = fig.querySelector('.slide-range');
     if (!range) return;
     function set() {
       fig.style.setProperty('--s', range.value);

@@ -69,9 +69,9 @@ def c(cx, cy, rad, fill, op=None, cls=None, stroke=None, sw=2, style=""):
 
 
 def t(x, y, s, size=13, fill=INK, fam="mono", weight=400, anchor="start", cls=None):
-    fams = {"mono": "'ApercuMono','JetBrains Mono',ui-monospace,monospace",
-            "sans": "'Diatype','Inter',system-ui,sans-serif",
-            "serif": "'Mackinac','Fraunces',Georgia,serif"}
+    fams = {"mono": "'Thistle',ui-monospace,monospace",
+            "sans": "'Clover',system-ui,sans-serif",
+            "serif": "'Laurel',Georgia,serif"}
     o = ('<text x="%.1f" y="%.1f" font-family="%s" font-size="%g" font-weight="%s" '
          'fill="%s" text-anchor="%s"' % (x, y, fams[fam], size, weight, fill, anchor))
     if cls:
@@ -106,8 +106,11 @@ def save(name, body, css, w=FW, h=FH, ground=PAPER):
 # =====================================================================
 def dash_seams():
     """The problem: three systems, one question, a person doing the joining."""
-    o = [title(28, 40, "One question, three systems"),
-         sub(28, 62, "the cost was never in any one tool")]
+    # No title on this one. It is the page's cover, and the page opens two
+    # centimetres below it with a kicker, a title and an intro that say the same
+    # thing in better words. A caption inside a cover image is a caption competing
+    # with the headline it sits above.
+    o = []
     SYS = [("ownership", BLUE), ("compliance jobs", GOLD), ("inventory", VIOLET)]
     for i, (nm, col) in enumerate(SYS):
         x = 46 + i * 240
@@ -135,43 +138,101 @@ def dash_seams():
 
 
 def tl_carry():
-    """The one that matters: state carries across the gap between events."""
-    o = [title(28, 40, "State carries across the gaps"),
-         sub(28, 62, "the colour between the dots is the answer")]
-    x0, tw = 60, FW - 120
-    NAIVE_Y, GOOD_Y = 150, 286
-    EVENTS = [(0.0, OK), (0.30, RED), (0.62, OK), (0.80, RED), (1.0, OK)]
-    o.append(t(60, 118, "drawn naively", 12, MUT, "mono"))
-    o.append(r(x0, NAIVE_Y - 2, tw, 4, LINE, 2))
-    for a, col in EVENTS:
-        o.append(c(x0 + tw * a, NAIVE_Y, 10, col))
-    o.append(t(x0 + tw * .46, NAIVE_Y + 42,
-               "reads as: nothing was wrong here", 12, MUT, "sans", 400, anchor="middle"))
-    o.append(t(60, 254, "carrying state forward", 12, ACCENT, "mono", 500))
-    o.append(r(x0, GOOD_Y - 3, tw, 6, LINE, 3))
-    o.append('<g class="fill">')
-    for i in range(len(EVENTS) - 1):
-        a, col = EVENTS[i]
-        b = EVENTS[i + 1][0]
-        o.append(r(x0 + tw * a, GOOD_Y - 4, tw * (b - a), 8, col, 4,
-                   cls="seg s%d" % i, style="animation-delay:%.2fs" % (i * .25)))
+    """One track, not two: the same events, read the wrong way and then the right
+    way, without the reader having to hold two pictures at once.
+
+    It was two tracks stacked, one labelled naive and one labelled carried, which
+    is a comparison the reader assembles themselves. A cover has about two seconds
+    to make its point, and two seconds is not enough to look twice. So there is
+    one timeline now, the dots land on it, and then the colour floods forward out
+    of each event into the gap after it -- which is not an illustration of the
+    idea, it IS the idea: state carries forward until something changes it.
+
+    No title across the top. This is the cover of a page that opens two
+    centimetres below it with a kicker, a headline and an intro, and a caption
+    inside a cover image is a caption competing with the headline above it.
+    """
+    o = []
+    # Authored at .cs-hero's own 799x307 rather than the 799x391 the in-page
+    # figures use. The hero draws with object-fit:cover, so a 391-tall cover loses
+    # 42 pixels off the top and 42 off the bottom -- which the other covers were
+    # composed around by accident rather than on purpose. At the real size there
+    # is nothing to compose around.
+    X0, TW, TY = 70, FW - 140, 85
+    # 0.30 to 0.62 of the track is the violated span, and the whole figure is
+    # built to put a bracket under exactly that.
+    EV = [(0.00, OK), (0.30, RED), (0.62, OK), (0.80, RED), (1.00, OK)]
+
+    o.append(r(X0, TY - 3, TW, 6, LINE, 3))
+
+    # the gaps, flooding forward out of the event on their left
+    o.append('<g class="flood">')
+    for i in range(len(EV) - 1):
+        aa, col = EV[i]
+        bb = EV[i + 1][0]
+        o.append(r(X0 + TW * aa, TY - 4, TW * (bb - aa), 8, col, 4,
+                   cls="seg", style="animation-delay:%.2fs" % (2.3 + i * .34)))
     o.append('</g>')
-    for a, col in EVENTS:
-        o.append(c(x0 + tw * a, GOOD_Y, 10, col))
-        o.append(c(x0 + tw * a, GOOD_Y, 10, "none", stroke=PAPER, sw=3))
-    o.append(t(x0 + tw * .46, GOOD_Y + 44,
-               "reads as: five days in violation", 12, INK, "sans", 700, anchor="middle"))
-    css = (".seg{opacity:0;transform-box:fill-box;transform-origin:0 50%;"
-           "animation:sg 7s ease-out infinite}"
-           "@keyframes sg{0%,8%{opacity:0;transform:scaleX(0)}"
-           "24%,90%{opacity:1;transform:scaleX(1)}100%{opacity:0;transform:scaleX(0)}}")
+
+    # the events themselves, landing left to right
+    for i, (aa, col) in enumerate(EV):
+        cx = X0 + TW * aa
+        o.append(c(cx, TY, 11, col, cls="dot",
+                   style="animation-delay:%.2fs" % (i * .2)))
+        o.append(c(cx, TY, 11, "none", stroke=PAPER, sw=3, cls="dot",
+                   style="animation-delay:%.2fs" % (i * .2)))
+        o.append(r(cx - .5, TY + 18, 1, 9, LINE, cls="dot",
+                   style="animation-delay:%.2fs" % (i * .2)))
+
+    for aa, lab, anc in ((0.0, "Aug 8", "start"), (0.62, "Aug 23", "middle"),
+                         (1.0, "Now", "end")):
+        o.append(t(X0 + TW * aa, TY + 46, lab, 11, MUT, "mono", anchor=anc))
+
+    # the bracket under the span the argument is about
+    bx0, bx1 = X0 + TW * .30, X0 + TW * .62
+    by = TY + 70
+    o.append('<g class="span">')
+    o.append(r(bx0, by, bx1 - bx0, 2, RED, 1, op=.55))
+    o.append(r(bx0, by - 7, 2, 9, RED, 1, op=.55))
+    o.append(r(bx1 - 2, by - 7, 2, 9, RED, 1, op=.55))
+    o.append(t((bx0 + bx1) / 2.0, by + 26, "five days in violation",
+               13, INK, "sans", 700, anchor="middle"))
+    o.append('</g>')
+
+    # the two readings, one at a time, in the same place
+    o.append(t(FW / 2.0, TY + 120, "five events, and four gaps",
+               12, MUT, "mono", anchor="middle", cls="read a"))
+    o.append(t(FW / 2.0, TY + 120,
+               "the gap is coloured by what happened before it",
+               12, ACCENT, "mono", 500, anchor="middle", cls="read b"))
+
+    css = ("""
+    .dot{opacity:0;transform-box:fill-box;transform-origin:50% 50%;
+         animation:tl-dot 9s ease-out infinite}
+    @keyframes tl-dot{0%{opacity:0;transform:scale(.3)}
+      6%{opacity:1;transform:scale(1.25)}10%,88%{opacity:1;transform:scale(1)}
+      96%,100%{opacity:0;transform:scale(.3)}}
+    .seg{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);
+         animation:tl-seg 9s cubic-bezier(.3,.7,.3,1) infinite}
+    @keyframes tl-seg{0%{transform:scaleX(0)}
+      7%,86%{transform:scaleX(1)}94%,100%{transform:scaleX(0)}}
+    .span{opacity:0;animation:tl-span 9s ease-out infinite}
+    @keyframes tl-span{0%,52%{opacity:0}60%,86%{opacity:1}92%,100%{opacity:0}}
+    .read{opacity:0;animation:tl-read 9s ease-in-out infinite}
+    .read.a{animation-name:tl-read-a}
+    .read.b{animation-name:tl-read-b}
+    @keyframes tl-read-a{0%,4%{opacity:0}10%,26%{opacity:1}34%,100%{opacity:0}}
+    @keyframes tl-read-b{0%,38%{opacity:0}46%,88%{opacity:1}94%,100%{opacity:0}}
+    """)
     return o, css
 
 
 def ui_drift():
     """Twenty-seven variants collapsing into nine components."""
-    o = [title(28, 40, "Twenty-seven variants, four components"),
-         sub(28, 62, "none of them wrong on their own page")]
+    # No caption across the top: this is a cover, and the page's own kicker,
+    # headline and intro sit two centimetres under it saying the same thing with
+    # more room to say it in.
+    o = []
     ROWS = [("Button", 9, ACCENT), ("Input", 7, BLUE), ("Modal", 5, VIOLET),
             ("Table", 6, GREEN)]
     y = 92
@@ -205,8 +266,10 @@ def persona_reorder():
               ("Team view", VIOLET), ("Getting started", GOLD)]
     ORDERS = [[0, 1, 2, 3, 4], [1, 3, 0, 2, 4], [4, 0, 1, 2, 3]]
     NAMES = ["Operator", "Owner", "Newcomer"]
-    o = [title(28, 40, "The same blocks, ranked differently"),
-         sub(28, 62, "colour follows one block across the three")]
+    # No caption across the top: this is a cover, and the page's own kicker,
+    # headline and intro sit two centimetres under it saying the same thing with
+    # more room to say it in.
+    o = []
     for i, nm in enumerate(NAMES):
         x = 28 + i * 254
         o.append(r(x, 88, 224, 30, VIOLET, 8, op=.12))
@@ -346,14 +409,88 @@ def pac_targets():
     return o, css
 
 
+
+# =====================================================================
+# 02b Events Timeline -- four events on one day
+# =====================================================================
+def tl_collapse():
+    """The clustering problem and the answer to it, side by side.
+
+    The section that needs this figure describes three options and picks one, and
+    a reader cannot weigh three options they have not seen. Drawn rather than
+    captured because the losing two never shipped: there is no screenshot of the
+    overlap bug, and there never should be.
+    """
+    o = []
+    CY = 170
+
+    def track(x0, x1, y):
+        return [r(x0, y - 2, x1 - x0, 4, LINE, 2)]
+
+    # ---- left: what four events on one day actually look like ----------
+    o += [t(46, 58, "drawn where they happened", 12, MUT, "mono", 500),
+          t(46, 82, "four events, one day", 15, INK, "sans", 600)]
+    o += track(46, 330, CY)
+    for i, col in enumerate((RED, GOLD, GOLD, OK)):
+        o.append(c(188 + i * 3.5, CY, 11, col, stroke=PAPER, sw=2.5))
+    o += [t(188, CY + 44, "one pixel, four dots", 11, MUT, "mono", anchor="middle"),
+          t(188, CY + 62, "reads as a rendering fault", 11, MUT, "mono",
+            anchor="middle")]
+    for x, lab in ((46, "Aug 8"), (330, "Now")):
+        o += [r(x, CY + 12, 1, 8, LINE),
+              t(x, CY + 34, lab, 11, MUT, "mono",
+                anchor="start" if x < 200 else "end")]
+
+    # ---- right: collapsed, with the detail one interaction away --------
+    o += [t(452, 58, "collapsed, position kept", 12, ACCENT, "mono", 500),
+          t(452, 82, "one dot, four events", 15, INK, "sans", 600)]
+    o += track(452, 752, CY)
+    o.append(c(594, CY, 13, INK, cls="dot"))
+    o.append(t(594, CY + 4.5, "4", 11, PAPER, "mono", 600, "middle"))
+    for x, lab in ((452, "Aug 8"), (752, "Now")):
+        o += [r(x, CY + 12, 1, 8, LINE),
+              t(x, CY + 34, lab, 11, MUT, "mono",
+                anchor="start" if x < 600 else "end")]
+
+    # the popover the dot opens
+    px, py = 500, 226
+    o.append(r(px, py, 188, 112, PAPER, 10, stroke=LINE, sw=1.5, cls="pop"))
+    rows = (("Policy Violated", RED), ("Fix Failed", GOLD),
+            ("Fix Retried", GOLD), ("Auto Fix Completed", OK))
+    for i, (lab, col) in enumerate(rows):
+        y = py + 26 + i * 22
+        o.append(c(px + 16, y - 4, 4.5, col, cls="pop"))
+        o.append(t(px + 30, y, lab, 11, INK, "mono", cls="pop"))
+    # No header on the popover. It sat exactly where the axis labels sit and the
+    # two collided; the caption underneath says the same thing with more room.
+
+    css = ("""
+    .dot{transform-box:fill-box;transform-origin:50% 50%;
+         animation:tlc-dot 6s ease-in-out infinite}
+    @keyframes tlc-dot{0%,42%{transform:scale(1)}
+      50%,88%{transform:scale(1.18)}96%,100%{transform:scale(1)}}
+    .pop{opacity:0;animation:tlc-pop 6s ease-in-out infinite}
+    @keyframes tlc-pop{0%,44%{opacity:0}54%,86%{opacity:1}94%,100%{opacity:0}}
+    """)
+    return o, css
+
+
 print("case-study figures:")
+# (name, builder) or (name, builder, width, height). Only the timeline cover is
+# authored at the hero's own size so far; the rest are 799x391 and lose a band top
+# and bottom to object-fit:cover, which they were composed around.
 FIGS = [
     ("cs-dash-seams", dash_seams),
-    ("cs-tl-carry", tl_carry),
+    ("cs-tl-carry", tl_carry, HW, HH),
+    ("cs-tl-collapse", tl_collapse),
     ("cs-ui-drift", ui_drift),
     ("cs-persona-reorder", persona_reorder),
     ("cs-pac-targets", pac_targets),
 ]
-for name, fn in FIGS:
+for spec in FIGS:
+    name, fn = spec[0], spec[1]
     body, css = fn()
-    save(name, "".join(body), css)
+    if len(spec) > 2:
+        save(name, "".join(body), css, spec[2], spec[3])
+    else:
+        save(name, "".join(body), css)

@@ -37,6 +37,31 @@ def _fig(inner, caption):
             % (inner, cap))
 
 
+# The window every figure on this site sits in.
+#
+# The stage machines draw their own chrome, on a plate that moves inside the card.
+# The older machines below do not: they fill the card edge to edge, which made a
+# screenshot on this site read as two different kinds of object depending on which
+# machine happened to be holding it. It is the same kind of object. It is a screen.
+#
+# So the chrome is drawn here instead, and the machine's own content goes into
+# .win -- a positioned box under the bar. Everything inside keeps working
+# unchanged, because inset:0 resolves against the nearest positioned ancestor and
+# .win is now that ancestor. The content box goes from 799x391 to 799x365, which
+# is why gen/plates.py computes strip travel against 365.
+FRAME_BAR = 26
+
+
+def _win(cls, inner, style=""):
+    return ('        <div class="cs-media cam framed %s"%s>\n'
+            '          <span class="bar" aria-hidden="true">'
+            '<i></i><i></i><i></i><b></b></span>\n'
+            '          <div class="win">\n%s'
+            '          </div>\n'
+            '        </div>\n'
+            % (cls, (' style="%s"' % style) if style else "", inner))
+
+
 def clip(name, alt, caption, root="../../"):
     """A walkthrough video. Plays itself, silently, forever.
 
@@ -50,13 +75,11 @@ def clip(name, alt, caption, root="../../"):
     Muted is not a preference. It is the only state a browser will autoplay, and
     these are assembled from state captures with no audio to lose.
     """
-    return _fig(
-        '        <div class="cs-media cam cam-clip">\n'
-        '          <video src="%sassets/video/%s.mp4" '
+    return _fig(_win("cam-clip",
+        '            <video src="%sassets/video/%s.mp4" '
         'poster="%sassets/video/%s-poster.jpg" '
         'autoplay muted loop playsinline preload="metadata" '
-        'aria-label="%s"></video>\n'
-        '        </div>\n' % (root, name, root, name, esc(alt)), caption)
+        'aria-label="%s"></video>\n' % (root, name, root, name, esc(alt))), caption)
 
 
 def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../../"):
@@ -65,11 +88,10 @@ def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../../")
     fx/fy name the point worth looking at, as percentages of the image, so the push
     frames the callout rather than the middle.
     """
-    return _fig(
-        '        <div class="cs-media cam cam-push" '
-        'style="--z:%s;--fx:%s;--fy:%s;--dur:%s">\n'
-        '          <img src="%sassets/%s" alt="%s" loading="lazy">\n'
-        '        </div>\n' % (z, fx, fy, dur, root, src, esc(alt)), caption)
+    return _fig(_win("cam-push",
+        '            <img src="%sassets/%s" alt="%s" loading="lazy">\n'
+        % (root, src, esc(alt)),
+        "--z:%s;--fx:%s;--fy:%s;--dur:%s" % (z, fx, fy, dur)), caption)
 
 
 def strip(src, alt, caption, travel, dur="17s", root="../../"):
@@ -78,10 +100,10 @@ def strip(src, alt, caption, travel, dur="17s", root="../../"):
     travel is a PERCENTAGE OF THE IMAGE'S OWN HEIGHT, never a pixel count. See the
     note in camera.css for why that distinction has its own paragraph.
     """
-    return _fig(
-        '        <div class="cs-media cam cam-strip" style="--travel:%s;--dur:%s">\n'
-        '          <img src="%sassets/%s" alt="%s" loading="lazy">\n'
-        '        </div>\n' % (travel, dur, root, src, esc(alt)), caption)
+    return _fig(_win("cam-strip",
+        '            <img src="%sassets/%s" alt="%s" loading="lazy">\n'
+        % (root, src, esc(alt)),
+        "--travel:%s;--dur:%s" % (travel, dur)), caption)
 
 
 def wipe(before_src, after_src, alt, caption,
@@ -92,14 +114,13 @@ def wipe(before_src, after_src, alt, caption,
     figure is a comparison, and a reader who has to look away to find out which half
     is which is doing the work the figure was meant to do for them.
     """
-    return _fig(
-        '        <div class="cs-media cam cam-wipe" style="--dur:%s">\n'
-        '          <img src="%sassets/%s" alt="%s" loading="lazy">\n'
-        '          <img src="%sassets/%s" alt="" aria-hidden="true" loading="lazy">\n'
-        '          <span class="seam"></span>\n'
-        '          <span class="tag b">%s</span><span class="tag a">%s</span>\n'
-        '        </div>\n' % (dur, root, before_src, esc(alt), root, after_src,
-                              esc(before), esc(after)), caption)
+    return _fig(_win("cam-wipe",
+        '            <img src="%sassets/%s" alt="%s" loading="lazy">\n'
+        '            <img src="%sassets/%s" alt="" aria-hidden="true" loading="lazy">\n'
+        '            <span class="seam"></span>\n'
+        '            <span class="tag b">%s</span><span class="tag a">%s</span>\n'
+        % (root, before_src, esc(alt), root, after_src, esc(before), esc(after)),
+        "--dur:%s" % dur), caption)
 
 
 def deal(srcs, alt, caption, dur="14s", root="../../"):
@@ -108,26 +129,33 @@ def deal(srcs, alt, caption, dur="14s", root="../../"):
     Which means the first entry should be the frame worth leaving on screen, since
     it is what reduced motion and a paused page both get.
     """
-    o = ['        <div class="cs-media cam cam-deal" style="--dur:%s;--n:%d">\n'
-         % (dur, len(srcs))]
+    o = []
     for i, src in enumerate(srcs):
-        o.append('          <img style="--i:%d" src="%sassets/%s" alt="%s"%s '
+        o.append('            <img style="--i:%d" src="%sassets/%s" alt="%s"%s '
                  'loading="lazy">\n'
                  % (i, root, src, esc(alt) if i == 0 else "",
                     "" if i == 0 else ' aria-hidden="true"'))
-    o.append('        </div>\n')
-    return _fig("".join(o), caption)
+    return _fig(_win("cam-deal", "".join(o),
+                     "--dur:%s;--n:%d" % (dur, len(srcs))), caption)
 
 
 def flat(src, alt, caption, root="../../"):
-    """A drawn figure, held still.
+    """A drawn figure, held still, and deliberately NOT in a browser window.
+
+    Everything else on this site that holds a picture wraps it in chrome, because
+    everything else is holding a screen. This is not: it is a diagram, drawn for
+    the page, explaining something no screenshot of the product could show. Putting
+    a title bar around it would claim it was a screenshot, which is the one thing
+    it is not, and the reader would spend a moment looking for the application it
+    came from.
 
     The SVG animates itself from its own <style>, so there is no camera machine
-    over the top of it: a machine here would be a second thing moving, out of
-    phase with the first. The slot just holds it at its authored size.
+    over the top of it either: a machine here would be a second thing moving, out
+    of phase with the first. The slot holds it whole -- contain rather than cover,
+    since a diagram cropped at the edges is a diagram missing an edge.
     """
     return _fig(
-        '        <div class="cs-media">\n'
+        '        <div class="cs-media cs-diagram">\n'
         '          <img class="cs-flat" src="%sassets/%s" alt="%s" loading="lazy">\n'
         '        </div>\n' % (root, src, esc(alt)), caption)
 
@@ -151,8 +179,14 @@ def annotated(src, alt, caption, notes, root="../../"):
                  '            <p class="ann-desc">%s</p>\n'
                  '          </div>\n'
                  % (key, top, x, y, z, esc(label), esc(desc)))
-    o.append('          <div class="ann-view">'
-             '<img src="%sassets/%s" alt="%s" loading="lazy"></div>\n'
+    # The bar lives inside .ann-view rather than on the figure, because this
+    # machine's labels sit in a column beside the picture: chrome across the whole
+    # card would be a browser window with a set of annotations inside it, which is
+    # not what is being shown.
+    o.append('          <div class="ann-view framed">'
+             '<span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b>'
+             '</span><div class="win">'
+             '<img src="%sassets/%s" alt="%s" loading="lazy"></div></div>\n'
              '        </div>\n' % (root, src, esc(alt)))
     return _fig("".join(o), caption)
 
@@ -412,9 +446,20 @@ def stepper(shots, alt, caption, label="Place the next tile", again="Start over"
     return _fig("".join(o), caption)
 
 
-def wipe(before, after, alt, caption, tags=("before", "after"),
-         start=50, plate=None, radius=None, root="../../"):
-    """Two frames of one run, in register, with a line the reader drags.
+def slider(before, after, alt, caption, tags=("before", "after"),
+           start=50, handle="Reveal the after state", plate=None,
+           radius=None, root="../../"):
+    """Two frames of one run, in register, with a line the reader DRAGS.
+
+    Not to be confused with wipe() above, which is the older machine and does a
+    different job: that one runs its own seam back and forth on a timer and is
+    right for a comparison the reader should be handed. This one waits for a hand.
+    A figure that moves at you is a claim; a figure you move is a check, and which
+    of the two you want depends on whether the reader has any reason to doubt you.
+
+    (These were the same name for about an hour, which is long enough for Python
+    to quietly hand every caller of the old one the new one instead. The names are
+    different now for that reason rather than for a nice one.)
 
     A before and an after are only a comparison if nothing else changed between
     them. That is a condition on the CAPTURE, not on this code: the run has to be
@@ -441,7 +486,7 @@ def wipe(before, after, alt, caption, tags=("before", "after"),
            % (pw, ph, bar, radius, x0, y0, k0, int(start),
               x0, y0 + barh, pw * k0, ph * k0 - barh))
     return _fig(
-        '        <div class="cs-media cam cam-stage cam-wipe" style="%s">\n'
+        '        <div class="cs-media cam cam-stage cam-slide" style="%s">\n'
         '          <div class="view">\n'
         '            <div class="plate">\n'
         '              <span class="bar" aria-hidden="true">'
@@ -451,18 +496,97 @@ def wipe(before, after, alt, caption, tags=("before", "after"),
         '                <img src="%sassets/%s" alt="" aria-hidden="true" '
         'loading="lazy">\n'
         '              </div>\n            </div>\n          </div>\n'
-        '          <span class="wipe-tag left">%s</span>\n'
-        '          <span class="wipe-tag right">%s</span>\n'
-        '          <span class="wipe-line" aria-hidden="true"><i></i></span>\n'
-        '          <input class="wipe-range" type="range" min="0" max="100" '
-        'value="%d" aria-label="Reveal the finished island">\n'
+        '          <span class="slide-tag left">%s</span>\n'
+        '          <span class="slide-tag right">%s</span>\n'
+        '          <span class="slide-line" aria-hidden="true"><i></i></span>\n'
+        '          <input class="slide-range" type="range" min="0" max="100" '
+        'value="%d" aria-label="%s">\n'
         '        </div>\n'
         % (var, root, before, esc(alt), root, after,
-           esc(tags[0]), esc(tags[1]), int(start)), caption)
+           esc(tags[0]), esc(tags[1]), int(start), esc(handle)), caption)
+
+
+def walk(steps, alt, caption, view=(1280, 600), press_bg=None, press_pad=8,
+         dur="28s", radius=None, root="../../"):
+    """A route through an application, clicked out step by step.
+
+    flow() is this with two screens and one click. A drill-down is neither: it is
+    a path, and what a path has to show is that each screen FOLLOWED from the
+    last. Four stills in a row cannot say that -- the reader is left working out
+    what was pressed between them, which is the one thing the figure exists to
+    supply.
+
+    steps  four dicts, in order: {page, press, scroll}. `press` is the thing
+           clicked to reach the NEXT screen, so the last step has none. It is a
+           rectangle in that screen's own pixels, read off the capture -- there is
+           no percentage anywhere in this machine, which is why it can be trusted
+           to land on the card it says it lands on.
+
+           The camera does not move. That is a choice: the route is the figure,
+           and going in and out of it four times turns a path into a series of
+           destinations. What has to read instead is the click, which is why the
+           press here squashes harder than flow's and leaves a ring behind it.
+    scroll set on the one screen that runs past its window: it is scrolled to its
+           foot before the camera goes in, because what gets clicked on it is
+           below the fold and cutting to it would skip the part that shows why.
+
+    The choreography is fixed at four screens and three clicks. That is not a
+    limit worth generalising away until there is a second route to build: the
+    keyframes are a script, and a script written for an unknown number of scenes
+    is a script that plays none of them well.
+    """
+    vw, vh = [float(v) for v in view]
+    bar = round(vw * BAR)
+    radius = round(vw * 0.013) if radius is None else radius
+    pw, ph = vw, vh + bar
+
+    scroll = 0.0
+    for st in steps:
+        if st.get("scroll"):
+            sw, sh = _plate_size(st["page"])
+            scroll = max(0.0, sh * (vw / float(sw)) - vh)
+
+    x0, y0, k0 = _fit(pw, ph, REST_PAD)
+    var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--dur:%s;--n:%d;'
+           '--press-bg:%s;--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f;--sy3:%.1fpx'
+           % (pw, ph, bar, radius, dur, len(steps), press_bg or PRESS_BG,
+              x0, y0, k0, -scroll))
+
+    o = ['        <div class="cs-media cam cam-stage page cam-walk" '
+         'style="%s">\n' % var,
+         '          <div class="view">\n',
+         '            <div class="plate">\n',
+         '              <span class="bar" aria-hidden="true">'
+         '<i></i><i></i><i></i><b></b></span>\n',
+         '              <div class="shots">\n',
+         '                <div class="reel">\n']
+    for i, st in enumerate(steps):
+        o.append('                  <img style="--i:%d" src="%sassets/%s" '
+                 'alt="%s"%s loading="lazy">\n'
+                 % (i, root, st["page"], esc(alt) if i == 0 else "",
+                    "" if i == 0 else ' aria-hidden="true"'))
+    for i, st in enumerate(steps):
+        if not st.get("press"):
+            continue
+        bx, by, bw, bh = [float(v) for v in st["press"]]
+        o.append('                  <span class="press s%d" aria-hidden="true" '
+                 'style="left:%.1fpx;top:%.1fpx;width:%.1fpx;height:%.1fpx">'
+                 '<i style="left:%.0fpx;top:%.0fpx;width:%.1fpx;height:%.1fpx;'
+                 'background-image:url(%sassets/%s);background-size:%dpx auto;'
+                 'background-position:%.1fpx %.1fpx"></i></span>\n'
+                 % (i + 1, bx - press_pad, by - press_pad,
+                    bw + press_pad * 2, bh + press_pad * 2,
+                    press_pad, press_pad, bw, bh,
+                    root, st["page"], int(vw), -bx, -by))
+    o.append('                </div>\n              </div>\n'
+             '            </div>\n          </div>\n')
+    o.append('        </div>\n')
+    return _fig("".join(o), caption)
 
 
 def flow(pages, alt, caption, view=(1280, 600), press=None, picks=None,
-         look=None, dur="22s", radius=None, root="../../"):
+         look=None, still=False, press_pad=None, press_bg=None,
+         dur="22s", radius=None, root="../../"):
     """A form, the button, and the page it takes you to.
 
     page() above scrolls one page and swaps states of it in place. A form is not
@@ -498,13 +622,21 @@ def flow(pages, alt, caption, view=(1280, 600), press=None, picks=None,
         return max(0.0, sh * (vw / float(sw)) - vh)
 
     sy, sy2 = travel(pages[0]), travel(pages[1])
+    # A first page that already fits its window has nothing to scroll, and the
+    # ordinary timeline spends a third of its loop scrolling it anyway -- which on
+    # screen is a third of a loop where nothing happens at all. The still variant
+    # gives that time to the two things this version does have: a longer look at
+    # the control before it is pressed, and a longer scroll of what the press
+    # returns.
+    still_first = still or sy <= 0.5
 
     x0, y0, k0 = _fit(pw, ph, REST_PAD)
-    cls = "cs-media cam cam-stage page flow"
+    cls = "cs-media cam cam-stage page flow" + (" still" if still_first else "")
     var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--dur:%s;--n:2;'
            '--press-bg:%s;--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f;'
            '--sy:%.1fpx;--sy2:%.1fpx'
-           % (pw, ph, bar, radius, dur, PRESS_BG, x0, y0, k0, -sy, -sy2))
+           % (pw, ph, bar, radius, dur, press_bg or PRESS_BG,
+              x0, y0, k0, -sy, -sy2))
 
     if look:
         # Stated against the page; the camera works in the window, and at the
@@ -539,15 +671,19 @@ def flow(pages, alt, caption, view=(1280, 600), press=None, picks=None,
                      % (bx * f, by * f, bw * f, bh * f, sheet,
                         idx["sprite_w"] * f, -i * idx["row"] * f))
     if press:
+        # The margin around the pressed crop is per-figure, because what is next to
+        # a button varies: a submit button sits alone on a page and can take a
+        # generous patch, while half of a segmented control has the other half
+        # against it and a generous patch would paint over it.
+        pad = PRESS_PAD if press_pad is None else float(press_pad)
         bx, by, bw, bh = [float(v) for v in press]
         o.append('                  <span class="press" aria-hidden="true" '
                  'style="left:%.1fpx;top:%.1fpx;width:%.1fpx;height:%.1fpx">'
                  '<i style="left:%.0fpx;top:%.0fpx;width:%.1fpx;height:%.1fpx;'
                  'background-image:url(%sassets/%s);background-size:%dpx auto;'
                  'background-position:%.1fpx %.1fpx"></i></span>\n'
-                 % (bx - PRESS_PAD, by - PRESS_PAD,
-                    bw + PRESS_PAD * 2, bh + PRESS_PAD * 2,
-                    PRESS_PAD, PRESS_PAD, bw, bh,
+                 % (bx - pad, by - pad, bw + pad * 2, bh + pad * 2,
+                    pad, pad, bw, bh,
                     root, pages[0], int(vw), -bx, -by))
     o.append('                </div>\n              </div>\n'
              '            </div>\n          </div>\n')

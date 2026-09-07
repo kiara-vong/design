@@ -49,7 +49,7 @@ def chrome(title, accent=ACCENT):
     for i, c in enumerate(("#E6685C", "#E8B84B", "#7DC26B")):
         o.append('<circle cx="%d" cy="26" r="6.5" fill="%s"/>' % (28 + i * 22, c))
     o.append(rect(108, 13, 430, 26, PAPER, 13, LINE))
-    o.append(text(126, 31, title, 13, MUT, "'JetBrains Mono',monospace"))
+    o.append(text(126, 31, title, 13, MUT, "'Thistle',monospace"))
     o.append(rect(W - 96, 13, 62, 26, accent, 13, op=.16))
     return "".join(o)
 
@@ -74,7 +74,7 @@ def sidebar(active=1, accent=BLUE, w=196):
 def dashboard():
     o = [chrome("resource dashboard", BLUE), sidebar(2, "#5AA9D6")]
     x0 = 236
-    o.append(text(x0, 104, "Resources", 26, INK, "'Fraunces',serif", 600))
+    o.append(text(x0, 104, "Resources", 26, INK, "'Laurel',serif", 600))
     # Filter row.
     for i in range(3):
         o.append(rect(x0 + i * 250, 130, 226, 40, PAPER, 8, LINE, 1.5))
@@ -91,7 +91,7 @@ def dashboard():
     ]
     for li, (label, items) in enumerate(LEVELS):
         g = ['<g class="lv l%d">' % li]
-        g.append(text(x0, 214, label, 13, MUT, "'JetBrains Mono',monospace", 500))
+        g.append(text(x0, 214, label, 13, MUT, "'Thistle',monospace", 500))
         # Breadcrumb: grows a step per level, which is the sense of depth.
         for k in range(li + 1):
             g.append(rect(x0 + k * 108, 228, 92, 22, BLUE, 11, op=.16))
@@ -102,11 +102,11 @@ def dashboard():
                      % (cx + 69, "#2E6B8E"))
             g.append('<path d="M %d 348 l 26 -15 l 26 15 l -26 15 Z" fill="%s" '
                      'opacity=".55"/>' % (cx + 69, "#2E6B8E"))
-            g.append(text(cx + 95, 396, nm, 14, INK, "'Inter',sans-serif", 700,
+            g.append(text(cx + 95, 396, nm, 14, INK, "'Clover',sans-serif", 700,
                           anchor="middle"))
             g.append('<circle cx="%d" cy="292" r="15" fill="%s"/>' % (cx + 166, BLUE))
             g.append(text(cx + 166, 297, str(n), 13, PAPER,
-                          "'Inter',sans-serif", 700, anchor="middle"))
+                          "'Clover',sans-serif", 700, anchor="middle"))
         g.append('</g>')
         o.append("".join(g))
     # A footer bar with the count and the export the case study talks about.
@@ -127,10 +127,10 @@ def dashboard():
 def timeline():
     o = [chrome("resource timeline", GREEN)]
     x0, y0 = 60, 120
-    o.append(text(x0, 104, "Resource Timeline", 24, INK, "'Fraunces',serif", 600))
+    o.append(text(x0, 104, "Resource Timeline", 24, INK, "'Laurel',serif", 600))
     o.append(rect(W - 240, 82, 200, 32, OK, 16, op=.18))
     o.append(text(W - 222, 103, "compliant since Aug 21", 12, OK,
-                  "'JetBrains Mono',monospace"))
+                  "'Thistle',monospace"))
     for i in range(3):
         o.append(rect(x0 + i * 300, 140, 274, 42, PAPER, 8, LINE, 1.5))
         o.append(bar(x0 + 16 + i * 300, 156, 96, 10, MUT))
@@ -153,7 +153,7 @@ def timeline():
                  'stroke-width="2.5"/></g>' % (i, cx, ty, col, cx, ty, PAPER))
         o.append(text(cx, ty + 42, ["Jul 24", "Aug 2", "Aug 7", "Aug 12", "Aug 16",
                                     "Now"][i], 12, MUT,
-                      "'JetBrains Mono',monospace", 400, anchor="middle"))
+                      "'Thistle',monospace", 400, anchor="middle"))
     # The events table beneath, arriving row by row.
     o.append('<line x1="%d" y1="330" x2="%d" y2="330" stroke="%s" stroke-width="1.5"/>'
              % (x0, W - 60, LINE))
@@ -190,7 +190,7 @@ def persona():
     o = [chrome("homepage", VIOLET)]
     # A persona switcher along the top, its pill sliding between the three.
     for i, nm in enumerate(NAMES):
-        o.append(text(120 + i * 200, 106, nm, 16, MUT, "'Inter',sans-serif", 700,
+        o.append(text(120 + i * 200, 106, nm, 16, MUT, "'Clover',sans-serif", 700,
                       anchor="middle"))
     o.append('<rect class="pill" x="60" y="82" width="120" height="34" rx="17" '
              'fill="%s" opacity=".20"/>' % VIOLET)
@@ -206,7 +206,7 @@ def persona():
             bh = 96 - rank * 10
             g.append(rect(60, yy, W - 120, bh, col, 10, op=.16))
             g.append(rect(60, yy, 6, bh, col, 3))
-            g.append(text(84, yy + 34, label, 17, col, "'Inter',sans-serif", 700))
+            g.append(text(84, yy + 34, label, 17, col, "'Clover',sans-serif", 700))
             if bh > 60:
                 g.append(bar(84, yy + 50, 420, 9, LINE))
                 g.append(bar(84, yy + 68, 300, 9, LINE))

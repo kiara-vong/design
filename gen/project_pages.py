@@ -187,7 +187,7 @@ PROJECTS = [
               # still: these are two frames of one take, in exact register, so
               # the only thing that changes across the seam is the thing being
               # compared.
-              media.wipe("plate/island-wipe-before.webp",
+              media.slider("plate/island-wipe-before.webp",
                          "plate/island-wipe-after.webp",
                          "The same board before and after one full generation, "
                          "split by a line the reader can drag",

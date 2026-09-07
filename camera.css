@@ -1,3 +1,85 @@
+/* ---------------------------------------------------------- 0. the window
+   Every figure on this site is a screen, and every screen gets a window.
+
+   The stage machines draw their own chrome on a plate that moves inside the card.
+   The older machines below did not: they filled the card edge to edge, so whether
+   a screenshot looked like a screen depended on which machine happened to be
+   holding it. That is a distinction the reader has no way to interpret, because
+   it does not mean anything -- it is just which idea I had first.
+
+   So the chrome is drawn once, here, and the machine's own content goes into
+   .win. Nothing inside had to change: inset:0 resolves against the nearest
+   positioned ancestor, and .win is now that ancestor. The content box is 799x365
+   rather than 799x391, which is why gen/plates.py computes strip travel against
+   365 -- a travel percentage measured against a frame the image no longer sits in
+   is a number that looks right and scrolls the picture past its own end. */
+.cs-media.framed {
+   background: var(--dove-ivory, #F5F2E5)
+}
+
+.cs-media.framed > .bar,
+.ann-view.framed > .bar {
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: 0;
+   height: 26px;
+   z-index: 5;
+   background: var(--dove-ivory, #F5F2E5);
+   border-bottom: 1px solid var(--outline-stroke, #E3E1CC)
+}
+
+.cs-media.framed > .win,
+.ann-view.framed > .win {
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: 26px;
+   bottom: 0;
+   overflow: hidden
+}
+
+/* The same three lights and address strip the home tiles and the stage windows
+   use, at the same proportions, so the whole site reads as one idiom. */
+.cs-media.framed > .bar i,
+.ann-view.framed > .bar i {
+   position: absolute;
+   top: 9px;
+   width: 8px;
+   height: 8px;
+   border-radius: 50%;
+   background: #E6685C
+}
+
+.cs-media.framed > .bar i:nth-of-type(1),
+.ann-view.framed > .bar i:nth-of-type(1) {
+   left: 11px
+}
+
+.cs-media.framed > .bar i:nth-of-type(2),
+.ann-view.framed > .bar i:nth-of-type(2) {
+   left: 25px;
+   background: #E8B84B
+}
+
+.cs-media.framed > .bar i:nth-of-type(3),
+.ann-view.framed > .bar i:nth-of-type(3) {
+   left: 39px;
+   background: #7DC26B
+}
+
+.cs-media.framed > .bar b,
+.ann-view.framed > .bar b {
+   position: absolute;
+   left: 58px;
+   right: 14px;
+   top: 6px;
+   height: 14px;
+   border-radius: 999px;
+   background: var(--parchment, #FDFBEF);
+   border: 1px solid var(--outline-stroke, #E3E1CC)
+}
+
 /* camera.css -- the reusable camera machines.
    =========================================================================
    Planned in CAPTURE.md Part 4 and built here. Every one of them takes a flat,
@@ -49,7 +131,7 @@
    display: block
 }
 
-.cam-push > img {
+.cam-push .win > img {
    transform-origin: var(--fx, 50%) var(--fy, 50%);
    animation: push var(--dur, 12s) cubic-bezier(.4, 0, .2, 1) infinite;
    will-change: transform
@@ -81,7 +163,7 @@
    gen/tiles.py computes it as (1 - windowHeight / renderedImageHeight) * 100 rather
    than anyone measuring it by hand, and build.py checks the page against what it
    computed. */
-.cam-strip > img {
+.cam-strip .win > img {
    position: static;
    width: 100%;
    height: auto;
@@ -114,13 +196,13 @@
 
    Each layer sets --i, the container sets --n. The resting state is the first frame,
    so a sequence doubles as its own still. */
-.cam-deal > img {
+.cam-deal .win > img {
    opacity: 0;
    animation: deal var(--dur, 12s) linear infinite;
    animation-delay: calc(var(--i) * var(--dur, 12s) / var(--n))
 }
 
-.cam-deal > img:first-child {
+.cam-deal .win > img:first-child {
    opacity: 1;
    animation: none
 }
@@ -150,7 +232,7 @@
 
    Resting state parks the seam at the middle with both halves visible, which is a
    perfectly good still and the one reduced motion gets. */
-.cam-wipe > img:last-child {
+.cam-wipe .win > img:last-child {
    clip-path: inset(0 0 0 var(--x, 50%));
    animation: wipe var(--dur, 11s) cubic-bezier(.45, 0, .25, 1) infinite
 }
@@ -202,7 +284,7 @@
    position: absolute;
    top: 12px;
    z-index: 3;
-   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-family: 'Thistle', ui-monospace, monospace;
    font-size: 11px;
    letter-spacing: .04em;
    text-transform: uppercase;
@@ -261,16 +343,16 @@
    The clips are walkthroughs assembled from state captures, so there is no audio to
    carry and nothing is lost by muting. Muted is also the only way a browser will
    autoplay at all. */
-.cam-clip > video {
+.cam-clip .win > video {
    background: var(--dove-ivory, #F6F2E6)
 }
 
 @media (prefers-reduced-motion: reduce) {
 
-   .cam-push > img,
-   .cam-strip > img,
-   .cam-deal > img,
-   .cam-wipe > img:last-child,
+   .cam-push .win > img,
+   .cam-strip .win > img,
+   .cam-deal .win > img,
+   .cam-wipe .win > img:last-child,
    .cam-wipe .seam,
    .is-in.cam-stagger > *,
    .cam-stagger.is-in > * {
@@ -279,15 +361,15 @@
 
    /* Resting states, stated rather than inherited, because "no animation" leaves
       each machine wherever its unanimated declarations happen to put it. */
-   .cam-deal > img {
+   .cam-deal .win > img {
       opacity: 0
    }
 
-   .cam-deal > img:first-child {
+   .cam-deal .win > img:first-child {
       opacity: 1
    }
 
-   .cam-wipe > img:last-child {
+   .cam-wipe .win > img:last-child {
       clip-path: inset(0 0 0 50%)
    }
 
@@ -593,7 +675,7 @@
    border: 1px solid var(--outline-stroke, #D8D2C2);
    border-radius: 11px;
    padding: 5px 10px;
-   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-family: 'Thistle', ui-monospace, monospace;
    font-weight: 500;
    font-size: 12px;
    line-height: 1.2;
@@ -604,7 +686,7 @@
 .cam-stage .call-desc {
    margin: 6px 0 0;
    padding-left: 31px;
-   font-family: 'Diatype', 'Inter', system-ui, sans-serif;
+   font-family: 'Clover', system-ui, sans-serif;
    font-size: 12px;
    line-height: 1.35;
    color: var(--dusty-granite, #5C5651)
@@ -752,7 +834,7 @@
    border: 1px solid var(--outline-stroke, #D8D2C2);
    border-radius: 11px;
    padding: 6px 10px;
-   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-family: 'Thistle', ui-monospace, monospace;
    font-weight: 500;
    font-size: 12px;
    line-height: 1.2;
@@ -770,7 +852,7 @@
 .ann-desc {
    margin: 0;
    padding-left: 32px;
-   font-family: 'Diatype', 'Inter', system-ui, sans-serif;
+   font-family: 'Clover', system-ui, sans-serif;
    font-weight: 400;
    font-size: 12px;
    line-height: 1.35;
@@ -1149,6 +1231,30 @@
    animation: flow-press var(--dur, 20s) cubic-bezier(.4, 0, .2, 1) infinite
 }
 
+/* The press overlay is a crop of the FIRST page's button, so it has to be gone
+   the instant the second page arrives -- otherwise it sits on top of the new page
+   painting the old state of the control over the new one. On the quiz that never
+   showed, because the button there is far below the fold once the results load.
+   On a view toggle in a header it showed immediately: you clicked Table, the page
+   became the table, and the toggle still said Graph. */
+.is-in .cam-stage.page.flow .press {
+   animation: flow-hit var(--dur, 20s) linear infinite
+}
+
+@keyframes flow-hit {
+   0%, 63% { opacity: 1 }
+   64%, 100% { opacity: 0 }
+}
+
+.is-in .cam-stage.page.flow.still .press {
+   animation-name: flow-hit-still
+}
+
+@keyframes flow-hit-still {
+   0%, 36% { opacity: 1 }
+   37%, 100% { opacity: 0 }
+}
+
 /* --sy is the form's own bottom, so the scroll ends with the button in frame
    rather than stopping somewhere that happens to be far enough. --sy2 is the
    answer's bottom. The 40-to-41 step is the navigation: one frame of the form at
@@ -1453,7 +1559,7 @@
    align-items: center;
    min-height: 45px;
    box-sizing: border-box;
-   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-family: 'Thistle', ui-monospace, monospace;
    font-weight: 500;
    font-size: 12px;
    line-height: 1.2;
@@ -1480,7 +1586,7 @@
 
 .cam-step .step-note {
    margin: 0;
-   font-family: 'Diatype', 'Inter', system-ui, sans-serif;
+   font-family: 'Clover', system-ui, sans-serif;
    font-size: 12px;
    line-height: 1.35;
    color: var(--dusty-granite, #5C5651)
@@ -1522,7 +1628,7 @@
    }
 }
 
-/* -------------------------------------------------------------- J. wipe
+/* -------------------------------------------------------------- J. slider
    Two frames of one run, in exact register, with a line the reader drags.
 
    This only works because the capture it comes from does not move: same camera,
@@ -1538,18 +1644,18 @@
    gen/media.py and handed over as --wx/--wy/--ww/--wh, and the furniture is
    positioned against that. The clip itself stays in the plate's space, where a
    percentage means the same thing at either end. */
-.cam-wipe .shots img {
+.cam-slide .shots img {
    opacity: 1
 }
 
-.cam-wipe .shots img + img {
+.cam-slide .shots img + img {
    opacity: 1;
    clip-path: inset(0 0 0 calc(var(--s, 50) * 1%))
 }
 
 /* The seam. Drawn over the screen only, not over the title bar, because a browser
    window whose chrome is cut in half is a broken window rather than a comparison. */
-.cam-wipe .wipe-line {
+.cam-slide .slide-line {
    position: absolute;
    left: calc(var(--wx) + var(--ww) * var(--s, 50) / 100);
    top: var(--wy);
@@ -1562,7 +1668,7 @@
    z-index: 3
 }
 
-.cam-wipe .wipe-line i {
+.cam-slide .slide-line i {
    position: absolute;
    left: 50%;
    top: 50%;
@@ -1577,8 +1683,8 @@
 
 /* Two arrows, drawn rather than typed, so the grip reads as draggable at the size
    it actually is. */
-.cam-wipe .wipe-line i::before,
-.cam-wipe .wipe-line i::after {
+.cam-slide .slide-line i::before,
+.cam-slide .slide-line i::after {
    content: "";
    position: absolute;
    top: 50%;
@@ -1589,18 +1695,18 @@
    border-width: 1px 1px 0 0
 }
 
-.cam-wipe .wipe-line i::before {
+.cam-slide .slide-line i::before {
    left: 6px;
    transform: rotate(-135deg)
 }
 
-.cam-wipe .wipe-line i::after {
+.cam-slide .slide-line i::after {
    right: 6px;
    transform: rotate(45deg)
 }
 
 /* The annotation: what each half IS, said at the size the reader is reading at. */
-.cam-wipe .wipe-tag {
+.cam-slide .slide-tag {
    position: absolute;
    /* Along the top, not the bottom. The app draws its own key legend into the
       bottom-left corner of the canvas, and a label sitting on top of another
@@ -1615,7 +1721,7 @@
    border-radius: 999px;
    background: var(--parchment, #FDFBEF);
    border: 1px solid var(--outline-stroke, #D8D2C2);
-   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-family: 'Thistle', ui-monospace, monospace;
    font-weight: 500;
    font-size: 11px;
    line-height: 1.2;
@@ -1624,13 +1730,19 @@
    pointer-events: none
 }
 
-.cam-wipe .wipe-tag.left {
+.cam-slide .slide-tag.left {
    left: calc(var(--wx) + 12px)
 }
 
-.cam-wipe .wipe-tag.right {
-   left: calc(var(--wx) + var(--ww) - 12px);
-   transform: translateX(-100%)
+/* Anchored by its RIGHT edge, not by its left with a transform pulling it back.
+   The transform moves the box after layout has already sized it, and layout sized
+   it against the space between its left anchor and the card's edge -- fifty-eight
+   pixels -- so a three-word label wrapped onto three lines inside a window barely
+   a hundred tall. Anchoring the side that is actually fixed lets it size to its
+   own text. */
+.cam-slide .slide-tag.right {
+   left: auto;
+   right: calc(100% - var(--wx) - var(--ww) + 12px)
 }
 
 /* A range input is the control, laid over the window at zero opacity. It is not a
@@ -1638,7 +1750,7 @@
    with the arrow keys, takes focus in tab order and announces itself -- all of
    which a div with a pointermove handler would have had to be taught one at a
    time and would still have got wrong for somebody. */
-.cam-wipe .wipe-range {
+.cam-slide .slide-range {
    position: absolute;
    left: var(--wx);
    top: var(--wy);
@@ -1654,29 +1766,29 @@
    background: transparent
 }
 
-.cam-wipe .wipe-range::-webkit-slider-thumb {
+.cam-slide .slide-range::-webkit-slider-thumb {
    -webkit-appearance: none;
    width: 34px;
    height: 100%
 }
 
-.cam-wipe .wipe-range::-moz-range-thumb {
+.cam-slide .slide-range::-moz-range-thumb {
    width: 34px;
    height: 100%;
    border: 0
 }
 
-.cam-wipe .wipe-range:focus-visible ~ .wipe-line i {
+.cam-slide .slide-range:focus-visible ~ .slide-line i {
    outline: 2px solid var(--accent, #649F25);
    outline-offset: 2px
 }
 
 /* The invitation, spent on first use, exactly like the stepper's. */
-.is-in .cam-wipe:not(.used) .wipe-line i {
-   animation: wipe-nudge 3s ease-in-out infinite
+.is-in .cam-slide:not(.used) .slide-line i {
+   animation: slide-nudge 3s ease-in-out infinite
 }
 
-@keyframes wipe-nudge {
+@keyframes slide-nudge {
 
    0%, 58%, 100% {
       transform: translateX(0)
@@ -1693,7 +1805,280 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-   .is-in .cam-wipe:not(.used) .wipe-line i {
+   .is-in .cam-slide:not(.used) .slide-line i {
+      animation: none
+   }
+}
+
+/* ---- a first page that does not scroll ------------------------------------
+   The ordinary flow spends a third of its loop scrolling the form to reach its
+   button. Some controls are already on screen -- a view toggle in a header, say --
+   and for those the scroll phase is a third of a loop in which nothing happens.
+
+   Same beats, redistributed: hold, go in on the control, press it, cut, and then
+   spend what was the form's scroll on the page that came back instead. */
+.is-in .cam-stage.page.flow.still .shots .reel {
+   animation-name: flow-scroll-still
+}
+
+.is-in .cam-stage.page.flow.still.moves .plate {
+   animation-name: flow-look-still
+}
+
+.is-in .cam-stage.page.flow.still .reel img:nth-of-type(2) {
+   animation-name: flow-load-still
+}
+
+.is-in .cam-stage.page.flow.still .press i {
+   animation-name: flow-press-still
+}
+
+@keyframes flow-scroll-still {
+   0%, 36% {
+      transform: translateY(0)
+   }
+
+   37%, 44% {
+      transform: translateY(0)
+   }
+
+   70%, 78% {
+      transform: translateY(var(--sy2, 0px))
+   }
+
+   88%, 100% {
+      transform: translateY(0)
+   }
+}
+
+@keyframes flow-look-still {
+   0%, 12% {
+      transform: translate(var(--x0), var(--y0)) scale(var(--k0))
+   }
+
+   20%, 36% {
+      transform: translate(var(--x1), var(--y1)) scale(var(--k1))
+   }
+
+   37%, 100% {
+      transform: translate(var(--x0), var(--y0)) scale(var(--k0))
+   }
+}
+
+@keyframes flow-load-still {
+   0%, 36% {
+      opacity: 0
+   }
+
+   37%, 88% {
+      opacity: 1
+   }
+
+   89%, 100% {
+      opacity: 0
+   }
+}
+
+@keyframes flow-press-still {
+   0%, 26% {
+      transform: scale(1);
+      filter: none
+   }
+
+   29%, 31% {
+      transform: scale(.955);
+      filter: brightness(.86)
+   }
+
+   34%, 100% {
+      transform: scale(1);
+      filter: none
+   }
+}
+
+/* -------------------------------------------------------------- K. walk
+   A path through an application, four screens deep, clicked out step by step.
+
+   flow() above is this with two screens and one click. A drill-down is neither
+   two screens nor one click: it is a route, and what a route has to show is that
+   each step FOLLOWED from the last. Four stills side by side cannot say that --
+   the reader has to work out what was pressed to get from one to the next, which
+   is the one piece of information the figure exists to supply.
+
+   So: click the card, cut, repeat. The camera does not move, and that is a choice
+   rather than an omission -- the route IS the figure, and four zooms in and out
+   of it turn a path into a series of destinations. The third screen scrolls,
+   because what gets clicked on it is below the fold. The cuts are cuts for the
+   same reason they are in flow: a page arriving is instantaneous and a cross-fade
+   would say otherwise.
+
+   Every press box is a rectangle in that screen's own pixels, read off the
+   capture in gen/cases.py. There is no percentage anywhere in this machine, which
+   is the whole reason it can be trusted to land on the card it says it is
+   landing on. */
+.cam-stage.page.cam-walk .press {
+   opacity: 0
+}
+
+.is-in .cam-stage.page.cam-walk .shots .reel {
+   animation: walk-scroll var(--dur, 28s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page.cam-walk .reel img:nth-of-type(2) {
+   animation: walk-page-2 var(--dur, 28s) linear infinite
+}
+
+.is-in .cam-stage.page.cam-walk .reel img:nth-of-type(3) {
+   animation: walk-page-3 var(--dur, 28s) linear infinite
+}
+
+.is-in .cam-stage.page.cam-walk .reel img:nth-of-type(4) {
+   animation: walk-page-4 var(--dur, 28s) linear infinite
+}
+
+.is-in .cam-stage.page.cam-walk .press.s1 { animation: walk-hit-1 var(--dur, 28s) linear infinite }
+.is-in .cam-stage.page.cam-walk .press.s2 { animation: walk-hit-2 var(--dur, 28s) linear infinite }
+.is-in .cam-stage.page.cam-walk .press.s3 { animation: walk-hit-3 var(--dur, 28s) linear infinite }
+
+.is-in .cam-stage.page.cam-walk .press.s1 i {
+   animation: walk-press-1 var(--dur, 28s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page.cam-walk .press.s2 i {
+   animation: walk-press-2 var(--dur, 28s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page.cam-walk .press.s3 i {
+   animation: walk-press-3 var(--dur, 28s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+/* Only the third screen runs past its window, so only the third scrolls. The
+   reel is back at the top by the time the fourth arrives, because a new page
+   arrives at the top. */
+@keyframes walk-scroll {
+   0%, 47% { transform: translateY(0) }
+   56%, 69% { transform: translateY(var(--sy3, 0px)) }
+   70%, 100% { transform: translateY(0) }
+}
+
+/* Each screen arrives at its cut and stays. They come off together at the end,
+   which puts the loop back on the first screen rather than dissolving through
+   the middle of the route. */
+@keyframes walk-page-2 {
+   0%, 20% { opacity: 0 }
+   21%, 96% { opacity: 1 }
+   99%, 100% { opacity: 0 }
+}
+
+@keyframes walk-page-3 {
+   0%, 41% { opacity: 0 }
+   42%, 96% { opacity: 1 }
+   99%, 100% { opacity: 0 }
+}
+
+@keyframes walk-page-4 {
+   0%, 69% { opacity: 0 }
+   70%, 96% { opacity: 1 }
+   99%, 100% { opacity: 0 }
+}
+
+/* A press overlay is a patch of page with a crop of the target on it, so it can
+   only be on screen while its own screen is. */
+@keyframes walk-hit-1 {
+   0%, 3% { opacity: 0 }
+   4%, 20% { opacity: 1 }
+   21%, 100% { opacity: 0 }
+}
+
+@keyframes walk-hit-2 {
+   0%, 24% { opacity: 0 }
+   25%, 41% { opacity: 1 }
+   42%, 100% { opacity: 0 }
+}
+
+@keyframes walk-hit-3 {
+   0%, 54% { opacity: 0 }
+   55%, 69% { opacity: 1 }
+   70%, 100% { opacity: 0 }
+}
+
+/* The click has to carry itself here. With no camera going in, a card is drawn at
+   about forty-five pixels and the four-percent shrink that reads as a press up
+   close is under two pixels -- which is not a press, it is a rendering artefact.
+   So: a firmer squash, and a ring that leaves the card the way a tap ripple does.
+   Two signals, because at this size either one alone is missable. */
+.cam-stage.page.cam-walk .press i {
+   border-radius: 12px
+}
+
+.cam-stage.page.cam-walk .press i::after {
+   content: "";
+   position: absolute;
+   inset: -1px;
+   border-radius: 13px;
+   border: 5px solid var(--accent-deep, #4C7A1C);
+   opacity: 0;
+   pointer-events: none
+}
+
+.is-in .cam-stage.page.cam-walk .press.s1 i::after {
+   animation: walk-ring-1 var(--dur, 28s) cubic-bezier(.2, .6, .3, 1) infinite
+}
+
+.is-in .cam-stage.page.cam-walk .press.s2 i::after {
+   animation: walk-ring-2 var(--dur, 28s) cubic-bezier(.2, .6, .3, 1) infinite
+}
+
+.is-in .cam-stage.page.cam-walk .press.s3 i::after {
+   animation: walk-ring-3 var(--dur, 28s) cubic-bezier(.2, .6, .3, 1) infinite
+}
+
+@keyframes walk-press-1 {
+   0%, 15% { transform: scale(1); filter: none }
+   16.5%, 17.5% { transform: scale(.93); filter: brightness(.9) }
+   19%, 100% { transform: scale(1); filter: none }
+}
+
+@keyframes walk-press-2 {
+   0%, 36% { transform: scale(1); filter: none }
+   37.5%, 38.5% { transform: scale(.93); filter: brightness(.9) }
+   40%, 100% { transform: scale(1); filter: none }
+}
+
+@keyframes walk-press-3 {
+   0%, 65% { transform: scale(1); filter: none }
+   66.5%, 67.5% { transform: scale(.93); filter: brightness(.9) }
+   69%, 100% { transform: scale(1); filter: none }
+}
+
+@keyframes walk-ring-1 {
+   0%, 16% { opacity: 0; transform: scale(1) }
+   17.5% { opacity: 1; transform: scale(1) }
+   20.5%, 100% { opacity: 0; transform: scale(1.22) }
+}
+
+@keyframes walk-ring-2 {
+   0%, 37% { opacity: 0; transform: scale(1) }
+   38.5% { opacity: 1; transform: scale(1) }
+   41.5%, 100% { opacity: 0; transform: scale(1.22) }
+}
+
+@keyframes walk-ring-3 {
+   0%, 66% { opacity: 0; transform: scale(1) }
+   67.5% { opacity: 1; transform: scale(1) }
+   70.5%, 100% { opacity: 0; transform: scale(1.22) }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   /* The first screen, at the top, nothing pressed. A route's still is where the
+      route starts; any other frame is the middle of a sentence. */
+   .is-in .cam-stage.page.cam-walk .shots .reel,
+   .is-in .cam-stage.page.cam-walk.moves .plate,
+   .is-in .cam-stage.page.cam-walk .reel img,
+   .is-in .cam-stage.page.cam-walk .press,
+   .is-in .cam-stage.page.cam-walk .press i,
+   .is-in .cam-stage.page.cam-walk .press i::after {
       animation: none
    }
 }

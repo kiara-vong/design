@@ -258,7 +258,7 @@ var SITE_ROOT = (function () {
    The two handlers above are bound to one element each, '#footer a[data-mail]'
    and (in site-nav.js) '.nav a[data-mail]', so a third one anywhere else on the
    page had no behaviour at all: it would follow its href and go nowhere. The case
-   studies now carry one in their meta strip, on "let me know".
+   studies now carry one in their meta strip, on "let me know!".
 
    Same address, assembled the same way rather than written out, and the same
    clipboard-then-execCommand fall-back. What differs is the confirmation. Those two
