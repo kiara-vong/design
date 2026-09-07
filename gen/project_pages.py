@@ -442,10 +442,10 @@ PROJECTS = [
                 "the game."),
          meta=[("Role", "Everything"),
                ("Stack", "HTML, CSS, vanilla JS,<br>canvas, Web Audio"),
-               ("Year", "2024"),
+               ("Year", "2026"),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
-              ("how", "How it works", False), ("data", "Facts and assets", True),
+              ("data", "How it works", False),
               ("arcade", "The arcade", False), ("rhythm", "The rhythm game", True),
               ("taught", "What it taught me", False)],
          sections=[
@@ -456,35 +456,28 @@ PROJECTS = [
                "“what does this one person want”, asked while the game is paused.",
                "So the whole design brief was: one page, no navigation, answer that "
                "question in under three seconds."],
+              media.clip("stardew-full-scroll",
+                         "The whole page scrolled from the title down through "
+                         "locations, the town map, the villagers and the arcade",
+                         "One page, no navigation. Every section of it, top to "
+                         "bottom, at about one and a half times real speed. It is the only "
+                         "claim in the brief that a picture can "
+                         "actually settle."),
+              media.clip("stardew-locations",
+                         "Clicking a building in the locations grid, reading its "
+                         "popup, and closing it again",
+                         "Click a building, read what it is for, close it, and you "
+                         "are back where you were. The whole interaction is one "
+                         "layer deep on purpose: this gets used with the game "
+                         "paused, and anything that navigates costs you your place."),
               media.clip("stardew-gift-lookup",
-                         "Searching a villager and opening their gift card",
-                         "Type a name, open the card, read the two lists. This is the question the wiki answers in four clicks and a lot of scrolling."),
-              media.deal(["plate/stardew-didyouknow-1.webp",
-                          "plate/stardew-didyouknow-2.webp",
-                          "plate/stardew-didyouknow-3.webp"],
-                         "The Did You Know card, showing three different facts",
-                         "What replaced a contact form that went nowhere. A fan guide does not need a get in touch box; it needs one more thing worth knowing.")),
-             ("how", "How it works", "Borrowing a visual language without stealing assets",
-              ["The thing that makes it feel like the game is not any single asset. It "
-               "is the palette, the chunky border radii, the drop shadows on the panels "
-               "and the specific weight of the type. Get those right and hand-drawn "
-               "elements read as belonging; get them wrong and a real asset still looks "
-               "pasted in.",
-               "No build step is a constraint I set on purpose. A fan guide that needs "
-               "npm install to change a gift list is a fan guide that stops being "
-               "updated."],
-              media.strip("plate/stardew-locations-both-tiers.webp",
-                          "The six main buildings as full boxes, the smaller spots as an icon row beneath",
-                          "Both tiers in one frame, which is the only way the tiering reads as a decision rather than as inconsistency.",
-                          travel="63.99%"),
-              media.strip("plate/stardew-explore-valley-popup.webp",
-                          "The Explore the Valley popup, scrolled through its full height",
-                          "The outdoor areas are one long scrollable panel rather than a box each, because they are places to wander through rather than buildings to visit.",
-                          travel="39.39%"),
-              media.strip("plate/stardew-location-popup-saloon.webp",
-                          "The Saloon popup, scrolled through its full height",
-                          "One of the six full-box buildings, given the same treatment as the others: hours, what's inside, who you'll find there.",
-                          travel="25.98%")),
+                         "Opening a villager card, browsing the whole gift list, "
+                         "then filtering it to one item",
+                         "Pick a face, read the two lists, and if you already know "
+                         "what is in your bag, type it: the picker filters to that "
+                         "item and tells you which list it lands in. The wiki answers "
+                         "this in four clicks and a lot of scrolling."),
+),
              ("data", "How it works", "Facts, sprites and code are not the same thing",
               ["The gift lists are game data, so a one-time Node script parsed them out "
                "of a mirrored fan site rather than my typing 34 characters' worth of "
@@ -507,17 +500,35 @@ PROJECTS = [
                ("Logic is written, or ported on purpose",
                 "Recreated where it belongs to someone, ported exactly where the "
                 "reference is open and the fidelity IS the feature.")],
-              media.strip("plate/stardew-villagers-grid.webp",
-                          "All 34 villager portraits",
-                          "Thirty-four of them. A number in a sentence is an assertion, and this is why the gift lists were parsed once rather than typed out.",
-                          travel="62.72%"),
-              media.stage("plate/stardew-villager-abigail.webp",
-                          "A villager card: bracketed portrait, birthday, biography, loved and liked gifts",
-                          "The hearts beside Loves and Likes are the game's own friendship sprites rather than emoji, which is the sort of detail the whole pastiche rests on.",
-                          plate=(2200, 1100), look=(620, 610, 1000, 320),
-                          call=("the game's own heart",
-                                "A friendship sprite lifted from the game, not "
-                                "an emoji standing in for one."))),
+              media.annot(
+                  "plate/stardew-villager-abigail.webp",
+                  "A villager card: a bracketed portrait, a name plate, a "
+                  "birthday, four lines of biography, a gift search and two "
+                  "lists of gifts",
+                  "Five decisions on one card, and the pastiche is the sum of "
+                  "them rather than any one. Read down the list; the ring "
+                  "follows.",
+                  [dict(rect=(92, 111, 493, 555), title="portrait and name plate",
+                        desc="The game\u2019s own art in a bracketed frame, over a "
+                             "wooden sign. Every label in the game is a sign; "
+                             "nothing here is a default input."),
+                   dict(rect=(214, 653, 243, 186), title="season and day",
+                        desc="Worth its own block: a gift on somebody\u2019s "
+                             "birthday is worth eight times the same gift on any "
+                             "other day."),
+                   dict(rect=(631, 46, 1485, 408), title="four written lines",
+                        desc="The gift lists are parsed game data. The biography "
+                             "is not. It is the one part of the card "
+                             "somebody had to write."),
+                   dict(rect=(972, 493, 741, 93), title="search the gifts",
+                        desc="Type what is in your bag rather than reading two "
+                             "lists to find out whether it is in either."),
+                   dict(rect=(631, 626, 1466, 400), title="loved and liked gifts",
+                        desc="The question the whole page exists to answer, in "
+                             "two lists: what this character loves, and what they "
+                             "merely like. Parsed once from game data rather than "
+                             "typed out thirty-four times.")],
+                  plate=(2200, 1100))),
              ("arcade", "The arcade", "Four cabinets and no game engine",
               ["Half of this project is not a guide at all. Four playable cabinets sit "
                "on the same page, each a plain canvas element with its own loop, and "
@@ -541,19 +552,34 @@ PROJECTS = [
                ("Junimo Jamboree",
                 "A four-lane rhythm game at three difficulties, with a song that does "
                 "not exist as a file.")],
-              media.stage("plate/stardew-arcade-row.webp",
-                          "Four arcade cabinets side by side",
-                          "Junimo Kart, Fishing, Prairie King and Junimo Jamboree. Each is a plain canvas with its own loop and no engine under it.",
-                          plate=(2200, 498), look=(420, 175, 1360, 300),
-                          call=("four cabinets",
-                                "One canvas each, one loop each, and no engine "
-                                "under any of them.")),
-              media.clip("stardew-junimo-kart",
-                         "Junimo Kart: the start line, a cleared gap, a spike hit, and the score screen",
-                         "Start, a cleared jump, a spike taken wrong, the score screen it resets from. Four states standing in for the run until this one gets a real recording."),
-              media.clip("stardew-prairie-king",
-                         "Journey of the Prairie King: spawn, a wave cleared, a hit taken, the wave counter climbing",
-                         "Five waves as five stills. The counter and the health both move considerably faster than this in the actual game.")),
+              media.cabinets(
+                  [dict(label="Junimo Kart", src="stardew-junimo-kart",
+                        alt="Junimo Kart: the start screen, a run over the spikes "
+                            "and gaps, and the game over it resets from",
+                        note="A runner. Score and lives in the corner, and a best "
+                             "that survives a reload."),
+                   dict(label="Fishing", src="stardew-fishing",
+                        alt="Casting, the bite, the catch bar, and the fish landed",
+                        note="Cast, bite, catch bar, fish. The bar is a deliberate "
+                             "port; the rest is not."),
+                   dict(label="Prairie King", src="stardew-prairie-king",
+                        alt="Journey of the Prairie King: the title, then moving "
+                            "and shooting through the first wave",
+                        note="A top-down shooter over five waves. Written rather "
+                             "than ported, because the original is somebody\u2019s "
+                             "work in a way a gift list is not."),
+                   dict(label="Junimo Jamboree", src="stardew-junimo-jamboree",
+                        alt="Junimo Jamboree: picking a difficulty, then notes "
+                            "falling in four lanes with the judgment under them",
+                        note="Four lanes, three difficulties, and a song that does "
+                             "not exist as a file.")],
+                  "Four arcade cabinets in one window, switched by the tabs in "
+                  "its title bar",
+                  "Four cabinets, one frame, four tabs. They are alternatives "
+                  "rather than a sequence, and stacking them down the page said "
+                  "the opposite, because you had to scroll past three to reach the "
+                  "fourth. Each is a plain canvas with its own loop and no engine "
+                  "under it.")),
              ("rhythm", "The arcade", "One source for the song and the chart",
               ["Junimo Jamboree has no audio track. A short hand-written motif is "
                "arranged into a sixteen-measure structure at load, and that same "
@@ -570,13 +596,15 @@ PROJECTS = [
                "sequencing usually needs.",
                "Difficulty changes note density and timing windows. It does not change "
                "the song."],
-              media.strip("plate/stardew-jamboree-difficulty.webp",
-                          "The difficulty select, with a best score kept per difficulty",
-                          "Three difficulties over one generated song. What changes is note density and the timing windows, not the music.",
-                          travel="36.64%"),
-              media.clip("stardew-junimo-jamboree",
-                         "Junimo Jamboree: difficulty select, notes falling in the four lanes, a cleared song",
-                         "Difficulty select, notes falling, a cleared song: three states where the actual note timing belongs once there's a real capture of it.")),
+              media.flat("case/cs-sdv-chart.svg",
+                         "One generated chart at the top, with the falling notes "
+                         "and the oscillators drawn under it, both firing on the "
+                         "same sixteen marks",
+                         "The half of this a screenshot can show is the notes "
+                         "falling. The other half is that the same sixteen marks "
+                         "are what schedules the sound, in one pass at load, "
+                         "so the beatmap and the music cannot drift apart, because "
+                         "there is nothing to drift.")),
              ("taught", "What it taught me", "Ports have tick rates",
               ["Matching an existing visual language closely is much harder than "
                "designing freely, and much better practice. You cannot fall back on "
@@ -593,9 +621,15 @@ PROJECTS = [
                "which quietly makes it the containing block for any fixed-position "
                "child instead of the viewport. The modals had to live outside it in the "
                "DOM. Nothing about the symptom pointed at the cause."],
-              media.clip("stardew-fishing",
-                         "The cast, the bite, and the catch bar",
-                         "The catch bar is the ported one, and the thing that ran about 20 per cent fast until its physics moved to the tick rate the original used.")),
+              media.ticks(
+                  "The same physics, stepped two ways. Both leave together; the "
+                  "one stepped once per frame arrives a fifth early, and every "
+                  "constant I then re-tuned by feel took it further from the "
+                  "thing I was trying to match.",
+                  fast="once per animation frame", slow="every 20ms",
+                  fast_hz=60, slow_hz=50,
+                  note="The fix was not a better constant. It was running the "
+                       "loop at the rate the original used.")),
          ]),
 
     dict(slug="p-uxfolio", title="UI/UX Case Studies", kicker="Personal",
@@ -642,19 +676,29 @@ PROJECTS = [
                 "useful and knowing enough to be funny."),
                ("Fonda Wallet",
                 "A mobile finance tool for restaurant owners, centralising revenue and "
-                "expenses. The least glamorous brief and the most interesting one.")],
-              media.deal(["plate/uxfolio-fondawallet-1-problem.webp",
-                          "plate/uxfolio-fondawallet-2-tried.webp",
-                          "plate/uxfolio-fondawallet-3-iteration.webp",
-                          "plate/uxfolio-fondawallet-4-shipped.webp"],
-                         "Fonda Wallet from the problem through what was tried to what shipped",
-                         "Four frames of one case study, in order. This arc is what the whole format rests on.")),
+                "expenses. The least glamorous brief and the most interesting one.")]),
              ("how", "How it works", "Process as the artefact",
               ["Every case study leads with the problem and spends most of its length "
                "on the decisions, with the final screens arriving last and briefly. "
                "The explorations that were abandoned get as much room as the one that "
                "shipped, which is the only honest way to show a decision was made "
-               "rather than stumbled into."]),
+               "rather than stumbled into.",
+               "The A/B Testing study is the clearest case. Two booking flows, three "
+               "hypotheses written before the data came in, and a t-test and a "
+               "chi-squared test that decide them. The finished screens are on it "
+               "twice, near the top; everything after that is the reasoning."],
+              media.strip("plate/uxfolio-abtesting-full.webp",
+                          "The A/B Testing case study scrolled from top to bottom",
+                          "One study, top to bottom. The two versions are the first "
+                          "fifth of it. The rest is hypotheses, test statistics and "
+                          "what the numbers actually let you claim.",
+                          travel="92.92%", dur="46s"),
+              media.strip("plate/uxfolio-fondawallet-full.webp",
+                          "The Fonda Wallet case study scrolled from top to bottom",
+                          "Fonda Wallet, top to bottom: sketches, the wireframes that "
+                          "came out of a critique, the style guide, and the built "
+                          "screens last.",
+                          travel="94.32%", dur="52s")),
              ("build", "How it works", "Framework-free output, non-repetitive source",
               ["The shipped site is plain HTML, CSS and JavaScript with no framework "
                "and no pipeline, which is the right answer for five static pages. The "
@@ -669,9 +713,11 @@ PROJECTS = [
                "This site does the same thing for the same reason, with Python instead "
                "of Node and considerably more generated. That is not a coincidence, it "
                "is this project's idea kept."],
-              media.clip("uxfolio-loader-transition",
-                         "The loading sequence, then a page transition into a case study",
-                         "The navy screen is a designed loader. It is also what made every headless capture of this site come back as a flat rectangle.")),
+              media.clip("uxfolio-about-panel",
+                         "The About panel opening over the home page and closing again",
+                         "The about card is one of the pieces that lives once in the "
+                         "partials folder, which is what lets it open over any page "
+                         "rather than being copied into five of them.")),
              ("taught", "What it taught me", "The format that survived",
               ["This is the direct ancestor of the case studies on this site: problem, "
                "then the two or three choices that were genuinely hard, then what "
@@ -700,7 +746,21 @@ PROJECTS = [
                "check, pinned pieces, promotion, the fifty-move rule.",
                "None of it is interesting and all of it has to be exactly right, "
                "because a search built on top of a subtly wrong move generator produces "
-               "confident nonsense."]),
+               "confident nonsense."],
+              media.stage("plate/chess-setup.webp",
+                          "The opening position, with a control bar above it: an "
+                          "autoplay toggle per colour, a speed selector, and a "
+                          "point-of-view switch",
+                          "The whole interface is one bar. Hand either colour to "
+                          "the engine, set how fast it is allowed to think, and "
+                          "choose which way the board faces, which is most of "
+                          "what you want from an engine you are testing rather "
+                          "than playing.",
+                          look=(587, 34, 595, 50),
+                          call=("actions per second",
+                                "The search is the same at every setting. This "
+                                "only decides how long it is given, which is the "
+                                "honest way to expose a depth limit."))),
              ("how", "How it works", "Searching without wasting the search",
               ["Alpha-beta is minimax that stops looking down a line as soon as it "
                "proves it cannot beat one already found. How much it saves depends "
@@ -719,13 +779,13 @@ PROJECTS = [
                 "Material, position, mobility. It has no opening book and no endgame "
                 "tables, and it should not pretend otherwise.")],
               media.clip("chess-autoplay",
-                         "Two copies of the engine playing each other with no human "
-                         "moves, the board degrading from the starting position into "
-                         "an unrecognizable mess within seconds",
-                         "Both sides set to the live site's own (BAD) AI CHESS, taking "
-                         "the engine's first choice every move. No opening book to "
-                         "paper over the early game and no endgame tables to recover "
-                         "with, so the position is unrecognizable by move six.")),
+                         "Both colours handed to the engine, playing a full game "
+                         "out at a speed that is turned up as it goes",
+                         "Both sides handed to the engine, and the speed turned up "
+                         "as the game runs. It is played at 1.8\u00d7 here, which "
+                         "keeps the acceleration a reader can see and does not "
+                         "invent one. No opening book and no endgame tables, so "
+                         "what you are watching is the search on its own.")),
              ("taught", "What it taught me", "Correctness before cleverness",
               ["I wrote the search first and spent a fortnight debugging an engine that "
                "was fine. The bug was in castling. Building the unglamorous layer "
@@ -755,7 +815,20 @@ PROJECTS = [
                "about the game comes from how the ghosts behave.",
                "So the interesting version of this project was never getting a yellow "
                "circle to move. It was giving four pursuers distinct personalities out "
-               "of one shared movement system."]),
+               "of one shared movement system."],
+              media.stage("plate/pacman-start.webp",
+                          "The maze before the first move: every corridor laid with "
+                          "pellets, the ghost house closed in the middle, score and "
+                          "lives along the bottom",
+                          "Nothing has moved yet, and everything that matters is "
+                          "already on screen: a fixed grid, a pellet in every "
+                          "corridor, and the box in the middle that the whole game "
+                          "comes out of.",
+                          look=(917, 422, 385, 156),
+                          call=("the ghost house",
+                                "Four pursuers start here sharing one movement "
+                                "system. All that separates them is which tile "
+                                "each one is aiming at."))),
              ("how", "How it works", "Four chase rules, one movement system",
               ["Each ghost runs the same loop: pick a target tile, then at every "
                "junction take the direction that most reduces the distance to it, "

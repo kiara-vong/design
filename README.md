@@ -115,7 +115,7 @@ byte-identical.
 | `gen-video.py` | the four art videos, transcoded from the source .mov files |
 | `uikit.py`, `handdrawn.py` | shared drawing vocabularies |
 
-Every page except `index.html` is generated — **edit the generator, not the HTML**.
+Every page except `index.html` is generated, **edit the generator, not the HTML**.
 `build.py` runs them all; the scripts are listed in its `STEPS` table.
 
 ## Layout
@@ -152,12 +152,12 @@ reached through `../`.
 That prefix is a template argument, not something you type. `gen/case_template.py`
 takes `root` in its spec and threads it through the page, the pill and the back
 link; `gen/art_pages.py` uses a literal `../` because everything it writes lives in
-`art/`. If you add a page at a new depth, pass its `root` — do not hand-edit the
+`art/`. If you add a page at a new depth, pass its `root`, do not hand-edit the
 output.
 
 Anything under a `_src` folder or starting with `_` is staged INPUT and is never
 touched by a build. Everything else under `assets/` is output and is rewritten on
-every run, so do not save new artwork there — it will be deleted. Sources go in
+every run, so do not save new artwork there: it will be deleted. Sources go in
 `../website/art/`, or in an `_src` folder next to where they are used.
 
 Generators run with the project root as the working directory, which is what
@@ -167,7 +167,7 @@ that, not against their own location.
 ## Where the writing lives
 
 `content/art_pieces.py` holds the Art section's content: every category, every
-piece, every title. It has no imports and no logic — paths are strings, and the only
+piece, every title. It has no imports and no logic, paths are strings, and the only
 thing the file can do is be read.
 
 It is separate from `gen/gallery.py` on purpose, and the reason is not tidiness. The
@@ -199,7 +199,7 @@ along in the same block.
 
 Three approaches were tried for these. Real screenshots read as unrelated
 rectangles at thumbnail size and lost their detail. Hand-drawn versions held
-together as a set but could not carry technical content — a wobbly dependency
+together as a set but could not carry technical content: a wobbly dependency
 graph reads as a doodle. Flat vector with one shared palette is the third answer
 and the one that stuck.
 

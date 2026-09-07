@@ -52,6 +52,8 @@ MIN_TRAVEL = 12.0
 
 # Plates the push machine crops into, which want the extra resolution.
 SHARP = {
+    "chess-setup",
+    "pacman-start",
     # Two whole pages the window scrolls AND the camera closes on. The look
     # lands on 11px token labels, so the delivery has to hold up at the far
     # end of the move rather than only at the resting framing.
@@ -59,7 +61,7 @@ SHARP = {
     "style-guide-full",
     "persona-home-leader",
     "persona-home-edit",
-    "persona-catalog",
+    "persona-widget-jobs",
     "persona-home-contributor",
     "dashboard-default-annotated",
     "dashboard-export-scoped",

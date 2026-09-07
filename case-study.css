@@ -1,5 +1,5 @@
 /* ============================================================================
-   CASE STUDY — the shared vocabulary for every case study page.
+   CASE STUDY: the shared vocabulary for every case study page.
 
    Lifted verbatim out of payments-home.html, where it had been inline, so that a
    second study does not mean a second copy of 488 lines. It is linked in exactly
@@ -52,7 +52,7 @@ body{background:var(--parchment)}
 .cs-nav{position:fixed;left:33px;top:180px;z-index:30;transform-origin:top left;
   display:flex;flex-direction:column;gap:8px;
   transition:opacity .3s ease,visibility .3s}
-.cs-nav a{font-family:'Laurel',Georgia,serif;font-weight:400;font-size:16px;line-height:1.5;
+.cs-nav a{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:400;font-size:16px;line-height:1.5;
   color:var(--antique-gold);text-decoration:none;will-change:transform;
   transition:color .2s cubic-bezier(.33,.85,.4,1),transform .2s cubic-bezier(.33,.85,.4,1)}
 .cs-nav a:hover,
@@ -173,10 +173,10 @@ body{background:var(--parchment)}
 }
 .cs-head{display:flex;flex-direction:column;gap:16px;width:100%;align-items:flex-start}
 .cs-titleblock{display:flex;flex-direction:column;gap:12px;width:653px}
-.cs-kicker{font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:16px;line-height:normal;color:var(--antique-gold)}
-.cs-title{font-family:'Giverny',Georgia,serif;font-weight:500;font-style:italic;font-size:42px;line-height:1.3;color:var(--dusty-granite)}
+.cs-kicker{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:16px;line-height:normal;color:var(--antique-gold)}
+.cs-title{font-family:'Kyoto','Newsreader',Georgia,serif;font-weight:500;font-style:italic;font-size:42px;line-height:1.3;color:var(--dusty-granite)}
 .cs-headgroup{display:flex;flex-direction:column;gap:32px;width:100%;align-items:flex-start}
-.cs-intro{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:var(--dusty-granite);width:100%}
+.cs-intro{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:var(--dusty-granite);width:100%}
 /* The live link, as a thing you can hit.
    ---------------------------------------------------------------------------
    It used to be the fourth of five columns in the meta box, set at 14px between
@@ -192,7 +192,7 @@ body{background:var(--parchment)}
 .cs-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .cs-cta a{display:inline-flex;align-items:center;gap:10px;padding:13px 20px 13px 22px;
   border-radius:999px;background:var(--accent-deep);color:var(--parchment);
-  font-family:'Thistle',ui-monospace,monospace;font-weight:500;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
   font-size:15px;line-height:1;text-decoration:none;
   box-shadow:0 1px 2px rgba(45,40,38,.16),0 8px 20px rgba(76,122,28,.22);
   transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s cubic-bezier(.4,0,.2,1),
@@ -211,7 +211,7 @@ body{background:var(--parchment)}
 /* Where it goes, said plainly. A reader deciding whether to follow a link wants
    to know, and github.io is part of the claim: these are live and hosted, not
    screenshots of something that once ran. */
-.cs-cta-url{font-family:'Thistle',ui-monospace,monospace;
+.cs-cta-url{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;
   font-size:13px;color:var(--muted);word-break:break-all}
 @media (prefers-reduced-motion: reduce){
   .cs-cta a,.cs-cta a svg{transition:none}
@@ -220,11 +220,11 @@ body{background:var(--parchment)}
 }
 .cs-meta{border:1px solid var(--outline-stroke);border-radius:12px;padding:16px 24px;display:flex;gap:32px;width:100%;box-sizing:border-box}
 .cs-meta .col{flex:1 1 0;display:flex;flex-direction:column;gap:8px;min-width:0}
-.cs-meta .lbl{font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:16px;line-height:normal;color:var(--antique-gold)}
-.cs-meta .val{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:1.5;color:var(--dusty-granite)}
+.cs-meta .lbl{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:16px;line-height:normal;color:var(--antique-gold)}
+.cs-meta .val{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:1.5;color:var(--dusty-granite)}
 /* inline link inside prose: accent at rest so it is findable mid-sentence.
-   The underline stays neutral (per the mock) — accent on accent read as
-   too much — and takes the accent only on hover. */
+   The underline stays neutral (per the mock), accent on accent read as
+   too much, and takes the accent only on hover. */
 /* The rule itself comes from the shared .touch::after in site.css; this only sets the
    type and the underline's colour.
 
@@ -243,7 +243,7 @@ body{background:var(--parchment)}
    nothing. Any future .touch link that has to wrap needs the background-gradient
    underline the About page uses instead, because a gradient paints on every line box
    and an absolute box cannot. */
-.cs-meta .touch{color:var(--accent);font-family:'Clover',system-ui,sans-serif;font-weight:700;font-size:14px;
+.cs-meta .touch{color:var(--accent);font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:700;font-size:14px;
   white-space:nowrap}
 .cs-meta .touch::after{background:var(--outline-stroke);bottom:-1px}
 /* The same treatment for a link in running prose: accent on an --outline-stroke
@@ -264,12 +264,12 @@ body{background:var(--parchment)}
 .cs-sechead{display:flex;flex-direction:column;gap:12px}
 .cs-tag{display:flex;flex-direction:column;gap:16px}
 .cs-line{width:45px;height:2px;background:#C8D665}
-.cs-seclabel{font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:16px;line-height:normal;color:var(--antique-gold)}
-.cs-h2{font-family:'Laurel',Georgia,serif;font-weight:500;font-size:28px;line-height:1.3;color:var(--dusty-granite)}
-.cs-body{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:var(--dusty-granite);width:100%}
+.cs-seclabel{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:16px;line-height:normal;color:var(--antique-gold)}
+.cs-h2{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;font-size:28px;line-height:1.3;color:var(--dusty-granite)}
+.cs-body{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:var(--dusty-granite);width:100%}
 .cs-body p{margin:0 0 1.5em}
 .cs-body p:last-child{margin-bottom:0}
-.cs-visual{font-family:'Clover',system-ui,sans-serif;font-weight:700}
+.cs-visual{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:700}
 
 /* Key-decisions group: several sub-sections */
 /* 128, not 100. The section label (.cs-tag) is 34px tall with a 12px gap beneath it,
@@ -296,7 +296,7 @@ body{background:var(--parchment)}
    down to the Pix card -> hold; the chat clears at the loop edge and the camera
    pulls back out to the resting shot while the screen is empty. */
 @keyframes wa-follow{
-  /* chat has just cleared — pull back out to the wide resting shot */
+  /* chat has just cleared, pull back out to the wide resting shot */
   0%    {transform:translateY(-215px) scale(1.3); animation-timing-function:cubic-bezier(.45,0,.25,1)}
   10.5% {transform:translateY(0) scale(1)}
   /* rest wide, empty screen (first message lands at 1.4s) */
@@ -328,7 +328,7 @@ body{background:var(--parchment)}
    first paint instead of hidden for good. See the .cs-figure IO in case-study.js. */
 .cs-figure{transition:opacity .5s ease,transform .55s cubic-bezier(.22,.8,.3,1)}
 .pt .cs-figure:not(.is-in){opacity:0;transform:translateY(16px)}
-.cs-caption{font-family:'Thistle',ui-monospace,monospace;font-weight:400;font-size:14px;line-height:normal;
+.cs-caption{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:14px;line-height:normal;
   color:var(--antique-gold);text-align:center;width:100%;margin:0}
 
 /* full-width accent bleed behind the (centred) footer */
@@ -362,18 +362,18 @@ body{background:var(--parchment)}
 .pux-row{display:flex;align-items:center}
 .pux-line{width:29.68px;height:5.33px;flex:none;display:block}
 .pux-note{background:var(--parchment);border:1px solid var(--outline-stroke);border-radius:12px;
-  padding:8px 12px;font-family:'Thistle',ui-monospace,monospace;font-weight:400;font-size:12px;line-height:normal;
+  padding:8px 12px;font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:12px;line-height:normal;
   color:var(--dusty-granite);white-space:nowrap;pointer-events:none;cursor:default}
 /* Invisible, stationary hit target sitting on each label's resting position. The
    visible label animates away on hover, so hit-testing must not follow it, and
    only the current view's targets are live (the other view's are still in the DOM). */
 .pux-hit{position:absolute;left:431.01px;top:var(--t);padding:8px 12px;border:1px solid transparent;
-  font-family:'Thistle',ui-monospace,monospace;font-weight:400;font-size:12px;line-height:normal;white-space:nowrap;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:12px;line-height:normal;white-space:nowrap;
   opacity:0;pointer-events:none;cursor:default}
 .pux[data-state="a"] .pux-hit.a,.pux[data-state="b"] .pux-hit.b{pointer-events:auto}
-.pux-desc{margin:0;padding-left:28px;font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:12px;
+.pux-desc{margin:0;padding-left:28px;font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:12px;
   line-height:1.2;color:var(--antique-gold);opacity:0;transition:opacity .3s ease .05s}
-.pux-desc strong{font-family:'Clover',system-ui,sans-serif;font-weight:700}
+.pux-desc strong{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:700}
 /* active: slide into the annotation slot and reveal the copy. Driven by a
    data-attribute rather than :hover, because the label moves out from under the
    cursor as it animates, which would otherwise drop the hover and flicker. */
@@ -463,7 +463,7 @@ body{background:var(--parchment)}
 .cmp-item.right{left:429.5px}
 .cmp-item img{display:block;width:140px;height:304px}
 .cmp-label{background:var(--parchment);border:1px solid var(--outline-stroke);border-radius:12px;
-  padding:8px 12px;font-family:'Thistle',ui-monospace,monospace;font-weight:400;font-size:12px;line-height:normal;
+  padding:8px 12px;font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:12px;line-height:normal;
   color:var(--dusty-granite);white-space:nowrap}
 .cmp-label em{font-style:normal;color:var(--antique-gold)}
 
@@ -504,9 +504,9 @@ body{background:var(--parchment)}
   display:flex;align-items:center;gap:16px}
 .chain-outtext{display:flex;flex-direction:column;gap:7px;max-width:256px}
 .chain-dot{width:11px;height:11px;border-radius:50%;background:var(--accent);flex:none}
-.chain-t{font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:13px;line-height:1.35;
+.chain-t{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:13px;line-height:1.35;
   color:var(--dusty-granite)}
-.chain-s{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:1.4;
+.chain-s{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:1.4;
   color:var(--antique-gold)}
 .chain-outtext .chain-s:first-of-type{margin-top:3px}
 
@@ -526,20 +526,20 @@ body{background:var(--parchment)}
 .stats{width:100%;background:var(--dove-ivory);border:1px solid var(--outline-stroke);
   border-radius:12px;padding:36px 40px;box-sizing:border-box;display:flex;flex-direction:column;gap:28px}
 .stats-eyebrow{display:flex;align-items:center;gap:12px;
-  font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:14px;line-height:normal;color:var(--antique-gold)}
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:14px;line-height:normal;color:var(--antique-gold)}
 .stats-eyebrow span{width:0;height:2px;background:var(--accent);flex:none;
   transition:width .7s cubic-bezier(.4,0,.2,1)}
 .stats-row{display:flex;align-items:stretch}
 .stat{flex:1 1 0;display:flex;flex-direction:column;gap:6px;padding-right:32px}
 .stat + .stat{padding-left:32px;border-left:1px solid var(--outline-stroke)}
-.stat-n{font-family:'Laurel',Georgia,serif;font-weight:500;font-size:44px;line-height:1.1;color:var(--dusty-granite)}
-.stat-l{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:1.4;color:var(--dusty-granite)}
+.stat-n{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;font-size:44px;line-height:1.1;color:var(--dusty-granite)}
+.stat-l{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:1.4;color:var(--dusty-granite)}
 /* the definition each metric needs, so the prose doesn't have to carry it */
-.stat-d{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:1.4;color:var(--antique-gold)}
+.stat-d{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:12px;line-height:1.4;color:var(--antique-gold)}
 .stats-note{display:flex;align-items:baseline;gap:10px;padding-top:24px;
   border-top:1px solid var(--outline-stroke);
-  font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:1.4;color:var(--antique-gold)}
-.stats-note b{font-family:'Clover',system-ui,sans-serif;font-weight:700;color:var(--dusty-granite)}
+  font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:14px;line-height:1.4;color:var(--antique-gold)}
+.stats-note b{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:700;color:var(--dusty-granite)}
 
 /* The callout animates in once when it reaches the reader: the rule draws out,
    the three stats rise in sequence, and the numbers count up to their value. */
@@ -569,11 +569,11 @@ body{background:var(--parchment)}
    there so the rules can be referred to. In accent they competed with the places
    where the accent is carrying an argument, and spending a loud colour on ordinal
    numbers is what makes it stop meaning anything elsewhere. */
-.cs-rule .n{font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:14px;
+.cs-rule .n{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:14px;
   color:var(--antique-gold);flex:none;width:24px}
-.cs-rule .t{font-family:'Laurel',Georgia,serif;font-weight:500;font-size:18px;line-height:1.3;
+.cs-rule .t{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;font-size:18px;line-height:1.3;
   color:var(--dusty-granite);flex:none;width:190px}
-.cs-rule .d{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;
+.cs-rule .d{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;
   color:var(--muted)}
 
 /* The rows settle into place, one after another, the same beat as the Impact
@@ -668,7 +668,7 @@ body{background:var(--parchment)}
 #cs-lens .lens-hint span {
   display: inline-block; padding: 7px 14px; border-radius: 999px;
   background: rgba(253,251,239,.94); border: 1px solid var(--outline-stroke);
-  font-family: 'Thistle'; font-size: 12px; line-height: 1;
+  font-family: 'JetBrains Mono'; font-size: 12px; line-height: 1;
   color: var(--dusty-granite); white-space: nowrap;
 }
 body.lens-open { overflow: hidden; }
@@ -686,15 +686,15 @@ body.lens-open { overflow: hidden; }
   border-radius:12px;overflow:hidden}
 .cs-ba-head{display:grid;grid-template-columns:1fr 52px 1fr;align-items:center;
   padding:16px 24px 12px;border-bottom:1px solid var(--outline-stroke)}
-.cs-ba-head span{font-family:'Thistle',ui-monospace,monospace;font-weight:500;
+.cs-ba-head span{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
   font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--antique-gold)}
 .cs-ba-head span:last-child{color:var(--accent)}
 .cs-ba-row{display:grid;grid-template-columns:1fr 52px 1fr;align-items:center;
   padding:16px 24px}
 .cs-ba-row + .cs-ba-row{border-top:1px solid var(--outline-stroke)}
-.cs-ba-row .b{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:15px;
+.cs-ba-row .b{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:15px;
   line-height:1.45;color:var(--muted)}
-.cs-ba-row .a{font-family:'Clover',system-ui,sans-serif;font-weight:700;font-size:15px;
+.cs-ba-row .a{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:700;font-size:15px;
   line-height:1.45;color:var(--dusty-granite)}
 /* Drawn rather than a glyph: an arrow character sits on the text baseline and
    rides the font, and this one has to sit on the ROW's centre whatever the two
@@ -741,22 +741,22 @@ body.lens-open { overflow: hidden; }
 .cs-plate-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .cs-kind{display:inline-flex;align-items:center;gap:7px;background:var(--accent);
   color:var(--parchment);border-radius:12px;padding:6px 12px;
-  font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:11px;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:11px;
   letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .cs-kind.is-video{background:var(--ink-blue)}
 .cs-kind.is-seq{background:var(--feat-sage)}
 .cs-kind.is-still{background:var(--tag-green)}
-.cs-tech{font-family:'Thistle',ui-monospace,monospace;font-weight:400;font-size:12px;
+.cs-tech{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:12px;
   color:var(--antique-gold)}
-.cs-plate h3{margin-top:20px;font-family:'Laurel',Georgia,serif;font-weight:500;
+.cs-plate h3{margin-top:20px;font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;
   font-size:23px;line-height:1.25;color:var(--dusty-granite);max-width:600px}
-.cs-plate p{margin-top:12px;font-family:'Clover',system-ui,sans-serif;font-weight:400;
+.cs-plate p{margin-top:12px;font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;
   font-size:15px;line-height:1.6;color:var(--muted);max-width:620px}
 .cs-plate ul{margin:12px 0 0 0;padding-left:18px;max-width:620px}
-.cs-plate li{font-family:'Clover',system-ui,sans-serif;font-weight:400;font-size:14px;
+.cs-plate li{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:14px;
   line-height:1.55;color:var(--muted);margin-bottom:5px}
 .cs-plate li::marker{color:var(--accent)}
 .cs-spec{margin-top:auto;padding-top:16px;border-top:1px solid var(--outline-stroke);
-  font-family:'Thistle',ui-monospace,monospace;font-weight:400;font-size:11.5px;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:11.5px;
   color:var(--antique-gold);display:flex;gap:18px;flex-wrap:wrap}
 .cs-spec b{font-weight:500;color:var(--dusty-granite)}

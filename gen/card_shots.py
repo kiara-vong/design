@@ -12,7 +12,7 @@ STRIP_H = 1900
 def ds_strip():
     o = [rect(0, 0, W - 196, STRIP_H, PAPER)]
     x0, cw = 40, W - 196 - 80
-    o.append(text(x0, 52, "Foundations", 22, INK, "'Laurel',serif", 600))
+    o.append(text(x0, 52, "Foundations", 22, INK, "'Fraunces',serif", 600))
     o.append(bar(x0, 68, 300, 8, LINE))
     # Colour ramps: the palette of this very site, so the artwork and the page agree.
     for r, base in enumerate(("#649F25", "#649F25", "#1F597B", "#8460C6")):
@@ -21,12 +21,12 @@ def ds_strip():
                           op=round(.14 + c * .107, 2)))
         o.append(text(x0 + 9 * 58 + 12, 126 + r * 52, ["persimmon", "leaf", "ink", "iris"][r], 12, MUT))
     y = 330
-    o.append(text(x0, y, "Type scale", 22, INK, "'Laurel',serif", 600))
+    o.append(text(x0, y, "Type scale", 22, INK, "'Fraunces',serif", 600))
     for i, s in enumerate((34, 27, 22, 17, 14, 11)):
         o.append(bar(x0, y + 26 + i * 34, 120 + s * 9, s * .78, INK if i < 2 else MUT))
         o.append(text(x0 + 640, y + 34 + i * 34, "%d / %d" % (s * 2, int(s * 2 * 1.4)), 12, MUT))
     y = 590
-    o.append(text(x0, y, "Components", 22, INK, "'Laurel',serif", 600))
+    o.append(text(x0, y, "Components", 22, INK, "'Fraunces',serif", 600))
     # 4x3 component tiles, each a different primitive so the grid does not read as wallpaper
     for i in range(12):
         cx, cy = x0 + (i % 4) * (cw / 4.0), y + 26 + (i // 4) * 148
@@ -62,7 +62,7 @@ def ds_strip():
                      'stroke-width="9" stroke-linecap="round"/>'
                      % (cx + tw / 2, cy + 38, cx + tw / 2 + 24, cy + 74, ACCENT))
     y = 1200
-    o.append(text(x0, y, "Usage", 22, INK, "'Laurel',serif", 600))
+    o.append(text(x0, y, "Usage", 22, INK, "'Fraunces',serif", 600))
     for i in range(2):
         bx = x0 + i * (cw / 2.0)
         o.append(rect(bx, y + 26, cw / 2.0 - 20, 190, PAPER, 10,
@@ -72,7 +72,7 @@ def ds_strip():
                       GREEN if i == 0 else "#E6685C", w=700))
         o.append(rect(bx + 24, y + 78, 92, 32, ACCENT if i == 0 else MUT, 16, op=1 if i == 0 else .45))
         o.append(lines(bx + 24, y + 130, [cw / 2.0 - 80, cw / 2.0 - 130, cw / 2.0 - 190]))
-    o.append(text(x0, 1470, "Migration", 22, INK, "'Laurel',serif", 600))
+    o.append(text(x0, 1470, "Migration", 22, INK, "'Fraunces',serif", 600))
     for i in range(6):     # the 12,600-line diff, as a review checklist
         yy = 1500 + i * 40
         o.append(rect(x0, yy, cw, 32, WASH if i % 2 else PAPER, 6))

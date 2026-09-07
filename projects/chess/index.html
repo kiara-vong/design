@@ -10,12 +10,8 @@
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<!-- The type is served from this origin now, so there is no third party to open a
-     connection to. The two faces every one of these pages sets before anything else
-     are named here: discovered in the stylesheet they queue behind it, and a case
-     study is a wall of text whose first paint is the title and the opening paragraph. -->
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -140,6 +136,23 @@
         <p>Everyone starts a chess engine wanting to write the clever search. The search is a week; move generation is a month, because the rules have more exceptions than anyone remembers. En passant, castling through check, pinned pieces, promotion, the fifty-move rule.</p>
         <p>None of it is interesting and all of it has to be exactly right, because a search built on top of a subtly wrong move generator produces confident nonsense.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:1214px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:57.8px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-523.6px;--y1:0.0px;--k1:0.9261">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img style="--i:0" src="../../assets/plate/chess-setup.webp" alt="The opening position, with a control bar above it: an autoplay toggle per colour, a speed selector, and a point-of-view switch" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <div class="call" style="--cx:613.0px;--cy:81.4px;--cw:166px">
+            <div class="call-row"><span class="call-line"></span><span class="call-note">actions per second</span></div>
+            <p class="call-desc">The search is the same at every setting. This only decides how long it is given, which is the honest way to expose a depth limit.</p>
+          </div>
+        </div>
+        <figcaption class="cs-caption">The whole interface is one bar. Hand either colour to the engine, set how fast it is allowed to think, and choose which way the board faces, which is most of what you want from an engine you are testing rather than playing.</figcaption>
+      </figure>
     </section>
 
     <section id="how" class="cs-section">
@@ -152,13 +165,13 @@
         <p>So the ordering heuristics matter more than the depth. Captures first, then checks, then everything else, and the improvement is dramatic enough that it changes what depth is affordable.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam framed cam-clip">
+        <div class="cs-media cam framed cam-clip" style="--wx:124.8px;--wy:42.0px;--ww:549.3px;--wh:333.0px;--bar:24.0px">
           <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
           <div class="win">
-            <video src="../../assets/video/chess-autoplay.mp4" poster="../../assets/video/chess-autoplay-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Two copies of the engine playing each other with no human moves, the board degrading from the starting position into an unrecognizable mess within seconds"></video>
+            <video src="../../assets/video/chess-autoplay.mp4" poster="../../assets/video/chess-autoplay-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Both colours handed to the engine, playing a full game out at a speed that is turned up as it goes"></video>
           </div>
         </div>
-        <figcaption class="cs-caption">Both sides set to the live site's own (BAD) AI CHESS, taking the engine's first choice every move. No opening book to paper over the early game and no endgame tables to recover with, so the position is unrecognizable by move six.</figcaption>
+        <figcaption class="cs-caption">Both sides handed to the engine, and the speed turned up as the game runs. It is played at 1.8× here, which keeps the acceleration a reader can see and does not invent one. No opening book and no endgame tables, so what you are watching is the search on its own.</figcaption>
       </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Order first, search second</span><span class="d">Alpha-beta only pays off if the good moves come first. The ordering is the optimisation.</span></div>

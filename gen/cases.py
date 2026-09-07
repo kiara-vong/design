@@ -57,6 +57,21 @@ def demo_cta(route, label="Open the rebuild"):
             'tool, with the data scrubbed</span>\n'
             '        </div>\n' % (href, esc(label), ARROW))
 
+def repo_cta(url, label, note):
+    """Same button, pointed at a repository rather than at the demo site.
+
+    The other rebuilds are routes inside one deployed app, so demo_cta can build
+    their links from a base and a fragment. This one is its own repository with
+    its own README, and hiding that behind the same wording would tell the reader
+    it is the same kind of thing.
+    """
+    return ('        <div class="cs-cta">\n'
+            '          <a href="%s" target="_blank" rel="noopener">'
+            '<span>%s</span>%s</a>\n'
+            '          <span class="cs-cta-url">%s</span>\n'
+            '        </div>\n' % (url, esc(label), ARROW, esc(note)))
+
+
 # =====================================================================
 build("resource-dashboard", dict(
     cta=demo_cta("#/resources", "Open the rebuild"),
@@ -466,8 +481,8 @@ build("ui-consistency", dict(
            "styles instead of tokens, four table layouts, three different ways to "
            "say \u201cno data\u201d. I inventoried it, designed the shared layer "
            "underneath, and cut a 231-file, 12,600-line change across twelve pages "
-           "into twenty-four pull requests a human could actually review \u2014 with "
-           "a Cypress suite under it, so review was not the only thing standing "
+           "into twenty-four pull requests a human could actually review, with "
+           "a Cypress suite under it so review was not the only thing standing "
            "between a refactor this size and a regression."),
     meta=[("Role", "Design engineer,<br>system owner"),
           ("Stack", "React, TypeScript,<br>MUI, Cypress"),
@@ -519,7 +534,7 @@ build("ui-consistency", dict(
              "which is the usual way these fail.",
              "The inventory became a page. Every component that had drifted got a card: "
              "what was wrong, what replaced it, how many files it touched, what it "
-             "blocked. Reviewers read that page before they read a diff \u2014 and so "
+             "blocked. Reviewers read that page before they read a diff, and so "
              "did the people who had written the variants I was proposing to delete."],
             media.page(
                 "plate/showcase-full-height.webp",
@@ -612,8 +627,8 @@ build("ui-consistency", dict(
         sub("tests", "Key decisions", "The net under the refactor",
             ["A refactor makes a promise that is hard to check: nothing behaves "
              "differently. On a diff this wide, nobody can hold that in their head, "
-             "and \u201cit looked fine when I clicked around\u201d is not evidence \u2014 "
-             "it is the absence of it.",
+             "and \u201cit looked fine when I clicked around\u201d is not evidence. "
+             "It is the absence of it.",
              "So the Cypress suite grew alongside the change rather than after it, to "
              "roughly 85% of the critical flows: the paths people take every day, "
              "asserted before the shared components went in and re-run after each "
@@ -647,112 +662,202 @@ build("persona-homepage", dict(
     out="work/persona-homepage/index.html", root="../../",
     kicker=CO,
     title="Persona Homepage",
+    cta=repo_cta("https://github.com/kiara-vong/persona-homepage",
+                 "Open the recreation",
+                 "A public rebuild of the page, running entirely on invented data"),
     hero="case/cs-persona-reorder.svg",
-    hero_alt="A homepage rearranging itself as the selected persona changes",
+    hero_alt="The same homepage twice, its five widgets joined by curves showing "
+             "where each one lands for the other persona",
     intro=("A homepage serving several kinds of user, each of whom needs a "
-           "different half of it. I am designing and building the customisation "
-           "model: what a page opens as when it knows who is looking, what it "
-           "lets you move, and where the line is between a layout somebody owns "
-           "and a layout nobody can support. In progress, shipping behind a flag "
-           "this quarter."),
-    meta=[("Role", "Design engineer,<br>API and interface"),
+           "different half of it. I picked up a proposal two teammates had "
+           "shelved, researched how three other products had solved it, drew "
+           "five personas, ran the workshop that cut them to two, and am now "
+           "building the model, the API and the interface. This is the whole "
+           "arc, in the order it happened."),
+    meta=[("Role", "Design engineer,<br>research through build"),
           ("Stack", "React, TypeScript,<br>GraphQL"),
-          ("Scope", "Research, personas,<br>widget model, build"),
+          ("Scope", "Research, wireframes,<br>workshop, build"),
           ("Status", "In build behind<br>a feature flag"),
           ("Note", NOTE)],
     nav=[("overview", "Overview", False),
          ("context", "Context", False),
+         ("research", "Research", False),
          ("decisions", "Key decisions", False),
-         ("personas", "Two, not five", True),
+         ("draft", "Everything that could go on a page", True),
+         ("workshop", "A workshop is a decision list", True),
+         ("personas", "Five became two", True),
          ("scope", "Scope is the persona", True),
-         ("widgets", "A catalog you cannot get wrong", True),
          ("ship", "Shipping it invisibly", True),
+         ("mockups", "Mockups", False),
+         ("built", "In build", False),
+         ("recreation", "The recreation", False),
          ("thinking", "Where my head is", False)],
     sections=(
         section("context", "Context",
-                "One homepage, several jobs",
+                "A landing page nobody landed on",
                 ["The people arriving at this page do not want the same things. "
                  "Some own one application and want the shortest path to what it "
                  "needs today. Some run a division and want the shape of all of "
-                 "it. Today they get the same page, tuned for the first group, so "
-                 "everyone else lands and immediately starts filtering.",
-                 "The obvious answer is to let people customise it. The obvious "
-                 "answer is also how you end up with a page most users never "
-                 "touch and a small minority configure into something nobody can "
-                 "support."],
-                media.stage("plate/persona-home-leader.webp",
-                            "The homepage as it opens for someone responsible for "
-                            "a whole division: a maturity score, its trend, and "
-                            "what the automation has done lately",
-                            "What a division lead opens to. Nothing here was "
-                            "chosen by them; it is what the page decided to show "
-                            "somebody with their scope, and the argument of this "
-                            "project is that getting that right matters more than "
-                            "any setting.")),
+                 "it. They all got the same mostly-empty page, so everyone "
+                 "landed and immediately started filtering.",
+                 "Two teammates had already written a proposal for it: "
+                 "configurable widget slots you pick from a dropdown, a tabbed "
+                 "nav in place of the dropdown menu, saved against your user id. "
+                 "It was shelved before it was fleshed out. Picking it up meant "
+                 "saying what it was missing, and I think the answer is this: it "
+                 "personalised by WHO you are, and the thing that actually "
+                 "predicts what you need is what you are responsible for.",
+                 "So the direction kept their selection model and added a "
+                 "detected scope underneath it. The page works out what you own, "
+                 "shows you what it worked out, and lets you correct it before "
+                 "anything is saved."],
+                media.flat("case/cs-persona-flow.svg",
+                           "The flow from opening the page for the first time to "
+                           "using it daily: detect scope, confirm it, tour, "
+                           "render, customise, save a preset",
+                           "The whole feature in one line. The branch at the "
+                           "front is the part I care about: somebody who has been "
+                           "here before skips every step of the onboarding, "
+                           "because a page that greets you the same way on the "
+                           "fortieth visit is a page that has not been paying "
+                           "attention.")),
+
+        section("research", "Research",
+                "Three products had already solved half of it",
+                ["Before designing anything I went and used three products that "
+                 "already do customisable dashboards: two other internal ones and "
+                 "a third-party observability platform. Not for inspiration, but for "
+                 "the list of things that go wrong, which is much harder to "
+                 "get from a blank page than from somebody else\u2019s shipped "
+                 "one.",
+                 "The most useful finding was an anti-pattern. One of the two "
+                 "internal products fetches a rich user profile on load, with the "
+                 "role and the org and the team all in it, and then renders the "
+                 "same layout for everybody. All the signal, none of the "
+                 "branching. That is the failure this project exists to avoid, "
+                 "and it was already sitting there in production to be looked at."],
+                fig=rules([
+                    ("Borrow", "One catalog source, no fallbacks. An explicit edit "
+                               "mode you opt into. Curated presets plus a personal "
+                               "override. Hiding widgets a user is not entitled to "
+                               "see."),
+                    ("Skip", "Multi-dashboard create-share-clone. A write on every "
+                             "drag. A three-way catalog fallback. A full-page "
+                             "editor route where a side panel would do."),
+                    ("Open", "Neither internal product has a persona concept at "
+                             "all. If this is right, it is new here, and being "
+                             "first is a reason to be careful rather than a "
+                             "reason to be pleased."),
+                ])),
 
         '    <div id="decisions" class="cs-group">\n\n' +
-        sub("personas", "Key decisions", "Two personas, not five",
-            ["The proposal I inherited had five roles, and the version before "
-             "that had three. The first workshop collapsed them to two, and the "
-             "reasoning is the part worth keeping: the first release ships "
-             "widgets that already exist on the current dashboards, and five "
-             "roles cannot be told apart by widgets none of them have yet. A "
-             "five-way split is a promise the product cannot cash.",
-             "So there are two. Somebody scoped to one application or account, "
-             "and somebody scoped to many, a division, or all of them. The finer "
-             "split is written down and waiting for the role-specific widgets "
-             "that would make it mean something.",
-             "The persona is also not read off a job title. It is inferred from a "
-             "scope the user has confirmed: on a first visit the page shows what "
-             "it detected about them and asks them to correct it before anything "
-             "is saved. Applying it silently was on the table and the workshop "
-             "turned it down, which I think was right. A page that quietly "
-             "rearranges itself around a guess about you is a page you cannot "
-             "argue with."],
+        sub("draft", "Key decisions", "Everything that could go on a page",
+            ["The first artefact was not a layout. It was an inventory: every "
+             "widget the product already had, grouped under the headings the "
+             "picker would eventually use. Twenty-four of them, six categories, "
+             "and not one of them new.",
+             "That constraint was deliberate and it survived the workshop intact. "
+             "A first release that also invents widgets is a release where you "
+             "cannot tell whether people dislike the customisation or the new "
+             "content. Everything here already exists on a page somebody uses "
+             "today; all this feature does is let them choose which ones and in "
+             "what order.",
+             "Five wireframes came out of that list, one each for developer, manager, "
+             "director, division lead and executive: a different opening "
+             "hand from the same deck, with the reasoning written in the margin "
+             "next to every block."],
+            media.flat("case/cs-persona-catalog.svg",
+                       "The widget catalog: twenty-four widgets under six "
+                       "headings, from maturity and compliance through to layout "
+                       "primitives",
+                       "The deck every persona is dealt from. Grouping it this "
+                       "way was not documentation. The headings are what the "
+                       "picker is grouped by, so the inventory and the interface "
+                       "are the same list."),
             first=True),
+
+        sub("workshop", "Key decisions", "A workshop is a decision list, not a meeting",
+            ["Eight of us, an hour, and a written agenda where every item was a "
+             "question with its options and the argument for each already laid "
+             "out. Not slides. The pre-read had the questions; the follow-up doc "
+             "had the answers, in the same order, so you could see which ones "
+             "moved.",
+             "The framing mattered more than the facilitation. \u201cAre these the "
+             "right five personas?\u201d is a decision somebody can disagree with "
+             "in one sentence. \u201cHere is my design\u201d is not. It is a "
+             "thing people nod at and then quietly ignore, and the proposal I "
+             "inherited had been nodded at once already.",
+             "It also set what we would NOT decide: no final visual design, no "
+             "aggregation logic per widget, no production wiring. A workshop that "
+             "tries to settle everything settles nothing."],
+            after=rules([
+                ("Personas", "How many, detected from what, and what scope each "
+                             "one fills in by default."),
+                ("Widgets", "Whether the catalog is right, what each persona "
+                            "opens with, and which existing pages this replaces."),
+                ("Affordances", "Editable, stackable and resizable widgets, and "
+                                "which edit-mode control we ship."),
+                ("Persistence", "Where preferences live, and what happens to a "
+                                "custom layout when somebody\u2019s role changes."),
+            ])),
+
+        sub("personas", "Key decisions", "Five personas became two",
+            ["The proposal I inherited had five roles and the version before it "
+             "had three. The workshop collapsed them to two, and the reasoning is "
+             "the part worth keeping: the first release ships widgets that already "
+             "exist, and five roles cannot be told apart by widgets none of them "
+             "have yet. A five-way split is a promise the product cannot cash.",
+             "So there are two. Somebody scoped to one application or account, and "
+             "somebody scoped to many, a division, or all of them. The finer split "
+             "is written down and waiting for the role-specific widgets that would "
+             "make it mean something, which is a different thing from being "
+             "dropped.",
+             "The persona is also not read off a job title. It follows from a "
+             "scope the user has confirmed: on a first visit the page shows what "
+             "it detected and asks them to correct it before anything is saved. "
+             "Applying it silently was on the table and the room turned it down, "
+             "which I think was right. A page that quietly rearranges itself "
+             "around a guess about you is a page you cannot argue with."],
+            media.flat("case/cs-persona-five-to-two.svg",
+                       "Five proposed persona layouts above, joined by curves to "
+                       "the two that shipped: contributor and leader",
+                       "Nothing was thrown away. Two of the five folded into one "
+                       "default and three into the other, and the split waits for "
+                       "the widgets that would justify it. A picture of that is "
+                       "more honest than a list of two, which reads as though the "
+                       "other three were never considered.")),
 
         sub("scope", "Key decisions", "Scope is the persona",
             ["Every widget declares which scope dimensions it can answer for. "
-             "Effective scope resolves widget-first, then the page, then a "
-             "default from the profile, so one widget can be pinned to a single "
+             "Effective scope resolves widget-first, then the page, then a default "
+             "from the profile, so one widget can be pinned to a single "
              "application while the rest of the page follows the division.",
              "The interesting case is the mismatch: the page is scoped by "
-             "something a widget does not accept. Two easy answers were "
-             "available and both are wrong. Applying it silently makes the widget "
-             "lie about what it is showing; dropping it silently makes it lie "
-             "about what it was asked. So it ignores the dimension and says so on "
-             "its own chip. A visible inconsistency the reader can reason about "
-             "beats an invisible one they cannot."],
-            media.stage("plate/persona-home-edit.webp",
-                        "The same homepage in edit mode, its widgets showing drag "
-                        "handles and the page scope set to a single application",
-                        "Edit mode, and the scope chips along the top. Those "
-                        "chips are the persona: the page does not ask who you "
-                        "are, it asks what you are responsible for, and the "
-                        "layout follows from the answer.")),
-
-        sub("widgets", "Key decisions", "A catalog you cannot get wrong",
-            ["The widget catalog is a typed array in code, one file per widget, "
-             "and it validates itself at module load: duplicate identifiers and "
-             "malformed scope declarations throw before anything renders. A "
-             "JSON file and a server-fetched catalog were both considered and "
-             "both rejected, because both turn a compile error into a runtime "
-             "one and then need a fallback for the case where the catalog is "
-             "missing, and a fallback catalog is a second source of truth "
-             "pretending to be a safety net.",
-             "Layouts are personal and named. Customise anything and the page "
-             "creates one for you rather than silently mutating the preset, so "
-             "the preset stays available to go back to. The larger version of "
-             "this feature, with sharing and cloning and a roles model, needs a "
-             "backend and a permissions story that phase one does not have, and "
-             "saying so out loud was cheaper than discovering it in the build."],
-            media.stage("plate/persona-catalog.webp",
-                        "The widget catalog open over the homepage, its widgets "
-                        "grouped by category with a search field and an add "
-                        "control on each card",
-                        "The catalog, and the shape of the promise: everything "
-                        "in here is a real widget with a declared scope, because "
-                        "the list is code that refuses to load if it is wrong.")),
+             "something a widget does not accept. Two easy answers were available "
+             "and both are wrong. Applying it silently makes the widget lie about "
+             "what it is showing; dropping it silently makes it lie about what it "
+             "was asked. So it ignores the dimension and says so on its own chip. "
+             "A visible inconsistency the reader can reason about beats an "
+             "invisible one they cannot.",
+             "Sizes are bounded for the same reason. At most three per widget, at "
+             "most two layouts, and the compact size always shows a real number "
+             "plus one piece of context: a trend, a threshold, a delta. Never "
+             "a bare number, because a bare number is a thing you have to go "
+             "somewhere else to understand."],
+            media.stage("plate/persona-widget-jobs.webp",
+                        "One widget on the homepage: a jobs table with its own "
+                        "scope chip, three filters and an export, stacked behind "
+                        "a numbered tab with a second widget",
+                        "One entry in that catalog, on the page. It carries its "
+                        "own scope chip, its own filters and its own export, and "
+                        "it is stacked behind a numbered tab with a second "
+                        "widget, which is how a column holds more than it "
+                        "has room for.",
+                        look=(146, 70, 440, 228),
+                        call=("two widgets, one column",
+                              "Stacked behind numbered tabs, each carrying its "
+                              "own scope, because a column has less room than a "
+                              "page has widgets."))),
 
         sub("ship", "Key decisions", "Shipping it where nobody can see it",
             ["The new homepage is a separate route behind a flag that is off in "
@@ -760,12 +865,146 @@ build("persona-homepage", dict(
              "That is deliberate: this arrives as roughly forty small pull "
              "requests over a quarter, and the cost of a regression on the page "
              "everybody already uses is far higher than the cost of running two "
-             "routes for three months.",
+             "routes for three months. The team opts in by visiting the route; "
+             "the architect and the tech lead review from the same place.",
              "If the flag resolves off, or the client that evaluates it fails "
              "outright, the new route redirects to the old one. The failure mode "
              "of a half-finished homepage should be the homepage that already "
-             "works, and that has to be designed rather than hoped for."]) +
+             "works, and that has to be designed rather than hoped for.",
+             "Preferences go to a table in the database that already serves this "
+             "product rather than to a new service, keyed by user, holding the "
+             "persona, the layout, the saved presets and whether the tour has been "
+             "seen. Local storage stays as an offline cache. Syncing across "
+             "devices was a requirement rather than a nicety, which is what ruled "
+             "out the browser-only version that would have shipped a month "
+             "sooner."]) +
         '    </div>\n\n',
+
+        section("mockups", "Mockups", "What it looks like when it opens",
+                ["Three moments got mocked before any of them got built, because "
+                 "all three are moments where the page is about to do something "
+                 "on your behalf and the only question is whether you can see it "
+                 "coming.",
+                 "The first is onboarding: what we detected, where each piece came "
+                 "from, and a control to remove or add any of it. The second is a "
+                 "five-step tour that runs once and is remembered. The third is "
+                 "the one nobody asks for and everybody needs: what happens "
+                 "when your role changes and you have unsaved edits. That one "
+                 "stops and makes you name what you have before it loads anything "
+                 "else. Discarding is allowed; discarding silently is not."],
+                fig=media.flat("case/cs-persona-onboard.svg",
+                               "The onboarding modal: an auto-detected banner, "
+                               "then rows of application, account and division "
+                               "chips, each removable, with a confirm button",
+                               "The banner is the whole argument. It says what was "
+                               "detected and where it came from, and everything "
+                               "under it can be taken off before a single "
+                               "preference is written."),
+                after=media.stage("plate/persona-home-leader.webp",
+                                  "The homepage as it opens for someone "
+                                  "responsible for a whole division: a maturity "
+                                  "score, its trend, and what the automation has "
+                                  "done lately",
+                                  "And the mockup, built. What a division lead "
+                                  "opens to. Nothing here was chosen by them; "
+                                  "it is what the page decided to show somebody "
+                                  "with their scope.",
+                                  look=(163, 152, 830, 64),
+                                  call=("the page\u2019s scope",
+                                        "Not a job title. The page asks what you "
+                                        "are responsible for, and the opening "
+                                        "layout follows from the answer."))),
+
+        section("built", "In build", "The half that is on screen today",
+                ["Editing is a mode you enter rather than a state you fall into. "
+                 "Edit layout adds a grip to every widget, an action menu on each "
+                 "one, and drag handles on the right and bottom edges; nothing "
+                 "else about the page changes. The page you were reading is the "
+                 "page you are rearranging, which is the difference between "
+                 "customising something and being handed a configuration screen.",
+                 "Underneath, the widget catalog is a typed array in code, one "
+                 "file per widget, validating itself at module load: duplicate "
+                 "identifiers and malformed scope declarations throw before "
+                 "anything renders. A JSON file and a server-fetched catalog were "
+                 "both considered and both rejected, because both turn a compile "
+                 "error into a runtime one and then need a fallback for the case "
+                 "where the catalog is missing, and a fallback catalog is a "
+                 "second source of truth pretending to be a safety net."],
+                fig=media.stage("plate/persona-home-edit.webp",
+                                "The same homepage in edit mode, its widgets "
+                                "showing drag handles and the page scope set to a "
+                                "single application",
+                                "Edit mode, and the scope chips along the top. "
+                                "Those chips are the persona: the page does not "
+                                "ask who you are, it asks what you are "
+                                "responsible for, and the layout follows from the "
+                                "answer.",
+                                look=(172, 280, 605, 82),
+                                call=("what moves",
+                                      "Edit mode adds a grip to each widget and "
+                                      "changes nothing else. The page you were "
+                                      "reading is the page you are rearranging.")),
+                after=media.stage("plate/persona-home-contributor.webp",
+                                  "The homepage as it opens for someone who owns "
+                                  "a single application: alerts first, then cost, "
+                                  "then the jobs outstanding against it",
+                                  "The other default. Same page, same widgets "
+                                  "available, different opening hand: what is "
+                                  "broken, what it costs, what it wants from you "
+                                  "today.")),
+
+        section("recreation", "The recreation",
+                "Rebuilt so it can be shown",
+                ["The internal captures on this page are stills, and stills are "
+                 "all they can be. The recording of the real thing carries a "
+                 "division, an application identifier and a colleague\u2019s name "
+                 "in half a dozen places on every frame, several of which pass "
+                 "under an open menu as it moves. A figure whose safety depends "
+                 "on a rectangle staying put is a figure waiting to leak.",
+                 "So the page is rebuilt in the open instead: same rail, same "
+                 "scope bar, same card grid, same edit mode, running on accounts "
+                 "and divisions I made up. Rebuilding it removes the question "
+                 "rather than managing it, and it is a better artefact anyway, "
+                 "because a reader can open it and drive it themselves rather "
+                 "than take a screenshot\u2019s word for it.",
+                 "It carries the decisions this page argues for, not just the "
+                 "look: each widget declares which scope dimensions it accepts, "
+                 "the effective scope resolves widget then page then default, and "
+                 "a widget the page scope cannot reach says so on its own card "
+                 "instead of showing numbers for a scope nobody asked for.",
+                 "It is close but not complete. Real data, entitlements, "
+                 "server-side preferences and the wider persona split are "
+                 "described here rather than implemented there."],
+                fig=media.clip("persona-edit-options",
+                               "Edit mode, a widget\u2019s action menu open on "
+                               "expand, replace, delete, move, merge, unstack and "
+                               "three sizes, then the change undone",
+                               "Edit mode and one widget\u2019s menu. Every "
+                               "action on it is reversible, which is what lets "
+                               "the page be rearranged by someone who is not sure "
+                               "yet what they want.",
+                               root="../../"),
+                after=media.clip("persona-scope-switch",
+                                 "The page scope changing from a single account "
+                                 "to a division, and the whole layout, the grade "
+                                 "and every widget\u2019s subtitle following it",
+                                 "The same page under a different scope. Nothing "
+                                 "was configured between these two states: the "
+                                 "scope changed and the layout followed, which is "
+                                 "the entire argument.",
+                                 root="../../")
+                      + media.clip("persona-widget-scope",
+                                   "One card pinned to a different account, then a "
+                                   "divisional widget added to a page scoped to a "
+                                   "single account, showing a warning on its own "
+                                   "scope line",
+                                   "Scope resolves widget, then page, then default. "
+                                   "The rollup at the bottom cannot be scoped by an "
+                                   "account, so it falls back to its own dimension "
+                                   "and says which scope it is not using. Silently "
+                                   "applying the wrong one, or silently dropping "
+                                   "it, are the two failures this replaces.",
+                                   root="../../")),
 
         section("thinking", "Where my head is",
                 "The defaults are the product",
@@ -775,28 +1014,22 @@ build("persona-homepage", dict(
                  "starting layout is right for most people, very few will change "
                  "it, and that is the success case rather than a sign the feature "
                  "failed.",
-                 "So most of the work has been research, personas and defaults, "
-                 "not settings screens. Which layout does the page open as, and "
-                 "how does it decide? What moves, and what is fixed because "
-                 "moving it would break the orientation of everyone who has "
-                 "learned where it is? Two rounds of structured feedback are "
-                 "built into the plan for exactly that, because the answer is not "
-                 "something I can reason my way to alone.",
+                 "Which is why most of the work so far has been research, "
+                 "personas and defaults rather than settings screens. Which "
+                 "layout does the page open as, and how does it decide? What "
+                 "moves, and what is fixed because moving it would break the "
+                 "orientation of everyone who has learned where it is? A second "
+                 "workshop and two rounds of structured feedback are in the plan "
+                 "for exactly that, because the answer is not something I can "
+                 "reason my way to alone.",
                  "Write-up to follow once it ships."],
-                fig=media.stage("plate/persona-home-contributor.webp",
-                                "The homepage as it opens for someone who owns a "
-                                "single application: alerts first, then cost, "
-                                "then the jobs outstanding against it",
-                                "The other default. Same page, same widgets "
-                                "available, different opening hand: what is "
-                                "broken, what it costs, what it wants from you "
-                                "today."),
-                after=rules([
+                fig=rules([
                     ("Default first", "The starting layout has to be right for the "
                                       "majority before any control is offered."),
-                    ("Bounded", "A page that can become anything is a page nobody can "
-                                "support or design for."),
-                    ("Legible", "When the page reorders, it should be obvious that it "
-                                "did and why."),
+                    ("Bounded", "A page that can become anything is a page nobody "
+                                "can support or design for."),
+                    ("Legible", "When the page reorders, it should be obvious that "
+                                "it did and why."),
                 ])),
     )))
+

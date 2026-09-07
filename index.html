@@ -24,12 +24,8 @@
      reached, well down the body, while the fonts discovered in the stylesheet have
      already started. It is the one asset on this page worth naming up here. -->
 <link rel="preload" as="image" href="assets/hero/hero-bg.webp" fetchpriority="high">
-<!-- The type is this site's own and sits on this origin, so there is nobody to
-     preconnect to. These two are the faces the first screen sets: the 80px display
-     italic in the hero and the body face under it. Discovered in the stylesheet
-     they would queue behind it, and swap would show both in Georgia first. -->
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="site.css">
 
 <!-- After the stylesheet: site.css sets html,body to parchment, but on iOS
@@ -325,64 +321,12 @@ window.__hl = (function () {
   .tile-win{transition:none}
 }
 
-/* ----- Card 4: the unshipped one -----
-   It is a <div>, not an <a>, because there is nothing to link to yet and a card
-   that looks clickable and is not is worse than one that plainly is not. The
-   thumbnail still animates; only the affordance is withheld. The toast says why,
-   and it appears on hover only, so the card reads as a normal card until you
-   reach for it. */
-/* The toast IS the cursor.
-
-   The reference build's coming-soon card does this and it is the best small idea on
-   that page: instead of a label sitting in the middle explaining that the card does
-   not open, the label picks itself up and follows your pointer, so reaching for the
-   card is the thing that answers you. The real cursor is hidden underneath it.
-
-   Sparks are dropped at the toast's position as it moves and decay where they were
-   left, so the mark belongs to the PATH rather than to the pointer. A glow pinned to
-   the cursor reads as a smudge riding on top of the picture; a wake reads as
-   something having been dragged through it.
-
-   Green rather than the reference's persimmon, because the accent is green here, and
-   emitted per distance travelled rather than per frame: move fast and the trail is
-   long, hold still and nothing accumulates. */
-.card-persona{cursor:default}
-.ps-photo{position:relative;cursor:none;--mx:264.5px;--my:152px;--rot:0deg}
-/* Explicit width and height rather than inset:0. A canvas is a replaced element, so
-   inset alone leaves it at its intrinsic attribute size instead of stretching to the
-   box, and every spark would be painted at double scale and mostly outside the card. */
-.ps-trail{position:absolute;left:0;top:0;width:529px;height:304px;
-  display:block;pointer-events:none;z-index:2}
-.ps-toast{position:absolute;left:0;top:0;z-index:3;
-  transform:translate(calc(var(--mx) - 50%),calc(var(--my) - 50%))
-            rotate(var(--rot,0deg)) scale(.94);
-  background:var(--parchment);border:1px solid var(--outline-stroke);
-  border-radius:14px;padding:10px 18px;white-space:nowrap;
-  font-family:'Thistle',ui-monospace,monospace;font-weight:500;font-size:16px;
-  color:var(--accent);pointer-events:none;
-  box-shadow:0 8px 20px rgba(45,40,38,.14);
-  /* Visible at rest, not on hover.
-  
-     It used to fade in only when you reached for the card, which meant the one card
-     that does not open looked exactly like the three that do until you had already
-     tried. The label is the card's status, and a status you have to discover is not
-     one. The reference build shows its own the same way: parked in the middle, and
-     it picks itself up and follows the pointer from there. */
-  transition:transform .62s cubic-bezier(.22,1.35,.36,1)}
-.card-persona:hover .ps-toast{transform:translate(calc(var(--mx) - 50%),calc(var(--my) - 50%))
-            rotate(var(--rot,0deg)) scale(1)}
-/* Tight follow while the pointer is inside; the long, overshooting glide home is the
-   base transition above. An object with mass arrives slightly past where it is going
-   and settles back, which is the difference between this and a UI element sliding. */
-.ps-photo.is-live .ps-toast{transition:transform .07s linear}
-/* The thumbnail dims behind it, so the toast stays legible over a busy diagram. */
-.card-persona .shot{transition:filter .28s ease}
-.card-persona:hover .shot{filter:saturate(.72) brightness(.97)}
-@media (prefers-reduced-motion:reduce){
-  .ps-toast,.card-persona .shot{transition:none}
-  .ps-trail{display:none}
-  .ps-photo{cursor:default}
-}
+/* Card 4 used to be the unshipped one: a <div> rather than an <a>, with a
+   coming-soon toast that picked itself up and followed the pointer, because a
+   card that looks clickable and is not is worse than one that plainly is not.
+   The case study exists now, so the card opens like the other three and the
+   toast, its spark trail and the hover dim that kept it legible are all gone
+   with it. Nothing here is keeping their place. */
 
 /* The one emphasis in the bio. Italic in the body face rather than a
    weight change, because the sentence is making a distinction, not
@@ -421,7 +365,7 @@ window.__hl = (function () {
    construction rather than by luck: the break is a <br>, so it lands in the same
    place at every width instead of moving with the box. */
 .mascot-cap{position:absolute;left:44px;top:456px;width:420px;pointer-events:none;
-  font-family:'Thistle',ui-monospace,monospace;font-size:11.5px;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-size:11.5px;
   line-height:1.5;color:var(--sage);transform:rotate(-2.4deg);text-align:left;
   display:block}
 
@@ -461,7 +405,7 @@ window.__hl = (function () {
   transform:rotate(6.7deg);transform-origin:50% 50%;
   pointer-events:none;overflow:hidden;
   display:flex;align-items:center;flex-wrap:wrap;
-  font-family:'Thistle',ui-monospace,monospace;font-weight:500;
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
   font-size:2.08cqw;line-height:1.28;color:#4A4438}
 /* The caret is ::after on the TEXT, not a sibling.
 
@@ -592,30 +536,6 @@ window.__hl = (function () {
           </div>
         </a>
         <!-- Card 02 -->
-        <a class="card card-events-timeline" href="work/events-timeline/" aria-label="Events Timeline, a Capital One case study">
-          <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
-          <div class="card-photo">
-            <img class="cp-field" src="assets/cards/field-gql.webp" alt="">
-            <div class="shot events-timeline">
-              <div class="cast">
-                <img class="base" src="assets/cards/shot-timeline.svg" alt="A compliance event timeline with coloured state runs between dated event dots">
-              </div>
-            </div>
-          </div>
-          <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
-          <div class="card-no">No. 02</div>
-          <div class="card-meta">
-            <div class="card-title-row">
-              <div class="card-title">Events Timeline</div>
-              <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">2026</span></div>
-            </div>
-            <p class="card-desc">A compliance history that was technically complete and practically unreadable. Designed the timeline above it, where state carries across the gaps so you can see how long something was broken.</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="work-row bottom">
-        <!-- Card 03 -->
         <a class="card card-ui-consistency" href="work/ui-consistency/" aria-label="UI Consistency, a Capital One case study">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
           <div class="card-photo">
@@ -630,38 +550,60 @@ window.__hl = (function () {
             </div>
           </div>
           <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
-          <div class="card-no">No. 03</div>
+          <div class="card-no">No. 02</div>
           <div class="card-meta">
             <div class="card-title-row">
               <div class="card-title">UI Consistency</div>
               <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">2026</span></div>
             </div>
-            <p class="card-desc">A dozen local dialects of the same interface. Audited it, designed the shared layer underneath, and cut the 208-file change into ten pull requests a human could actually review.</p>
+            <p class="card-desc">A dozen local dialects of the same interface. Audited it, designed the shared layer underneath, and cut a 231-file, 12,600-line change into twenty-four pull requests a human could actually review.</p>
           </div>
         </a>
-        <!-- Card 04 -->
-        <div class="card card-persona-homepage">
+      </div>
+
+      <div class="work-row bottom">
+        <!-- Card 03 -->
+        <a class="card card-persona-homepage" href="work/persona-homepage/" aria-label="Persona Homepage, a Capital One case study">
           <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
-          <div class="card-photo ps-photo">
+          <div class="card-photo">
             <img class="cp-field" src="assets/cards/field-persona.webp" alt="">
             <div class="shot persona-homepage">
               <div class="cast">
-                <img class="base" src="assets/cards/shot-persona.svg" alt="A homepage rearranging itself as the selected persona changes">
+                <img class="base" src="assets/cards/shot-persona.svg" alt="The same homepage twice, its five widgets in a different order for each persona">
               </div>
             </div>
-            <canvas class="ps-trail" width="1058" height="608" aria-hidden="true"></canvas>
-            <span class="ps-toast">Coming soon!</span>
+          </div>
+          <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
+          <div class="card-no">No. 03</div>
+          <div class="card-meta">
+            <div class="card-title-row">
+              <div class="card-title">Persona Homepage</div>
+              <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">2026</span></div>
+            </div>
+            <p class="card-desc">A homepage that reorders itself around who is looking at it. Designing the customisation model, the defaults that have to be right before anyone touches a setting, and how a page earns the right to move.</p>
+          </div>
+        </a>
+        <!-- Card 04 -->
+        <a class="card card-events-timeline" href="work/events-timeline/" aria-label="Events Timeline, a Capital One case study">
+          <img class="ticket" src="assets/ui/card-ticket.svg" alt="">
+          <div class="card-photo">
+            <img class="cp-field" src="assets/cards/field-gql.webp" alt="">
+            <div class="shot events-timeline">
+              <div class="cast">
+                <img class="base" src="assets/cards/shot-timeline.svg" alt="A compliance event timeline with coloured state runs between dated event dots">
+              </div>
+            </div>
           </div>
           <div class="card-dots">••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••</div>
           <div class="card-no">No. 04</div>
           <div class="card-meta">
             <div class="card-title-row">
-              <div class="card-title">Persona Homepage</div>
-              <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">Upcoming</span></div>
+              <div class="card-title">Events Timeline</div>
+              <div class="tags"><span class="tag blue">Capital One</span><span class="tag mut">2026</span></div>
             </div>
-            <p class="card-desc">A homepage that reorders itself around who is looking at it. Designing the customisation model, the defaults that have to be right before anyone touches a setting, and how a page earns the right to move.</p>
+            <p class="card-desc">A compliance history that was technically complete and practically unreadable. Designed the timeline above it, where state carries across the gaps so you can see how long something was broken.</p>
           </div>
-        </div>
+        </a>
       </div>
 
       <!-- Projects. Smaller builds, each linking into the existing project pages.
@@ -671,23 +613,21 @@ window.__hl = (function () {
       <div class="reads" id="projects">
         <article class="mini">
           <div class="mini-shot">
-            <div class="tile" style="--field:#BDE3F0;--ground:url(assets/tile/field-ac.webp)">
+            <div class="tile" style="--field:#EEEAD6;--ground:url(assets/tile/field-stardew.webp)">
               <div class="tile-win">
                 <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
-                <div class="tile-view clip">
-                  <video src="assets/tile/ac-tile.mp4" poster="assets/tile/ac-tile-poster.jpg"
-                         autoplay muted loop playsinline preload="metadata"
-                         aria-label="The island generator building itself, tile by tile, on a slowly turning board"></video>
+                <div class="tile-view">
+                  <img src="assets/tile/stardew.jpg" alt="Stardew Valley companion" style="--travel:46.25%" loading="lazy">
                 </div>
               </div>
             </div>
           </div>
           <div class="mini-panel">
             <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="projects/animal-crossing/">Animal Crossing island generator</a></h3>
-              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/animal-crossing/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2024</span></div>
+              <h3 class="mini-title"><a class="mini-link" href="projects/stardew/">Stardew Valley companion</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/stardew/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2024</span></div>
             </div>
-            <p class="mini-desc">A procedural 3D island built tile by tile with wave function collapse, the same technique games like Bad North use to grow coherent worlds from a small set of hand-modelled pieces.</p>
+            <p class="mini-desc">Look up any of the 34 villagers' favourite gifts, click around town to learn what each building does, then play one of four arcade cabinets built into the page. No framework, no build step, no game engine.</p>
           </div>
         </article>
         <article class="mini">
@@ -711,25 +651,6 @@ window.__hl = (function () {
         </article>
         <article class="mini">
           <div class="mini-shot">
-            <div class="tile" style="--field:#EEEAD6;--ground:url(assets/tile/field-stardew.webp)">
-              <div class="tile-win">
-                <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
-                <div class="tile-view">
-                  <img src="assets/tile/stardew.jpg" alt="Stardew Valley companion" style="--travel:46.25%" loading="lazy">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mini-panel">
-            <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="projects/stardew/">Stardew Valley companion</a></h3>
-              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/stardew/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2024</span></div>
-            </div>
-            <p class="mini-desc">Look up any of the 34 villagers' favourite gifts, click around town to learn what each building does, then play one of four arcade cabinets built into the page. No framework, no build step, no game engine.</p>
-          </div>
-        </article>
-        <article class="mini">
-          <div class="mini-shot">
             <div class="tile" style="--field:#D6DBEA;--ground:url(assets/tile/field-uxfolio.webp)">
               <div class="tile-win">
                 <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
@@ -749,21 +670,23 @@ window.__hl = (function () {
         </article>
         <article class="mini">
           <div class="mini-shot">
-            <div class="tile" style="--field:#E8DCC0;--ground:url(assets/tile/field-chess.webp)">
+            <div class="tile" style="--field:#BDE3F0;--ground:url(assets/tile/field-ac.webp)">
               <div class="tile-win">
                 <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
-                <div class="tile-view pan">
-                  <img src="assets/tile/chess.jpg" alt="Chess engine"  loading="lazy">
+                <div class="tile-view clip">
+                  <video src="assets/tile/ac-tile.mp4" poster="assets/tile/ac-tile-poster.jpg"
+                         autoplay muted loop playsinline preload="metadata"
+                         aria-label="The island generator building itself, tile by tile, on a slowly turning board"></video>
                 </div>
               </div>
             </div>
           </div>
           <div class="mini-panel">
             <div class="mini-head">
-              <h3 class="mini-title"><a class="mini-link" href="projects/chess/">Chess engine</a></h3>
-              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/site/projects/chess/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
+              <h3 class="mini-title"><a class="mini-link" href="projects/animal-crossing/">Animal Crossing island generator</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/animal-crossing/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2024</span></div>
             </div>
-            <p class="mini-desc">A playable board with an opponent behind it: move generation, alpha-beta search, and an evaluation that is honest about how much it does not know.</p>
+            <p class="mini-desc">A procedural 3D island built tile by tile with wave function collapse, the same technique games like Bad North use to grow coherent worlds from a small set of hand-modelled pieces.</p>
           </div>
         </article>
         <article class="mini">
@@ -771,8 +694,10 @@ window.__hl = (function () {
             <div class="tile" style="--field:#12131A;--ground:url(assets/tile/field-pacman.webp)">
               <div class="tile-win">
                 <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
-                <div class="tile-view pan">
-                  <img src="assets/tile/pacman.jpg" alt="Pac-Man"  loading="lazy">
+                <div class="tile-view clip">
+                  <video src="assets/tile/pacman-tile.mp4" poster="assets/tile/pacman-tile-poster.jpg"
+                         autoplay muted loop playsinline preload="metadata"
+                         aria-label="A round in progress: Pac-Man clearing a corridor while the ghosts close from two directions"></video>
                 </div>
               </div>
             </div>
@@ -783,6 +708,27 @@ window.__hl = (function () {
               <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/site/projects/pacman/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
             </div>
             <p class="mini-desc">Pac-Man rebuilt in the browser, four ghosts included. They share one movement system and differ only in the tile each one aims at, which is a cheap way to buy four personalities.</p>
+          </div>
+        </article>
+        <article class="mini">
+          <div class="mini-shot">
+            <div class="tile" style="--field:#E8DCC0;--ground:url(assets/tile/field-chess.webp)">
+              <div class="tile-win">
+                <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
+                <div class="tile-view clip">
+                  <video src="assets/tile/chess-tile.mp4" poster="assets/tile/chess-tile-poster.jpg"
+                         autoplay muted loop playsinline preload="metadata"
+                         aria-label="The engine playing itself: both colours on autoplay, the position changing every second or so"></video>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-head">
+              <h3 class="mini-title"><a class="mini-link" href="projects/chess/">Chess engine</a></h3>
+              <div class="mini-tags"><a class="mini-tag demo" href="https://kiara-vong.github.io/site/projects/chess/" target="_blank" rel="noopener">Live Site<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.6 8.4 8.4 3.6"/><path d="M4.6 3.6h3.8v3.8"/></svg></a><span class="mini-tag co-year">2023</span></div>
+            </div>
+            <p class="mini-desc">A playable board with an opponent behind it: move generation, alpha-beta search, and an evaluation that is honest about how much it does not know.</p>
           </div>
         </article>
       </div>

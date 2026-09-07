@@ -62,8 +62,15 @@ def _win(cls, inner, style=""):
             % (cls, (' style="%s"' % style) if style else "", inner))
 
 
-def clip(name, alt, caption, root="../../"):
+def clip(name, alt, caption, size=None, root="../../"):
     """A walkthrough video. Plays itself, silently, forever.
+
+    Floated rather than full-bleed, and the reason is consistency rather than
+    decoration: every plate on this site is an object sitting on a surface, and a
+    recording that fills the card to its edges reads as a different KIND of figure
+    when it is the same kind. The window is sized from the clip's own delivered
+    dimensions, so the frame follows a re-cut instead of letterboxing inside a box
+    left over from the last one.
 
     The poster is the clip's own opening frame, which is also the frame it dissolves
     back to at the loop, so a clip that has not started and a clip mid-cycle are the
@@ -75,11 +82,16 @@ def clip(name, alt, caption, root="../../"):
     Muted is not a preference. It is the only state a browser will autoplay, and
     these are assembled from state captures with no audio to lose.
     """
+    vw, vh = _clip_size(name, size)
+    x, y, w, h = _float_win(vw, vh)
+    var = ('--wx:%.1fpx;--wy:%.1fpx;--ww:%.1fpx;--wh:%.1fpx;--bar:%.1fpx'
+           % (x, y, w, h, CLIP_BAR))
     return _fig(_win("cam-clip",
         '            <video src="%sassets/video/%s.mp4" '
         'poster="%sassets/video/%s-poster.jpg" '
         'autoplay muted loop playsinline preload="metadata" '
-        'aria-label="%s"></video>\n' % (root, name, root, name, esc(alt))), caption)
+        'aria-label="%s"></video>\n' % (root, name, root, name, esc(alt)),
+        var), caption)
 
 
 def push(src, alt, caption, z=1.4, fx="50%", fy="50%", dur="13s", root="../../"):
@@ -220,6 +232,52 @@ BAR = 0.026
 # the assets are 2x that, so scale 1 is where a capture is pixel-exact on a
 # retina screen. Past it there is nothing left to reveal and the softness starts.
 MAX_K = 1.0
+
+
+# The air a floated window sits in, in card pixels. Sides and ends differ because
+# the card is 799x391 and a 16:9 recording is limited by its height: matching pads
+# would leave a stripe of ivory at the sides and none at the ends.
+# Enough air that the window reads as an object on a surface rather than as a
+# picture that nearly fits. Measured against the plate machines, whose windows
+# come out around three quarters of the card's width.
+CLIP_PAD_X, CLIP_PAD_Y = 56.0, 42.0
+CLIP_BAR = 24.0
+
+
+def _clip_size(name, given=None):
+    """The delivered size of a clip, from the index gen/screencaps.py writes.
+
+    Same job as _plate_size and the same reason: the window is drawn from the
+    recording's real aspect, so a re-cut at a different crop moves the frame
+    rather than silently letterboxing inside a box sized for the old one.
+    """
+    if given:
+        return given
+    try:
+        import json
+        idx = json.load(io.open("video-index.json", encoding="utf-8"))
+    except Exception:
+        return (1280, 612)
+    e = idx.get(name)
+    return (e["w"], e["h"]) if e else (1280, 612)
+
+
+def _float_win(vw, vh, pad_x=None, pad_y=None, bar=None, top=None, foot=0.0):
+    """Where a window of aspect vw:vh sits when floated in the 799x391 card.
+
+    Returns (x, y, w, h) with h including the title bar. `top` pins the window to
+    a fixed y instead of centring it, which is what the tabbed variant needs.
+    """
+    pad_x = CLIP_PAD_X if pad_x is None else pad_x
+    pad_y = CLIP_PAD_Y if pad_y is None else pad_y
+    bar = CLIP_BAR if bar is None else bar
+    aw = SLOT_W - pad_x * 2
+    ah = SLOT_H + 26.0 - pad_y * 2 - bar - foot     # the card, not the .win box
+    k = min(aw / float(vw), ah / float(vh))
+    w, h = vw * k, vh * k + bar
+    x = (SLOT_W - w) / 2.0
+    y = top if top is not None else (SLOT_H + 26.0 - h - foot) / 2.0
+    return x, y, w, h
 
 
 def _plate_size(src, given=None):
@@ -790,5 +848,161 @@ def stage(shots, alt, caption, look=None, call=None,
                     "" if i == 0 else ' aria-hidden="true"'))
     o.append('              </div>\n            </div>\n          </div>\n')
     o.append(call_html)
+    o.append('        </div>\n')
+    return _fig("".join(o), caption)
+
+
+# =====================================================================
+# Bespoke figures. Everything above this line is a MACHINE: one shape that any
+# capture can be poured into. These three are not, and the distinction is worth
+# keeping: a machine says "here is a screen, and here is a camera over it", which
+# is the right sentence about ten times and the wrong one the eleventh. When a
+# section's argument has a shape of its own -- four things that are alternatives,
+# one drawing with five parts worth naming, a race between two clocks -- the
+# figure should have that shape too, and a general machine cannot give it one.
+# =====================================================================
+
+
+def cabinets(items, alt, caption, root="../../"):
+    """Four alternatives in one window, switched by tabs in the title bar.
+
+    The arcade section used to stack four clips down the page, which is four
+    figures making one point badly: they are alternatives, and a reader scrolling
+    past three of them to reach the fourth has been shown a list rather than a
+    choice. One frame with four tabs says the true thing -- same page, same
+    canvas, pick one -- and costs a quarter of the vertical space.
+
+    The tabs live IN the title bar rather than above it, because the window is
+    already the site's idiom for "a screen" and a row of tabs is what a window
+    with four screens in it looks like. Nothing else on the page needed teaching.
+
+    Only the selected clip is allowed to play. The other three are preload="none"
+    until they are asked for, so a page with four recordings on it costs one.
+    """
+    vw, vh = _clip_size(items[0]["src"])
+    # 32 for the tab strip, and 30 held back at the foot for the caption line,
+    # which sits on the ivory under the window because it describes the tab
+    # rather than the screen.
+    x, y, w, h = _float_win(vw, vh, pad_x=60.0, pad_y=18.0, bar=32.0, top=18.0,
+                            foot=46.0)
+    var = ('--wx:%.1fpx;--wy:%.1fpx;--ww:%.1fpx;--wh:%.1fpx;--bar:32px'
+           % (x, y, w, h))
+
+    o = ['        <div class="cs-media cam cab" data-i="0" style="%s">\n' % var,
+         '          <div class="cab-bar" role="tablist" aria-label="Arcade cabinets">\n',
+         '            <span class="cab-lights" aria-hidden="true">'
+         '<i></i><i></i><i></i></span>\n']
+    for i, it in enumerate(items):
+        o.append('            <button class="cab-tab%s" type="button" role="tab" '
+                 'data-i="%d" aria-selected="%s" data-note="%s">%s</button>\n'
+                 % (" is-on" if i == 0 else "", i,
+                    "true" if i == 0 else "false",
+                    esc(it["note"]), esc(it["label"])))
+    o.append('          </div>\n          <div class="cab-win">\n')
+    for i, it in enumerate(items):
+        o.append('            <video data-i="%d" src="%sassets/video/%s.mp4" '
+                 'poster="%sassets/video/%s-poster.jpg" muted loop playsinline '
+                 'preload="%s"%s aria-label="%s"></video>\n'
+                 % (i, root, it["src"], root, it["src"],
+                    "metadata" if i == 0 else "none",
+                    " autoplay" if i == 0 else "", esc(it["alt"])))
+    o.append('          </div>\n')
+    o.append('          <p class="cab-note">%s</p>\n' % esc(items[0]["note"]))
+    o.append('        </div>\n')
+    return _fig("".join(o), caption)
+
+
+# The annotated-specimen figure's two columns, in card pixels.
+ANN_W, ANN_GAP = 452.0, 20.0
+
+
+def annot(src, alt, caption, notes, plate=None, root="../../"):
+    """One specimen, several parts named at once, and a reader who can point.
+
+    The callout on stage() names ONE thing, and everything else in the frame is
+    left for the caption to cover in prose. That is the wrong shape for an object
+    whose argument is that it has parts -- a card with a portrait, a birthday, a
+    biography and two lists is five decisions, and naming one of them implies the
+    other four were not decisions.
+
+    So: the specimen on the left, its parts listed down the right, and a ring on
+    the specimen for whichever one you are reading. It cycles by itself until the
+    first hover and then does what it is told, because a figure that only responds
+    to a hover has no way to tell you it responds to a hover.
+
+    notes  [{rect: (x, y, w, h) in the PLATE's own pixels, title, desc}]. The rings
+           are computed here from those rectangles and the drawn size of the
+           image, in the same spirit as the camera machines: a rectangle read off
+           the capture cannot drift, and a percentage typed by hand can.
+    """
+    pw, ph = _plate_size(src, plate)
+    bar = 22.0
+    vw = ANN_W
+    # The window is cut to the plate rather than to the card. A fixed-height box
+    # holding a 2:1 capture is two bands of empty ivory with a picture between
+    # them, and the reader reads that as the figure not fitting rather than as
+    # air. So the height follows the aspect and the whole thing is centred.
+    iw = vw
+    ih = min(iw * ph / float(pw), SLOT_H - 28.0 - bar)
+    vh = bar + ih
+    top = (SLOT_H - vh) / 2.0
+    k = min(iw / float(pw), ih / float(ph))
+    dx, dy = (iw - pw * k) / 2.0, bar + (ih - ph * k) / 2.0
+    var = ('--annw:%.1fpx;--annh:%.1fpx;--anny:%.1fpx;--bar:%.1fpx;--n:%d'
+           % (vw, vh, top, bar, len(notes)))
+
+    o = ['        <div class="cs-media cam cam-ann" style="%s" data-i="0">\n' % var,
+         '          <div class="ann-shot framed">\n',
+         '            <span class="bar" aria-hidden="true">'
+         '<i></i><i></i><i></i><b></b></span>\n',
+         '            <div class="win"><img src="%sassets/%s" alt="%s" '
+         'loading="lazy"></div>\n' % (root, src, esc(alt))]
+    for i, n in enumerate(notes):
+        rx, ry, rw, rh = [float(v) for v in n["rect"]]
+        o.append('            <span class="ann-ring" data-i="%d" aria-hidden="true" '
+                 'style="--rx:%.1fpx;--ry:%.1fpx;--rw:%.1fpx;--rh:%.1fpx"></span>\n'
+                 % (i, dx + rx * k, dy + ry * k, rw * k, rh * k))
+    o.append('          </div>\n          <ul class="ann-list">\n')
+    for i, n in enumerate(notes):
+        o.append('            <li class="ann-item%s" data-i="%d" tabindex="0">'
+                 '<span class="ann-dot" aria-hidden="true"></span>'
+                 '<b>%s</b><p>%s</p></li>\n'
+                 % (" is-on" if i == 0 else "", i, esc(n["title"]), esc(n["desc"])))
+    o.append('          </ul>\n        </div>\n')
+    return _fig("".join(o), caption)
+
+
+def ticks(caption, fast="once per animation frame", slow="every 20ms",
+          fast_hz=60, slow_hz=50, note=None):
+    """Two clocks racing, because the bug was arithmetic and arithmetic can be run.
+
+    The lesson in that section is a number: physics stepped once per frame at
+    60fps runs 20 per cent fast against a loop written for a 50Hz tick. Written
+    down it is a sentence you either believe or do not. Drawn as two bars leaving
+    at the same moment and arriving 20 per cent apart, it is a thing the reader
+    watches happen, and the ratio in the markup is the ratio in the claim.
+
+    No screenshot could show this: the difference is in the SPEED of two things
+    that look identical, which is exactly the case where a drawn figure is not a
+    substitute for a capture but better than one.
+    """
+    ratio = float(fast_hz) / float(slow_hz)
+    o = ['        <div class="cs-media cam cam-tick" style="--ratio:%.4f">\n' % ratio,
+         '          <div class="tick-lane fast">\n',
+         '            <span class="tick-cap">%s<i>%dHz</i></span>\n' % (esc(fast), fast_hz),
+         '            <span class="tick-track"><b class="tick-fill"></b>'
+         '<i class="tick-fish"></i></span>\n',
+         '          </div>\n',
+         '          <div class="tick-lane slow">\n',
+         '            <span class="tick-cap">%s<i>%dHz</i></span>\n' % (esc(slow), slow_hz),
+         '            <span class="tick-track"><b class="tick-fill"></b>'
+         '<i class="tick-fish"></i></span>\n',
+         '          </div>\n',
+         '          <span class="tick-line" aria-hidden="true"></span>\n',
+         '          <span class="tick-gap">%+d%%</span>\n'
+         % round((ratio - 1) * 100),
+         '          <button class="tick-go" type="button">Run it again</button>\n']
+    if note:
+        o.append('          <p class="tick-note">%s</p>\n' % esc(note))
     o.append('        </div>\n')
     return _fig("".join(o), caption)

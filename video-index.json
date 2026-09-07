@@ -1,10 +1,10 @@
 {
  "chess-autoplay": {
-  "h": 612,
-  "kb": 134,
-  "needs_motion": true,
-  "seconds": 5.3,
-  "states": 5,
+  "h": 720,
+  "kb": 305,
+  "needs_motion": false,
+  "seconds": 17.4,
+  "source": "screen recording",
   "w": 1280
  },
  "dashboard-filters-persist": {
@@ -64,51 +64,99 @@
   "w": 1280
  },
  "pacman-gameplay": {
-  "h": 612,
-  "kb": 309,
-  "needs_motion": true,
-  "seconds": 9.0,
-  "states": 6,
+  "h": 720,
+  "kb": 160,
+  "needs_motion": false,
+  "seconds": 17.4,
+  "source": "screen recording",
+  "w": 1280
+ },
+ "persona-edit-options": {
+  "h": 680,
+  "kb": 210,
+  "needs_motion": false,
+  "seconds": 8.0,
+  "source": "screen recording",
+  "w": 1280
+ },
+ "persona-scope-switch": {
+  "h": 680,
+  "kb": 249,
+  "needs_motion": false,
+  "seconds": 10.6,
+  "source": "screen recording",
+  "w": 1280
+ },
+ "persona-widget-scope": {
+  "h": 680,
+  "kb": 374,
+  "needs_motion": false,
+  "seconds": 13.4,
+  "source": "screen recording",
   "w": 1280
  },
  "stardew-fishing": {
-  "h": 612,
-  "kb": 1156,
-  "needs_motion": true,
-  "seconds": 13.8,
-  "states": 13,
+  "h": 584,
+  "kb": 193,
+  "needs_motion": false,
+  "seconds": 12.2,
+  "source": "screen recording",
+  "w": 1280
+ },
+ "stardew-full-scroll": {
+  "h": 584,
+  "kb": 1080,
+  "needs_motion": false,
+  "seconds": 14.5,
+  "source": "screen recording",
   "w": 1280
  },
  "stardew-gift-lookup": {
-  "h": 674,
-  "kb": 760,
+  "h": 634,
+  "kb": 784,
   "needs_motion": false,
-  "seconds": 12.9,
-  "states": 10,
+  "seconds": 10.8,
+  "source": "screen recording",
   "w": 1280
  },
  "stardew-junimo-jamboree": {
-  "h": 612,
-  "kb": 411,
-  "needs_motion": true,
-  "seconds": 5.7,
-  "states": 3,
+  "h": 584,
+  "kb": 199,
+  "needs_motion": false,
+  "seconds": 12.6,
+  "source": "screen recording",
   "w": 1280
  },
  "stardew-junimo-kart": {
-  "h": 612,
-  "kb": 680,
-  "needs_motion": true,
-  "seconds": 7.3,
-  "states": 4,
+  "h": 584,
+  "kb": 372,
+  "needs_motion": false,
+  "seconds": 15.6,
+  "source": "screen recording",
+  "w": 1280
+ },
+ "stardew-locations": {
+  "h": 584,
+  "kb": 248,
+  "needs_motion": false,
+  "seconds": 5.3,
+  "source": "screen recording",
   "w": 1280
  },
  "stardew-prairie-king": {
-  "h": 612,
-  "kb": 561,
-  "needs_motion": true,
-  "seconds": 8.4,
-  "states": 5,
+  "h": 584,
+  "kb": 161,
+  "needs_motion": false,
+  "seconds": 15.6,
+  "source": "screen recording",
+  "w": 1280
+ },
+ "uxfolio-about-panel": {
+  "h": 684,
+  "kb": 301,
+  "needs_motion": false,
+  "seconds": 10.9,
+  "source": "screen recording",
   "w": 1280
  },
  "uxfolio-loader-transition": {

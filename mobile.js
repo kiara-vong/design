@@ -112,7 +112,7 @@
 
       /* Calcifer's bubble is bound to mouseenter/mouseleave, which pick a fresh
          message and never repeat two in a row. Rather than restate that list here,
-         the tap just sends those two events — so the phone and the desktop stay one
+         the tap just sends those two events, so the phone and the desktop stay one
          behaviour with one source of messages. */
       var rabbit = document.querySelector('.mascot');
       var bubble = document.querySelector('.bubble');

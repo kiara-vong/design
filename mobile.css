@@ -1,5 +1,5 @@
 /* ============================================================================
-   MOBILE — everything below 760px.
+   MOBILE, everything below 760px.
 
    The rest of this site is a 1440px canvas scaled to fit: s = min(vw/1440, 1).
    That is right down to about a tablet and wrong on a phone, where it renders the
@@ -8,7 +8,7 @@
    wrote) and the pages become ordinary stacked documents.
 
    This file only ever ADDS rules inside one media query, so desktop is untouched by
-   construction — deleting the file returns the site exactly to where it was.
+   construction, deleting the file returns the site exactly to where it was.
 
    Two things CSS cannot do here, so mobile.js does them: it cannot divide one
    length by another to get a scale factor, and a fixed-size Figma block that has to
@@ -30,8 +30,8 @@
     top: auto !important;
   }
 
-  /* site.css sets `section{width:1440px}` for every section on every page — the
-     work block and both footers included — so releasing the stages alone left them
+  /* site.css sets `section{width:1440px}` for every section on every page, the
+     work block and both footers included, so releasing the stages alone left them
      all 1440 wide inside a 390 column. */
   section { width: auto !important; }
 
@@ -147,7 +147,7 @@
                 bottom: auto; font-size: 10px; line-height: 1.35;
                 text-align: center; white-space: normal;
                 transform: rotate(-1.2deg); }
-  /* The bubble is the hero's one piece of play, so it stays — on a tap rather than a
+  /* The bubble is the hero's one piece of play, so it stays, on a tap rather than a
      hover (mobile.js). Both it and its nudge are placed against Calcifer instead of
      against canvas coordinates: he is the last thing in this column, so his bottom
      edge is the column's, and they sit his own height above it.
@@ -158,7 +158,7 @@
   .bubble-prompt, .bubble {
     position: absolute; left: 0; right: 0; margin-inline: auto; width: max-content;
     /* top:461px is the desktop placement and it has to go, or the box is
-       over-constrained — top and bottom both set with an auto height — and top wins,
+       over-constrained, top and bottom both set with an auto height, and top wins,
        which put the bubble squarely across Calcifer's face. */
     top: auto;
     /* The -8 drops both of them together. It goes on bottom rather than a transform
@@ -177,7 +177,7 @@
                    transform: translateY(12px); }
   .bubble p { white-space: normal; max-width: min(74vw, 290px); }
 
-  /* The glass pill becomes a bottom bar — it is already the right shape for one. */
+  /* The glass pill becomes a bottom bar: it is already the right shape for one. */
   #hg-center {
     position: fixed !important;
     left: 0; right: 0; bottom: 24px;
@@ -197,7 +197,7 @@
          /* On desktop this pill sits on the hero photograph, so it is transparent
             with a white gradient stroke and a backdrop blur. As a bottom bar it sits
             over parchment instead, where transparent-plus-white-stroke reads as
-            nothing at all — just icons floating loose over the page. It gets a real
+            nothing at all, just icons floating loose over the page. It gets a real
             surface here. */
          background: rgba(253,251,239,.94);
          border: 1px solid var(--outline-stroke);
@@ -237,8 +237,8 @@
     display: block !important; opacity: 1 !important;
     transform: translateX(-50%) !important; }
 
-  /* No ticket flow on a phone. The whole right-hand cluster goes — postcards, the
-     invitation and the button — and the modal with it, so there is no way in even
+  /* No ticket flow on a phone. The whole right-hand cluster goes, postcards, the
+     invitation and the button, and the modal with it, so there is no way in even
      if something else reaches for it. Calcifer carries the hero on his own. */
   #hg-right { display: none !important; }
   #modal-overlay { display: none !important; }
@@ -293,7 +293,7 @@
      absolutely positioned and would otherwise paint over all of this.
 
      left/top have to be cleared with it. They were written for absolute placement
-     inside the 573x703 card — .card-meta sits at top:471.25px — and on a relatively
+     inside the 573x703 card, .card-meta sits at top:471.25px, and on a relatively
      positioned element the same declarations become OFFSETS, which pushed every
      card's text hundreds of pixels down its own box and the last card's clean over
      the footer. */
@@ -395,7 +395,7 @@
   .cs-back svg { width: 22px; height: 22px; opacity: .62; }
 
   /* The section rail is a 320px gutter on desktop. There is no gutter here, so it
-     becomes a scrolling strip under the back arrow — still a way to move around the
+     becomes a scrolling strip under the back arrow, still a way to move around the
      piece, without eating a third of the screen. */
   /* fixed, not sticky. mobile.css puts overflow-x:hidden on html and body so nothing can
      drag the page sideways, and that turns the body into the scrollport -- which leaves
@@ -585,7 +585,7 @@
 
   /* relative rather than static, and z-indexed above the ground: #ab-bg is
      absolutely positioned, and a positioned element paints over in-flow ones in the
-     same stacking context — which put the whole page behind its own background.
+     same stacking context, which put the whole page behind its own background.
      left/top must be cleared with it or the desktop coordinates become offsets. */
   /* 40/20 is Library's placement, and the two pages sit either side of one shared
      view transition on the arrow, so they have to agree on where it is. */
@@ -711,12 +711,12 @@
 
   /* On desktop this page is a fixed 1440x861 screen: the left column holds still
      and only the shelf scrolls. A phone has no room for two columns and no second
-     axis to spare, so it becomes one ordinary scrolling page — title, description,
+     axis to spare, so it becomes one ordinary scrolling page, title, description,
      then the shelf, with the document doing the scrolling the shelf used to. */
   /* relative, not static. The ground sits in the positioned layer with z-index 0;
      a static stage paints below that and the title and the description vanished
      behind the photograph. (The covers survived only because .lb-cover is relative
-     and comes later in the document.) left/top go with it — on a relative box the
+     and comes later in the document.) left/top go with it, on a relative box the
      desktop placement would stop being placement and start being an offset. */
   #lb-stage { position: relative !important; z-index: 1;
               left: auto !important; top: auto !important;
@@ -745,7 +745,7 @@
      interactions land differently -- About reveals in place, Library opens a card -- but
      the sentence is the same object on both. */
   .ab-hint { font-size: 28px !important; }
-  .lb-hint span { font-family: 'Clover'; font-weight: 700; color: var(--new-leaf-green); }
+  .lb-hint span { font-family: 'Space Grotesk'; font-weight: 700; color: var(--new-leaf-green); }
 
   /* The silhouette is a desktop object: it marks where a hover ticket will land, and
      there is no hover here. The hint survives on its own, in flow between the
@@ -813,7 +813,7 @@
 
   /* max-content, or the pill shrinks to fit. A fixed box with left:50% and no width
      gets only the half-viewport to its right to be shrink-to-fit in, and the three
-     icons were squeezed to zero width inside it — the pill rendered with a label, a
+     icons were squeezed to zero width inside it: the pill rendered with a label, a
      separator and nothing after it. */
   #lb-navwrap { position: fixed !important; left: 0 !important; top: auto !important;
                 width: auto !important; height: auto !important; transform: none !important; }
@@ -841,7 +841,7 @@
   /* The modal is a 1052x750 canvas scaled by --modal-scale, which the home page's
      fit() normally sets from the hero scale. On mobile that function stands down,
      so mobile.js sets it to whatever fits the screen instead. The internals keep
-     their proportions — this is the piece most in need of a real phone layout, and
+     their proportions: this is the piece most in need of a real phone layout, and
      the least dangerous to leave proportional in the meantime. */
   #print-modal { transform: translate(-50%, -50%) scale(var(--modal-scale, .34)) !important; }
 }

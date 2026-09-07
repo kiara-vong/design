@@ -1,4 +1,10 @@
 {
+ "chess-setup": {
+  "h": 1157,
+  "kb": 25,
+  "travel": 13.14,
+  "w": 2200
+ },
  "dashboard-button-contact-sheet": {
   "h": 832,
   "kb": 36,
@@ -323,10 +329,10 @@
   "travel": 13.22,
   "w": 1440
  },
- "persona-catalog": {
-  "h": 1167,
-  "kb": 53,
-  "travel": 13.88,
+ "pacman-start": {
+  "h": 1157,
+  "kb": 31,
+  "travel": 13.14,
   "w": 2200
  },
  "persona-home-contributor": {
@@ -337,13 +343,19 @@
  },
  "persona-home-edit": {
   "h": 1167,
-  "kb": 85,
+  "kb": 84,
   "travel": 13.88,
   "w": 2200
  },
  "persona-home-leader": {
   "h": 1167,
   "kb": 91,
+  "travel": 13.88,
+  "w": 2200
+ },
+ "persona-widget-jobs": {
+  "h": 1167,
+  "kb": 53,
   "travel": 13.88,
   "w": 2200
  },
@@ -431,6 +443,12 @@
   "travel": 0.0,
   "w": 2200
  },
+ "uxfolio-abtesting-full": {
+  "h": 10324,
+  "kb": 698,
+  "travel": 92.92,
+  "w": 1600
+ },
  "uxfolio-casestudies-index": {
   "h": 3529,
   "kb": 111,
@@ -459,6 +477,12 @@
   "h": 777,
   "kb": 24,
   "travel": 0.0,
+  "w": 1600
+ },
+ "uxfolio-fondawallet-full": {
+  "h": 12874,
+  "kb": 969,
+  "travel": 94.32,
   "w": 1600
  }
 }

@@ -10,12 +10,8 @@
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<!-- The type is served from this origin now, so there is no third party to open a
-     connection to. The two faces every one of these pages sets before anything else
-     are named here: discovered in the stylesheet they queue behind it, and a case
-     study is a wall of text whose first paint is the title and the opening paragraph. -->
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -140,6 +136,23 @@
         <p>Pac-Man is easy to describe and hard to reproduce, and almost all of the difficulty is in four characters who could have been identical and deliberately are not. The maze is a fixed grid, the pellets are a counter, and the player has one input. Everything anybody remembers about the game comes from how the ghosts behave.</p>
         <p>So the interesting version of this project was never getting a yellow circle to move. It was giving four pursuers distinct personalities out of one shared movement system.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:1214px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:57.8px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-814.0px;--y1:-361.5px;--k1:1.0000">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img style="--i:0" src="../../assets/plate/pacman-start.webp" alt="The maze before the first move: every corridor laid with pellets, the ghost house closed in the middle, score and lives along the bottom" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <div class="call" style="--cx:613.0px;--cy:169.5px;--cw:166px">
+            <div class="call-row"><span class="call-line"></span><span class="call-note">the ghost house</span></div>
+            <p class="call-desc">Four pursuers start here sharing one movement system. All that separates them is which tile each one is aiming at.</p>
+          </div>
+        </div>
+        <figcaption class="cs-caption">Nothing has moved yet, and everything that matters is already on screen: a fixed grid, a pellet in every corridor, and the box in the middle that the whole game comes out of.</figcaption>
+      </figure>
     </section>
 
     <section id="how" class="cs-section">
@@ -152,7 +165,7 @@
         <p>Frightened mode then inverts the rule rather than replacing it: the same code picks the direction that INCREASES the distance. The state everyone remembers is four lines, because the movement system was built to be pointed at any target.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam framed cam-clip">
+        <div class="cs-media cam framed cam-clip" style="--wx:124.8px;--wy:42.0px;--ww:549.3px;--wh:333.0px;--bar:24.0px">
           <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
           <div class="win">
             <video src="../../assets/video/pacman-gameplay.mp4" poster="../../assets/video/pacman-gameplay-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="A round of Pac-Man from the ready countdown through a ghost collision, death and restart"></video>

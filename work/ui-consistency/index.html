@@ -10,12 +10,8 @@
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<!-- The type is served from this origin now, so there is no third party to open a
-     connection to. The two faces every one of these pages sets before anything else
-     are named here: discovered in the stylesheet they queue behind it, and a case
-     study is a wall of text whose first paint is the title and the opening paragraph. -->
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -120,7 +116,7 @@
           <h1 class="cs-title">UI Consistency</h1>
         </div>
         <div class="cs-headgroup">
-        <p class="cs-intro">The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three different ways to say “no data”. I inventoried it, designed the shared layer underneath, and cut a 231-file, 12,600-line change across twelve pages into twenty-four pull requests a human could actually review — with a Cypress suite under it, so review was not the only thing standing between a refactor this size and a regression.</p>
+        <p class="cs-intro">The app had grown a dozen local dialects of the same interface: inline styles instead of tokens, four table layouts, three different ways to say “no data”. I inventoried it, designed the shared layer underneath, and cut a 231-file, 12,600-line change across twelve pages into twenty-four pull requests a human could actually review, with a Cypress suite under it so review was not the only thing standing between a refactor this size and a regression.</p>
         <div class="cs-cta">
           <a href="https://kiara-vong.github.io/resource-dashboard/#/showcase" target="_blank" rel="noopener"><span>Open the showcase</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg></a>
           <span class="cs-cta-url">A public rebuild of the internal tool, with the data scrubbed</span>
@@ -174,7 +170,7 @@
       <div class="cs-body">
         <p>The instinct is to design the target state and then go find everything that does not match it. I did the opposite: inventoried every variant already shipping, with no judgement attached, before proposing anything.</p>
         <p>That order mattered more than it sounds. Two of the variants I would have deleted on sight turned out to be load-bearing, solving a real constraint the canonical component could not. They became part of that component’s API rather than exceptions to it. Designing first and reconciling later produces a system that is correct in isolation and wrong in the product, which is the usual way these fail.</p>
-        <p>The inventory became a page. Every component that had drifted got a card: what was wrong, what replaced it, how many files it touched, what it blocked. Reviewers read that page before they read a diff — and so did the people who had written the variants I was proposing to delete.</p>
+        <p>The inventory became a page. Every component that had drifted got a card: what was wrong, what replaced it, how many files it touched, what it blocked. Reviewers read that page before they read a diff, and so did the people who had written the variants I was proposing to delete.</p>
       </div>
       <figure class="cs-figure">
         <div class="cs-media cam cam-stage page solo moves" style="--pw:1200px;--ph:611px;--bar:31px;--plate-r:16px;--dur:34s;--n:1;--x0:105.9px;--y0:46.0px;--k0:0.4894;--sy:-2783.3px;--sr:-900.0px;--x1:-51.3px;--y1:-44.9px;--k1:0.7133">
@@ -269,7 +265,7 @@
       <div class="cs-sub" id="tests">
         <h2 class="cs-h2">The net under the refactor</h2>
       <div class="cs-body">
-        <p>A refactor makes a promise that is hard to check: nothing behaves differently. On a diff this wide, nobody can hold that in their head, and “it looked fine when I clicked around” is not evidence — it is the absence of it.</p>
+        <p>A refactor makes a promise that is hard to check: nothing behaves differently. On a diff this wide, nobody can hold that in their head, and “it looked fine when I clicked around” is not evidence. It is the absence of it.</p>
         <p>So the Cypress suite grew alongside the change rather than after it, to roughly 85% of the critical flows: the paths people take every day, asserted before the shared components went in and re-run after each pull request. Where a spec had to change, that was the signal to stop and look, because a passing test that needed rewriting is a behaviour change wearing a costume.</p>
         <p>It shipped with no regressions, which is the claim I would otherwise have had no honest way to make.</p>
       </div>

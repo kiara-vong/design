@@ -156,8 +156,8 @@ PAGE = '''<!doctype html>
      reader. The two faces carrying the title and the body get the same treatment,
      so the type stops reflowing a second after it appears. -->
 <link rel="preload" as="image" href="../assets/hero/about-bg.webp" fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="../assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preload" as="font" type="font/otf" href="../assets/fonts/PPKyoto-MediumItalic.otf" crossorigin>
+<link rel="preload" as="font" type="font/otf" href="../assets/fonts/ABCDiatype-Regular.otf" crossorigin>
 <!-- Same trick as every other page here: the scale is written as a stylesheet
      before anything paints, so the 1440-wide canvas never renders unscaled first. -->
 <script>
@@ -209,13 +209,13 @@ PAGE = '''<!doctype html>
   background-size:9px 12px;background-repeat:repeat-y}
 .ab-stub:hover{transform:translateY(-3px) rotate(-.8deg);
   box-shadow:0 16px 30px rgba(30,24,18,.34)}
-.ab-stub-no{font-family:'Thistle',ui-monospace,monospace;font-weight:500;
+.ab-stub-no{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
   font-size:11px;letter-spacing:.10em;color:var(--accent);
   writing-mode:vertical-rl;transform:rotate(180deg);padding-left:6px}
 .ab-stub-main{display:flex;flex-direction:column;gap:4px}
-.ab-stub .t{font-family:'Laurel',Georgia,serif;font-weight:500;font-size:17px;
+.ab-stub .t{font-family:'Mackinac','Fraunces',Georgia,serif;font-weight:500;font-size:17px;
   line-height:1.2}
-.ab-stub .s{font-family:'Thistle',ui-monospace,monospace;font-size:11px;
+.ab-stub .s{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-size:11px;
   color:var(--antique-gold)}
 .ab-stub-arrow{margin-left:8px;color:var(--accent);
   transition:transform .3s cubic-bezier(.34,1.4,.5,1)}

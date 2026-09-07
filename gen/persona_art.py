@@ -1,98 +1,113 @@
 # -*- coding: utf-8 -*-
-"""Artwork for the Persona Homepage card and case study.
+"""Artwork for the Persona Homepage case study cover.
 
-This is the one project with nothing to screenshot: it has not shipped. So it is
-drawn, and drawn as a DIAGRAM rather than as a fake screen -- three copies of the
-same page with the same blocks in a different order, which is the whole idea of
-the feature and is not something a single screenshot could show anyway.
+The captures on the case-study page show what the two defaults look like. What
+they cannot show is the thing the project is actually about, which is that they
+are the SAME page: same widget catalog, same page, different opening order. A
+screenshot of one ordering is a screenshot of a homepage; two of them side by side
+with the blocks joined up is the argument.
 
-Being visibly a diagram is the point. A convincing mockup of an unshipped product
-sitting next to three real screenshots would be the one dishonest image on the
-site.
+So this is drawn, and drawn as a diagram rather than as a fake screen. Colour
+marks which widget, and the links across the middle are the same five widgets
+finding their new rank. Being visibly a diagram is the point -- a convincing
+mockup sitting next to four real screenshots would be the one image on the page a
+reader could not tell from evidence.
+
+The home-page thumbnail is NOT here. It lives in gen/work_cards.py with the other
+three, because it animates and the animation has to travel inside the file.
 """
 import io
-from gen.uikit import rect, bar, text, save, W, H, INK, MUT, LINE, PAPER, WASH, ACCENT, BLUE, GREEN
+from gen.uikit import (rect, bar, text, save, W, H, INK, MUT, LINE, PAPER, WASH,
+                       ACCENT, BLUE)
 
-HW, HH = 799, 307      # .cs-hero
 FW, FH = 799, 391      # .cs-media
 
-# Each persona gets the same five blocks in a different order and at different
-# weights. Colour marks WHICH block, so the eye can follow one across the three
-# panels and see it move.
-BLOCKS = [("Tasks due", ACCENT), ("What I own", BLUE), ("Recent activity", GREEN),
-          ("Team view", "#8460C6"), ("Getting started", "#E8B84B")]
-PERSONAS = [("Operator", [0, 1, 2, 3, 4]),
-            ("Owner", [1, 3, 0, 2, 4]),
-            ("Newcomer", [4, 0, 1, 2, 3])]
+# Five colours that stay five colours at hero size. ACCENT and GREEN are two
+# greens a reader cannot tell apart across a metre of white, and telling them
+# apart is the entire job the colour is doing here.
+VIOLET, AMBER, RUST = "#8460C6", "#E8B84B", "#B4552F"
+
+# The five widgets that actually exist on both defaults, in the order the leader
+# page opens with. Colour marks WHICH widget, so the eye can follow one across
+# and watch it move rather than reading two lists.
+BLOCKS = [("Maturity score", ACCENT), ("Score trend", BLUE),
+          ("Governance", RUST), ("Recent notices", VIOLET),
+          ("Cloud cost", AMBER)]
+
+# Two, not three, and not five. The case study explains why; the picture should
+# not quietly disagree with it.
+PERSONAS = [("Division lead", [0, 1, 2, 3, 4]),
+            ("Application owner", [3, 4, 0, 2, 1])]
 
 
 def panel(x, y, w, h, name, order, scale=1.0):
-    """One persona's homepage: a title bar, then its blocks in its own order."""
+    """One persona's homepage, and where each of its blocks ended up.
+
+    Returns (svg, {block index: vertical centre}) so the caller can join the two
+    panels up. Working the positions out twice, once to draw and once to link, is
+    how a diagram ends up with lines that nearly point at things.
+    """
     o = [rect(x, y, w, h, PAPER, 10, LINE, 1.5),
          rect(x, y, w, 26 * scale, WASH, 10),
          rect(x, y + 16 * scale, w, 10 * scale, WASH)]
     o.append(text(x + 12, y + 18 * scale, name, 11 * scale, INK,
-                  "'Clover',sans-serif", 700))
-    # A persona switcher, with this one selected.
+                  "'Inter',sans-serif", 700))
+    # The scope chip that decides the ordering, drawn as a chip rather than a
+    # name, because the page infers the persona from scope rather than a title.
     o.append(rect(x + w - 54 * scale, y + 7 * scale, 44 * scale, 13 * scale,
                   MUT, 7 * scale, op=.22))
+    mid = {}
     yy = y + 36 * scale
     for rank, idx in enumerate(order):
         label, col = BLOCKS[idx]
         # The first block is tallest: rank IS the hierarchy, so the panel has to
         # show weight changing, not just sequence.
-        bh = (34 - rank * 4) * scale
+        bh = (46 - rank * 5) * scale
         o.append(rect(x + 10 * scale, yy, w - 20 * scale, bh, col, 6, op=.16))
         o.append(rect(x + 10 * scale, yy, 3.5 * scale, bh, col, 2))
         o.append(text(x + 20 * scale, yy + 12 * scale, label, 9 * scale, col,
-                      "'Clover',sans-serif", 700))
+                      "'Inter',sans-serif", 700))
         if bh > 22 * scale:
             o.append(bar(x + 20 * scale, yy + 18 * scale, (w - 56) * scale,
                          5 * scale, LINE))
+        mid[idx] = yy + bh / 2.0
         yy += bh + 6 * scale
-    return "".join(o)
+    return "".join(o), mid
+
+
+def link(x0, y0, x1, y1, col):
+    """A flat S-curve from one panel's block to the same block in the other."""
+    dx = (x1 - x0) * 0.55
+    return ('<path d="M%.1f %.1f C%.1f %.1f %.1f %.1f %.1f %.1f" stroke="%s" '
+            'stroke-width="1.6" fill="none" opacity=".5"/>'
+            % (x0, y0, x0 + dx, y0, x1 - dx, y1, x1, y1, col))
 
 
 def fig_reorder():
-    o = [rect(0, 0, FW, FH, PAPER)]
     # No caption across the top. This is the cover of a page whose kicker,
     # headline and intro sit two centimetres below it saying the same thing with
     # more room to say it in, and a caption inside a cover image is a caption
     # competing with the headline above it.
-    for i, (name, order) in enumerate(PERSONAS):
-        o.append(panel(28 + i * 254, 84, 224, 252, name, order, scale=1.02))
+    o = [rect(0, 0, FW, FH, PAPER)]
+    PW, PH, PY = 262, 278, 56
+    LX, RX = 46, FW - 46 - PW
+    left, lmid = panel(LX, PY, PW, PH, PERSONAS[0][0], PERSONAS[0][1], scale=1.06)
+    right, rmid = panel(RX, PY, PW, PH, PERSONAS[1][0], PERSONAS[1][1], scale=1.06)
+    # Links first, so the panels sit on top of where the curves meet them.
+    for idx, (_, col) in enumerate(BLOCKS):
+        o.append(link(LX + PW, lmid[idx], RX, rmid[idx], col))
+    o.append(left)
+    o.append(right)
     return "".join(o)
 
 
 def field():
     """The card's ground wash, matching the other three cards' treatment."""
-    body = ('<defs><linearGradient id="g" x1="0" y1="0" x2=".3" y2="1">'
-            '<stop offset="0" stop-color="#EFECFF"/>'
-            '<stop offset="1" stop-color="#DED9F7"/></linearGradient>'
-            '<radialGradient id="v" cx=".5" cy=".42" r=".78">'
-            '<stop offset=".55" stop-color="#000" stop-opacity="0"/>'
-            '<stop offset="1" stop-color="#000" stop-opacity=".13"/></radialGradient></defs>'
-            '<rect width="529" height="304" fill="url(#g)"/>')
-    for i in range(9):
-        for j in range(5):
-            body += ('<circle cx="%.0f" cy="%.0f" r="1.8" fill="#8460C6" '
-                     'opacity=".22"/>' % (34 + i * 58, 30 + j * 62))
-    body += '<rect width="529" height="304" fill="url(#v)"/>'
     # The flat field this used to draw is gone: the four work cards sit on
     # paintings now, cut by gen/card_fields.py.
-
-
-def card_shot():
-    """The home-page thumbnail, authored in the shared 1200x700 cast."""
-    o = [rect(0, 0, W, H, "#EFECFF")]
-    o.append(text(40, 52, "ONE PAGE, THREE ORDERINGS", 17, "#8460C6",
-                  "'Thistle',monospace", 500))
-    for i, (name, order) in enumerate(PERSONAS):
-        o.append(panel(40 + i * 380, 128, 340, 452, name, order, scale=1.62))
-    save("shot-persona", "".join(o), W, H)
+    return None
 
 
 save("cs-persona-reorder", fig_reorder(), FW, FH)
 field()
-card_shot()
 print("persona artwork written")

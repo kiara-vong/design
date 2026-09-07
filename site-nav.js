@@ -5,7 +5,7 @@
    changes with the page. Load this after the nav. */
 (function(){
   // Copy-email nav icon. The tooltip says "Copy email", so it copies rather than
-  // opening a mail client. The href stays a real mailto: — with JS off the link
+  // opening a mail client. The href stays a real mailto:, with JS off the link
   // still works, and right-click > Copy Link Address still yields the address.
   var link = document.querySelector('.nav a[data-mail]');
   if(!link) return;
@@ -20,7 +20,7 @@
 
   /* Failure holds longer than success: "Copied!" only needs to be seen, whereas the
      fall-back shows the address itself and has to stay up long enough to read and
-     type. That path fires when the browser refuses the clipboard — a non-secure
+     type. That path fires when the browser refuses the clipboard: a non-secure
      origin, or Safari withholding permission. */
   function flash(msg, ms){
     link.setAttribute('data-tip', msg);
@@ -114,7 +114,7 @@
    It stands down when the footer arrives: the footer carries the same three
    links, so the pill would only be repeating itself, and its glass surface goes
    nearly invisible against the pale About footer. The trigger is the same one
-   payments-home uses for its chrome — the footer's top crossing the pill's
+   payments-home uses for its chrome: the footer's top crossing the pill's
    bottom, with 24px of margin. */
 (function(){
   var pill = document.querySelector('.nav');
@@ -129,7 +129,7 @@
   if (!wrap || !footer) return;
 
   /* The page's photographic ground. Past its bottom edge the pill is over parchment
-     and needs a surface — see .nav.on-light. */
+     and needs a surface, see .nav.on-light. */
   var ground = document.querySelector('#hero, .ab-canvas, .lb-screen');
 
   /* A page with no photographic ground at all is light from top to bottom, so the

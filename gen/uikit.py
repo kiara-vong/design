@@ -35,7 +35,7 @@ def bar(x, y, w, h=9, fill=LINE, r=None):
 def lines(x, y, widths, gap=17, h=9, fill=LINE):
     return "".join(bar(x, y + i * gap, w, h, fill) for i, w in enumerate(widths))
 
-def text(x, y, s, size=15, fill=INK, fam="'Thistle',monospace", w=400, anchor="start"):
+def text(x, y, s, size=15, fill=INK, fam="'JetBrains Mono',monospace", w=400, anchor="start"):
     return ('<text x="%.1f" y="%.1f" font-family="%s" font-size="%g" font-weight="%s" '
             'fill="%s" text-anchor="%s">%s</text>' % (x, y, fam, size, w, fill, anchor, esc(s)))
 

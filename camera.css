@@ -121,8 +121,18 @@
    overflow: hidden
 }
 
+/* Both spellings on purpose, and the second one is not decoration.
+   When the window went in, the machines' content moved from being a direct child
+   of .cam to being a child of .win -- and this rule, which is what gives every
+   plate its box, stopped matching. The strip machine sets its own width and
+   survived; push, deal, wipe and clip did not, so their images and videos fell
+   back to intrinsic size and every one of them was drawn at whatever the file
+   happened to be, cropped to the top-left corner of the window. It looked like a
+   framing decision, which is why it went unnoticed. Keep both selectors. */
 .cam > img,
-.cam > video {
+.cam > video,
+.cam > .win > img,
+.cam > .win > video {
    position: absolute;
    inset: 0;
    width: 100%;
@@ -284,7 +294,7 @@
    position: absolute;
    top: 12px;
    z-index: 3;
-   font-family: 'Thistle', ui-monospace, monospace;
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
    font-size: 11px;
    letter-spacing: .04em;
    text-transform: uppercase;
@@ -343,8 +353,14 @@
    The clips are walkthroughs assembled from state captures, so there is no audio to
    carry and nothing is lost by muting. Muted is also the only way a browser will
    autoplay at all. */
+/* Contain rather than cover, which is the one place this site does not crop to
+   the slot. A still can be: the plate was cut for this box. A recording cannot --
+   the crop would be hiding part of what happened, and on the villager card, whose
+   heading and its Likes row are 890px apart in a 1080px capture, it would hide
+   the two things the clip is for. So it fits whole and the ivory shows at the
+   edges, which is why this rule has always painted a ground. */
 .cam-clip .win > video {
-   background: var(--dove-ivory, #F6F2E6)
+   object-fit: contain
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -675,7 +691,7 @@
    border: 1px solid var(--outline-stroke, #D8D2C2);
    border-radius: 11px;
    padding: 5px 10px;
-   font-family: 'Thistle', ui-monospace, monospace;
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
    font-weight: 500;
    font-size: 12px;
    line-height: 1.2;
@@ -686,7 +702,7 @@
 .cam-stage .call-desc {
    margin: 6px 0 0;
    padding-left: 31px;
-   font-family: 'Clover', system-ui, sans-serif;
+   font-family: 'Diatype', 'Inter', system-ui, sans-serif;
    font-size: 12px;
    line-height: 1.35;
    color: var(--dusty-granite, #5C5651)
@@ -834,7 +850,7 @@
    border: 1px solid var(--outline-stroke, #D8D2C2);
    border-radius: 11px;
    padding: 6px 10px;
-   font-family: 'Thistle', ui-monospace, monospace;
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
    font-weight: 500;
    font-size: 12px;
    line-height: 1.2;
@@ -852,7 +868,7 @@
 .ann-desc {
    margin: 0;
    padding-left: 32px;
-   font-family: 'Clover', system-ui, sans-serif;
+   font-family: 'Diatype', 'Inter', system-ui, sans-serif;
    font-weight: 400;
    font-size: 12px;
    line-height: 1.35;
@@ -1559,7 +1575,7 @@
    align-items: center;
    min-height: 45px;
    box-sizing: border-box;
-   font-family: 'Thistle', ui-monospace, monospace;
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
    font-weight: 500;
    font-size: 12px;
    line-height: 1.2;
@@ -1586,7 +1602,7 @@
 
 .cam-step .step-note {
    margin: 0;
-   font-family: 'Clover', system-ui, sans-serif;
+   font-family: 'Diatype', 'Inter', system-ui, sans-serif;
    font-size: 12px;
    line-height: 1.35;
    color: var(--dusty-granite, #5C5651)
@@ -1721,7 +1737,7 @@
    border-radius: 999px;
    background: var(--parchment, #FDFBEF);
    border: 1px solid var(--outline-stroke, #D8D2C2);
-   font-family: 'Thistle', ui-monospace, monospace;
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
    font-weight: 500;
    font-size: 11px;
    line-height: 1.2;
@@ -2081,4 +2097,587 @@
    .is-in .cam-stage.page.cam-walk .press i::after {
       animation: none
    }
+}
+
+
+/* ---------------------------------------------------------- L. the cabinets
+   Four alternatives in one window, switched by tabs in the title bar.
+
+   The tab strip IS the chrome. Every other figure on this site draws three
+   lights and an address bar because that is what says "screen"; this one draws
+   three lights and four tabs, because that is what says "four screens, pick
+   one", and the reader already knows how to read it.
+
+   Only the selected clip is displayed and only the selected clip plays. The rest
+   sit at opacity 0 with no pointer events, which is what lets the video elements
+   stay in the DOM -- switching back is instant, and a browser that has already
+   decoded the first frame does not have to fetch it again. */
+.cam-clip .win > video,
+.cab-win > video {
+   background: var(--dove-ivory, #F6F2E6)
+}
+
+.cs-media.cab {
+   background: var(--dove-ivory, #F5F2E5)
+}
+
+.cab-bar {
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: 0;
+   height: 34px;
+   z-index: 5;
+   display: flex;
+   align-items: stretch;
+   gap: 2px;
+   padding-left: 58px;
+   background: var(--dove-ivory, #F5F2E5);
+   border-bottom: 1px solid var(--outline-stroke, #E3E1CC)
+}
+
+.cab-lights {
+   position: absolute;
+   left: 11px;
+   top: 13px;
+   display: flex;
+   gap: 6px
+}
+
+.cab-lights i {
+   width: 8px;
+   height: 8px;
+   border-radius: 50%;
+   background: #E6685C
+}
+
+.cab-lights i:nth-child(2) {
+   background: #E8B84B
+}
+
+.cab-lights i:nth-child(3) {
+   background: #7DC26B
+}
+
+/* A tab, not a button: square-ish top corners, no shadow, and the selected one
+   joins the panel below it by covering the border. */
+.cab-tab {
+   appearance: none;
+   border: 0;
+   background: transparent;
+   margin: 4px 0 0;
+   padding: 0 13px;
+   border-radius: 7px 7px 0 0;
+   font: 500 11.5px/1 'Thistle', ui-monospace, monospace;
+   letter-spacing: .02em;
+   color: var(--muted, #878676);
+   cursor: pointer;
+   white-space: nowrap;
+   transition: background .18s ease, color .18s ease
+}
+
+.cab-tab:hover {
+   background: rgba(0, 0, 0, .04);
+   color: var(--ink, #423E3D)
+}
+
+.cab-tab.is-on {
+   background: var(--parchment, #FDFBEF);
+   color: var(--ink, #423E3D);
+   box-shadow: 0 1px 0 0 var(--parchment, #FDFBEF)
+}
+
+.cab-tab:focus-visible {
+   outline: 2px solid var(--accent-deep, #4C7A1C);
+   outline-offset: -2px
+}
+
+.cab-win {
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: 34px;
+   bottom: 34px;
+   overflow: hidden;
+   background: var(--dove-ivory, #F6F2E6)
+}
+
+.cab-win > video {
+   position: absolute;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+   display: block;
+   opacity: 0;
+   pointer-events: none;
+   transition: opacity .22s ease
+}
+
+.cs-media.cab[data-i="0"] > .cab-win > video[data-i="0"],
+.cs-media.cab[data-i="1"] > .cab-win > video[data-i="1"],
+.cs-media.cab[data-i="2"] > .cab-win > video[data-i="2"],
+.cs-media.cab[data-i="3"] > .cab-win > video[data-i="3"] {
+   opacity: 1
+}
+
+/* The line under the window is the tab's own caption. It changes with the tab,
+   so the figure's caption underneath can stay about the four of them together. */
+.cab-note {
+   position: absolute;
+   left: 14px;
+   right: 14px;
+   bottom: 0;
+   height: 34px;
+   margin: 0;
+   display: flex;
+   align-items: center;
+   font: 400 11.5px/1.35 var(--sans, system-ui), sans-serif;
+   color: var(--muted, #878676);
+   border-top: 1px solid var(--outline-stroke, #E3E1CC)
+}
+
+/* ---------------------------------------------------- M. annotated specimen
+   One drawing, several parts named at once.
+
+   stage()'s callout names one thing and leaves the rest to prose. That is the
+   wrong shape for an object whose argument is that it HAS parts: naming one of
+   five decisions implies the other four were not decisions. So the specimen sits
+   on the left and its parts are listed down the right, with a ring on the
+   specimen for whichever line you are reading.
+
+   The rings are positioned from rectangles measured in the plate's own pixels
+   and converted in gen/media.py against the drawn size, which is the same rule
+   the camera machines follow and for the same reason. */
+.cam-ann {
+   background: var(--dove-ivory, #F5F2E5)
+}
+
+.ann-shot {
+   position: absolute;
+   left: 14px;
+   top: var(--anny, 14px);
+   width: var(--annw, 452px);
+   height: var(--annh, 363px);
+   border-radius: 10px;
+   overflow: hidden;
+   background: var(--dove-ivory, #F5F2E5);
+   border: 1px solid var(--outline-stroke, #E3E1CC)
+}
+
+.ann-shot > .bar {
+   height: var(--bar, 22px)
+}
+
+/* The window needs its own box, not just a top offset.
+   The base rule that gives .win its inset is .cs-media.framed > .win, and this
+   .win is a child of .ann-shot -- which carries `framed` but is not .cs-media,
+   so nothing matched. .win collapsed to zero height, the image's inset:0
+   resolved against .ann-shot instead, and the plate was drawn over the title bar
+   as well as under it. Every ring then sat a bar's height too low, which looked
+   like a measuring error in the rectangles and was not. */
+.ann-shot > .win {
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: var(--bar, 22px);
+   bottom: 0;
+   overflow: hidden
+}
+
+.ann-shot .win > img {
+   position: absolute;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   object-fit: contain
+}
+
+.ann-ring {
+   position: absolute;
+   left: var(--rx);
+   top: var(--ry);
+   width: var(--rw);
+   height: var(--rh);
+   z-index: 4;
+   border: 2px solid var(--accent-deep, #4C7A1C);
+   border-radius: 6px;
+   background: rgba(76, 122, 28, .09);
+   opacity: 0;
+   transform: scale(1.06);
+   transition: opacity .2s ease, transform .2s cubic-bezier(.3, 1.3, .4, 1);
+   pointer-events: none
+}
+
+.cam-ann[data-i="0"] .ann-ring[data-i="0"],
+.cam-ann[data-i="1"] .ann-ring[data-i="1"],
+.cam-ann[data-i="2"] .ann-ring[data-i="2"],
+.cam-ann[data-i="3"] .ann-ring[data-i="3"],
+.cam-ann[data-i="4"] .ann-ring[data-i="4"],
+.cam-ann[data-i="5"] .ann-ring[data-i="5"] {
+   opacity: 1;
+   transform: scale(1)
+}
+
+.ann-list {
+   position: absolute;
+   left: calc(14px + var(--annw, 452px) + 20px);
+   right: 14px;
+   top: 14px;
+   bottom: 14px;
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   gap: 2px
+}
+
+.ann-item {
+   position: relative;
+   padding: 4px 6px 4px 18px;
+   border-radius: 7px;
+   cursor: default;
+   opacity: .5;
+   transition: opacity .2s ease, background .2s ease
+}
+
+.ann-item.is-on {
+   opacity: 1;
+   background: rgba(0, 0, 0, .035)
+}
+
+.ann-item:focus-visible {
+   outline: 2px solid var(--accent-deep, #4C7A1C);
+   outline-offset: 0
+}
+
+.ann-dot {
+   position: absolute;
+   left: 6px;
+   top: 11px;
+   width: 6px;
+   height: 6px;
+   border-radius: 50%;
+   background: var(--outline-stroke, #C9C6AE);
+   transition: background .2s ease, transform .2s ease
+}
+
+.ann-item.is-on .ann-dot {
+   background: var(--accent-deep, #4C7A1C);
+   transform: scale(1.25)
+}
+
+.ann-item b {
+   display: block;
+   font: 500 11.5px/1.3 'Thistle', ui-monospace, monospace;
+   color: var(--ink, #423E3D)
+}
+
+.ann-item p {
+   margin: 1px 0 0;
+   font: 400 10.5px/1.35 var(--sans, system-ui), sans-serif;
+   color: var(--muted, #878676)
+}
+
+/* ------------------------------------------------------------- N. the ticks
+   Two clocks racing.
+
+   The lesson is a number -- physics stepped once per frame at 60Hz runs 20 per
+   cent fast against a loop written for a 50Hz tick -- and a number in a sentence
+   is a thing the reader either believes or does not. Two bars leaving together
+   and arriving a fifth apart is the same claim as an event.
+
+   --ratio is the only number here, it comes from the two frequencies, and both
+   lanes are driven by it: the fast lane finishes in 1/ratio of the time. Nothing
+   is keyframed to a figure typed by hand, so the picture cannot disagree with
+   the caption. */
+.cam-tick {
+   background: var(--dove-ivory, #F5F2E5)
+}
+
+.tick-lane {
+   position: absolute;
+   left: 26px;
+   right: 26px;
+   height: 74px;
+   display: flex;
+   align-items: center;
+   gap: 16px
+}
+
+.tick-lane.fast {
+   top: 74px
+}
+
+.tick-lane.slow {
+   top: 176px
+}
+
+.tick-cap {
+   width: 178px;
+   flex: none;
+   font: 500 11.5px/1.35 'Thistle', ui-monospace, monospace;
+   color: var(--ink, #423E3D)
+}
+
+.tick-cap i {
+   display: block;
+   font-style: normal;
+   font-size: 10.5px;
+   color: var(--muted, #878676)
+}
+
+.tick-track {
+   position: relative;
+   flex: 1;
+   height: 26px;
+   border-radius: 13px;
+   background: rgba(0, 0, 0, .05);
+   overflow: visible
+}
+
+.tick-fill {
+   position: absolute;
+   left: 0;
+   top: 0;
+   bottom: 0;
+   width: 0;
+   border-radius: 13px;
+   background: var(--accent-deep, #4C7A1C);
+   opacity: .18
+}
+
+.tick-fish {
+   position: absolute;
+   top: 3px;
+   left: 0;
+   width: 20px;
+   height: 20px;
+   margin-left: -10px;
+   border-radius: 50%;
+   background: var(--accent-deep, #4C7A1C)
+}
+
+/* The run only plays when the figure is on screen, and then once per press.
+   A race that restarts every time it scrolls past is wallpaper. */
+.cam-tick.is-run .fast .tick-fill {
+   animation: tick-fill calc(6s / var(--ratio)) cubic-bezier(.35, 0, .25, 1) forwards
+}
+
+.cam-tick.is-run .fast .tick-fish {
+   animation: tick-fish calc(6s / var(--ratio)) cubic-bezier(.35, 0, .25, 1) forwards
+}
+
+.cam-tick.is-run .slow .tick-fill {
+   animation: tick-fill 6s cubic-bezier(.35, 0, .25, 1) forwards
+}
+
+.cam-tick.is-run .slow .tick-fish {
+   animation: tick-fish 6s cubic-bezier(.35, 0, .25, 1) forwards
+}
+
+@keyframes tick-fill {
+   from {
+      width: 0
+   }
+
+   to {
+      width: 100%
+   }
+}
+
+@keyframes tick-fish {
+   from {
+      left: 0
+   }
+
+   to {
+      left: 100%
+   }
+}
+
+/* The finish line, and the distance between the two arrivals. */
+.tick-line {
+   position: absolute;
+   right: 26px;
+   top: 74px;
+   height: 176px;
+   border-left: 2px dashed var(--outline-stroke, #C9C6AE)
+}
+
+.tick-gap {
+   position: absolute;
+   right: 26px;
+   top: 258px;
+   font: 500 12px/1 'Thistle', ui-monospace, monospace;
+   color: var(--accent-deep, #4C7A1C)
+}
+
+.tick-go {
+   position: absolute;
+   left: 26px;
+   bottom: 26px;
+   appearance: none;
+   border: 1px solid var(--outline-stroke, #E3E1CC);
+   background: var(--parchment, #FDFBEF);
+   border-radius: 999px;
+   padding: 7px 16px;
+   font: 500 11.5px/1 'Thistle', ui-monospace, monospace;
+   color: var(--ink, #423E3D);
+   cursor: pointer
+}
+
+.tick-go:hover {
+   border-color: var(--accent-deep, #4C7A1C);
+   color: var(--accent-deep, #4C7A1C)
+}
+
+.tick-note {
+   position: absolute;
+   left: 160px;
+   right: 26px;
+   bottom: 28px;
+   margin: 0;
+   text-align: right;
+   font: 400 11px/1.4 var(--sans, system-ui), sans-serif;
+   color: var(--muted, #878676)
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   .cam-tick.is-run .tick-fill,
+   .cam-tick.is-run .tick-fish {
+      animation-duration: .01s !important
+   }
+
+   .ann-ring {
+      transition: none
+   }
+}
+
+
+/* ------------------------------------------------ O. the floated window
+   A clip is an object on a surface, like every plate on this site, rather than a
+   thing that fills the card to its edges.
+
+   This was the whole stylistic gap between the game pages and the app pages: the
+   plate machines float their capture with air and a shadow, and clip() made the
+   card itself the window. Two ideas about what a figure is, on one site, with
+   nothing to tell the reader why.
+
+   --wx/--wy/--ww/--wh are computed in gen/media.py from the recording's delivered
+   dimensions. Nothing here is a percentage, so a re-cut at a different crop moves
+   the frame instead of letterboxing inside a box sized for the old one. */
+.cs-media.framed.cam-clip,
+.cs-media.cab {
+   background: var(--dove-ivory, #F5F2E5)
+}
+
+/* The shadow is its own layer behind both halves of the window. Put on either
+   half it draws a line across the seam where the two meet. */
+.cs-media.framed.cam-clip::before {
+   content: "";
+   position: absolute;
+   left: var(--wx);
+   top: var(--wy);
+   width: var(--ww);
+   height: var(--wh);
+   border-radius: 11px;
+   box-shadow: 0 14px 30px rgba(45, 40, 38, .15);
+   z-index: 0
+}
+
+.cs-media.framed.cam-clip > .bar {
+   left: var(--wx);
+   right: auto;
+   top: var(--wy);
+   width: var(--ww);
+   height: var(--bar, 24px);
+   border-radius: 11px 11px 0 0;
+   border: 1px solid var(--outline-stroke, #E3E1CC);
+   border-bottom-color: var(--outline-stroke, #E3E1CC);
+   z-index: 2
+}
+
+.cs-media.framed.cam-clip > .bar i {
+   top: 8px;
+   width: 7px;
+   height: 7px
+}
+
+.cs-media.framed.cam-clip > .bar i:nth-of-type(1) { left: 10px }
+.cs-media.framed.cam-clip > .bar i:nth-of-type(2) { left: 22px }
+.cs-media.framed.cam-clip > .bar i:nth-of-type(3) { left: 34px }
+
+.cs-media.framed.cam-clip > .bar b {
+   left: 50px;
+   right: 12px;
+   top: 5px;
+   height: 13px
+}
+
+.cs-media.framed.cam-clip > .win {
+   left: var(--wx);
+   right: auto;
+   top: calc(var(--wy) + var(--bar, 24px));
+   bottom: auto;
+   width: var(--ww);
+   height: calc(var(--wh) - var(--bar, 24px));
+   border-radius: 0 0 11px 11px;
+   border: 1px solid var(--outline-stroke, #E3E1CC);
+   border-top: 0;
+   z-index: 2
+}
+
+/* The cabinets float on the same rule. Their bar is taller because it carries
+   four tabs, and the caption line sits under the window on the ivory rather than
+   inside the frame -- it describes the tab, not the screen. */
+.cs-media.cab::before {
+   content: "";
+   position: absolute;
+   left: var(--wx);
+   top: var(--wy);
+   width: var(--ww);
+   height: var(--wh);
+   border-radius: 11px;
+   box-shadow: 0 14px 30px rgba(45, 40, 38, .15);
+   z-index: 0
+}
+
+.cs-media.cab > .cab-bar {
+   left: var(--wx);
+   right: auto;
+   top: var(--wy);
+   width: var(--ww);
+   height: var(--bar, 32px);
+   border-radius: 11px 11px 0 0;
+   border: 1px solid var(--outline-stroke, #E3E1CC);
+   border-bottom: 1px solid var(--outline-stroke, #E3E1CC);
+   z-index: 2
+}
+
+.cs-media.cab > .cab-win {
+   left: var(--wx);
+   right: auto;
+   top: calc(var(--wy) + var(--bar, 32px));
+   bottom: auto;
+   width: var(--ww);
+   height: calc(var(--wh) - var(--bar, 32px));
+   border-radius: 0 0 11px 11px;
+   border: 1px solid var(--outline-stroke, #E3E1CC);
+   border-top: 0;
+   z-index: 2
+}
+
+.cs-media.cab > .cab-note {
+   left: var(--wx);
+   right: auto;
+   width: var(--ww);
+   bottom: 10px;
+   height: auto;
+   border-top: 0;
+   justify-content: center;
+   text-align: center
 }

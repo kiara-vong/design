@@ -114,12 +114,8 @@ PAGE = """<!doctype html>
 <link rel="apple-touch-icon" href="{root}assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{{background:#FDFBEF}}</style>
-<!-- The type is served from this origin now, so there is no third party to open a
-     connection to. The two faces every one of these pages sets before anything else
-     are named here: discovered in the stylesheet they queue behind it, and a case
-     study is a wall of text whose first paint is the title and the opening paragraph. -->
-<link rel="preload" as="font" type="font/woff2" href="{root}assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="{root}assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{root}site.css">
 <script src="{root}site-motion.js"></script>
 <link rel="stylesheet" href="{root}case-study.css">

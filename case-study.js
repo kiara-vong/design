@@ -14,7 +14,7 @@
   function fit(){
     var vw = window.innerWidth;
     /* Stacked by mobile.css below this width, so every inline style written here
-       has to come back off — including the rail's, which is positioned by hand. */
+       has to come back off, including the rail's, which is positioned by hand. */
     if (vw <= 760) {
       stage.style.transform = ''; stage.style.left = '';
       document.body.style.height = '';
@@ -53,7 +53,7 @@
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fit); }
 })();
 
-/* Impact callout: play once when it reaches the reader — the stats rise in
+/* Impact callout: play once when it reaches the reader: the stats rise in
    sequence and the numbers count up. Deliberately not looping; a metric that
    keeps re-animating reads as decoration rather than a result. */
 (function(){
@@ -61,7 +61,7 @@
   var nums=[].slice.call(card.querySelectorAll('.stat-n'));
   var reduce=window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches;
   /* data-to carries its own precision ("4.8" counts to one decimal, "7" to none),
-     and data-prefix defaults to "+" so a lift reads as one — set it to "" for a
+     and data-prefix defaults to "+" so a lift reads as one, set it to "" for a
      figure that is a share rather than a change. */
   function fmt(n, v){
     var raw = n.getAttribute('data-to') || '0';
@@ -86,7 +86,7 @@
   }
   if(!('IntersectionObserver' in window)){ play(); return; }
   // Trigger when the card is genuinely in the reading area, not the instant its
-  // top edge clears the fold — otherwise the count-up finishes before you reach it.
+  // top edge clears the fold, otherwise the count-up finishes before you reach it.
   var io=new IntersectionObserver(function(es){
     es.forEach(function(e){ if(e.isIntersecting){ play(); io.disconnect(); } });
   },{threshold:.55, rootMargin:'0px 0px -18% 0px'});
@@ -379,5 +379,153 @@
     range.addEventListener('pointerdown', function () { fig.classList.add('used'); });
     range.addEventListener('keydown', function () { fig.classList.add('used'); });
     set();
+  });
+})();
+
+
+/* ---------------------------------------------------------------------------
+   Cabinets: four alternatives in one window, switched by tabs in the title bar.
+
+   Only the selected clip plays. The other three are paused and left at their
+   poster frame, which is what makes a figure holding four recordings cost about
+   what one costs: the browser never has to decode three streams nobody is
+   looking at. Switching also sets preload on the clip being shown, because the
+   three that start at preload="none" have nothing to play until they are asked.
+   --------------------------------------------------------------------------- */
+(function () {
+  var cabs = document.querySelectorAll('.cs-media.cab');
+  Array.prototype.forEach.call(cabs, function (cab) {
+    var tabs = cab.querySelectorAll('.cab-tab');
+    var vids = cab.querySelectorAll('.cab-win > video');
+    var note = cab.querySelector('.cab-note');
+
+    function show(i) {
+      cab.setAttribute('data-i', String(i));
+      Array.prototype.forEach.call(tabs, function (t, j) {
+        t.classList.toggle('is-on', j === i);
+        t.setAttribute('aria-selected', j === i ? 'true' : 'false');
+      });
+      Array.prototype.forEach.call(vids, function (v, j) {
+        if (j === i) {
+          if (v.preload === 'none') { v.preload = 'metadata'; v.load(); }
+          var p = v.play();
+          if (p && p.catch) { p.catch(function () {}); }
+        } else {
+          v.pause();
+        }
+      });
+      if (note) { note.textContent = tabs[i].getAttribute('data-note') || ''; }
+    }
+
+    Array.prototype.forEach.call(tabs, function (t, i) {
+      t.addEventListener('click', function () { show(i); });
+      /* Left and right move between tabs, which is what a tablist is expected
+         to do and costs four lines. */
+      t.addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) { return; }
+        e.preventDefault();
+        var n = (i + d + tabs.length) % tabs.length;
+        tabs[n].focus();
+        show(n);
+      });
+    });
+
+    /* Nothing plays until the figure is on screen. A page with four recordings
+       on it should not be decoding any of them while the reader is six sections
+       above them. */
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          var v = vids[Number(cab.getAttribute('data-i')) || 0];
+          if (!v) { return; }
+          if (e.isIntersecting) { var p = v.play(); if (p && p.catch) { p.catch(function () {}); } }
+          else { v.pause(); }
+        });
+      }, { threshold: 0.2 });
+      io.observe(cab);
+    }
+  });
+})();
+
+/* ---------------------------------------------------------------------------
+   Annotated specimen: one drawing, several parts named, a ring on the one being
+   read.
+
+   It cycles on its own until the reader touches it, then stops for good. A
+   figure that only responds to a hover has no way of telling anyone that it
+   responds to a hover, and a figure that keeps cycling under the pointer is
+   arguing with the person using it.
+   --------------------------------------------------------------------------- */
+(function () {
+  var anns = document.querySelectorAll('.cs-media.cam-ann');
+  Array.prototype.forEach.call(anns, function (ann) {
+    var items = ann.querySelectorAll('.ann-item');
+    if (!items.length) { return; }
+    var timer = null;
+    var i = 0;
+
+    function show(n) {
+      i = n;
+      ann.setAttribute('data-i', String(n));
+      Array.prototype.forEach.call(items, function (it, j) {
+        it.classList.toggle('is-on', j === n);
+      });
+    }
+    function stop() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+    function start() {
+      stop();
+      timer = setInterval(function () { show((i + 1) % items.length); }, 2600);
+    }
+
+    Array.prototype.forEach.call(items, function (it, j) {
+      it.addEventListener('mouseenter', function () { stop(); show(j); });
+      it.addEventListener('focus', function () { stop(); show(j); });
+    });
+    ann.addEventListener('mouseleave', function () { /* stays where it was left */ });
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting && timer === null && !ann.dataset.touched) { start(); }
+          else if (!e.isIntersecting) { stop(); }
+        });
+      }, { threshold: 0.35 });
+      io.observe(ann);
+    } else { start(); }
+
+    ann.addEventListener('mouseenter', function () { ann.dataset.touched = '1'; stop(); });
+  });
+})();
+
+/* ---------------------------------------------------------------------------
+   The ticks: two clocks racing.
+
+   Plays once when it scrolls in, and again on request. Not on a loop: the point
+   lands the first time, and a race that restarts forever is wallpaper with a
+   number on it.
+   --------------------------------------------------------------------------- */
+(function () {
+  var els = document.querySelectorAll('.cs-media.cam-tick');
+  Array.prototype.forEach.call(els, function (el) {
+    var go = el.querySelector('.tick-go');
+
+    function run() {
+      el.classList.remove('is-run');
+      void el.offsetWidth;              /* reflow, so the animation restarts */
+      el.classList.add('is-run');
+    }
+    if (go) { go.addEventListener('click', run); }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting) { run(); io.disconnect(); }
+        });
+      }, { threshold: 0.45 });
+      io.observe(el);
+    } else { run(); }
   });
 })();

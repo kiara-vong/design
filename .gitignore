@@ -19,27 +19,31 @@ _hit.html
 # committing both pays twice for the same frames.
 assets/video/_gif/
 
+# The raw screen recording gen/screencaps.py cuts the walkthrough clips out
+# of. Same reason as the GIFs above: every frame of it survives into the mp4s
+# beside it, and committing both pays twice for one thing.
+assets/video/_rec/
+
 # One-shot scripts at the ROOT only. Anchored, because an unanchored _*.py also
 # swallowed gen/__init__.py and content/__init__.py, without which `python -m gen.x`
 # does not work at all on a fresh clone.
 /_*.py
 
-# The fonts ARE in the repo now, and that is the point of them.
+# NOT in the repo, deliberately. assets/fonts holds 11 commercial faces (PP Kyoto,
+# ABC Diatype, Apercu Mono, P22 Mackinac, Monument Grotesk). Serving them unlicensed
+# is one problem; committing them to a PUBLIC repository is redistribution, which is
+# a bigger one, and git history makes it permanent.
 #
-# This folder used to hold 11 commercial faces (PP Kyoto, ABC Diatype, Apercu Mono,
-# P22 Mackinac, Monument Grotesk), ignored wholesale because committing them to a
-# public repository is redistribution and git history makes that permanent. The site
-# then fell through to a Google Fonts @import, which meant the published page never
-# looked like the design at all.
+# site.css @imports Newsreader, Inter, JetBrains Mono and Fraunces, and every rule
+# names one of them as its fallback, so the site renders properly without these.
 #
-# gen/fonts.py replaced all of it with four families cut from open-licensed sources
-# and named for this site. Those .woff2 files and the OFL-*.txt beside them are
-# tracked, because a font the reader cannot download is not serving anybody.
-#
-# What stays out: the variable-font masters the cuts come from, which are 2MB to
-# ship 180KB and are re-fetched by the generator on demand, and any .otf or .ttf,
-# which is either a licensed original that must not be published or an intermediate
-# nobody needs.
-assets/fonts/_src/
-assets/fonts/*.otf
-assets/fonts/*.ttf
+# If you buy webfont licences, or make the repo private, delete these two lines and
+# run:  git add -f assets/fonts
+assets/fonts/
+
+# The persona captures BEFORE gen/persona_scrub.py repaints them. These are the
+# demo seeded with real values -- a division name, an application identifier,
+# a first name in the greeting -- and this is a public repository. The scrubbed
+# copies in assets/tile/_src ARE tracked, so a fresh clone still builds; the
+# scrub step is a no-op when this folder is absent.
+assets/tile/_src/_persona/

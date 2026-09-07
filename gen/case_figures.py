@@ -69,9 +69,9 @@ def c(cx, cy, rad, fill, op=None, cls=None, stroke=None, sw=2, style=""):
 
 
 def t(x, y, s, size=13, fill=INK, fam="mono", weight=400, anchor="start", cls=None):
-    fams = {"mono": "'Thistle',ui-monospace,monospace",
-            "sans": "'Clover',system-ui,sans-serif",
-            "serif": "'Laurel',Georgia,serif"}
+    fams = {"mono": "'ApercuMono','JetBrains Mono',ui-monospace,monospace",
+            "sans": "'Diatype','Inter',system-ui,sans-serif",
+            "serif": "'Mackinac','Fraunces',Georgia,serif"}
     o = ('<text x="%.1f" y="%.1f" font-family="%s" font-size="%g" font-weight="%s" '
          'fill="%s" text-anchor="%s"' % (x, y, fams[fam], size, weight, fill, anchor))
     if cls:
@@ -291,6 +291,27 @@ def persona_reorder():
 
 
 
+
+def pac_man(cx, cy, r, mouth=38, facing=180, fill="#F2C744"):
+    """A Pac-Man wedge with no arc commands in it.
+
+    mouth  the full opening in degrees, facing  the direction it points (180 is
+    left, screen coordinates). The circle is walked in one-degree steps from one
+    lip to the other, which at this size is indistinguishable from an arc and
+    cannot be drawn inside out.
+    """
+    import math
+    a0 = facing + mouth / 2.0
+    a1 = facing + 360.0 - mouth / 2.0
+    pts = []
+    n = int(a1 - a0)
+    for i in range(n + 1):
+        a = math.radians(a0 + i)
+        pts.append("%.2f %.2f" % (cx + r * math.cos(a), cy + r * math.sin(a)))
+    return ('<path d="M %.2f %.2f L %s Z" fill="%s"/>'
+            % (cx, cy, " L ".join(pts), fill))
+
+
 def pac_targets():
     """Pac-Man's actual argument: one movement system, four target rules.
 
@@ -371,11 +392,15 @@ def pac_targets():
                      'fill="none"/>'
                      % (i, cx(gc), cy(gr), cx(tc), cy(tr), col))
 
-        # the player, facing left, identical in every panel
-        o.append('<path d="M %.1f %.1f L %.1f %.1f A 9 9 0 1 0 %.1f %.1f Z" '
-                 'fill="#F2C744"/>'
-                 % (cx(PC), cy(PR), cx(PC) - 8.5, cy(PR) - 3.1,
-                    cx(PC) - 8.5, cy(PR) + 3.1))
+        # the player, facing left, identical in every panel.
+        #
+        # Drawn as a fan of short segments rather than as an SVG arc. The arc
+        # version put the wedge's apex at the sphere's centre and then asked for
+        # a radius-9 arc between two points 9.05 apart from it -- so the renderer
+        # placed the arc's OWN centre wherever it had to, the circle slid off the
+        # apex, and what came out was a yellow triangle stuck to the side of a
+        # ball. A/@sweep flags are a bad place to be clever at nine pixels wide.
+        o.append(pac_man(cx(PC), cy(PR), 9.2, 38))
 
         # the ghost
         o.append('<path class="gh p%d" d="M %.1f %.1f a 8 8 0 0 1 16 0 v 9.5 '
@@ -479,6 +504,115 @@ print("case-study figures:")
 # (name, builder) or (name, builder, width, height). Only the timeline cover is
 # authored at the hero's own size so far; the rest are 799x391 and lose a band top
 # and bottom to object-fit:cover, which they were composed around.
+
+
+def sdv_chart():
+    """One generated chart, two things reading it, and no file between them.
+
+    The claim in that section is that the beatmap and the music are the same
+    object rather than a track with a chart placed on top of it -- so they cannot
+    drift, because there is nothing to drift. A screenshot of the game shows
+    notes falling, which is the half of that anyone would have assumed. What it
+    cannot show is the other consumer: the same sixteen marks are also what
+    schedules the oscillators, in one pass at load.
+
+    So both consumers are drawn under one track, driven by one set of delays. If
+    the two halves of this picture ever fell out of step it would be because the
+    same arithmetic that generates them fell out of step, which is the property
+    being described.
+    """
+    BEATS = 16
+    LOOP = 8.0
+    STEP = LOOP / BEATS
+    LANE = [0, 2, 1, 3, 0, 1, 2, 2, 3, 1, 0, 3, 2, 0, 1, 3]
+    COL = ["#649F25", "#1F597B", "#B4552F", "#8460C6"]
+
+    X0, X1 = 62, 738
+    TRACK_Y = 86
+    SPAN = (X1 - X0) / float(BEATS - 1)
+
+    o = [t(28, 42, "ONE GENERATED CHART", 11, MUT, "mono", 700),
+         t(232, 42, "sixteen measures, written at load", 11, MUT, "sans", 400)]
+
+    # the chart itself: one mark per beat, coloured by the lane it belongs to
+    o.append('<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="%s" '
+             'stroke-width="1.5"/>' % (X0 - 14, TRACK_Y, X1 + 14, TRACK_Y, LINE))
+    for i in range(BEATS):
+        x = X0 + i * SPAN
+        o.append('<rect class="mk" style="animation-delay:%.3fs" x="%.1f" y="%d" '
+                 'width="9" height="9" rx="2.5" fill="%s"/>'
+                 % (i * STEP, x - 4.5, TRACK_Y - 4.5, COL[LANE[i]]))
+
+    # the two consumers
+    PY_, PH = 132, 196
+    for px, pw, name, sub_ in ((28, 356, "THE FALLING NOTES", "read every frame"),
+                               (416, 356, "THE OSCILLATORS",
+                                "scheduled once, at load")):
+        o.append(r(px, PY_, pw, PH, "#FFFFFF", 10, stroke=LINE, sw=1.5))
+        o.append(t(px + 14, PY_ + 22, name, 10.5, MUT, "mono", 700))
+        o.append(t(px + 14, PY_ + 38, sub_, 10.5, MUT, "sans", 400))
+        # the fork from the track down into each panel
+        cxp = px + pw / 2.0
+        o.append('<path d="M%.1f %d C%.1f %d %.1f %d %.1f %d" stroke="%s" '
+                 'stroke-width="1.5" fill="none"/>'
+                 % (400, TRACK_Y + 12, 400, TRACK_Y + 40, cxp, PY_ - 34,
+                    cxp, PY_, LINE))
+
+    # left panel: four lanes, notes falling to a judgment line
+    LX, LW = 42, 328
+    LANE_W = LW / 4.0
+    JUDGE = PY_ + PH - 34
+    for k in range(4):
+        lx = LX + k * LANE_W
+        o.append(r(lx + 6, PY_ + 50, LANE_W - 12, PH - 84, COL[k], 5, op=.07))
+    o.append('<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" stroke="%s" '
+             'stroke-width="2"/>' % (LX + 4, JUDGE, LX + LW - 4, JUDGE, LINE))
+    for i in range(BEATS):
+        k = LANE[i]
+        lx = LX + k * LANE_W + LANE_W / 2.0
+        o.append('<circle class="nt" style="animation-delay:%.3fs" cx="%.1f" '
+                 'cy="%.1f" r="7" fill="%s"/>'
+                 % (i * STEP, lx, PY_ + 56, COL[k]))
+    for k in range(4):
+        lx = LX + k * LANE_W + LANE_W / 2.0
+        o.append('<circle cx="%.1f" cy="%.1f" r="9" fill="none" stroke="%s" '
+                 'stroke-width="1.5"/>' % (lx, JUDGE, LINE))
+
+    # right panel: one bar per beat, rising as its mark is reached
+    RX, RW = 430, 328
+    BW = RW / float(BEATS)
+    BASE = PY_ + PH - 30
+    for i in range(BEATS):
+        h = 16 + (LANE[i] + 1) * 15
+        o.append('<rect class="os" style="animation-delay:%.3fs" x="%.1f" '
+                 'y="%.1f" width="%.1f" height="%d" rx="2" fill="%s"/>'
+                 % (i * STEP, RX + i * BW + 2.5, BASE - h, BW - 5, h,
+                    COL[LANE[i]]))
+    o.append('<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" stroke="%s" '
+             'stroke-width="2"/>' % (RX - 2, BASE, RX + RW + 2, BASE, LINE))
+
+    o.append(t(28, 356, "The beatmap and the music are the same object. Difficulty "
+               "changes note density and the timing windows, not the song.",
+               12, INK, "sans", 400))
+
+    css = (
+        ".mk{opacity:.3;transform-box:fill-box;transform-origin:50%% 50%%;"
+        "animation:mk %ss linear infinite}"
+        "@keyframes mk{0%%,3%%{opacity:1;transform:scale(1.5)}"
+        "12%%,100%%{opacity:.3;transform:scale(1)}}"
+        ".nt{opacity:0;animation:nt %ss linear infinite}"
+        "@keyframes nt{0%%{opacity:0;transform:translateY(-14px)}"
+        "6%%{opacity:1}"
+        "34%%{opacity:1;transform:translateY(%dpx)}"
+        "40%%,100%%{opacity:0;transform:translateY(%dpx)}}"
+        ".os{opacity:.12;transform-box:fill-box;transform-origin:50%% 100%%;"
+        "animation:os %ss linear infinite}"
+        "@keyframes os{0%%{opacity:.12;transform:scaleY(.18)}"
+        "4%%{opacity:1;transform:scaleY(1)}"
+        "18%%,100%%{opacity:.12;transform:scaleY(.18)}}"
+        % (LOOP, LOOP, int(JUDGE - (PY_ + 56)), int(JUDGE - (PY_ + 56)), LOOP))
+    return "".join(o), css
+
 FIGS = [
     ("cs-dash-seams", dash_seams),
     ("cs-tl-carry", tl_carry, HW, HH),
@@ -486,6 +620,7 @@ FIGS = [
     ("cs-ui-drift", ui_drift),
     ("cs-persona-reorder", persona_reorder),
     ("cs-pac-targets", pac_targets),
+    ("cs-sdv-chart", sdv_chart),
 ]
 for spec in FIGS:
     name, fn = spec[0], spec[1]

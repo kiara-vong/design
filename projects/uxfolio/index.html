@@ -10,12 +10,8 @@
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<!-- The type is served from this origin now, so there is no third party to open a
-     connection to. The two faces every one of these pages sets before anything else
-     are named here: discovered in the stylesheet they queue behind it, and a case
-     study is a wall of text whose first paint is the title and the opening paragraph. -->
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -161,18 +157,6 @@
       <div class="cs-body">
         <p>Four case studies, chosen so they do not all demonstrate the same skill. One is quantitative, one is competitive research turned into a build, one is a redesign with a sense of humour about itself, and one is a domain nobody designs for.</p>
       </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam framed cam-deal" style="--dur:14s;--n:4">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <img style="--i:0" src="../../assets/plate/uxfolio-fondawallet-1-problem.webp" alt="Fonda Wallet from the problem through what was tried to what shipped" loading="lazy">
-            <img style="--i:1" src="../../assets/plate/uxfolio-fondawallet-2-tried.webp" alt="" aria-hidden="true" loading="lazy">
-            <img style="--i:2" src="../../assets/plate/uxfolio-fondawallet-3-iteration.webp" alt="" aria-hidden="true" loading="lazy">
-            <img style="--i:3" src="../../assets/plate/uxfolio-fondawallet-4-shipped.webp" alt="" aria-hidden="true" loading="lazy">
-          </div>
-        </div>
-        <figcaption class="cs-caption">Four frames of one case study, in order. This arc is what the whole format rests on.</figcaption>
-      </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">A/B Testing</span><span class="d">Two appointment-booking flows, a hypothesis, a statistical test, and a result that had to be reported whichever way it went.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Development</span><span class="d">Competitive analysis into UI design for a React film-discovery app: search, genre filtering, bookmarking.</span></div>
@@ -190,7 +174,26 @@
       </div>
       <div class="cs-body">
         <p>Every case study leads with the problem and spends most of its length on the decisions, with the final screens arriving last and briefly. The explorations that were abandoned get as much room as the one that shipped, which is the only honest way to show a decision was made rather than stumbled into.</p>
+        <p>The A/B Testing study is the clearest case. Two booking flows, three hypotheses written before the data came in, and a t-test and a chi-squared test that decide them. The finished screens are on it twice, near the top; everything after that is the reasoning.</p>
       </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam framed cam-strip" style="--travel:92.92%;--dur:46s">
+          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+          <div class="win">
+            <img src="../../assets/plate/uxfolio-abtesting-full.webp" alt="The A/B Testing case study scrolled from top to bottom" loading="lazy">
+          </div>
+        </div>
+        <figcaption class="cs-caption">One study, top to bottom. The two versions are the first fifth of it. The rest is hypotheses, test statistics and what the numbers actually let you claim.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam framed cam-strip" style="--travel:94.32%;--dur:52s">
+          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+          <div class="win">
+            <img src="../../assets/plate/uxfolio-fondawallet-full.webp" alt="The Fonda Wallet case study scrolled from top to bottom" loading="lazy">
+          </div>
+        </div>
+        <figcaption class="cs-caption">Fonda Wallet, top to bottom: sketches, the wireframes that came out of a critique, the style guide, and the built screens last.</figcaption>
+      </figure>
       </div>
 
       <div class="cs-sub" id="build">
@@ -201,13 +204,13 @@
         <p>This site does the same thing for the same reason, with Python instead of Node and considerably more generated. That is not a coincidence, it is this project's idea kept.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam framed cam-clip">
+        <div class="cs-media cam framed cam-clip" style="--wx:110.4px;--wy:42.0px;--ww:578.2px;--wh:333.0px;--bar:24.0px">
           <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
           <div class="win">
-            <video src="../../assets/video/uxfolio-loader-transition.mp4" poster="../../assets/video/uxfolio-loader-transition-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The loading sequence, then a page transition into a case study"></video>
+            <video src="../../assets/video/uxfolio-about-panel.mp4" poster="../../assets/video/uxfolio-about-panel-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The About panel opening over the home page and closing again"></video>
           </div>
         </div>
-        <figcaption class="cs-caption">The navy screen is a designed loader. It is also what made every headless capture of this site come back as a flat rectangle.</figcaption>
+        <figcaption class="cs-caption">The about card is one of the pieces that lives once in the partials folder, which is what lets it open over any page rather than being copied into five of them.</figcaption>
       </figure>
       </div>
 

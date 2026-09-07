@@ -64,6 +64,15 @@ FADE_MS = 320
 HOLD_MS = 900           # every state, regardless of what the recorder chose
 HOLD_FIRST_MS = 1500    # the opening state gets longer: it is the establishing shot
 
+# Built from real screen recordings by gen/screencaps.py instead, and skipped here
+# so a re-run cannot quietly replace 60fps of an actual run with a dissolve between
+# four screenshots of one. Everything below about what this material is worth is
+# still true of the material that is still here.
+RECORDED = {
+    "stardew-junimo-kart", "stardew-fishing", "stardew-prairie-king",
+    "stardew-junimo-jamboree", "stardew-gift-lookup",
+}
+
 # The clips whose subject is motion. A one-frame-per-second capture cannot show it.
 NEEDS_MOTION = {
     "stardew-junimo-kart", "stardew-prairie-king", "stardew-junimo-jamboree",
@@ -201,7 +210,8 @@ def main():
         print("  no %s; nothing to build" % SRC)
         return
     index = {}
-    names = sorted(f[:-4] for f in os.listdir(SRC) if f.endswith(".gif"))
+    names = sorted(f[:-4] for f in os.listdir(SRC)
+                   if f.endswith(".gif") and f[:-4] not in RECORDED)
     for name in names:
         t = TUNING.get(name, {})
         frames = states(os.path.join(SRC, name + ".gif"))

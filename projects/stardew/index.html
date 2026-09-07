@@ -10,12 +10,8 @@
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<!-- The type is served from this origin now, so there is no third party to open a
-     connection to. The two faces every one of these pages sets before anything else
-     are named here: discovered in the stylesheet they queue behind it, and a case
-     study is a wall of text whose first paint is the title and the opening paragraph. -->
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -65,8 +61,7 @@
 <nav class="cs-nav">
     <a href="#overview">Overview</a>
     <a href="#context">Context</a>
-    <a href="#how">How it works</a>
-    <a class="sub" href="#data">Facts and assets</a>
+    <a href="#data">How it works</a>
     <a href="#arcade">The arcade</a>
     <a class="sub" href="#rhythm">The rhythm game</a>
     <a href="#taught">What it taught me</a>
@@ -127,7 +122,7 @@
         <div class="cs-meta">
           <div class="col"><span class="lbl">Role</span><span class="val">Everything</span></div>
           <div class="col"><span class="lbl">Stack</span><span class="val">HTML, CSS, vanilla JS,<br>canvas, Web Audio</span></div>
-          <div class="col"><span class="lbl">Year</span><span class="val">2024</span></div>
+          <div class="col"><span class="lbl">Year</span><span class="val">2026</span></div>
           <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know!</a></span></div>
         </div>
         </div>
@@ -144,107 +139,70 @@
         <p>So the whole design brief was: one page, no navigation, answer that question in under three seconds.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam framed cam-clip">
+        <div class="cs-media cam framed cam-clip" style="--wx:60.9px;--wy:42.0px;--ww:677.3px;--wh:333.0px;--bar:24.0px">
           <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
           <div class="win">
-            <video src="../../assets/video/stardew-gift-lookup.mp4" poster="../../assets/video/stardew-gift-lookup-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Searching a villager and opening their gift card"></video>
+            <video src="../../assets/video/stardew-full-scroll.mp4" poster="../../assets/video/stardew-full-scroll-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The whole page scrolled from the title down through locations, the town map, the villagers and the arcade"></video>
           </div>
         </div>
-        <figcaption class="cs-caption">Type a name, open the card, read the two lists. This is the question the wiki answers in four clicks and a lot of scrolling.</figcaption>
+        <figcaption class="cs-caption">One page, no navigation. Every section of it, top to bottom, at about one and a half times real speed. It is the only claim in the brief that a picture can actually settle.</figcaption>
       </figure>
       <figure class="cs-figure">
-        <div class="cs-media cam framed cam-deal" style="--dur:14s;--n:3">
+        <div class="cs-media cam framed cam-clip" style="--wx:60.9px;--wy:42.0px;--ww:677.3px;--wh:333.0px;--bar:24.0px">
           <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
           <div class="win">
-            <img style="--i:0" src="../../assets/plate/stardew-didyouknow-1.webp" alt="The Did You Know card, showing three different facts" loading="lazy">
-            <img style="--i:1" src="../../assets/plate/stardew-didyouknow-2.webp" alt="" aria-hidden="true" loading="lazy">
-            <img style="--i:2" src="../../assets/plate/stardew-didyouknow-3.webp" alt="" aria-hidden="true" loading="lazy">
+            <video src="../../assets/video/stardew-locations.mp4" poster="../../assets/video/stardew-locations-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Clicking a building in the locations grid, reading its popup, and closing it again"></video>
           </div>
         </div>
-        <figcaption class="cs-caption">What replaced a contact form that went nowhere. A fan guide does not need a get in touch box; it needs one more thing worth knowing.</figcaption>
+        <figcaption class="cs-caption">Click a building, read what it is for, close it, and you are back where you were. The whole interaction is one layer deep on purpose: this gets used with the game paused, and anything that navigates costs you your place.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam framed cam-clip" style="--wx:87.6px;--wy:42.0px;--ww:623.8px;--wh:333.0px;--bar:24.0px">
+          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+          <div class="win">
+            <video src="../../assets/video/stardew-gift-lookup.mp4" poster="../../assets/video/stardew-gift-lookup-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Opening a villager card, browsing the whole gift list, then filtering it to one item"></video>
+          </div>
+        </div>
+        <figcaption class="cs-caption">Pick a face, read the two lists, and if you already know what is in your bag, type it: the picker filters to that item and tells you which list it lands in. The wiki answers this in four clicks and a lot of scrolling.</figcaption>
       </figure>
     </section>
 
-    <div class="cs-group">
-
-      <div class="cs-sub" id="how">
+    <section id="data" class="cs-section">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">How it works</span></div>
-        <h2 class="cs-h2">Borrowing a visual language without stealing assets</h2>
-      </div>
-      <div class="cs-body">
-        <p>The thing that makes it feel like the game is not any single asset. It is the palette, the chunky border radii, the drop shadows on the panels and the specific weight of the type. Get those right and hand-drawn elements read as belonging; get them wrong and a real asset still looks pasted in.</p>
-        <p>No build step is a constraint I set on purpose. A fan guide that needs npm install to change a gift list is a fan guide that stops being updated.</p>
-      </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam framed cam-strip" style="--travel:63.99%;--dur:17s">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <img src="../../assets/plate/stardew-locations-both-tiers.webp" alt="The six main buildings as full boxes, the smaller spots as an icon row beneath" loading="lazy">
-          </div>
-        </div>
-        <figcaption class="cs-caption">Both tiers in one frame, which is the only way the tiering reads as a decision rather than as inconsistency.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-media cam framed cam-strip" style="--travel:39.39%;--dur:17s">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <img src="../../assets/plate/stardew-explore-valley-popup.webp" alt="The Explore the Valley popup, scrolled through its full height" loading="lazy">
-          </div>
-        </div>
-        <figcaption class="cs-caption">The outdoor areas are one long scrollable panel rather than a box each, because they are places to wander through rather than buildings to visit.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-media cam framed cam-strip" style="--travel:25.98%;--dur:17s">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <img src="../../assets/plate/stardew-location-popup-saloon.webp" alt="The Saloon popup, scrolled through its full height" loading="lazy">
-          </div>
-        </div>
-        <figcaption class="cs-caption">One of the six full-box buildings, given the same treatment as the others: hours, what's inside, who you'll find there.</figcaption>
-      </figure>
-      </div>
-
-      <div class="cs-sub" id="data">
         <h2 class="cs-h2">Facts, sprites and code are not the same thing</h2>
+      </div>
       <div class="cs-body">
         <p>The gift lists are game data, so a one-time Node script parsed them out of a mirrored fan site rather than my typing 34 characters' worth of preferences by hand. Portraits, item icons and location photos come from the same source and the official wiki, used the way a fan guide typically uses them.</p>
         <p>Game code is a different category, and the arcade below draws the line in both directions. Prairie King's shooter logic is an original recreation, because the original is somebody's work in a way a gift list is not. The fishing catch-bar, on the other hand, is a deliberate port of a specific open reference implementation at its own constants, because approximating it did not feel right and matching it exactly was the entire point.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam framed cam-strip" style="--travel:62.72%;--dur:17s">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <img src="../../assets/plate/stardew-villagers-grid.webp" alt="All 34 villager portraits" loading="lazy">
+        <div class="cs-media cam cam-ann" style="--annw:452.0px;--annh:248.0px;--anny:71.5px;--bar:22.0px;--n:5" data-i="0">
+          <div class="ann-shot framed">
+            <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+            <div class="win"><img src="../../assets/plate/stardew-villager-abigail.webp" alt="A villager card: a bracketed portrait, a name plate, a birthday, four lines of biography, a gift search and two lists of gifts" loading="lazy"></div>
+            <span class="ann-ring" data-i="0" aria-hidden="true" style="--rx:18.9px;--ry:44.8px;--rw:101.3px;--rh:114.0px"></span>
+            <span class="ann-ring" data-i="1" aria-hidden="true" style="--rx:44.0px;--ry:156.2px;--rw:49.9px;--rh:38.2px"></span>
+            <span class="ann-ring" data-i="2" aria-hidden="true" style="--rx:129.6px;--ry:31.5px;--rw:305.1px;--rh:83.8px"></span>
+            <span class="ann-ring" data-i="3" aria-hidden="true" style="--rx:199.7px;--ry:123.3px;--rw:152.2px;--rh:19.1px"></span>
+            <span class="ann-ring" data-i="4" aria-hidden="true" style="--rx:129.6px;--ry:150.6px;--rw:301.2px;--rh:82.2px"></span>
           </div>
+          <ul class="ann-list">
+            <li class="ann-item is-on" data-i="0" tabindex="0"><span class="ann-dot" aria-hidden="true"></span><b>portrait and name plate</b><p>The game’s own art in a bracketed frame, over a wooden sign. Every label in the game is a sign; nothing here is a default input.</p></li>
+            <li class="ann-item" data-i="1" tabindex="0"><span class="ann-dot" aria-hidden="true"></span><b>season and day</b><p>Worth its own block: a gift on somebody’s birthday is worth eight times the same gift on any other day.</p></li>
+            <li class="ann-item" data-i="2" tabindex="0"><span class="ann-dot" aria-hidden="true"></span><b>four written lines</b><p>The gift lists are parsed game data. The biography is not. It is the one part of the card somebody had to write.</p></li>
+            <li class="ann-item" data-i="3" tabindex="0"><span class="ann-dot" aria-hidden="true"></span><b>search the gifts</b><p>Type what is in your bag rather than reading two lists to find out whether it is in either.</p></li>
+            <li class="ann-item" data-i="4" tabindex="0"><span class="ann-dot" aria-hidden="true"></span><b>loved and liked gifts</b><p>The question the whole page exists to answer, in two lists: what this character loves, and what they merely like. Parsed once from game data rather than typed out thirty-four times.</p></li>
+          </ul>
         </div>
-        <figcaption class="cs-caption">Thirty-four of them. A number in a sentence is an assertion, and this is why the gift lists were parsed once rather than typed out.</figcaption>
+        <figcaption class="cs-caption">Five decisions on one card, and the pastiche is the sum of them rather than any one. Read down the list; the ring follows.</figcaption>
       </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Facts are facts</span><span class="d">What a character likes is not authored; it is looked up. Scraping it once beats retyping it 34 times.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Sprites are borrowed, and credited</span><span class="d">Non-commercial fan use, the same footing as any fan wiki, and named as such.</span></div>
         <div class="cs-rule"><span class="n">03</span><span class="t">Logic is written, or ported on purpose</span><span class="d">Recreated where it belongs to someone, ported exactly where the reference is open and the fidelity IS the feature.</span></div>
       </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:1157px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:64.3px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-321.6px;--y1:-246.5px;--k1:0.5510">
-          <div class="view">
-            <div class="plate">
-              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-              <div class="shots">
-                <img style="--i:0" src="../../assets/plate/stardew-villager-abigail.webp" alt="A villager card: bracketed portrait, birthday, biography, loved and liked gifts" loading="lazy">
-              </div>
-            </div>
-          </div>
-          <div class="call" style="--cx:613.0px;--cy:183.2px;--cw:166px">
-            <div class="call-row"><span class="call-line"></span><span class="call-note">the game's own heart</span></div>
-            <p class="call-desc">A friendship sprite lifted from the game, not an emoji standing in for one.</p>
-          </div>
-        </div>
-        <figcaption class="cs-caption">The hearts beside Loves and Likes are the game's own friendship sprites rather than emoji, which is the sort of detail the whole pastiche rests on.</figcaption>
-      </figure>
-      </div>
-
-    </div>
+    </section>
 
     <div class="cs-group">
 
@@ -258,21 +216,23 @@
         <p>They are also the reason the page does not cost anything while you are reading it. All four pause their render loop through an IntersectionObserver the moment they scroll out of view, and the rhythm game suspends its audio context at the same instant, so closing the modal actually stops the music rather than leaving it playing under everything else.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:555px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:132.6px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-150.2px;--y1:83.1px;--k1:0.4051">
-          <div class="view">
-            <div class="plate">
-              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-              <div class="shots">
-                <img style="--i:0" src="../../assets/plate/stardew-arcade-row.webp" alt="Four arcade cabinets side by side" loading="lazy">
-              </div>
-            </div>
+        <div class="cs-media cam cab" data-i="0" style="--wx:67.4px;--wy:18.0px;--ww:664.1px;--wh:335.0px;--bar:32px">
+          <div class="cab-bar" role="tablist" aria-label="Arcade cabinets">
+            <span class="cab-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <button class="cab-tab is-on" type="button" role="tab" data-i="0" aria-selected="true" data-note="A runner. Score and lives in the corner, and a best that survives a reload.">Junimo Kart</button>
+            <button class="cab-tab" type="button" role="tab" data-i="1" aria-selected="false" data-note="Cast, bite, catch bar, fish. The bar is a deliberate port; the rest is not.">Fishing</button>
+            <button class="cab-tab" type="button" role="tab" data-i="2" aria-selected="false" data-note="A top-down shooter over five waves. Written rather than ported, because the original is somebody’s work in a way a gift list is not.">Prairie King</button>
+            <button class="cab-tab" type="button" role="tab" data-i="3" aria-selected="false" data-note="Four lanes, three difficulties, and a song that does not exist as a file.">Junimo Jamboree</button>
           </div>
-          <div class="call" style="--cx:613.0px;--cy:211.8px;--cw:166px">
-            <div class="call-row"><span class="call-line"></span><span class="call-note">four cabinets</span></div>
-            <p class="call-desc">One canvas each, one loop each, and no engine under any of them.</p>
+          <div class="cab-win">
+            <video data-i="0" src="../../assets/video/stardew-junimo-kart.mp4" poster="../../assets/video/stardew-junimo-kart-poster.jpg" muted loop playsinline preload="metadata" autoplay aria-label="Junimo Kart: the start screen, a run over the spikes and gaps, and the game over it resets from"></video>
+            <video data-i="1" src="../../assets/video/stardew-fishing.mp4" poster="../../assets/video/stardew-fishing-poster.jpg" muted loop playsinline preload="none" aria-label="Casting, the bite, the catch bar, and the fish landed"></video>
+            <video data-i="2" src="../../assets/video/stardew-prairie-king.mp4" poster="../../assets/video/stardew-prairie-king-poster.jpg" muted loop playsinline preload="none" aria-label="Journey of the Prairie King: the title, then moving and shooting through the first wave"></video>
+            <video data-i="3" src="../../assets/video/stardew-junimo-jamboree.mp4" poster="../../assets/video/stardew-junimo-jamboree-poster.jpg" muted loop playsinline preload="none" aria-label="Junimo Jamboree: picking a difficulty, then notes falling in four lanes with the judgment under them"></video>
           </div>
+          <p class="cab-note">A runner. Score and lives in the corner, and a best that survives a reload.</p>
         </div>
-        <figcaption class="cs-caption">Junimo Kart, Fishing, Prairie King and Junimo Jamboree. Each is a plain canvas with its own loop and no engine under it.</figcaption>
+        <figcaption class="cs-caption">Four cabinets, one frame, four tabs. They are alternatives rather than a sequence, and stacking them down the page said the opposite, because you had to scroll past three to reach the fourth. Each is a plain canvas with its own loop and no engine under it.</figcaption>
       </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Junimo Kart</span><span class="d">A runner. Jump the spikes and the gaps, collect stars, and beat a best score that survives a reload.</span></div>
@@ -280,24 +240,6 @@
         <div class="cs-rule"><span class="n">03</span><span class="t">Journey of the Prairie King</span><span class="d">A top-down shooter over five waves. Arrows or WASD to move, hold space to fire.</span></div>
         <div class="cs-rule"><span class="n">04</span><span class="t">Junimo Jamboree</span><span class="d">A four-lane rhythm game at three difficulties, with a song that does not exist as a file.</span></div>
       </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam framed cam-clip">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <video src="../../assets/video/stardew-junimo-kart.mp4" poster="../../assets/video/stardew-junimo-kart-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Junimo Kart: the start line, a cleared gap, a spike hit, and the score screen"></video>
-          </div>
-        </div>
-        <figcaption class="cs-caption">Start, a cleared jump, a spike taken wrong, the score screen it resets from. Four states standing in for the run until this one gets a real recording.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-media cam framed cam-clip">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <video src="../../assets/video/stardew-prairie-king.mp4" poster="../../assets/video/stardew-prairie-king-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Journey of the Prairie King: spawn, a wave cleared, a hit taken, the wave counter climbing"></video>
-          </div>
-        </div>
-        <figcaption class="cs-caption">Five waves as five stills. The counter and the health both move considerably faster than this in the actual game.</figcaption>
-      </figure>
       </div>
 
       <div class="cs-sub" id="rhythm">
@@ -308,22 +250,10 @@
         <p>Difficulty changes note density and timing windows. It does not change the song.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam framed cam-strip" style="--travel:36.64%;--dur:17s">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <img src="../../assets/plate/stardew-jamboree-difficulty.webp" alt="The difficulty select, with a best score kept per difficulty" loading="lazy">
-          </div>
+        <div class="cs-media cs-diagram">
+          <img class="cs-flat" src="../../assets/case/cs-sdv-chart.svg" alt="One generated chart at the top, with the falling notes and the oscillators drawn under it, both firing on the same sixteen marks" loading="lazy">
         </div>
-        <figcaption class="cs-caption">Three difficulties over one generated song. What changes is note density and the timing windows, not the music.</figcaption>
-      </figure>
-      <figure class="cs-figure">
-        <div class="cs-media cam framed cam-clip">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <video src="../../assets/video/stardew-junimo-jamboree.mp4" poster="../../assets/video/stardew-junimo-jamboree-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Junimo Jamboree: difficulty select, notes falling in the four lanes, a cleared song"></video>
-          </div>
-        </div>
-        <figcaption class="cs-caption">Difficulty select, notes falling, a cleared song: three states where the actual note timing belongs once there's a real capture of it.</figcaption>
+        <figcaption class="cs-caption">The half of this a screenshot can show is the notes falling. The other half is that the same sixteen marks are what schedules the sound, in one pass at load, so the beatmap and the music cannot drift apart, because there is nothing to drift.</figcaption>
       </figure>
       </div>
 
@@ -340,13 +270,21 @@
         <p>The other one was structural. The popups rendered off-screen for a day because the page's parallax puts a perspective on the main element, which quietly makes it the containing block for any fixed-position child instead of the viewport. The modals had to live outside it in the DOM. Nothing about the symptom pointed at the cause.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam framed cam-clip">
-          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-          <div class="win">
-            <video src="../../assets/video/stardew-fishing.mp4" poster="../../assets/video/stardew-fishing-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The cast, the bite, and the catch bar"></video>
+        <div class="cs-media cam cam-tick" style="--ratio:1.2000">
+          <div class="tick-lane fast">
+            <span class="tick-cap">once per animation frame<i>60Hz</i></span>
+            <span class="tick-track"><b class="tick-fill"></b><i class="tick-fish"></i></span>
           </div>
+          <div class="tick-lane slow">
+            <span class="tick-cap">every 20ms<i>50Hz</i></span>
+            <span class="tick-track"><b class="tick-fill"></b><i class="tick-fish"></i></span>
+          </div>
+          <span class="tick-line" aria-hidden="true"></span>
+          <span class="tick-gap">+20%</span>
+          <button class="tick-go" type="button">Run it again</button>
+          <p class="tick-note">The fix was not a better constant. It was running the loop at the rate the original used.</p>
         </div>
-        <figcaption class="cs-caption">The catch bar is the ported one, and the thing that ran about 20 per cent fast until its physics moved to the tick rate the original used.</figcaption>
+        <figcaption class="cs-caption">The same physics, stepped two ways. Both leave together; the one stepped once per frame arrives a fifth early, and every constant I then re-tuned by feel took it further from the thing I was trying to match.</figcaption>
       </figure>
     </section>
 

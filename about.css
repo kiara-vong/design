@@ -1,7 +1,7 @@
 /* ================= ABOUT (Figma 681:1009) ================= */
 /* Authored at 1440x1386 and scaled to fit, like every other page here. */
 /* The page is 1440 wide and centred, so on anything wider the surround shows down
-   both gutters — it used to be a flat orange left over from the old ground. It now
+   both gutters: it used to be a flat orange left over from the old ground. It now
    tracks the ground's own edge tone band by band (sampled from about-bg.webp), then
    hard-stops at 75.00% to the tone the footer's painting sits at once its scrim
    is applied, which is exactly where the canvas ends
@@ -23,27 +23,27 @@ body{overflow-x:hidden}
    ground beneath the last entry that the design has. */
 .ab-canvas{position:relative;width:1440px;height:1214.73px;overflow:hidden;
   /* The content is 1326 wide and drawn at .8, so it renders 1060.8. The 265px it
-     gives up is split evenly rather than dumped on the right — the design's gutters
+     gives up is split evenly rather than dumped on the right: the design's gutters
      are 57 and 57, and the page has to stay symmetric even at a smaller scale. */
   --ab-inset:189.6px}
-/* 4320x4158 — a 3x asset for a 1440 box, so it stays sharp on 2x and 3x screens
+/* 4320x4158: a 3x asset for a 1440 box, so it stays sharp on 2x and 3x screens
    alike. Shipping it at 1x was the original blur: the browser was upscaling to
    device pixels and smearing the very grain the effect provides.
 
    fill, NOT cover. The canvas is 1126 tall while the ground's own ratio wants
-   1386, so cover was cropping 130px off each end — taking the deepest orange at
+   1386, so cover was cropping 130px off each end, taking the deepest orange at
    the bottom and the palest top with it and leaving the flat middle, which is why
    the page read brighter and lower in contrast than the design. Filling keeps the
    whole tonal range; the vertical squash is carried by soft, blurred forms.
 
    The ground is image 59 from node 659:445, exported at 4x (5760x4640) with the
-   texture effect baked in — checked against a render of the whole frame, where the
+   texture effect baked in, checked against a render of the whole frame, where the
    gutters agree to ~1.2/255, so nothing that Figma layers on top is missing. It is
    pre-squashed to 4x the canvas box so the browser only ever does a clean 4:1
    downscale. Filling rather than covering again: fill reproduces the frame's tone
    exactly (122.3/86.3/50.6 both), cover crops to 119.9/80.1/42.3. */
 /* A 44x37 copy of the ground, inlined, sitting behind the real one. The full
-   image is 1.7MB — on anything but a fast connection the page used to arrive as
+   image is 1.7MB, on anything but a fast connection the page used to arrive as
    flat brown and then change colour under the reader, which is most of what made
    the arrival feel erratic. This costs one KB, travels with the HTML, and holds
    the right composition and tone until the real ground paints over it. Sized the
@@ -53,14 +53,14 @@ body{overflow-x:hidden}
   filter:brightness(.88) saturate(1.06);
   background:url('data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAQCACdASosACUAPpU6m0kloyKhKrqsALASiWMAwRAiAWqlRKcvl1rmBfTqfHdhVUhg6RfT2mpJsGpOvK+iMF71q+d4+2yTVckAAPxvuHF93SbzguCn4J4BWYTZaRMt9ftbYko7iAlxO1EspXjxrhi0cemLtEwZ3XZQ7a5kGmxN6D8xp0na+8BO5rMmDBcb54tgbljR7RQ02zwYIDjj+g2iXWGnwiy5emcrtdlIdnVDgJEFKKJsyru+IzZ1IUKwXAAAAA==') center/100% 100% no-repeat,#7A5633}
 
-/* Back to the index. Chrome in the left gutter, like the case study's — clear of
+/* Back to the index. Chrome in the left gutter, like the case study's, clear of
    the content column rather than aligned to its edge.
 
    Horizontally that is the case study's own position: .cs-back is a 24-unit
    viewBox drawn at 28px from x=33, putting its glyph's left edge at 38.83, and
    left:32 lands this 32-unit asset's glyph at 38.67. The two pages agree.
 
-   Vertically it is the case study's position too — glyph centre y=45 on both pages.
+   Vertically it is the case study's position too, glyph centre y=45 on both pages.
    The title comes up to meet it rather than the arrow going down: .ab-page's top
    margin is set so the h1's cap band starts level with the arrow's glyph, which
    also lands About's first visible content at the same height as the case study's
@@ -76,7 +76,7 @@ body{overflow-x:hidden}
 
 /* Frame 129 at (57,43), 1326 wide */
 /* Everything inside is dialled back 20%. Scaling from the block's own top-left
-   means the 57/43 page padding is untouched — only the content and its internal
+   means the 57/43 page padding is untouched, only the content and its internal
    spacing shrink, which is what "keep the padding the same" asks for. */
 .ab-page{position:absolute;left:var(--ab-inset);top:51.33px;width:1326px;
   transform:scale(.8);transform-origin:top left}
@@ -84,7 +84,7 @@ body{overflow-x:hidden}
    inside .ab-page, which is scaled to .8, so the Figma's 80 was arriving on screen at
    64 while the index's name and Library's title both arrived at 80. The declared
    number is the odd one here precisely so the rendered one is not. */
-.ab-hello{font-family:'Giverny';font-weight:500;font-style:italic;font-size:100px;
+.ab-hello{font-family:'Kyoto';font-weight:500;font-style:italic;font-size:100px;
   line-height:1.3;color:var(--parchment);margin:0}
 /* Frame 71: the two columns, 622.5 and 616 with a 81px gutter (703.5 - 622.5) */
 .ab-cols{position:relative;margin-top:24px;width:1326px}
@@ -92,7 +92,7 @@ body{overflow-x:hidden}
 .ab-right{position:absolute;left:703.5px;top:0;width:616px}
 
 /* ----- left: intro, rule, and the history ----- */
-.ab-intro{font-family:'Clover';font-weight:400;font-size:22px;line-height:1.6;
+.ab-intro{font-family:'Diatype';font-weight:400;font-size:22px;line-height:1.6;
   color:var(--parchment);margin:0;width:622.5px}
 .ab-intro b{font-weight:700;color:var(--new-leaf-green)}
 .ab-rule{position:absolute;left:0;top:266px;width:622.5px;height:1px;
@@ -104,29 +104,29 @@ body{overflow-x:hidden}
 .ab-job{position:absolute;left:0;width:622.5px;display:flex;gap:42px;align-items:flex-start;
   top:calc(308px + var(--i) * 157px)}
 .ab-job-main{flex:1 0 0;min-width:0;display:flex;flex-direction:column;gap:4px}
-.ab-role{font-family:'Laurel';font-weight:700;font-size:26px;line-height:1.3;
+.ab-role{font-family:'Mackinac';font-weight:700;font-size:26px;line-height:1.3;
   color:var(--parchment);white-space:nowrap;margin:0}
 .ab-role .at{color:var(--butter)}
 /* 18 rather than the design's 16. The hard line breaks are gone with it: they
    were the positions a 16px line happened to end at, so at 18px they broke mid
    thought and left ragged short lines. The column wraps them itself now. */
-.ab-desc{font-family:'Clover';font-weight:400;font-size:22px;line-height:1.5;
+.ab-desc{font-family:'Diatype';font-weight:400;font-size:22px;line-height:1.5;
   color:var(--butter);margin:0}
-/* Both boxes start at y=0, as they do in Figma — but the role is 24px on 31.2 and
+/* Both boxes start at y=0, as they do in Figma, but the role is 24px on 31.2 and
    the date is 16px on normal, so equal box tops put the date's cap 2.45px above the
    role's and it read as floating. Nudged by 3.06 at design scale (2.45 / .8) so the
    two cap lines meet. */
-.ab-when{flex:none;font-family:'Thistle';font-weight:500;font-size:16px;
+.ab-when{flex:none;font-family:'ApercuMonoPro';font-weight:500;font-size:16px;
   line-height:normal;color:var(--parchment);white-space:nowrap;margin:3.06px 0 0}
 
 /* ----- right: the moonlight list ----- */
-.ab-moon{font-family:'Clover';font-weight:400;font-size:22px;line-height:1.5;
+.ab-moon{font-family:'Diatype';font-weight:400;font-size:22px;line-height:1.5;
   color:var(--parchment);margin:0;width:616px}
 /* The green links, with the same sweep every other link on the site has: the rule
    retracts to the right, then redraws from the left.
 
    Drawn as a background gradient rather than the ::after the others use, because
-   these wrap — "fledgling ikebana florist" breaks across two lines — and an
+   these wrap, "fledgling ikebana florist" breaks across two lines, and an
    ::after renders once, on the last line box only. A background paints on every
    line box and can still be animated, via size and position rather than scaleX.
    The colour does not change on hover; only the rule moves. */
@@ -136,7 +136,7 @@ body{overflow-x:hidden}
   background-position:0 100%}
 /* The sweep reads as two moves, so it carries two easings. Declaring one on the
    shorthand applied it to every segment, which decelerated into the midpoint, sat
-   there, then accelerated out — the stop-start that read as jitter. The rule now
+   there, then accelerated out: the stop-start that read as jitter. The rule now
    accelerates as it retracts and decelerates as it returns, and the invisible
    midpoint (width 0, anchor jumping right to left) is stepped rather than
    interpolated so nothing is animated while there is nothing to see. */
@@ -158,9 +158,9 @@ body{overflow-x:hidden}
 /* the rotated aside. Figma reports only a rotated bounding box (222.8x71.3 for two
    16px lines), so the angle is solved from it rather than given: ~ -7.5deg.
 
-   Figma's y of 88 puts its rotated box 15px INTO the moonlight paragraph — the
+   Figma's y of 88 puts its rotated box 15px INTO the moonlight paragraph, the
    rotation drops its lower-left corner onto the first line. Lifted to 60.25, which
-   clears the paragraph by 7px — enough to sit off the text, close enough to still
+   clears the paragraph by 7px, enough to sit off the text, close enough to still
    read as a note about it. It has no horizontal overlap with the heading
    (the aside starts at x 879, "Hello world!" ends near 451), so the room is free.
 
@@ -168,7 +168,7 @@ body{overflow-x:hidden}
    20px on screen, because this block sits inside .ab-page at a scale of 0.8 -- so
    every nudge here is asked for in screen pixels and written down at 1.25x. */
 .ab-aside{position:absolute;left:879px;top:85.25px;width:220px;
-  font-family:'Thistle';font-weight:400;font-size:17px;line-height:1.4;
+  font-family:'ApercuMono';font-weight:400;font-size:17px;line-height:1.4;
   color:var(--nougat);text-align:center;margin:0;transform:rotate(-7.5deg)}
 
 /* ----- the illustration well ----- */
@@ -178,7 +178,7 @@ body{overflow-x:hidden}
    12.5 it used to carry was a guess at centring it in the 616 column, and every
    illustration coordinate was quietly written against that mistake. */
 .ab-well{position:absolute;left:0;top:269px;width:591px;height:497px}
-/* The page ends on a dark photograph and the footer starts on #E2F085 — 49 points
+/* The page ends on a dark photograph and the footer starts on #E2F085, 49 points
    of L* in one line, which is what read as abrupt. Rather than dull the footer, the
    last 170px of ground lift toward its hue, so the two surfaces meet instead of
    colliding. The footer keeps the colour the design specifies. */
@@ -205,7 +205,7 @@ body{overflow-x:hidden}
 .ab-page,.ab-back{z-index:2}
 
 /* Figma 696:1404, measured off the node's own render rather than read off a class
-   name: 1px, radius 24, outline-stroke — and a dash of 11.8 on a gap of 11.8, a
+   name: 1px, radius 24, outline-stroke, and a dash of 11.8 on a gap of 11.8, a
    period of 23.6. border-style:dashed cannot say any of that; it draws whatever
    pattern the engine likes, which here was roughly 3 on 3 and read as a much finer
    rule than the design's. So it is a real stroke on a real path.
@@ -220,9 +220,9 @@ body{overflow-x:hidden}
 .ab-rest img{position:absolute;left:236.49px;top:146px;width:120px;height:110.75px}
 /* 20 rather than the design's 24 */
 .ab-hint{position:absolute;left:186px;top:283.74px;width:219px;margin:0;
-  font-family:'Thistle';font-weight:400;font-size:20px;line-height:1.4;
+  font-family:'ApercuMono';font-weight:400;font-size:20px;line-height:1.4;
   color:var(--nougat);text-align:center;white-space:pre-wrap}
-.ab-hint span{font-family:'Clover';font-weight:700;color:var(--new-leaf-green);
+.ab-hint span{font-family:'Monument';font-weight:700;color:var(--new-leaf-green);
   box-shadow:inset 0 -2px 0 0 var(--new-leaf-green)}
 
 /* Each illustration is placed at its own Figma coordinates, converted to be
@@ -231,7 +231,7 @@ body{overflow-x:hidden}
    past both ends, which is how the frames are drawn. */
 /* Every polaroid lands in the same slot, so without this they would read as one
    template shown eight times. Each gets its own angle, and drifts a third of a
-   degree either side of it — the periods are all different and the delays negative,
+   degree either side of it: the periods are all different and the delays negative,
    so no two are ever in step and none of them starts from rest. The pivot is the
    card's own centre (67.5 + 427/2, -12 + 638.4/2) rather than the well's, so it turns
    like a photograph on a wall instead of swinging from the corner. */

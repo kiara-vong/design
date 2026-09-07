@@ -4,18 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Persona Homepage · Kiara Vong</title>
-<meta name="description" content="A homepage serving several kinds of user, each of whom needs a different half of it. I am designing and building the customisation model: what a page ">
+<meta name="description" content="A homepage serving several kinds of user, each of whom needs a different half of it. I picked up a proposal two teammates had shelved, researched how ">
 <meta name="theme-color" content="#649F25">
 <link rel="icon" href="../../assets/ui/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../assets/ui/favicon.svg">
 <!-- Critical: painted before site.css arrives, so a cold load does not flash white. -->
 <style>html{background:#FDFBEF}</style>
-<!-- The type is served from this origin now, so there is no third party to open a
-     connection to. The two faces every one of these pages sets before anything else
-     are named here: discovered in the stylesheet they queue behind it, and a case
-     study is a wall of text whose first paint is the title and the opening paragraph. -->
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/giverny-italic.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="../../assets/fonts/clover-400.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../../site.css">
 <script src="../../site-motion.js"></script>
 <link rel="stylesheet" href="../../case-study.css">
@@ -65,11 +61,16 @@
 <nav class="cs-nav">
     <a href="#overview">Overview</a>
     <a href="#context">Context</a>
+    <a href="#research">Research</a>
     <a href="#decisions">Key decisions</a>
-    <a class="sub" href="#personas">Two, not five</a>
+    <a class="sub" href="#draft">Everything that could go on a page</a>
+    <a class="sub" href="#workshop">A workshop is a decision list</a>
+    <a class="sub" href="#personas">Five became two</a>
     <a class="sub" href="#scope">Scope is the persona</a>
-    <a class="sub" href="#widgets">A catalog you cannot get wrong</a>
     <a class="sub" href="#ship">Shipping it invisibly</a>
+    <a href="#mockups">Mockups</a>
+    <a href="#built">In build</a>
+    <a href="#recreation">The recreation</a>
     <a href="#thinking">Where my head is</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -110,7 +111,7 @@
       <div class="cs-hero">
         <div class="hero-stage">
           <div class="hero-float">
-            <img class="cs-heroimg" src="../../assets/case/cs-persona-reorder.svg" alt="A homepage rearranging itself as the selected persona changes">
+            <img class="cs-heroimg" src="../../assets/case/cs-persona-reorder.svg" alt="The same homepage twice, its five widgets joined by curves showing where each one lands for the other persona">
           </div>
         </div>
       </div>
@@ -120,11 +121,15 @@
           <h1 class="cs-title">Persona Homepage</h1>
         </div>
         <div class="cs-headgroup">
-        <p class="cs-intro">A homepage serving several kinds of user, each of whom needs a different half of it. I am designing and building the customisation model: what a page opens as when it knows who is looking, what it lets you move, and where the line is between a layout somebody owns and a layout nobody can support. In progress, shipping behind a flag this quarter.</p>
+        <p class="cs-intro">A homepage serving several kinds of user, each of whom needs a different half of it. I picked up a proposal two teammates had shelved, researched how three other products had solved it, drew five personas, ran the workshop that cut them to two, and am now building the model, the API and the interface. This is the whole arc, in the order it happened.</p>
+        <div class="cs-cta">
+          <a href="https://github.com/kiara-vong/persona-homepage" target="_blank" rel="noopener"><span>Open the recreation</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg></a>
+          <span class="cs-cta-url">A public rebuild of the page, running entirely on invented data</span>
+        </div>
         <div class="cs-meta">
-          <div class="col"><span class="lbl">Role</span><span class="val">Design engineer,<br>API and interface</span></div>
+          <div class="col"><span class="lbl">Role</span><span class="val">Design engineer,<br>research through build</span></div>
           <div class="col"><span class="lbl">Stack</span><span class="val">React, TypeScript,<br>GraphQL</span></div>
-          <div class="col"><span class="lbl">Scope</span><span class="val">Research, personas,<br>widget model, build</span></div>
+          <div class="col"><span class="lbl">Scope</span><span class="val">Research, wireframes,<br>workshop, build</span></div>
           <div class="col"><span class="lbl">Status</span><span class="val">In build behind<br>a feature flag</span></div>
           <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know!</a></span></div>
         </div>
@@ -135,14 +140,141 @@
     <section id="context" class="cs-section">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Context</span></div>
-        <h2 class="cs-h2">One homepage, several jobs</h2>
+        <h2 class="cs-h2">A landing page nobody landed on</h2>
       </div>
       <div class="cs-body">
-        <p>The people arriving at this page do not want the same things. Some own one application and want the shortest path to what it needs today. Some run a division and want the shape of all of it. Today they get the same page, tuned for the first group, so everyone else lands and immediately starts filtering.</p>
-        <p>The obvious answer is to let people customise it. The obvious answer is also how you end up with a page most users never touch and a small minority configure into something nobody can support.</p>
+        <p>The people arriving at this page do not want the same things. Some own one application and want the shortest path to what it needs today. Some run a division and want the shape of all of it. They all got the same mostly-empty page, so everyone landed and immediately started filtering.</p>
+        <p>Two teammates had already written a proposal for it: configurable widget slots you pick from a dropdown, a tabbed nav in place of the dropdown menu, saved against your user id. It was shelved before it was fleshed out. Picking it up meant saying what it was missing, and I think the answer is this: it personalised by WHO you are, and the thing that actually predicts what you need is what you are responsible for.</p>
+        <p>So the direction kept their selection model and added a detected scope underneath it. The page works out what you own, shows you what it worked out, and lets you correct it before anything is saved.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-stage" style="--pw:2200px;--ph:1224px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:130.8px;--y0:46.0px;--k0:0.2443">
+        <div class="cs-media cs-diagram">
+          <img class="cs-flat" src="../../assets/case/cs-persona-flow.svg" alt="The flow from opening the page for the first time to using it daily: detect scope, confirm it, tour, render, customise, save a preset" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">The whole feature in one line. The branch at the front is the part I care about: somebody who has been here before skips every step of the onboarding, because a page that greets you the same way on the fortieth visit is a page that has not been paying attention.</figcaption>
+      </figure>
+    </section>
+
+    <section id="research" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Research</span></div>
+        <h2 class="cs-h2">Three products had already solved half of it</h2>
+      </div>
+      <div class="cs-body">
+        <p>Before designing anything I went and used three products that already do customisable dashboards: two other internal ones and a third-party observability platform. Not for inspiration, but for the list of things that go wrong, which is much harder to get from a blank page than from somebody else’s shipped one.</p>
+        <p>The most useful finding was an anti-pattern. One of the two internal products fetches a rich user profile on load, with the role and the org and the team all in it, and then renders the same layout for everybody. All the signal, none of the branching. That is the failure this project exists to avoid, and it was already sitting there in production to be looked at.</p>
+      </div>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">Borrow</span><span class="d">One catalog source, no fallbacks. An explicit edit mode you opt into. Curated presets plus a personal override. Hiding widgets a user is not entitled to see.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Skip</span><span class="d">Multi-dashboard create-share-clone. A write on every drag. A three-way catalog fallback. A full-page editor route where a side panel would do.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">Open</span><span class="d">Neither internal product has a persona concept at all. If this is right, it is new here, and being first is a reason to be careful rather than a reason to be pleased.</span></div>
+      </div>
+    </section>
+
+    <div id="decisions" class="cs-group">
+
+      <div class="cs-sub" id="draft">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Key decisions</span></div>
+        <h2 class="cs-h2">Everything that could go on a page</h2>
+      </div>
+      <div class="cs-body">
+        <p>The first artefact was not a layout. It was an inventory: every widget the product already had, grouped under the headings the picker would eventually use. Twenty-four of them, six categories, and not one of them new.</p>
+        <p>That constraint was deliberate and it survived the workshop intact. A first release that also invents widgets is a release where you cannot tell whether people dislike the customisation or the new content. Everything here already exists on a page somebody uses today; all this feature does is let them choose which ones and in what order.</p>
+        <p>Five wireframes came out of that list, one each for developer, manager, director, division lead and executive: a different opening hand from the same deck, with the reasoning written in the margin next to every block.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cs-diagram">
+          <img class="cs-flat" src="../../assets/case/cs-persona-catalog.svg" alt="The widget catalog: twenty-four widgets under six headings, from maturity and compliance through to layout primitives" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">The deck every persona is dealt from. Grouping it this way was not documentation. The headings are what the picker is grouped by, so the inventory and the interface are the same list.</figcaption>
+      </figure>
+      </div>
+
+      <div class="cs-sub" id="workshop">
+        <h2 class="cs-h2">A workshop is a decision list, not a meeting</h2>
+      <div class="cs-body">
+        <p>Eight of us, an hour, and a written agenda where every item was a question with its options and the argument for each already laid out. Not slides. The pre-read had the questions; the follow-up doc had the answers, in the same order, so you could see which ones moved.</p>
+        <p>The framing mattered more than the facilitation. “Are these the right five personas?” is a decision somebody can disagree with in one sentence. “Here is my design” is not. It is a thing people nod at and then quietly ignore, and the proposal I inherited had been nodded at once already.</p>
+        <p>It also set what we would NOT decide: no final visual design, no aggregation logic per widget, no production wiring. A workshop that tries to settle everything settles nothing.</p>
+      </div>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">Personas</span><span class="d">How many, detected from what, and what scope each one fills in by default.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Widgets</span><span class="d">Whether the catalog is right, what each persona opens with, and which existing pages this replaces.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">Affordances</span><span class="d">Editable, stackable and resizable widgets, and which edit-mode control we ship.</span></div>
+        <div class="cs-rule"><span class="n">04</span><span class="t">Persistence</span><span class="d">Where preferences live, and what happens to a custom layout when somebody’s role changes.</span></div>
+      </div>
+      </div>
+
+      <div class="cs-sub" id="personas">
+        <h2 class="cs-h2">Five personas became two</h2>
+      <div class="cs-body">
+        <p>The proposal I inherited had five roles and the version before it had three. The workshop collapsed them to two, and the reasoning is the part worth keeping: the first release ships widgets that already exist, and five roles cannot be told apart by widgets none of them have yet. A five-way split is a promise the product cannot cash.</p>
+        <p>So there are two. Somebody scoped to one application or account, and somebody scoped to many, a division, or all of them. The finer split is written down and waiting for the role-specific widgets that would make it mean something, which is a different thing from being dropped.</p>
+        <p>The persona is also not read off a job title. It follows from a scope the user has confirmed: on a first visit the page shows what it detected and asks them to correct it before anything is saved. Applying it silently was on the table and the room turned it down, which I think was right. A page that quietly rearranges itself around a guess about you is a page you cannot argue with.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cs-diagram">
+          <img class="cs-flat" src="../../assets/case/cs-persona-five-to-two.svg" alt="Five proposed persona layouts above, joined by curves to the two that shipped: contributor and leader" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">Nothing was thrown away. Two of the five folded into one default and three into the other, and the split waits for the widgets that would justify it. A picture of that is more honest than a list of two, which reads as though the other three were never considered.</figcaption>
+      </figure>
+      </div>
+
+      <div class="cs-sub" id="scope">
+        <h2 class="cs-h2">Scope is the persona</h2>
+      <div class="cs-body">
+        <p>Every widget declares which scope dimensions it can answer for. Effective scope resolves widget-first, then the page, then a default from the profile, so one widget can be pinned to a single application while the rest of the page follows the division.</p>
+        <p>The interesting case is the mismatch: the page is scoped by something a widget does not accept. Two easy answers were available and both are wrong. Applying it silently makes the widget lie about what it is showing; dropping it silently makes it lie about what it was asked. So it ignores the dimension and says so on its own chip. A visible inconsistency the reader can reason about beats an invisible one they cannot.</p>
+        <p>Sizes are bounded for the same reason. At most three per widget, at most two layouts, and the compact size always shows a real number plus one piece of context: a trend, a threshold, a delta. Never a bare number, because a bare number is a thing you have to go somewhere else to understand.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:1224px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:56.7px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-70.5px;--y1:-45.5px;--k1:1.0000">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img style="--i:0" src="../../assets/plate/persona-widget-jobs.webp" alt="One widget on the homepage: a jobs table with its own scope chip, three filters and an export, stacked behind a numbered tab with a second widget" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <div class="call" style="--cx:613.0px;--cy:169.5px;--cw:166px">
+            <div class="call-row"><span class="call-line"></span><span class="call-note">two widgets, one column</span></div>
+            <p class="call-desc">Stacked behind numbered tabs, each carrying its own scope, because a column has less room than a page has widgets.</p>
+          </div>
+        </div>
+        <figcaption class="cs-caption">One entry in that catalog, on the page. It carries its own scope chip, its own filters and its own export, and it is stacked behind a numbered tab with a second widget, which is how a column holds more than it has room for.</figcaption>
+      </figure>
+      </div>
+
+      <div class="cs-sub" id="ship">
+        <h2 class="cs-h2">Shipping it where nobody can see it</h2>
+      <div class="cs-body">
+        <p>The new homepage is a separate route behind a flag that is off in production, and the existing homepage is untouched, byte for byte. That is deliberate: this arrives as roughly forty small pull requests over a quarter, and the cost of a regression on the page everybody already uses is far higher than the cost of running two routes for three months. The team opts in by visiting the route; the architect and the tech lead review from the same place.</p>
+        <p>If the flag resolves off, or the client that evaluates it fails outright, the new route redirects to the old one. The failure mode of a half-finished homepage should be the homepage that already works, and that has to be designed rather than hoped for.</p>
+        <p>Preferences go to a table in the database that already serves this product rather than to a new service, keyed by user, holding the persona, the layout, the saved presets and whether the tour has been seen. Local storage stays as an offline cache. Syncing across devices was a requirement rather than a nicety, which is what ruled out the browser-only version that would have shipped a month sooner.</p>
+      </div>
+      </div>
+
+    </div>
+
+    <section id="mockups" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Mockups</span></div>
+        <h2 class="cs-h2">What it looks like when it opens</h2>
+      </div>
+      <div class="cs-body">
+        <p>Three moments got mocked before any of them got built, because all three are moments where the page is about to do something on your behalf and the only question is whether you can see it coming.</p>
+        <p>The first is onboarding: what we detected, where each piece came from, and a control to remove or add any of it. The second is a five-step tour that runs once and is remembered. The third is the one nobody asks for and everybody needs: what happens when your role changes and you have unsaved edits. That one stops and makes you name what you have before it loads anything else. Discarding is allowed; discarding silently is not.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cs-diagram">
+          <img class="cs-flat" src="../../assets/case/cs-persona-onboard.svg" alt="The onboarding modal: an auto-detected banner, then rows of application, account and division chips, each removable, with a confirm button" loading="lazy">
+        </div>
+        <figcaption class="cs-caption">The banner is the whole argument. It says what was detected and where it came from, and everything under it can be taken off before a single preference is written.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:1224px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:56.7px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-88.2px;--y1:0.0px;--k1:0.6639">
           <div class="view">
             <div class="plate">
               <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
@@ -151,33 +283,26 @@
               </div>
             </div>
           </div>
+          <div class="call" style="--cx:613.0px;--cy:134.0px;--cw:166px">
+            <div class="call-row"><span class="call-line"></span><span class="call-note">the page’s scope</span></div>
+            <p class="call-desc">Not a job title. The page asks what you are responsible for, and the opening layout follows from the answer.</p>
+          </div>
         </div>
-        <figcaption class="cs-caption">What a division lead opens to. Nothing here was chosen by them; it is what the page decided to show somebody with their scope, and the argument of this project is that getting that right matters more than any setting.</figcaption>
+        <figcaption class="cs-caption">And the mockup, built. What a division lead opens to. Nothing here was chosen by them; it is what the page decided to show somebody with their scope.</figcaption>
       </figure>
     </section>
 
-    <div id="decisions" class="cs-group">
-
-      <div class="cs-sub" id="personas">
+    <section id="built" class="cs-section">
       <div class="cs-sechead">
-        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Key decisions</span></div>
-        <h2 class="cs-h2">Two personas, not five</h2>
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">In build</span></div>
+        <h2 class="cs-h2">The half that is on screen today</h2>
       </div>
       <div class="cs-body">
-        <p>The proposal I inherited had five roles, and the version before that had three. The first workshop collapsed them to two, and the reasoning is the part worth keeping: the first release ships widgets that already exist on the current dashboards, and five roles cannot be told apart by widgets none of them have yet. A five-way split is a promise the product cannot cash.</p>
-        <p>So there are two. Somebody scoped to one application or account, and somebody scoped to many, a division, or all of them. The finer split is written down and waiting for the role-specific widgets that would make it mean something.</p>
-        <p>The persona is also not read off a job title. It is inferred from a scope the user has confirmed: on a first visit the page shows what it detected about them and asks them to correct it before anything is saved. Applying it silently was on the table and the workshop turned it down, which I think was right. A page that quietly rearranges itself around a guess about you is a page you cannot argue with.</p>
-      </div>
-      </div>
-
-      <div class="cs-sub" id="scope">
-        <h2 class="cs-h2">Scope is the persona</h2>
-      <div class="cs-body">
-        <p>Every widget declares which scope dimensions it can answer for. Effective scope resolves widget-first, then the page, then a default from the profile, so one widget can be pinned to a single application while the rest of the page follows the division.</p>
-        <p>The interesting case is the mismatch: the page is scoped by something a widget does not accept. Two easy answers were available and both are wrong. Applying it silently makes the widget lie about what it is showing; dropping it silently makes it lie about what it was asked. So it ignores the dimension and says so on its own chip. A visible inconsistency the reader can reason about beats an invisible one they cannot.</p>
+        <p>Editing is a mode you enter rather than a state you fall into. Edit layout adds a grip to every widget, an action menu on each one, and drag handles on the right and bottom edges; nothing else about the page changes. The page you were reading is the page you are rearranging, which is the difference between customising something and being handed a configuration screen.</p>
+        <p>Underneath, the widget catalog is a typed array in code, one file per widget, validating itself at module load: duplicate identifiers and malformed scope declarations throw before anything renders. A JSON file and a server-fetched catalog were both considered and both rejected, because both turn a compile error into a runtime one and then need a fallback for the case where the catalog is missing, and a fallback catalog is a second source of truth pretending to be a safety net.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-stage" style="--pw:2200px;--ph:1224px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:130.8px;--y0:46.0px;--k0:0.2443">
+        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:1224px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:56.7px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-136.6px;--y1:-148.8px;--k1:0.9107">
           <div class="view">
             <div class="plate">
               <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
@@ -186,52 +311,13 @@
               </div>
             </div>
           </div>
+          <div class="call" style="--cx:613.0px;--cy:169.5px;--cw:166px">
+            <div class="call-row"><span class="call-line"></span><span class="call-note">what moves</span></div>
+            <p class="call-desc">Edit mode adds a grip to each widget and changes nothing else. The page you were reading is the page you are rearranging.</p>
+          </div>
         </div>
         <figcaption class="cs-caption">Edit mode, and the scope chips along the top. Those chips are the persona: the page does not ask who you are, it asks what you are responsible for, and the layout follows from the answer.</figcaption>
       </figure>
-      </div>
-
-      <div class="cs-sub" id="widgets">
-        <h2 class="cs-h2">A catalog you cannot get wrong</h2>
-      <div class="cs-body">
-        <p>The widget catalog is a typed array in code, one file per widget, and it validates itself at module load: duplicate identifiers and malformed scope declarations throw before anything renders. A JSON file and a server-fetched catalog were both considered and both rejected, because both turn a compile error into a runtime one and then need a fallback for the case where the catalog is missing, and a fallback catalog is a second source of truth pretending to be a safety net.</p>
-        <p>Layouts are personal and named. Customise anything and the page creates one for you rather than silently mutating the preset, so the preset stays available to go back to. The larger version of this feature, with sharing and cloning and a roles model, needs a backend and a permissions story that phase one does not have, and saying so out loud was cheaper than discovering it in the build.</p>
-      </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-stage" style="--pw:2200px;--ph:1224px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:130.8px;--y0:46.0px;--k0:0.2443">
-          <div class="view">
-            <div class="plate">
-              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-              <div class="shots">
-                <img style="--i:0" src="../../assets/plate/persona-catalog.webp" alt="The widget catalog open over the homepage, its widgets grouped by category with a search field and an add control on each card" loading="lazy">
-              </div>
-            </div>
-          </div>
-        </div>
-        <figcaption class="cs-caption">The catalog, and the shape of the promise: everything in here is a real widget with a declared scope, because the list is code that refuses to load if it is wrong.</figcaption>
-      </figure>
-      </div>
-
-      <div class="cs-sub" id="ship">
-        <h2 class="cs-h2">Shipping it where nobody can see it</h2>
-      <div class="cs-body">
-        <p>The new homepage is a separate route behind a flag that is off in production, and the existing homepage is untouched, byte for byte. That is deliberate: this arrives as roughly forty small pull requests over a quarter, and the cost of a regression on the page everybody already uses is far higher than the cost of running two routes for three months.</p>
-        <p>If the flag resolves off, or the client that evaluates it fails outright, the new route redirects to the old one. The failure mode of a half-finished homepage should be the homepage that already works, and that has to be designed rather than hoped for.</p>
-      </div>
-      </div>
-
-    </div>
-
-    <section id="thinking" class="cs-section">
-      <div class="cs-sechead">
-        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Where my head is</span></div>
-        <h2 class="cs-h2">The defaults are the product</h2>
-      </div>
-      <div class="cs-body">
-        <p>The thing I keep coming back to is that customisation is not the feature. The default is the feature, and customisation is what you offer the people the default cannot serve. If the starting layout is right for most people, very few will change it, and that is the success case rather than a sign the feature failed.</p>
-        <p>So most of the work has been research, personas and defaults, not settings screens. Which layout does the page open as, and how does it decide? What moves, and what is fixed because moving it would break the orientation of everyone who has learned where it is? Two rounds of structured feedback are built into the plan for exactly that, because the answer is not something I can reason my way to alone.</p>
-        <p>Write-up to follow once it ships.</p>
-      </div>
       <figure class="cs-figure">
         <div class="cs-media cam cam-stage" style="--pw:2200px;--ph:1224px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:130.8px;--y0:46.0px;--k0:0.2443">
           <div class="view">
@@ -245,6 +331,58 @@
         </div>
         <figcaption class="cs-caption">The other default. Same page, same widgets available, different opening hand: what is broken, what it costs, what it wants from you today.</figcaption>
       </figure>
+    </section>
+
+    <section id="recreation" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">The recreation</span></div>
+        <h2 class="cs-h2">Rebuilt so it can be shown</h2>
+      </div>
+      <div class="cs-body">
+        <p>The internal captures on this page are stills, and stills are all they can be. The recording of the real thing carries a division, an application identifier and a colleague’s name in half a dozen places on every frame, several of which pass under an open menu as it moves. A figure whose safety depends on a rectangle staying put is a figure waiting to leak.</p>
+        <p>So the page is rebuilt in the open instead: same rail, same scope bar, same card grid, same edit mode, running on accounts and divisions I made up. Rebuilding it removes the question rather than managing it, and it is a better artefact anyway, because a reader can open it and drive it themselves rather than take a screenshot’s word for it.</p>
+        <p>It carries the decisions this page argues for, not just the look: each widget declares which scope dimensions it accepts, the effective scope resolves widget then page then default, and a widget the page scope cannot reach says so on its own card instead of showing numbers for a scope nobody asked for.</p>
+        <p>It is close but not complete. Real data, entitlements, server-side preferences and the wider persona split are described here rather than implemented there.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam framed cam-clip" style="--wx:108.7px;--wy:42.0px;--ww:581.6px;--wh:333.0px;--bar:24.0px">
+          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+          <div class="win">
+            <video src="../../assets/video/persona-edit-options.mp4" poster="../../assets/video/persona-edit-options-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Edit mode, a widget’s action menu open on expand, replace, delete, move, merge, unstack and three sizes, then the change undone"></video>
+          </div>
+        </div>
+        <figcaption class="cs-caption">Edit mode and one widget’s menu. Every action on it is reversible, which is what lets the page be rearranged by someone who is not sure yet what they want.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam framed cam-clip" style="--wx:108.7px;--wy:42.0px;--ww:581.6px;--wh:333.0px;--bar:24.0px">
+          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+          <div class="win">
+            <video src="../../assets/video/persona-scope-switch.mp4" poster="../../assets/video/persona-scope-switch-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The page scope changing from a single account to a division, and the whole layout, the grade and every widget’s subtitle following it"></video>
+          </div>
+        </div>
+        <figcaption class="cs-caption">The same page under a different scope. Nothing was configured between these two states: the scope changed and the layout followed, which is the entire argument.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam framed cam-clip" style="--wx:108.7px;--wy:42.0px;--ww:581.6px;--wh:333.0px;--bar:24.0px">
+          <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+          <div class="win">
+            <video src="../../assets/video/persona-widget-scope.mp4" poster="../../assets/video/persona-widget-scope-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="One card pinned to a different account, then a divisional widget added to a page scoped to a single account, showing a warning on its own scope line"></video>
+          </div>
+        </div>
+        <figcaption class="cs-caption">Scope resolves widget, then page, then default. The rollup at the bottom cannot be scoped by an account, so it falls back to its own dimension and says which scope it is not using. Silently applying the wrong one, or silently dropping it, are the two failures this replaces.</figcaption>
+      </figure>
+    </section>
+
+    <section id="thinking" class="cs-section">
+      <div class="cs-sechead">
+        <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">Where my head is</span></div>
+        <h2 class="cs-h2">The defaults are the product</h2>
+      </div>
+      <div class="cs-body">
+        <p>The thing I keep coming back to is that customisation is not the feature. The default is the feature, and customisation is what you offer the people the default cannot serve. If the starting layout is right for most people, very few will change it, and that is the success case rather than a sign the feature failed.</p>
+        <p>Which is why most of the work so far has been research, personas and defaults rather than settings screens. Which layout does the page open as, and how does it decide? What moves, and what is fixed because moving it would break the orientation of everyone who has learned where it is? A second workshop and two rounds of structured feedback are in the plan for exactly that, because the answer is not something I can reason my way to alone.</p>
+        <p>Write-up to follow once it ships.</p>
+      </div>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Default first</span><span class="d">The starting layout has to be right for the majority before any control is offered.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Bounded</span><span class="d">A page that can become anything is a page nobody can support or design for.</span></div>

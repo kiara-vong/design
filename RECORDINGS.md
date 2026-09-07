@@ -18,7 +18,7 @@ One shape for everything, because the figures are built around it.
 | **Frame rate** | 30fps is plenty; 60 if the tool offers it free |
 | **Length** | 8–12 seconds. A loop nobody watches to the end proves nothing |
 | **Cursor** | visible for anything where a click or a hover is the point |
-| **Chrome** | none. No browser scrollbar in frame — hide it before recording |
+| **Chrome** | none. No browser scrollbar in frame, hide it before recording |
 | **Stills** | same window, same 2880 × 1620, PNG |
 
 Two notes that have cost real work:
@@ -35,7 +35,7 @@ document.head.appendChild(Object.assign(document.createElement('style'),
 **Why 16:9 specifically.** The figures now hold the capture at its authored size
 and move a camera over it, rather than cropping it to fit. The detail framing is
 exactly 1:1, so a 2× capture is pixel-perfect at the closest the camera ever gets.
-Off-spec captures still work — the maths follows whatever size you give it — but
+Off-spec captures still work: the maths follows whatever size you give it, but
 they cannot be as sharp, and the resting framing gets more letterboxing the
 further from 16:9 they are.
 
@@ -51,22 +51,22 @@ of the captions **say so on the page**:
 > "three states where the actual note timing belongs once there's a real capture"
 > "The counter and the health both move considerably faster than this in the actual game."
 
+None of those sentences is on the site any more; they are kept here because they
+are what the pages sounded like while the footage was missing, and that is worth
+being able to recognise.
+
 These are games and solvers. Motion is the subject, so a dissolve between stills
-cannot stand in for it — you can see the frames.
+cannot stand in for it, you can see the frames.
 
-### Stardew — the four arcade cabinets
+### Stardew: the four arcade cabinets ✅ done
 
-Live at `kiara-vong.github.io/stardew`, Arcade section.
+Recorded and cut. `gen/screencaps.py` takes the four 1080p60 captures in
+`assets/video/_rec/` and cuts one clip out of each; `gen/walkthroughs.py` now skips
+these names so a re-run cannot put the dissolved stills back. The fishing one is
+spliced: the cast and the bite are at the front of that recording and the fish is
+landed thirty seconds later, so the middle is taken out and the caption says so.
 
-| Clip | Record | Must be in frame |
-|---|---|---|
-| `stardew-junimo-kart` | One run: start line, a cleared jump, a spike hit, the score screen | The score screen resetting. The page says "the score screen it resets from" |
-| `stardew-prairie-king` | Two waves: spawn, wave cleared, a hit taken, counter climbing | The wave counter and the health, at real speed — the caption currently apologises for the pace |
-| `stardew-junimo-jamboree` | Difficulty select, then notes falling in four lanes, then a cleared song | Actual note timing against the music. This is the whole claim |
-| `stardew-fishing` | Cast, bite, the catch bar, a landed fish | The catch bar moving. Page says its physics were ported to the original tick rate — that is a claim about *motion* |
-
-If Jamboree only gets one take, make it **Hard** — note density is what differs
-between difficulties, and the difficulty select still is already on the page.
+The captions that apologised for the pace are gone with them.
 
 ### Chess
 
@@ -86,7 +86,7 @@ between difficulties, and the difficulty select still is already on the page.
 
 Frightened mode is the one thing worth having and the current footage never
 reaches it. The page argues that the state everyone remembers is four lines of
-code because the movement system inverts rather than branches — and there is no
+code because the movement system inverts rather than branches, and there is no
 frame of blue ghosts anywhere on the site.
 
 Heads-up: the game hangs on a "Loading…" screen because `pacman.js` fetches five
@@ -103,7 +103,7 @@ p.addEventListener = function (t, fn, o) {
 };
 ```
 
-### Animal Crossing — the solver
+### Animal Crossing: the solver
 
 `kiara-vong.github.io/animal-crossing`
 
@@ -118,16 +118,16 @@ p.addEventListener = function (t, fn, o) {
 Footage that exists and is fine, but was captured in a shape that fights the
 figure.
 
-### ~~Dorms — the review card~~ · done
+### ~~Dorms: the review card~~ · done
 
 Your full-page shot of the Wellness page solved this. The figure now carries the
 rating summary, the write-a-review form and a real review, and no student name
-appears anywhere — so the caption no longer has to promise blurring.
+appears anywhere, so the caption no longer has to promise blurring.
 
-### ~~Dorms — the browse and filter clip~~ · done
+### ~~Dorms: the browse and filter clip~~ · done
 
-Your four full-page shots of the index — unfiltered, singles, singles on Center
-Campus, and singles on Center Campus with a private bathroom — replaced both the
+Your four full-page shots of the index, unfiltered, singles, singles on Center
+Campus, and singles on Center Campus with a private bathroom, replaced both the
 clip and the still that sat under it. They are hung on a new machine that holds
 the window still and scrolls the *page* behind it, so the list's length is now
 part of the argument rather than a number in the caption: thirty halls scroll past
@@ -137,15 +137,15 @@ them, then the camera goes in on the rail that did it.
 `dorms-browse-filter.mp4` and `dorms-list.webp` are unused as a result.
 **Nothing to re-record here.**
 
-### ~~Dorms — the dorm page~~ · done
+### ~~Dorms: the dorm page~~ · done
 
-Your Grad Center shot runs as one scroll through the whole page — gallery,
-description, feature table, map, four buildings of floor plans, review — and
+Your Grad Center shot runs as one scroll through the whole page, gallery,
+description, feature table, map, four buildings of floor plans, review, and
 closes on the feature table, which is the filter rail restated for one dorm.
 
-### ~~Dorms — the quiz~~ · done
+### ~~Dorms: the quiz~~ · done
 
-Your two shots — the quiz with its answers chosen, and the ranked shortlist —
+Your two shots: the quiz with its answers chosen, and the ranked shortlist 
 register as two states of one page, so the figure cross-fades between them in a
 single framing: preferences in, three dorms out. That reads better than the clip
 did, so the old `dorms-quiz.mp4` is now unused. **Nothing to re-record here.**
@@ -161,7 +161,7 @@ prose that a figure would make better.
 
 | Clip | Record | Why |
 |---|---|---|
-| `dashboard-graph-view` | The graph view being explored — a node opened, the layout settling | The page shows the table view twice and the graph view once, statically. The toggle is a headline claim |
+| `dashboard-graph-view` | The graph view being explored: a node opened, the layout settling | The page shows the table view twice and the graph view once, statically. The toggle is a headline claim |
 
 ### Events Timeline
 
@@ -190,11 +190,11 @@ Stills → `assets/tile/_src/<name>.png`.
 
 The names in the tables are the existing asset names; keeping them means the
 figures pick the new footage up with no code change. Anything new can be named
-freely — tell me the name and what it shows and I'll wire it in.
+freely, tell me the name and what it shows and I'll wire it in.
 
 ## What I'll do when they land
 
 Re-time each clip to the 8–12 second band, cut the browser chrome if any survives,
-generate posters, and set each figure's camera from the new capture — the framing
+generate posters, and set each figure's camera from the new capture: the framing
 is a rectangle read off the footage now, so it goes where you say rather than
 where a percentage happens to land.
