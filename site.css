@@ -3751,20 +3751,25 @@ a[href] {
 
 /* -------------------------------------------------------- cursors
    Custom pointers cut from a set of hand-painted icons. Delivered as 48x48
-   PNGs, which is bigger than the OS default without crossing the size at
-   which Firefox and Safari silently fall back to the keyword. A fallback
-   keyword follows every url() so a browser that cannot load an image at all
-   still has the right shape.
+   PNGs with a hairline white outline, so they show up against the accent-green
+   footer as well as they do against parchment. A fallback keyword follows
+   every url() so a browser that cannot load an image still has the right shape.
 
-   Hotspots, per cursor, in the 48-canvas:
-     arrow  -- the tip of the arrow, top-left of the canvas.
-     point  -- the tip of the raised finger, near the top-centre.
-     wait   -- the middle, because an hourglass has no tip.
-     move   -- the middle, for the same reason.
-     resize -- the middle. */
+   Hotspots are MEASURED, not guessed. Each one is the pixel where the click
+   should actually land, read off the delivered PNG:
+     arrow  (18, 6)  -- the top-left tip of the arrow head.
+     point  (18, 2)  -- the very tip of the raised finger.
+     wait   (22, 23) -- centre; an hourglass has no tip.
+     resize (24, 23) -- centre.
+     move   (23, 23) -- centre.
+
+   The point icon: the raised finger had a daisy on the palm, and at rendered
+   cursor size the hand plus the daisy plus the thumb collapsed into three
+   blobs that read as a clover. The daisy has been inpainted with the palm's
+   own texture in gen -- just a hand with a raised finger reaches the browser. */
 
 :root {
-  cursor: url("assets/ui/cursor-arrow.png") 2 2, auto;
+  cursor: url("assets/ui/cursor-arrow.png") 18 6, auto;
 }
 
 /* Links and buttons: the two things a reader knows in advance are interactive.
@@ -3776,26 +3781,25 @@ a, button, summary,
 label[for],
 input[type="submit"], input[type="reset"], input[type="button"],
 input[type="checkbox"], input[type="radio"], select {
-  cursor: url("assets/ui/cursor-point.png") 24 3, pointer;
+  cursor: url("assets/ui/cursor-point.png") 18 2, pointer;
 }
 
 /* Things a reader is meant to pick up. The persona-homepage demo has grips
    and resize handles; the portfolio itself has none. Rules cost nothing on
-   pages without the elements, and adding them here keeps a future draggable
-   working without a second stylesheet. */
+   pages without the elements. */
 [draggable="true"], .grip {
-  cursor: url("assets/ui/cursor-move.png") 24 24, grab;
+  cursor: url("assets/ui/cursor-move.png") 23 23, grab;
 }
 [draggable="true"]:active, .grip:active {
-  cursor: url("assets/ui/cursor-move.png") 24 24, grabbing;
+  cursor: url("assets/ui/cursor-move.png") 23 23, grabbing;
 }
 .rz, .rz-e, .rz-s, .rz-se {
-  cursor: url("assets/ui/cursor-resize.png") 24 24, nwse-resize;
+  cursor: url("assets/ui/cursor-resize.png") 24 23, nwse-resize;
 }
 
 /* Waiting states, on the element that carries the wait: aria-busy is what a
    loading tile or a submitting form should set. Deliberately not applied to
    the page: a busy cursor site-wide reads as a page that has broken. */
 .is-busy, [aria-busy="true"] {
-  cursor: url("assets/ui/cursor-wait.png") 24 24, progress;
+  cursor: url("assets/ui/cursor-wait.png") 22 23, progress;
 }
