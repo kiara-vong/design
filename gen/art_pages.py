@@ -467,11 +467,14 @@ PROSE = {
    ]),
  "rheoscopic": dict(
    # All eight figures, since with no hang this section IS the page.
-   # rh-final ("the piece, running") is the closing film now, not a still, so it
-   # comes out of the picks and in as the run below. The Selected stills are the
-   # documentation: the detail, the gears, the CAD and the flow studies.
-   picks=["rh-detail", "rh-gears", "rh-cad", "rh-cad2", "rh-flow",
-          "rh-flow2", "rh-bench"],
+   # The running piece is the closing film. The Selected stills are the
+   # documentation, each labelled for what it shows: a cylinder in hand, the CAD,
+   # the gear housing, a printed gear, two flow studies and the Moody diagram.
+   picks=["rh-hand", "rh-cad", "rh-gears", "rh-detail",
+          "rh-flow2", "rh-flow", "rh-bench"],
+   # No count in the credit strip. This page is a run and its documentation, not a
+   # gallery with a number on the door.
+   nocount=True,
    sections=[
      ("Context", [
        "Rheoscopic fluid is water with microscopic mica flakes suspended in it. "
@@ -506,7 +509,11 @@ PROSE = {
                  "condition made visible: fluid at the wall keeps pace with the "
                  "wall, fluid at the centre lags, and the shear between them is the "
                  "pattern. It looks like the bands on a gas giant for the same "
-                 "reason.")),
+                 "reason.",
+             clips=[dict(src="rheoscopic-clip", poster="rh-clip", dur="0:02",
+                         title="Up close",
+                         cap="The same train from the table, the cylinders in blue "
+                             "and pink.")])),
  "sandsketch": dict(
    picks=["ss-3", "ss-1", "ss-4"],
    # The count in the credit strip should say what the page holds, and for these two
@@ -771,20 +778,27 @@ def build_category(cat):
                 "The films" if vids else "Selected results", "".join(plates)))
 
     if film:
-        p = by.get(film["poster"])
-        w, h = (p[3], p[4]) if p else (760, 427)
-        nav.append(("run", film["title"], False))
-        media = ('        <video controls preload="none" playsinline '
+        # The run, and any shorter clips hung under it. A clip is the same shape as
+        # the run -- a poster piece for its dimensions, a stem in assets/video --
+        # so the two render through one helper and the section holds however many
+        # the page has.
+        def _vid_plate(spec):
+            pp = by.get(spec["poster"])
+            vw, vh = (pp[3], pp[4]) if pp else (760, 427)
+            m = ('        <video controls preload="none" playsinline '
                  'poster="../../assets/art/%s/%s.jpg" width="%d" height="%d">\n'
                  '          <source src="../../assets/video/%s.mp4" type="video/mp4">\n'
                  '          Your browser cannot play this film. '
                  '<a href="../../assets/video/%s.mp4">Download it instead.</a>\n'
                  '        </video>\n'
-                 % (slug, film["poster"], w, h, film["src"], film["src"]))
-        secs.append(plain_section(
-            "run", cat["tag"], film["title"],
-            plate(media, film["title"], film["cap"], None,
-                  '<span class="runs">%s</span> &middot; ' % esc(film["dur"]))))
+                 % (slug, spec["poster"], vw, vh, spec["src"], spec["src"]))
+            return plate(m, spec["title"], spec.get("cap"), None,
+                         '<span class="runs">%s</span> &middot; ' % esc(spec["dur"]))
+        nav.append(("run", film["title"], False))
+        body = _vid_plate(film)
+        for clip in film.get("clips", []):
+            body += _vid_plate(clip)
+        secs.append(plain_section("run", cat["tag"], film["title"], body))
 
     if hang:
         # A title and nothing else, on every category. A paragraph under every
@@ -836,7 +850,11 @@ def build_category(cat):
     # Count what the page actually shows, and name it correctly. Three of these
     # pages have no hang: "8 pieces" over a page holding five figures from a report
     # was both the wrong number and the wrong word.
-    if vids:
+    # A page can opt out of the count entirely (nocount): a run and its
+    # documentation is not a gallery with a number on the door.
+    if prose and prose.get("nocount"):
+        pass
+    elif vids:
         meta.append(("Films", "%d" % len(vids)))
     elif not hang:
         meta.append(("Figures", "%d" % len(prose["picks"])))

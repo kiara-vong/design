@@ -126,29 +126,38 @@ CATEGORIES = [
                "cylinders, driven by a 3D-printed gear train, after Paul "
                "Matisse's Kalliroscope.",
          pieces=[
+             # rh-run and rh-clip are the two films' posters; rh-final is the
+             # index cover. Everything else is a Selected still, each labelled for
+             # what it actually shows -- the set had drifted (a printed gear filed
+             # as a cylinder, a flow pattern filed as CAD, a Moody chart filed as a
+             # bench photo), which is what this pass fixes.
              ("rh-run", SRC + "rheo/run.jpg", "The piece, running",
-              "The gear train running."),
+              "The gear train running under its own drive."),
+             ("rh-clip", SRC + "rheo/clip.jpg", "The piece, up close",
+              "The same train from the table, the cylinders in blue and pink."),
              ("rh-final", SRC + "rheo/image5.jpg", "The piece, running",
-              "Mica flakes suspended in water. They orient along the flow "
-              "direction the way logs do in a river, so the currents inside the "
-              "cylinder become visible without any dye."),
-             ("rh-detail", SRC + "rheo/image3.jpg", "Cylinder detail",
-              "The no-slip condition is the whole subject: fluid at the wall "
-              "moves with the wall, fluid at the centre lags, and the shear "
-              "between them is what the flakes draw."),
+              "The whole piece from above, one cylinder full of moving fluid."),
+             ("rh-hand", SRC + "rheo/hand.jpg", "A cylinder in hand",
+              "One cylinder out of the train. Rheoscopic fluid is water with "
+              "microscopic mica flakes that line up with the flow, so the currents "
+              "show without any dye."),
+             ("rh-cad", SRC + "rheo/image13.png", "CAD",
+              "The assembly before it was anything physical. Tooth counts were "
+              "worked backwards from the flow we wanted to see."),
              ("rh-gears", SRC + "rheo/image6.jpg", "Gear housing",
               "3D-printed drive, printed in place. The gearing sets the rotation "
               "rate, which sets whether the flow reads as laminar or turbulent."),
-             ("rh-cad", SRC + "rheo/image10.png", "CAD",
-              "The assembly before it was anything physical."),
-             ("rh-cad2", SRC + "rheo/image11.png", "Drive train",
-              "Tooth count worked backwards from the flow we wanted to see."),
-             ("rh-flow", SRC + "rheo/image7.png", "Flow study",
-              "Testing rotation rates against the pattern they produce."),
-             ("rh-flow2", SRC + "rheo/image8.png", "Flow study, II",
-              "Faster. The transition point is sharp and repeatable."),
-             ("rh-bench", SRC + "rheo/image9.png", "On the bench",
-              "Mid-build, with the fluid mixed and not yet sealed in."),
+             ("rh-detail", SRC + "rheo/image3.jpg", "The printed gear",
+              "One of the gears before assembly, printed clear so the mesh is easy "
+              "to check."),
+             ("rh-flow2", SRC + "rheo/image8.png", "Flow study, I",
+              "The slower state. The bands are broad and hold their shape."),
+             ("rh-flow", SRC + "rheo/image7.png", "Flow study, II",
+              "Faster. The transition toward turbulence is sharp and repeatable."),
+             ("rh-bench", SRC + "rheo/image9.png", "Moody diagram",
+              "Where the flow tips from laminar to turbulent against Reynolds "
+              "number. The rotation rate we chose sits on the laminar side of "
+              "that line."),
          ]),
 
     dict(slug="sandsketch", name="SandSketch", kind="project", cover="ss-1",
