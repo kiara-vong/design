@@ -204,6 +204,10 @@
    /* hero field */
    --cp-edge: #E9E6FF;
    /* hero hairline */
+   /* Text selection: a highlighter pass in the site's own green,
+      dark ink on top so selected text stays readable. */
+   --selection-bg: #E4F56F;
+   --selection-ink: #2E2B29;
 }
 
 /* ---------- Reset ---------- */
@@ -211,6 +215,16 @@
    margin: 0;
    padding: 0;
    box-sizing: border-box
+}
+
+/* ---------- Text selection ---------- */
+::selection {
+   background: var(--selection-bg);
+   color: var(--selection-ink)
+}
+::-moz-selection {
+   background: var(--selection-bg);
+   color: var(--selection-ink)
 }
 
 /* A bare <a> only gets the hand cursor when it has an href, so the placeholder
