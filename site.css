@@ -206,8 +206,8 @@
    /* hero hairline */
    /* Text selection: a highlighter pass in the site's own green,
       dark ink on top so selected text stays readable. */
-   --selection-bg: #E4F56F;
-   --selection-ink: #2E2B29;
+   --selection-bg: #649F25;
+   --selection-ink: #FFFFFF;
 }
 
 /* ---------- Reset ---------- */
@@ -255,7 +255,13 @@ body {
 }
 
 img {
-   display: block
+   display: block;
+   /* Images are draggable by default, so a drag that begins on one lifts a
+      ghost of the picture instead of selecting the text beside it. Turn that
+      off site-wide; real HTML text stays selectable, and text baked into an
+      image was never selectable to begin with. */
+   -webkit-user-drag: none;
+   user-drag: none
 }
 
 p {
