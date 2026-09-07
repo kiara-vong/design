@@ -3767,9 +3767,23 @@ a[href] {
    Firefox's parser does not accept an rgba() thumb colour written any other
    way in every version. */
 
+/* scrollbar-color is now standardised, and modern Chrome supports it. When set
+   on * it PREEMPTS the ::-webkit-scrollbar rules below, and Chrome painted the
+   Firefox fallback -- accent green at low alpha -- instead of the glass. So it
+   is gated behind @-moz-document, which only Firefox parses; Chrome and Safari
+   ignore that block and pick up the webkit rules unhindered.
+
+   scrollbar-width: thin is safe to keep on *: Chrome accepts it and it just
+   sets the thinner track width, which agrees with what the webkit rule
+   declares anyway. */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(100, 159, 37, .22) transparent;
+}
+
+@-moz-document url-prefix() {
+  * {
+    scrollbar-color: rgba(100, 159, 37, .22) transparent;
+  }
 }
 
 *::-webkit-scrollbar {
