@@ -71,6 +71,7 @@ STEPS = [
     # Prepares the case-study and project figures: 50MB of raw PNG capture
     # down to 2.5MB of WebP, and the travel each tall one has to scroll.
     ("plates",    "gen.plates",   [], []),
+    ("picks",     "gen.quiz_picks", [], []),
     ("persona",   "gen.persona_art",    [], []),
     ("polaroids", "gen.polaroids",  [], []),
     # Writes gallery-index.py, which the Art pages read. This is THE ordering

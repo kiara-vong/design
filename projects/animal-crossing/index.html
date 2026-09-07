@@ -107,12 +107,15 @@
         </div>
         <div class="cs-headgroup">
         <p class="cs-intro">A procedural island built tile by tile with wave function collapse. No map is authored and no layout is stored: the entire input is a set of hand-modelled pieces and the rules about which may sit next to which.</p>
+        <div class="cs-cta">
+          <a href="https://kiara-vong.github.io/animal-crossing/" target="_blank" rel="noopener"><span>Open the generator</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg></a>
+          <span class="cs-cta-url">kiara-vong.github.io/animal-crossing</span>
+        </div>
         <div class="cs-meta">
           <div class="col"><span class="lbl">Role</span><span class="val">Everything</span></div>
           <div class="col"><span class="lbl">Stack</span><span class="val">React, Three.js,<br>WFC solver</span></div>
           <div class="col"><span class="lbl">Year</span><span class="val">2024</span></div>
-          <div class="col"><span class="lbl">Live</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/animal-crossing/" target="_blank" rel="noopener">Open it</a></span></div>
-          <div class="col"><span class="lbl">Note</span><span class="val">If you would like the detail, please <a class="touch" href="../../">get in touch</a></span></div>
+          <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know</a></span></div>
         </div>
         </div>
       </div>
@@ -128,10 +131,17 @@
         <p>The collapse step is easy. Propagation is not: when a cell settles, every neighbour's option set narrows, and theirs after that. Getting that to terminate, stay correct, and run fast enough to watch is the actual problem, and no description had made that clear.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-clip">
-          <video src="../../assets/video/island-generator-building.mp4" poster="../../assets/video/island-generator-building-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="The solver filling an empty grid tile by tile"></video>
+        <div class="cs-media cam cam-stage" style="--pw:1280px;--ph:703px;--bar:33px;--plate-r:17px;--dur:13s;--n:1;--x0:127.3px;--y0:46.0px;--k0:0.4253">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <video style="--i:0" src="../../assets/video/island-generator-building.mp4" poster="../../assets/video/island-generator-building-poster.jpg" aria-label="The solver filling an empty triangular grid tile by tile while the island turns" autoplay muted loop playsinline preload="metadata"></video>
+              </div>
+            </div>
+          </div>
         </div>
-        <figcaption class="cs-caption">Empty to finished. Every tile placed is the most constrained cell that was left, which is the heuristic the whole thing rests on.</figcaption>
+        <figcaption class="cs-caption">Empty to finished, in one take. Every tile placed is the most constrained cell that was left, which is the heuristic the whole thing rests on.</figcaption>
       </figure>
     </section>
 
@@ -146,15 +156,6 @@
         <p>The solver takes no map. Its entire input is a set of tiles and, for each, what is allowed on each of its edges. Everything the output looks like is emergent from those constraints.</p>
         <p>That is what makes it worth building rather than reading about. The design surface is not the picture, it is the ruleset, and the relationship between the two is not obvious in either direction. Tightening one edge rule changes the character of the whole island, and wanting a particular look means reasoning backwards to the constraints that would produce it.</p>
       </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-deal" style="--dur:14s;--n:4">
-          <img style="--i:0" src="../../assets/plate/island-generator-stage1-empty.webp" alt="One generation at four stages, from an empty grid to a finished island" loading="lazy">
-          <img style="--i:1" src="../../assets/plate/island-generator-stage2-quarter.webp" alt="" aria-hidden="true" loading="lazy">
-          <img style="--i:2" src="../../assets/plate/island-generator-stage3-threequarter.webp" alt="" aria-hidden="true" loading="lazy">
-          <img style="--i:3" src="../../assets/plate/island-generator-stage4-complete.webp" alt="" aria-hidden="true" loading="lazy">
-        </div>
-        <figcaption class="cs-caption">Same camera in all four, so what changes is only how much has been decided. This is the still version of the clip above, and what reduced motion gets.</figcaption>
-      </figure>
       <div class="cs-rules">
         <div class="cs-rule"><span class="n">01</span><span class="t">Lowest entropy first</span><span class="d">Always collapse the most constrained cell. Pick randomly instead and the solver spends its time backtracking out of contradictions it walked into with its eyes open.</span></div>
         <div class="cs-rule"><span class="n">02</span><span class="t">Propagate, then stop</span><span class="d">A settled cell narrows its neighbours, and theirs. The queue has to drain to a fixed point before the next collapse.</span></div>
@@ -170,10 +171,32 @@
         <p>Generation is also steerable rather than purely automatic. Clicking any cell forces a specific tile there and re-propagates outward from it, so the solver can be pushed toward a coastline or a cliff and then left to resolve everything the choice implies.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-clip">
-          <video src="../../assets/video/island-generator-steering.mp4" poster="../../assets/video/island-generator-steering-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Forcing a tile mid-generation and watching the constraint propagate outward"></video>
+        <div class="cs-media cam cam-stage cam-step" style="--pw:1440px;--ph:795px;--bar:37px;--plate-r:19px;--n:12;--x0:46.0px;--y0:60.5px;--k0:0.3396;--vx:0px;--vw:581.0px;--cx:601.0px;--cw:178px" data-label="Place the next tiles" data-again="Back to the empty board">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img style="--i:0" src="../../assets/plate/island-step-01.webp" alt="The generator stepped forward by hand, from an empty triangulated board to a finished island" loading="lazy">
+                <img style="--i:1" src="../../assets/plate/island-step-02.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:2" src="../../assets/plate/island-step-03.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:3" src="../../assets/plate/island-step-04.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:4" src="../../assets/plate/island-step-05.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:5" src="../../assets/plate/island-step-06.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:6" src="../../assets/plate/island-step-07.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:7" src="../../assets/plate/island-step-08.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:8" src="../../assets/plate/island-step-09.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:9" src="../../assets/plate/island-step-10.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:10" src="../../assets/plate/island-step-11.webp" alt="" aria-hidden="true" loading="lazy">
+                <img style="--i:11" src="../../assets/plate/island-step-12.webp" alt="" aria-hidden="true" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <div class="step-ui">
+            <button class="step-go" type="button">Place the next tiles</button>
+            <p class="step-note">In the app a click does more than advance it: it forces a specific tile into that cell and re-propagates outward from the choice.</p>
+          </div>
         </div>
-        <figcaption class="cs-caption">One click fixes a cell, and everything that choice implies resolves around it.</figcaption>
+        <figcaption class="cs-caption">Twelve steps out of one run, and yours to walk. The board is the argument on its own: three edges per cell rather than four is why ten pieces cover a surface with no visible seam.</figcaption>
       </figure>
       </div>
 
@@ -184,10 +207,39 @@
         <p>Rock and foliage colour is done in custom GLSL vertex shaders rather than baked into the models, which is what keeps a few hand-modelled pieces from reading as the same object repeated across the island.</p>
       </div>
       <figure class="cs-figure">
-        <div class="cs-media cam cam-push" style="--z:1.4;--fx:52%;--fy:46%;--dur:13s">
-          <img src="../../assets/plate/island-generator-finished.webp" alt="A finished island: cliffs, water, beaches and scattered conifers" loading="lazy">
+        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:1217px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:57.5px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-705.4px;--y1:-21.2px;--k1:0.5802">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img style="--i:0" src="../../assets/plate/island-generator-tiles.webp" alt="The controls panel open on the tile list: Grass, four cliffs, water, two beaches and two triangles" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <div class="call" style="--cx:613.0px;--cy:169.5px;--cw:166px">
+            <div class="call-row"><span class="call-line"></span><span class="call-note">ten pieces</span></div>
+            <p class="call-desc">Grass, four cliffs, water, two beaches, two triangles. That is the whole set.</p>
+          </div>
         </div>
-        <figcaption class="cs-caption">Nothing here is placed by hand. The rock and foliage colour is shader work, which is what stops a few modelled pieces reading as one object repeated.</figcaption>
+        <figcaption class="cs-caption">The entire input, on screen and named. Everything above was built out of these and the rules about which may touch which.</figcaption>
+      </figure>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage cam-wipe" style="--pw:1440px;--ph:795px;--bar:37px;--plate-r:19px;--n:2;--x0:128.7px;--y0:46.0px;--k0:0.3761;--s:50;--wx:128.7px;--wy:59.9px;--ww:541.6px;--wh:285.1px">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <img src="../../assets/plate/island-wipe-before.webp" alt="The same board before and after one full generation, split by a line the reader can drag" loading="lazy">
+                <img src="../../assets/plate/island-wipe-after.webp" alt="" aria-hidden="true" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <span class="wipe-tag left">nothing decided</span>
+          <span class="wipe-tag right">every cell settled</span>
+          <span class="wipe-line" aria-hidden="true"><i></i></span>
+          <input class="wipe-range" type="range" min="0" max="100" value="50" aria-label="Reveal the finished island">
+        </div>
+        <figcaption class="cs-caption">Drag the line. Left is the board with nothing decided; right is what the ten pieces and their adjacency rules made of it, in one run, with nothing placed by hand.</figcaption>
       </figure>
       </div>
 

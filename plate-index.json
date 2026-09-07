@@ -83,6 +83,12 @@
   "travel": 0.0,
   "w": 1600
  },
+ "dorms-detail": {
+  "h": 5500,
+  "kb": 411,
+  "travel": 0.0,
+  "w": 2200
+ },
  "dorms-filter-0": {
   "h": 4312,
   "kb": 626,
@@ -137,6 +143,18 @@
   "travel": 0.0,
   "w": 2200
  },
+ "dorms-quiz-page": {
+  "h": 2466,
+  "kb": 106,
+  "travel": 0.0,
+  "w": 2200
+ },
+ "dorms-quiz-results": {
+  "h": 975,
+  "kb": 91,
+  "travel": 0.0,
+  "w": 1600
+ },
  "dorms-reviews": {
   "h": 1357,
   "kb": 41,
@@ -150,34 +168,124 @@
   "w": 1568
  },
  "island-generator-finished": {
-  "h": 766,
-  "kb": 21,
+  "h": 670,
+  "kb": 22,
   "travel": 0.0,
-  "w": 1600
+  "w": 1280
  },
  "island-generator-stage1-empty": {
-  "h": 766,
-  "kb": 17,
+  "h": 670,
+  "kb": 12,
   "travel": 0.0,
-  "w": 1600
+  "w": 1280
  },
  "island-generator-stage2-quarter": {
-  "h": 766,
-  "kb": 18,
+  "h": 670,
+  "kb": 16,
   "travel": 0.0,
-  "w": 1600
+  "w": 1280
  },
  "island-generator-stage3-threequarter": {
-  "h": 766,
+  "h": 670,
   "kb": 18,
   "travel": 0.0,
-  "w": 1600
+  "w": 1280
  },
  "island-generator-stage4-complete": {
-  "h": 766,
+  "h": 670,
+  "kb": 22,
+  "travel": 0.0,
+  "w": 1280
+ },
+ "island-generator-tiles": {
+  "h": 1160,
+  "kb": 53,
+  "travel": 0.0,
+  "w": 2200
+ },
+ "island-step-01": {
+  "h": 758,
+  "kb": 14,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-02": {
+  "h": 758,
+  "kb": 17,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-03": {
+  "h": 758,
+  "kb": 18,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-04": {
+  "h": 758,
+  "kb": 18,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-05": {
+  "h": 758,
+  "kb": 19,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-06": {
+  "h": 758,
+  "kb": 19,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-07": {
+  "h": 758,
+  "kb": 20,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-08": {
+  "h": 758,
   "kb": 21,
   "travel": 0.0,
-  "w": 1600
+  "w": 1440
+ },
+ "island-step-09": {
+  "h": 758,
+  "kb": 21,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-10": {
+  "h": 758,
+  "kb": 22,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-11": {
+  "h": 758,
+  "kb": 23,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-step-12": {
+  "h": 758,
+  "kb": 23,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-wipe-after": {
+  "h": 758,
+  "kb": 23,
+  "travel": 0.0,
+  "w": 1440
+ },
+ "island-wipe-before": {
+  "h": 758,
+  "kb": 14,
+  "travel": 0.0,
+  "w": 1440
  },
  "resource-detail-full": {
   "h": 2810,

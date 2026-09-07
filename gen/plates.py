@@ -62,6 +62,9 @@ SHARP = {
     "dorms-quiz-answered",
     "dorms-list",
     "dorms-filter-3",
+    "dorms-detail",
+    "dorms-quiz-page",
+    "island-generator-tiles",
 }
 
 # Whole pages, kept at the width they were captured. These are not figures cut to
@@ -71,6 +74,9 @@ SHARP = {
 # be listed in SHARP as well. Marking all four sharp would cost a megabyte to make
 # three images that are never seen closer than half size look better at half size.
 PAGE = {
+    "dorms-detail",
+    "dorms-quiz-page",
+    "dorms-quiz-results",
     "dorms-filter-0",
     "dorms-filter-1",
     "dorms-filter-2",

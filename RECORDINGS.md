@@ -109,7 +109,7 @@ p.addEventListener = function (t, fn, o) {
 
 | Clip | Record | Must be in frame |
 |---|---|---|
-| `island-generator-building` | Hold space and let it fill from empty to finished | The *rate*. The claim is "the most constrained cell that was left" — the pace of collapse is the evidence |
+| ~~`island-generator-building`~~ **done** | Nothing. Your take runs an empty grid to a finished island in one shot, auto-rotating | Trimmed to 11s at 1.45x, letterbox cropped off, and the four still stages further down that page are now frames out of the same run |
 
 ---
 
@@ -123,6 +123,25 @@ figure.
 Your full-page shot of the Wellness page solved this. The figure now carries the
 rating summary, the write-a-review form and a real review, and no student name
 appears anywhere — so the caption no longer has to promise blurring.
+
+### ~~Dorms — the browse and filter clip~~ · done
+
+Your four full-page shots of the index — unfiltered, singles, singles on Center
+Campus, and singles on Center Campus with a private bathroom — replaced both the
+clip and the still that sat under it. They are hung on a new machine that holds
+the window still and scrolls the *page* behind it, so the list's length is now
+part of the argument rather than a number in the caption: thirty halls scroll past
+to the footer, then three switches land in order and the grid falls to one under
+them, then the camera goes in on the rail that did it.
+
+`dorms-browse-filter.mp4` and `dorms-list.webp` are unused as a result.
+**Nothing to re-record here.**
+
+### ~~Dorms — the dorm page~~ · done
+
+Your Grad Center shot runs as one scroll through the whole page — gallery,
+description, feature table, map, four buildings of floor plans, review — and
+closes on the feature table, which is the filter rail restated for one dorm.
 
 ### ~~Dorms — the quiz~~ · done
 

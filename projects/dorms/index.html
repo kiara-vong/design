@@ -54,9 +54,9 @@
     <a href="#overview">Overview</a>
     <a href="#context">Context</a>
     <a href="#does">What it does</a>
+    <a class="sub" href="#page">A dorm page</a>
+    <a class="sub" href="#quiz">The quiz</a>
     <a href="#how">How it works</a>
-    <a class="sub" href="#plans">Floor plans</a>
-    <a class="sub" href="#photos">Photographs</a>
     <a href="#taught">What it taught me</a>
   </nav>
 <div id="cs-navwrap" aria-hidden="false">
@@ -108,12 +108,15 @@
         </div>
         <div class="cs-headgroup">
         <p class="cs-intro">Before the annual housing lottery, students piece dorm information together from old forum posts, secondhand accounts and a housing page with floor plans but no photos. D@B puts it in one place: photos, plans, features and peer reviews, plus a quiz that narrows thirty dorms to a shortlist worth touring.</p>
+        <div class="cs-cta">
+          <a href="https://kiara-vong.github.io/dab/" target="_blank" rel="noopener"><span>Open Dorms @ Brown</span><svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg></a>
+          <span class="cs-cta-url">kiara-vong.github.io/dab</span>
+        </div>
         <div class="cs-meta">
           <div class="col"><span class="lbl">Role</span><span class="val">Full stack</span></div>
           <div class="col"><span class="lbl">Stack</span><span class="val">React, Java (Spark),<br>Firebase, Docker</span></div>
           <div class="col"><span class="lbl">Year</span><span class="val">2023</span></div>
-          <div class="col"><span class="lbl">Live</span><span class="val"><a class="touch" href="https://kiara-vong.github.io/dab/" target="_blank" rel="noopener">Open it</a></span></div>
-          <div class="col"><span class="lbl">Note</span><span class="val">If you would like the detail, please <a class="touch" href="../../">get in touch</a></span></div>
+          <div class="col"><span class="lbl">Note</span><span class="val">If you want to know more, <a class="touch" href="#" data-mail>let me know</a></span></div>
         </div>
         </div>
       </div>
@@ -130,7 +133,9 @@
       </div>
     </section>
 
-    <section id="does" class="cs-section">
+    <div class="cs-group">
+
+      <div class="cs-sub" id="does">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">What it does</span></div>
         <h2 class="cs-h2">Everything in one place, then a shortlist</h2>
@@ -164,6 +169,37 @@
         <div class="cs-rule"><span class="n">04</span><span class="t">The quiz</span><span class="d">A few questions about what you care about, and thirty dorms come back as a ranked shortlist.</span></div>
         <div class="cs-rule"><span class="n">05</span><span class="t">Sign-in</span><span class="d">Google, restricted to brown.edu, so the reviews come from people who actually live there.</span></div>
       </div>
+      </div>
+
+      <div class="cs-sub" id="page">
+        <h2 class="cs-h2">A dorm page, top to bottom</h2>
+      <div class="cs-body">
+        <p>The page answers the questions in the order you would ask them. A photograph of the actual room first, because that is what nobody could find anywhere else. Then the description and the six features the filters run on. Then where it is on campus, then the plan of the floor you might live on, then what somebody who lived there said.</p>
+        <p>Two of those parts took a decision rather than a layout. Dorm photos are phone snapshots in every orientation and resolution, and hard-cropping a tall one into a fixed frame cuts off the half of the room you wanted. The gallery letterboxes the whole photo over a blurred, darkened copy of itself: nothing is cropped, the frame keeps its size, and the fill reads as intentional rather than as empty space.</p>
+        <p>The other is the plans. Keeney, Greg, Grad Center, New Pembroke and Young Orchard are not buildings, they are several, each with its own floors and its own set of plans, so the plans render as grouped card grids, one group per building. That only exists because the data was looked at rather than assumed, and it is invisible on the other twenty-five dorms, which is the correct outcome.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage page solo moves" style="--pw:1280px;--ph:633px;--bar:33px;--plate-r:17px;--dur:18s;--n:1;--x0:97.2px;--y0:46.0px;--k0:0.4724;--sy:-2600.0px;--sr:-490.0px;--x1:-501.0px;--y1:-137.5px;--k1:1.0000">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <div class="reel">
+                  <img style="--i:0" src="../../assets/plate/dorms-detail.webp" alt="A dorm page for Grad Center: photo gallery, description, a feature table, a campus map, floor plans for four buildings, and a student review" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cs-caption">One page per dorm, answering what the filters cannot. Photographs of the actual room rather than the building from outside, a plan for every floor of every building, where it sits on the map, and someone who lived there saying what it was like. The table it ends on is the filter rail again, stated for one dorm.</figcaption>
+      </figure>
+      <div class="cs-rules">
+        <div class="cs-rule"><span class="n">01</span><span class="t">Gallery</span><span class="d">Every photo at full height, letterboxed rather than cropped.</span></div>
+        <div class="cs-rule"><span class="n">02</span><span class="t">Description and features</span><span class="d">Room type, bathroom, kitchen, floor, common room, elevator: the filter rail restated for one dorm.</span></div>
+        <div class="cs-rule"><span class="n">03</span><span class="t">Location</span><span class="d">An embedded campus map, because South Campus means nothing until you have seen the walk.</span></div>
+        <div class="cs-rule"><span class="n">04</span><span class="t">Floor plans</span><span class="d">Grouped per building for the five dorms that are more than one.</span></div>
+        <div class="cs-rule"><span class="n">05</span><span class="t">Reviews</span><span class="d">An average rating, and what the people who lived there wrote.</span></div>
+      </div>
       <figure class="cs-figure">
         <div class="cs-media cam cam-stage moves" style="--pw:2400px;--ph:1542px;--bar:62px;--plate-r:31px;--dur:13s;--n:1;--x0:166.8px;--y0:46.0px;--k0:0.1939;--x1:-155.9px;--y1:-322.6px;--k1:0.4628">
           <div class="view">
@@ -175,13 +211,44 @@
             </div>
           </div>
         </div>
-        <figcaption class="cs-caption">Named in the intro of every version of this project and, until now, shown nowhere. A rating, a box asking what it is actually like, and the one review that came back.</figcaption>
+        <figcaption class="cs-caption">The part named in the intro of every version of this project. A rating, a box asking what it is actually like, and the one review that came back.</figcaption>
       </figure>
-    </section>
+      </div>
 
-    <div class="cs-group">
+      <div class="cs-sub" id="quiz">
+        <h2 class="cs-h2">Thirty dorms in, three out</h2>
+      <div class="cs-body">
+        <p>The filters assume you already know what you want. Plenty of people do not. They know they would like to cook sometimes, that a private bathroom matters more to them than being on Center Campus, and that they would rather not spend a year alone on a Tuesday night, which is not a filter query.</p>
+        <p>So the quiz asks about those instead: room styles that would work, where you would rather live, how much the bathroom matters, and a few more. What comes back is not a filtered list with everything else hidden, it is a ranked shortlist of three, which is a number of buildings you can actually go and walk through before the lottery.</p>
+      </div>
+      <figure class="cs-figure">
+        <div class="cs-media cam cam-stage page flow moves" style="--pw:1280px;--ph:633px;--bar:33px;--plate-r:17px;--dur:22s;--n:2;--press-bg:#FBF8F4;--x0:97.2px;--y0:46.0px;--k0:0.4724;--sy:-834.8px;--sy2:-180.0px;--x1:-250.5px;--y1:-192.7px;--k1:1.0000">
+          <div class="view">
+            <div class="plate">
+              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
+              <div class="shots">
+                <div class="reel">
+                  <img style="--i:0" src="../../assets/plate/dorms-quiz-page.webp" alt="The recommendation quiz with all six questions answered, the Get Recommendations button pressed, and the results page ranking Hegeman, Hope and Caswell one to three" loading="lazy">
+                  <img style="--i:1" src="../../assets/plate/dorms-quiz-results.webp" alt="" aria-hidden="true" loading="lazy">
+                  <span class="pick" aria-hidden="true" style="left:299.2px;top:375.5px;width:91.2px;height:49.6px;background-image:url(../../assets/plate/dorms-quiz-blanks.webp);background-size:154.1px auto;background-position:0 0.0px"></span>
+                  <span class="pick" aria-hidden="true" style="left:453.9px;top:514.7px;width:154.1px;height:49.6px;background-image:url(../../assets/plate/dorms-quiz-blanks.webp);background-size:154.1px auto;background-position:0 -51.7px"></span>
+                  <span class="pick" aria-hidden="true" style="left:559.5px;top:653.9px;width:118.9px;height:49.6px;background-image:url(../../assets/plate/dorms-quiz-blanks.webp);background-size:154.1px auto;background-position:0 -103.5px"></span>
+                  <span class="pick" aria-hidden="true" style="left:299.2px;top:793.1px;width:120.0px;height:49.6px;background-image:url(../../assets/plate/dorms-quiz-blanks.webp);background-size:154.1px auto;background-position:0 -155.2px"></span>
+                  <span class="pick" aria-hidden="true" style="left:299.2px;top:932.3px;width:145.1px;height:49.6px;background-image:url(../../assets/plate/dorms-quiz-blanks.webp);background-size:154.1px auto;background-position:0 -206.9px"></span>
+                  <span class="pick" aria-hidden="true" style="left:559.5px;top:1071.5px;width:118.9px;height:49.6px;background-image:url(../../assets/plate/dorms-quiz-blanks.webp);background-size:154.1px auto;background-position:0 -258.7px"></span>
+                  <span class="press" aria-hidden="true" style="left:498.0px;top:1154.0px;width:284.0px;height:79.0px"><i style="left:12px;top:12px;width:260.0px;height:55.0px;background-image:url(../../assets/plate/dorms-quiz-page.webp);background-size:1280px auto;background-position:-510.0px -1166.0px"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="cs-caption">Six questions, one button, three buildings. Not a shorter list of the same kind: an answer to a question the filters cannot be asked.</figcaption>
+      </figure>
+      </div>
 
-      <div class="cs-sub" id="how">
+    </div>
+
+    <section id="how" class="cs-section">
       <div class="cs-sechead">
         <div class="cs-tag"><span class="cs-line"></span><span class="cs-seclabel">How it works</span></div>
         <h2 class="cs-h2">Why there is a backend at all</h2>
@@ -212,59 +279,7 @@
         <div class="cs-rule"><span class="n">02</span><span class="t">Static front, hosted back</span><span class="d">A static host cannot run a server, so the two deploy separately and meet over HTTP.</span></div>
         <div class="cs-rule"><span class="n">03</span><span class="t">Sign-in by redirect</span><span class="d">Popup sign-in is silently killed by default cross-origin policy on static hosts: the window opens, closes, and never completes.</span></div>
       </div>
-      </div>
-
-      <div class="cs-sub" id="plans">
-        <h2 class="cs-h2">Some dorms are more than one building</h2>
-      <div class="cs-body">
-        <p>Keeney, Greg, Grad Center, New Pembroke and Young Orchard are not buildings, they are several, each with its own floors and its own set of plans. A flat list of floor plans is wrong for those five and quietly misleading for anyone who does not already know that.</p>
-        <p>So the plans render as grouped card grids, one group per building. It is a small structural decision that only exists because the data was looked at rather than assumed, and it is invisible on the other twenty-five dorms, which is the correct outcome.</p>
-      </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-stage moves pans" style="--pw:2200px;--ph:801px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:104.7px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:-117.8px;--y1:-37.9px;--x2:-117.8px;--y2:-189.7px;--k1:0.7250">
-          <div class="view">
-            <div class="plate">
-              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-              <div class="shots">
-                <img style="--i:0" src="../../assets/plate/dorms-floorplans-multibuilding.webp" alt="Floor plans grouped into one card grid per building" loading="lazy">
-              </div>
-            </div>
-          </div>
-          <div class="call" style="--cx:613.0px;--cy:169.5px;--cw:166px">
-            <div class="call-row"><span class="call-line"></span><span class="call-note">per building</span></div>
-            <p class="call-desc">Archibald-Bronson, then Everett-Poland. A flat list would run these together.</p>
-          </div>
-        </div>
-        <figcaption class="cs-caption">Five of the thirty dorms are several buildings. A flat list of plans is wrong for those and quietly misleading to anyone who does not already know it.</figcaption>
-      </figure>
-      </div>
-
-      <div class="cs-sub" id="photos">
-        <h2 class="cs-h2">Photographs nobody framed</h2>
-      <div class="cs-body">
-        <p>Dorm photos are phone snapshots in every orientation and resolution. Hard-cropping a tall photo into a fixed frame cuts off half the room, which is the half you wanted.</p>
-        <p>The gallery letterboxes the full photo over a blurred, darkened copy of itself filling the rest of the frame. Nothing is cropped, the frame stays a consistent size, and the fill reads as intentional rather than as empty space.</p>
-      </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-stage moves" style="--pw:2200px;--ph:865px;--bar:57px;--plate-r:29px;--dur:13s;--n:1;--x0:46.0px;--y0:97.4px;--k0:0.2268;--vx:0px;--vw:591.0px;--x1:20.0px;--y1:-90.9px;--k1:0.6268">
-          <div class="view">
-            <div class="plate">
-              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-              <div class="shots">
-                <img style="--i:0" src="../../assets/plate/dorms-gallery-letterbox.webp" alt="A tall phone photo letterboxed over a blurred copy of itself" loading="lazy">
-              </div>
-            </div>
-          </div>
-          <div class="call" style="--cx:613.0px;--cy:169.5px;--cw:166px">
-            <div class="call-row"><span class="call-line"></span><span class="call-note">the same photo</span></div>
-            <p class="call-desc">Blurred and darkened to fill the frame, so a tall photo keeps its top and its bottom.</p>
-          </div>
-        </div>
-        <figcaption class="cs-caption">Nothing is cropped and the frame keeps its size. What fills the rest is the same photograph, blurred and darkened.</figcaption>
-      </figure>
-      </div>
-
-    </div>
+    </section>
 
     <section id="taught" class="cs-section">
       <div class="cs-sechead">
@@ -275,20 +290,6 @@
         <p>I had thought of hosting as something that happens after the build. It is not: the static-host constraint decided the architecture, the auth flow and the routing, and every one of those is visible to the person using it.</p>
         <p>Client-side routing on a project path needed an explicit basename and the redirect trick for deep links, because there is no server to rewrite a URL. That is a design decision that arrived from the infrastructure, and I would now go looking for those earlier.</p>
       </div>
-      <figure class="cs-figure">
-        <div class="cs-media cam cam-stage seq moves" style="--pw:2200px;--ph:1065px;--bar:57px;--plate-r:29px;--dur:13s;--n:2;--x0:90.7px;--y0:46.0px;--k0:0.2808;--x1:-106.5px;--y1:-98.9px;--k1:0.4600">
-          <div class="view">
-            <div class="plate">
-              <span class="bar" aria-hidden="true"><i></i><i></i><i></i><b></b></span>
-              <div class="shots">
-                <img style="--i:0" src="../../assets/plate/dorms-quiz-asked.webp" alt="The recommendation quiz with its answers chosen, then the same page showing three dorms ranked one to three" loading="lazy">
-                <img style="--i:1" src="../../assets/plate/dorms-quiz-answered.webp" alt="" aria-hidden="true" loading="lazy">
-              </div>
-            </div>
-          </div>
-        </div>
-        <figcaption class="cs-caption">Thirty dorms in, a shortlist worth touring out, over a container on a free tier that sleeps between visits.</figcaption>
-      </figure>
     </section>
 
   </main>

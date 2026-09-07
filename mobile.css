@@ -461,6 +461,12 @@
   /* Two columns, not one. Stacked, five short label/value pairs ran the block to nearly
      a screen for perhaps forty words; paired up it is half that and each value still has
      its own line. The note is a sentence rather than a field, so it spans both. */
+  /* The button keeps its size; the URL drops under it rather than squeezing the
+     button to fit beside it on a 390px column. */
+  .cs-cta { gap: 10px; }
+  .cs-cta a { font-size: 14px; padding: 12px 18px 12px 20px; }
+  .cs-cta-url { font-size: 12px; flex-basis: 100%; }
+
   .cs-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px;
              padding: 16px; align-items: start; }
   .cs-meta .col { gap: 4px; }

@@ -924,6 +924,57 @@
    }
 }
 
+/* ---- one page, nothing landing on it --------------------------------------
+   A page with no states to show has nothing to fill the long hold the sequence
+   above needs between coming back up and going in, and four seconds of a still
+   frame in the middle of a loop is not a pause, it is the figure appearing to
+   have stopped working. So the solo timeline spends that budget on the two things
+   it does have: a slower scroll, which is the one that has to be readable, and a
+   longer hold on the close. Same shape, same order, no dead air. */
+.is-in .cam-stage.page.solo .shots .reel {
+   animation-name: page-scroll-solo
+}
+
+.is-in .cam-stage.page.solo.moves .plate {
+   animation-name: page-look-solo
+}
+
+@keyframes page-scroll-solo {
+   0%, 6% {
+      transform: translateY(0)
+   }
+
+   36%, 43% {
+      transform: translateY(var(--sy, 0px))
+   }
+
+   60%, 65% {
+      transform: translateY(0)
+   }
+
+   72%, 88% {
+      transform: translateY(var(--sr, 0px))
+   }
+
+   97%, 100% {
+      transform: translateY(0)
+   }
+}
+
+@keyframes page-look-solo {
+   0%, 65% {
+      transform: translate(var(--x0), var(--y0)) scale(var(--k0))
+   }
+
+   72%, 88% {
+      transform: translate(var(--x1), var(--y1)) scale(var(--k1))
+   }
+
+   97%, 100% {
+      transform: translate(var(--x0), var(--y0)) scale(var(--k0))
+   }
+}
+
 /* ---- the filters, landing in order ---------------------------------------
    Each state rises over the one before and STAYS, so the figure accumulates
    rather than cycling: at 70% all three are on and the page below them is the
@@ -1023,5 +1074,626 @@
 
    .cam-stage.page .reel img + img {
       opacity: 0
+   }
+}
+
+/* ------------------------------------------------------------- H2. flow
+   Two pages and the click between them: fill a form, press the button, land on
+   the answer.
+
+   The page machine above scrolls one page and swaps states of it in place, which
+   is right for a list that narrows. A form is not that. A form has a before and
+   an after, they are different pages, and the thing worth showing is the moment
+   the first becomes the second -- so this machine is built around that moment
+   rather than around a dissolve.
+
+   Three things follow from taking a navigation seriously:
+
+     - the swap is a CUT, not a fade. Two pages cross-fading reads as one page
+       changing its mind; a page load is instantaneous and should look it. The
+       reel jumps back to the top and the camera drops back to the wide framing in
+       the same fifth of a second, because that is what a browser does;
+     - the two pages are different HEIGHTS, so each has its own scroll stop. The
+       second one's stop is defined as its own bottom, which is why it never shows
+       the first page underneath it: at the end of its scroll the two edges are
+       the same edge;
+     - the press is real. A button that darkens is a hover; a button that moves is
+       a press. So .press holds a crop of the button taken from the page itself,
+       on a patch of the page's own background, and it is that crop which shrinks.
+       Nothing is drawn twice and nothing has to be kept in sync by hand -- the
+       crop is the same file at the same width, offset to the button. */
+.cam-stage.page.flow .press {
+   position: absolute;
+   z-index: 2;
+   overflow: hidden;
+   background: var(--press-bg, #FBF8F4)
+}
+
+.cam-stage.page.flow .press i {
+   position: absolute;
+   display: block;
+   background-repeat: no-repeat;
+   transform-origin: 50% 50%;
+   will-change: transform
+}
+
+/* An answer that has not been given yet: an unselected pill, carrying the
+   selected one's own glyphs, laid exactly over it. It starts opaque and goes, so
+   the form fills itself in and the state it ends in is the capture unmodified.
+   Built in gen/quiz_picks.py -- see there for why the labels are lifted out of
+   the crimson rather than typeset again. */
+.cam-stage.page.flow .pick {
+   position: absolute;
+   z-index: 2;
+   background-repeat: no-repeat
+}
+
+/* Linear, and not for the usual reason. The answers land on a schedule, and the
+   schedule is only right if each pill is in the same place on the screen when its
+   answer arrives. An eased scroll would put the middle four somewhere else, and
+   the figure would look like it was clicking at nothing in particular. */
+.is-in .cam-stage.page.flow .shots .reel {
+   animation-name: flow-scroll;
+   animation-timing-function: linear
+}
+
+.is-in .cam-stage.page.flow.moves .plate {
+   animation-name: flow-look
+}
+
+.is-in .cam-stage.page.flow .reel img:nth-of-type(2) {
+   animation-name: flow-load
+}
+
+.is-in .cam-stage.page.flow .press i {
+   animation: flow-press var(--dur, 20s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+/* --sy is the form's own bottom, so the scroll ends with the button in frame
+   rather than stopping somewhere that happens to be far enough. --sy2 is the
+   answer's bottom. The 40-to-41 step is the navigation: one frame of the form at
+   its foot, the next of the result at its head. */
+@keyframes flow-scroll {
+   0%, 7% {
+      transform: translateY(0)
+   }
+
+   42%, 63% {
+      transform: translateY(var(--sy, 0px))
+   }
+
+   64%, 69% {
+      transform: translateY(0)
+   }
+
+   80%, 86% {
+      transform: translateY(var(--sy2, 0px))
+   }
+
+   92%, 100% {
+      transform: translateY(0)
+   }
+}
+
+/* In on the button before the press, because a four-pixel movement at the resting
+   framing is not a press, it is a rendering artefact. Out again on the load: a new
+   page arrives at the framing a new page arrives at. */
+@keyframes flow-look {
+   0%, 46% {
+      transform: translate(var(--x0), var(--y0)) scale(var(--k0))
+   }
+
+   51%, 63% {
+      transform: translate(var(--x1), var(--y1)) scale(var(--k1))
+   }
+
+   64%, 100% {
+      transform: translate(var(--x0), var(--y0)) scale(var(--k0))
+   }
+}
+
+@keyframes flow-load {
+   0%, 63% {
+      opacity: 0
+   }
+
+   64%, 92% {
+      opacity: 1
+   }
+
+   93%, 100% {
+      opacity: 0
+   }
+}
+
+/* Down, held, up. The hold is what separates a press from a flinch, and the
+   brightness comes off with it because a pressed button on this site is darker as
+   well as smaller. */
+@keyframes flow-press {
+   0%, 55% {
+      transform: scale(1);
+      filter: none
+   }
+
+   57%, 58% {
+      transform: scale(.955);
+      filter: brightness(.86)
+   }
+
+   60%, 100% {
+      transform: scale(1);
+      filter: none
+   }
+}
+
+/* Six tracks rather than one with a delay, for the same reason the page machine
+   needs six: a delay moves the END of a hold along with its start, so the answers
+   would come off again in the order they went on. Each one goes and stays gone
+   until the reset.
+
+   The percentages are a schedule, not a layout, and they assume what a form
+   almost always is: questions at a regular pitch, read at a steady scroll. These
+   six land at the same height on screen to within a pixel. A form with uneven
+   spacing would want its own numbers. */
+.is-in .cam-stage.page.flow .pick:nth-of-type(1) {
+   animation: flow-pick-1 var(--dur, 22s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page.flow .pick:nth-of-type(2) {
+   animation: flow-pick-2 var(--dur, 22s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page.flow .pick:nth-of-type(3) {
+   animation: flow-pick-3 var(--dur, 22s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page.flow .pick:nth-of-type(4) {
+   animation: flow-pick-4 var(--dur, 22s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page.flow .pick:nth-of-type(5) {
+   animation: flow-pick-5 var(--dur, 22s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.page.flow .pick:nth-of-type(6) {
+   animation: flow-pick-6 var(--dur, 22s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+@keyframes flow-pick-1 {
+   0%, 4% { opacity: 1 }
+   6%, 92% { opacity: 0 }
+   93%, 100% { opacity: 1 }
+}
+
+@keyframes flow-pick-2 {
+   0%, 11.5% { opacity: 1 }
+   13.5%, 92% { opacity: 0 }
+   93%, 100% { opacity: 1 }
+}
+
+@keyframes flow-pick-3 {
+   0%, 17.4% { opacity: 1 }
+   19.4%, 92% { opacity: 0 }
+   93%, 100% { opacity: 1 }
+}
+
+@keyframes flow-pick-4 {
+   0%, 23.3% { opacity: 1 }
+   25.3%, 92% { opacity: 0 }
+   93%, 100% { opacity: 1 }
+}
+
+@keyframes flow-pick-5 {
+   0%, 29.1% { opacity: 1 }
+   31.1%, 92% { opacity: 0 }
+   93%, 100% { opacity: 1 }
+}
+
+@keyframes flow-pick-6 {
+   0%, 35% { opacity: 1 }
+   37%, 92% { opacity: 0 }
+   93%, 100% { opacity: 1 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   /* The form, at the top, unpressed. The answer is a state this figure argues
+      its way to; showing it as the still would give away the only thing the
+      figure has to say. */
+   .is-in .cam-stage.page.flow .press i,
+   .is-in .cam-stage.page.flow .pick {
+      animation: none
+   }
+
+   .cam-stage.page.flow .pick {
+      opacity: 1
+   }
+
+   .cam-stage.page.flow .press i {
+      transform: scale(1)
+   }
+}
+
+/* A clip in the window, on the same terms as a still: the plate's own size, the
+   plate's own corners, and the camera over it if there is one. The site used to
+   frame its screenshots and leave its recordings bare, which quietly said they
+   were two different kinds of evidence. They are the same kind. */
+.cam-stage .shots video {
+   position: absolute;
+   inset: 0;
+   width: 100%;
+   height: 100%;
+   display: block;
+   object-fit: cover
+}
+
+/* ---- more than two states -------------------------------------------------
+   Two states of a screen cross-fade on one window: before and after, and the
+   reader holds both in mind at once. Three or more is a different thing -- a
+   progression -- and it needs to arrive in order and accumulate, the same way the
+   page machine's filters do, for the same reason: a shared window with a delay
+   moves the end of each hold along with its start, so the earlier states drop out
+   from under the later ones and a sequence plays backwards at its own edges.
+
+   Four fixed tracks. They all clear together at the end, so the loop restarts
+   from the first state rather than dissolving through the middle of the run. */
+.is-in .cam-stage.steps .shots img:nth-of-type(2) {
+   animation: stage-step-2 var(--dur, 15s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.steps .shots img:nth-of-type(3) {
+   animation: stage-step-3 var(--dur, 15s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.steps .shots img:nth-of-type(4) {
+   animation: stage-step-4 var(--dur, 15s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+.is-in .cam-stage.steps .shots img:nth-of-type(5) {
+   animation: stage-step-5 var(--dur, 15s) cubic-bezier(.4, 0, .2, 1) infinite
+}
+
+@keyframes stage-step-2 {
+   0%, 20% { opacity: 0 }
+   25%, 84% { opacity: 1 }
+   92%, 100% { opacity: 0 }
+}
+
+@keyframes stage-step-3 {
+   0%, 40% { opacity: 0 }
+   45%, 84% { opacity: 1 }
+   92%, 100% { opacity: 0 }
+}
+
+@keyframes stage-step-4 {
+   0%, 58% { opacity: 0 }
+   63%, 84% { opacity: 1 }
+   92%, 100% { opacity: 0 }
+}
+
+@keyframes stage-step-5 {
+   0%, 72% { opacity: 0 }
+   77%, 84% { opacity: 1 }
+   92%, 100% { opacity: 0 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   /* The first state, which for a progression is the one before anything has
+      happened -- an empty grid rather than a finished island. The figure's whole
+      claim is that the second was got from the first by rule, and a still of the
+      second gives that away for nothing. */
+   .is-in .cam-stage.steps .shots img {
+      animation: none
+   }
+}
+
+/* ------------------------------------------------------------- I. stepper
+   The solver, one decision at a time, under the reader's hand.
+
+   Every other machine in this file plays at the reader. This one waits. The
+   difference matters here more than it would anywhere else on the site: the
+   argument of the page is that the island is not drawn, it is DECIDED, one cell
+   after another, each one following from what was already settled. A loop makes
+   that a thing you watch. A click makes it a thing you do -- and the second is
+   the only one that puts the reader in the position the algorithm is in.
+
+   The frames were captured beforehand, out of a single run, chosen at equal
+   increments of filled area so that every click is worth the same amount. That
+   last part is what stops it feeling arbitrary: a stepper whose steps are uneven
+   reads as a slideshow with a button, and the reader stops after two.
+
+   It borrows the whole window from .cam-stage -- same frame, same chrome, same
+   corners -- and adds only the control column and the state. */
+.cam-step .shots img {
+   opacity: 0;
+   transition: opacity .22s cubic-bezier(.4, 0, .2, 1)
+}
+
+/* Without script this is a picture of a finished island, not of an empty grid.
+   The last frame is the only one that stands on its own; the first one is the
+   setup for a joke the reader would never get to hear. */
+.cam-step .shots img:last-of-type {
+   opacity: 1
+}
+
+.cam-step[data-live] .shots img:last-of-type {
+   opacity: 0
+}
+
+.cam-step[data-live] .shots img.on {
+   opacity: 1
+}
+
+.cam-step .view {
+   cursor: pointer
+}
+
+/* The column the view gave up. Same arrangement as a callout's, because it is the
+   same idea: the surface beside the window is not a gap, it is where the thing
+   that talks about the window goes. */
+.cam-step .step-ui {
+   position: absolute;
+   left: var(--cx);
+   top: 50%;
+   width: var(--cw, 178px);
+   transform: translateY(-50%);
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 10px
+}
+
+.cam-step .step-go {
+   /* One line or two, the box is the same height. "Back to the empty board"
+      wraps where "Place the next tiles" does not, and without this the counter
+      and the track below it jump 16px on the last step -- which reads as the
+      figure breaking at exactly the moment the reader finishes it. */
+   display: flex;
+   align-items: center;
+   min-height: 45px;
+   box-sizing: border-box;
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-weight: 500;
+   font-size: 12px;
+   line-height: 1.2;
+   text-align: left;
+   color: var(--dusty-granite, #5C5651);
+   background: var(--parchment, #FDFBEF);
+   border: 1px solid var(--outline-stroke, #D8D2C2);
+   border-radius: 11px;
+   padding: 8px 12px;
+   cursor: pointer;
+   box-shadow: 0 2px 6px rgba(45, 40, 38, .10);
+   transition: transform .12s ease, box-shadow .12s ease, background .12s ease
+}
+
+.cam-step .step-go:hover {
+   background: #fff;
+   box-shadow: 0 4px 10px rgba(45, 40, 38, .14)
+}
+
+.cam-step .step-go:active {
+   transform: translateY(1px);
+   box-shadow: 0 1px 3px rgba(45, 40, 38, .12)
+}
+
+.cam-step .step-note {
+   margin: 0;
+   font-family: 'Diatype', 'Inter', system-ui, sans-serif;
+   font-size: 12px;
+   line-height: 1.35;
+   color: var(--dusty-granite, #5C5651)
+}
+
+/* The invitation, and it is spent the moment it is taken. Same rule the
+   dashboard's hover ring follows: a prompt that keeps prompting after you have
+   done the thing is not a prompt, it is a tic. */
+.is-in .cam-step:not(.used) .step-go {
+   animation: step-nudge 2.6s ease-in-out infinite
+}
+
+@keyframes step-nudge {
+
+   0%, 62%, 100% {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(45, 40, 38, .10)
+   }
+
+   72% {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(45, 40, 38, .16)
+   }
+
+   82% {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(45, 40, 38, .10)
+   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   .is-in .cam-step:not(.used) .step-go {
+      animation: none
+   }
+
+   .cam-step .shots img {
+      transition: none
+   }
+}
+
+/* -------------------------------------------------------------- J. wipe
+   Two frames of one run, in exact register, with a line the reader drags.
+
+   This only works because the capture it comes from does not move: same camera,
+   same light, same board, and the only difference across the seam is how much has
+   been decided. A wipe between two frames that do not line up is not a
+   comparison, it is a glitch -- the eye reads the jump in the silhouette before it
+   reads anything either half is saying.
+
+   The handle and its two labels live in the CARD's coordinates rather than the
+   plate's, because the plate is scaled down to fit and everything drawn inside it
+   scales with it: a one-pixel rule would land at less than half a pixel and a
+   label would go under six point. So the window's drawn rectangle is computed in
+   gen/media.py and handed over as --wx/--wy/--ww/--wh, and the furniture is
+   positioned against that. The clip itself stays in the plate's space, where a
+   percentage means the same thing at either end. */
+.cam-wipe .shots img {
+   opacity: 1
+}
+
+.cam-wipe .shots img + img {
+   opacity: 1;
+   clip-path: inset(0 0 0 calc(var(--s, 50) * 1%))
+}
+
+/* The seam. Drawn over the screen only, not over the title bar, because a browser
+   window whose chrome is cut in half is a broken window rather than a comparison. */
+.cam-wipe .wipe-line {
+   position: absolute;
+   left: calc(var(--wx) + var(--ww) * var(--s, 50) / 100);
+   top: var(--wy);
+   height: var(--wh);
+   width: 2px;
+   margin-left: -1px;
+   background: rgba(253, 251, 239, .92);
+   box-shadow: 0 0 0 1px rgba(28, 24, 22, .16);
+   pointer-events: none;
+   z-index: 3
+}
+
+.cam-wipe .wipe-line i {
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   width: 26px;
+   height: 26px;
+   margin: -13px 0 0 -13px;
+   border-radius: 50%;
+   background: var(--parchment, #FDFBEF);
+   border: 1px solid var(--outline-stroke, #D8D2C2);
+   box-shadow: 0 2px 8px rgba(45, 40, 38, .18)
+}
+
+/* Two arrows, drawn rather than typed, so the grip reads as draggable at the size
+   it actually is. */
+.cam-wipe .wipe-line i::before,
+.cam-wipe .wipe-line i::after {
+   content: "";
+   position: absolute;
+   top: 50%;
+   width: 5px;
+   height: 5px;
+   margin-top: -3px;
+   border: 1px solid var(--dusty-granite, #5C5651);
+   border-width: 1px 1px 0 0
+}
+
+.cam-wipe .wipe-line i::before {
+   left: 6px;
+   transform: rotate(-135deg)
+}
+
+.cam-wipe .wipe-line i::after {
+   right: 6px;
+   transform: rotate(45deg)
+}
+
+/* The annotation: what each half IS, said at the size the reader is reading at. */
+.cam-wipe .wipe-tag {
+   position: absolute;
+   /* Along the top, not the bottom. The app draws its own key legend into the
+      bottom-left corner of the canvas, and a label sitting on top of another
+      label is two things nobody reads. Sixteen pixels down clears the collapsed
+      Controls tab on the other side. */
+   top: calc(var(--wy) + 16px);
+   /* Over the seam rather than under it: the line is furniture and the labels are
+      the annotation, and at three quarters across the line was drawing straight
+      through the middle of a word. */
+   z-index: 5;
+   padding: 4px 9px;
+   border-radius: 999px;
+   background: var(--parchment, #FDFBEF);
+   border: 1px solid var(--outline-stroke, #D8D2C2);
+   font-family: 'ApercuMono', 'JetBrains Mono', ui-monospace, monospace;
+   font-weight: 500;
+   font-size: 11px;
+   line-height: 1.2;
+   color: var(--dusty-granite, #5C5651);
+   box-shadow: 0 2px 6px rgba(45, 40, 38, .12);
+   pointer-events: none
+}
+
+.cam-wipe .wipe-tag.left {
+   left: calc(var(--wx) + 12px)
+}
+
+.cam-wipe .wipe-tag.right {
+   left: calc(var(--wx) + var(--ww) - 12px);
+   transform: translateX(-100%)
+}
+
+/* A range input is the control, laid over the window at zero opacity. It is not a
+   shortcut: it is a slider, so it drags with a mouse, drags with a finger, moves
+   with the arrow keys, takes focus in tab order and announces itself -- all of
+   which a div with a pointermove handler would have had to be taught one at a
+   time and would still have got wrong for somebody. */
+.cam-wipe .wipe-range {
+   position: absolute;
+   left: var(--wx);
+   top: var(--wy);
+   width: var(--ww);
+   height: var(--wh);
+   margin: 0;
+   padding: 0;
+   opacity: 0;
+   z-index: 4;
+   cursor: ew-resize;
+   -webkit-appearance: none;
+   appearance: none;
+   background: transparent
+}
+
+.cam-wipe .wipe-range::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   width: 34px;
+   height: 100%
+}
+
+.cam-wipe .wipe-range::-moz-range-thumb {
+   width: 34px;
+   height: 100%;
+   border: 0
+}
+
+.cam-wipe .wipe-range:focus-visible ~ .wipe-line i {
+   outline: 2px solid var(--accent, #649F25);
+   outline-offset: 2px
+}
+
+/* The invitation, spent on first use, exactly like the stepper's. */
+.is-in .cam-wipe:not(.used) .wipe-line i {
+   animation: wipe-nudge 3s ease-in-out infinite
+}
+
+@keyframes wipe-nudge {
+
+   0%, 58%, 100% {
+      transform: translateX(0)
+   }
+
+   70% {
+      transform: translateX(-7px)
+   }
+
+   84% {
+      transform: translateX(7px)
+   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+   .is-in .cam-wipe:not(.used) .wipe-line i {
+      animation: none
    }
 }

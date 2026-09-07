@@ -252,3 +252,64 @@ var SITE_ROOT = (function () {
   window.addEventListener('resize', onScroll, { passive: true });
   update();
 })();
+
+/* Any other copy-email link on the page.
+   ---------------------------------------------------------------------------
+   The two handlers above are bound to one element each, '#footer a[data-mail]'
+   and (in site-nav.js) '.nav a[data-mail]', so a third one anywhere else on the
+   page had no behaviour at all: it would follow its href and go nowhere. The case
+   studies now carry one in their meta strip, on "let me know".
+
+   Same address, assembled the same way rather than written out, and the same
+   clipboard-then-execCommand fall-back. What differs is the confirmation. Those two
+   have a toast element sitting ready in their markup; a link in a line of prose has
+   nothing to show, so it briefly becomes its own confirmation and changes back. The
+   width shifts by a few pixels while it does, which is worth it for not putting a
+   floating bubble over body copy. */
+(function () {
+  var links = [].slice.call(document.querySelectorAll('a[data-mail]'))
+                .filter(function (a) {
+                  return !a.closest('#footer') && !a.closest('.nav');
+                });
+  if (!links.length) return;
+
+  var address = ['vong', 'kiara', 'real'].reverse().join('') +
+                '@' + ['gmail', 'com'].join('.');
+
+  function legacy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    var done = false;
+    try { done = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    return done;
+  }
+
+  links.forEach(function (a) {
+    /* A real mailto, so the link still works with script off and a right-click can
+       still copy it. The click handler takes over when script is running. */
+    a.setAttribute('href', 'mailto:' + address);
+    var original = a.textContent, busy = null;
+
+    function say(msg, ms) {
+      a.textContent = msg;
+      clearTimeout(busy);
+      busy = setTimeout(function () { a.textContent = original; }, ms || 1700);
+    }
+
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(address).then(
+          function () { say('copied'); },
+          function () { say(legacy(address) ? 'copied' : address, 5000); });
+      } else {
+        say(legacy(address) ? 'copied' : address, 5000);
+      }
+    });
+  });
+})();

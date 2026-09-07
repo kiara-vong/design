@@ -311,3 +311,73 @@
     plate.addEventListener('pointerleave', off);
   });
 })();
+
+/* The island stepper: the reader advances the run themselves.
+   ---------------------------------------------------------------------------
+   The frames are all in the DOM, stacked, and one carries .on. That is the whole
+   state. It is script rather than CSS because there is nothing to animate: the
+   figure is waiting, and what it is waiting for is a person.
+
+   data-live is set here rather than in the markup on purpose. Without script the
+   stylesheet shows the LAST frame -- a finished island, which is a picture worth
+   having -- and setting the attribute is what hands control over. A reader with
+   no JavaScript gets a still instead of a broken toy, and never sees a flash of
+   the empty grid on the way. */
+(function () {
+  var figs = [].slice.call(document.querySelectorAll('.cam-step'));
+  if (!figs.length) return;
+
+  figs.forEach(function (fig) {
+    var imgs = [].slice.call(fig.querySelectorAll('.shots img'));
+    if (imgs.length < 2) return;
+    var btn = fig.querySelector('.step-go');
+    var view = fig.querySelector('.view');
+    var label = fig.getAttribute('data-label') || 'Next';
+    var again = fig.getAttribute('data-again') || 'Start over';
+    var last = imgs.length - 1;
+    var i = 0;
+
+    function show(k) {
+      i = k;
+      imgs.forEach(function (im, j) { im.classList.toggle('on', j === i); });
+      if (btn) btn.textContent = i === last ? again : label;
+    }
+
+    /* Wrapping rather than stopping at the end. A stepper that dead-ends on its
+       last frame is a stepper nobody runs twice, and this one is worth running
+       twice -- no two runs of the solver place the same tiles. */
+    function next() {
+      fig.classList.add('used');
+      show(i >= last ? 0 : i + 1);
+    }
+
+    fig.setAttribute('data-live', '');
+    show(0);
+    if (btn) btn.addEventListener('click', next);
+    if (view) view.addEventListener('click', next);
+  });
+})();
+
+/* Before/after wipe: a range input drives a clip-path, and that is the whole thing.
+   ---------------------------------------------------------------------------
+   The control is a real <input type="range"> laid over the window at zero opacity
+   rather than a div with a pointermove handler, which means drag, touch, arrow
+   keys, tab order and a screen-reader announcement all arrive for free instead of
+   being reimplemented one at a time and got wrong for somebody. All this has to do
+   is copy the value onto the container, where the CSS is waiting for it. */
+(function () {
+  var figs = [].slice.call(document.querySelectorAll('.cam-wipe'));
+  if (!figs.length) return;
+
+  figs.forEach(function (fig) {
+    var range = fig.querySelector('.wipe-range');
+    if (!range) return;
+    function set() {
+      fig.style.setProperty('--s', range.value);
+    }
+    range.addEventListener('input', set);
+    range.addEventListener('pointerdown', function () { fig.classList.add('used'); });
+    range.addEventListener('keydown', function () { fig.classList.add('used'); });
+    set();
+  });
+})();

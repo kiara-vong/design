@@ -446,3 +446,24 @@
     cards.forEach(function (c) { io.observe(c); });
   });
 })();
+
+/* Autoplaying tiles, stopped for anyone who asked for less motion.
+   ---------------------------------------------------------------------------
+   CSS can turn off an animation and cannot turn off a video, so the one thumbnail
+   that is a recording has to be paused here. Pausing at currentTime 0 leaves the
+   first frame showing, which for this clip is an empty grid -- so it seeks to the
+   end instead, where the picture is a finished island and stands on its own. */
+(function () {
+  if (!(window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion:reduce)').matches)) return;
+  [].slice.call(document.querySelectorAll('.tile-view video')).forEach(function (v) {
+    v.removeAttribute('autoplay');
+    v.loop = false;
+    function still() {
+      v.pause();
+      if (v.duration && isFinite(v.duration)) v.currentTime = v.duration - 0.05;
+    }
+    still();
+    v.addEventListener('loadedmetadata', still);
+  });
+})();

@@ -292,6 +292,19 @@ window.__hl = (function () {
   100%     {transform:scale(1.10) translate(2.5%,2%)}
 }
 @media (prefers-reduced-motion:reduce){.tile-view.pan img{animation:none}}
+/* One of the six is a recording rather than a still, and it is the one where the
+   still was doing the least work: a generator that builds itself out of nothing is
+   a process, and a frame of a finished island is the one thing about it that is
+   not interesting. The other five are pages and boards, which a pan reads fine.
+
+   Cropped to this window's aspect at encode time rather than by object-fit, so the
+   file carries no pixels the tile will never show. 308KB for the one tile on this
+   page whose subject is motion.
+
+   Under reduced motion it is paused by site-motion.js and the poster stands in --
+   a rule here cannot stop a video, only an animation. */
+.tile-view.clip video{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block}
 /* Long holds at both ends: the pause is what lets someone actually read the top of
    a page before it moves, and six of these are on screen together. */
 @keyframes tile-scroll{
@@ -657,8 +670,10 @@ window.__hl = (function () {
             <div class="tile" style="--field:#BDE3F0;--ground:url(assets/tile/field-ac.webp)">
               <div class="tile-win">
                 <div class="tile-bar"><i></i><i></i><i></i><span></span></div>
-                <div class="tile-view pan">
-                  <img src="assets/tile/ac.jpg" alt="Animal Crossing island generator"  loading="lazy">
+                <div class="tile-view clip">
+                  <video src="assets/tile/ac-tile.mp4" poster="assets/tile/ac-tile-poster.jpg"
+                         autoplay muted loop playsinline preload="metadata"
+                         aria-label="The island generator building itself, tile by tile, on a slowly turning board"></video>
                 </div>
               </div>
             </div>

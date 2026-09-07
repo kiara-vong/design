@@ -177,6 +177,47 @@ body{background:var(--parchment)}
 .cs-title{font-family:'Kyoto','Newsreader',Georgia,serif;font-weight:500;font-style:italic;font-size:42px;line-height:1.3;color:var(--dusty-granite)}
 .cs-headgroup{display:flex;flex-direction:column;gap:32px;width:100%;align-items:flex-start}
 .cs-intro{font-family:'Diatype','Inter',system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.5;color:var(--dusty-granite);width:100%}
+/* The live link, as a thing you can hit.
+   ---------------------------------------------------------------------------
+   It used to be the fourth of five columns in the meta box, set at 14px between
+   the year and a footnote. That is where a fact goes. This is not a fact about
+   the project, it is the one place on the page where a reader can stop reading
+   about the work and go use it, and it was the quietest element in the block.
+
+   --accent-deep rather than --accent, and the reason is contrast rather than
+   taste: parchment on --accent is 3.5:1, which fails at this size, while the deep
+   variant is 4.9:1 and passes. That token already existed for the footer, which
+   needed the same thing for the same reason -- a colour that is right for 14px of
+   link text is too light across a filled area. */
+.cs-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cs-cta a{display:inline-flex;align-items:center;gap:10px;padding:13px 20px 13px 22px;
+  border-radius:999px;background:var(--accent-deep);color:var(--parchment);
+  font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;
+  font-size:15px;line-height:1;text-decoration:none;
+  box-shadow:0 1px 2px rgba(45,40,38,.16),0 8px 20px rgba(76,122,28,.22);
+  transition:transform .16s cubic-bezier(.4,0,.2,1),box-shadow .16s cubic-bezier(.4,0,.2,1),
+    background .16s ease}
+.cs-cta a:hover{background:#456F19;transform:translateY(-2px);
+  box-shadow:0 2px 4px rgba(45,40,38,.18),0 12px 26px rgba(76,122,28,.30)}
+.cs-cta a:active{transform:translateY(0);
+  box-shadow:0 1px 2px rgba(45,40,38,.16),0 4px 10px rgba(76,122,28,.20)}
+.cs-cta a:focus-visible{outline:2px solid var(--dusty-granite);outline-offset:3px}
+/* The arrow leaves before the button does, which is the whole gesture: the button
+   presses down and the arrow goes on ahead. */
+.cs-cta a svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  transition:transform .16s cubic-bezier(.4,0,.2,1)}
+.cs-cta a:hover svg{transform:translate(2px,-2px)}
+/* Where it goes, said plainly. A reader deciding whether to follow a link wants
+   to know, and github.io is part of the claim: these are live and hosted, not
+   screenshots of something that once ran. */
+.cs-cta-url{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;
+  font-size:13px;color:var(--muted);word-break:break-all}
+@media (prefers-reduced-motion: reduce){
+  .cs-cta a,.cs-cta a svg{transition:none}
+  .cs-cta a:hover{transform:none}
+  .cs-cta a:hover svg{transform:none}
+}
 .cs-meta{border:1px solid var(--outline-stroke);border-radius:12px;padding:16px 24px;display:flex;gap:32px;width:100%;box-sizing:border-box}
 .cs-meta .col{flex:1 1 0;display:flex;flex-direction:column;gap:8px;min-width:0}
 .cs-meta .lbl{font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-weight:500;font-size:16px;line-height:normal;color:var(--antique-gold)}

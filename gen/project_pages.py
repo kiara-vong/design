@@ -30,17 +30,46 @@ def live(href, label):
             % (href, esc(label)))
 
 
+# The arrow. Drawn rather than typed, because the two characters that mean this --
+# an arrow glyph and a box-with-arrow -- render at a different weight in every
+# font on the list and one of them is an emoji on Windows.
+ARROW = ('<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">'
+         '<path d="M4 10L10 4M10 4H5.2M10 4v4.8"/></svg>')
+
+
+def cta(href, label):
+    """The live link, as the thing it actually is.
+
+    It used to be the fourth of five columns in the meta box, set at 14px between
+    the year and a footnote -- which is where you put a fact, not where you put
+    the only place on the page a reader can go and use the thing. Everything above
+    it argues that the work exists; this is the sentence that offers to prove it.
+
+    The URL rides alongside rather than inside. A reader deciding whether to
+    follow a link wants to know where it goes, and github.io is itself part of the
+    claim: these are live and they are hosted, not screenshots of something that
+    once ran.
+    """
+    host = href.split("//", 1)[-1].rstrip("/")
+    return ('        <div class="cs-cta">\n'
+            '          <a href="%s" target="_blank" rel="noopener">'
+            '<span>%s</span>%s</a>\n'
+            '          <span class="cs-cta-url">%s</span>\n'
+            '        </div>\n' % (href, esc(label), ARROW, esc(host)))
+
+
 PROJECTS = [
     dict(slug="p-animal-crossing", title="Island Generator", kicker="Personal",
          hero="hero/cover-ac.webp",
          hero_alt="A low-poly 3D island with cliffs, water and scattered conifers",
          live="https://kiara-vong.github.io/animal-crossing/",
+         cta=cta("https://kiara-vong.github.io/animal-crossing/", "Open the generator"),
          intro=("A procedural island built tile by tile with wave function collapse. "
                 "No map is authored and no layout is stored: the entire input is a "
                 "set of hand-modelled pieces and the rules about which may sit next "
                 "to which."),
          meta=[("Role", "Everything"), ("Stack", "React, Three.js,<br>WFC solver"),
-               ("Year", "2024"), ("Live", live("https://kiara-vong.github.io/animal-crossing/", "Open it")),
+               ("Year", "2024"),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
               ("how", "How it works", False), ("grid", "Triangles", True),
@@ -56,9 +85,17 @@ PROJECTS = [
                "neighbour's option set narrows, and theirs after that. Getting that to "
                "terminate, stay correct, and run fast enough to watch is the actual "
                "problem, and no description had made that clear."],
-              media.clip("island-generator-building",
-                         "The solver filling an empty grid tile by tile",
-                         "Empty to finished. Every tile placed is the most constrained cell that was left, which is the heuristic the whole thing rests on.")),
+              # A real recording, finally, and in the window the rest of the
+              # site's screenshots sit in. No camera over it: the scene is
+              # already turning and the grid is already filling, and a third
+              # movement on top of two would be motion for its own sake.
+              media.stage("video/island-generator-building.mp4",
+                          "The solver filling an empty triangular grid tile by "
+                          "tile while the island turns",
+                          "Empty to finished, in one take. Every tile placed is "
+                          "the most constrained cell that was left, which is the "
+                          "heuristic the whole thing rests on.",
+                          plate=(1280, 670))),
              ("how", "How it works", "Adjacency is the whole ruleset",
               ["The solver takes no map. Its entire input is a set of tiles and, for "
                "each, what is allowed on each of its edges. Everything the output looks "
@@ -78,13 +115,7 @@ PROJECTS = [
                 "drain to a fixed point before the next collapse."),
                ("Backtrack cheaply",
                 "When a cell runs out of options, rewind to the last one that still had "
-                "a choice. Most of the work is choosing where to look next.")],
-              media.deal(["plate/island-generator-stage1-empty.webp",
-                          "plate/island-generator-stage2-quarter.webp",
-                          "plate/island-generator-stage3-threequarter.webp",
-                          "plate/island-generator-stage4-complete.webp"],
-                         "One generation at four stages, from an empty grid to a finished island",
-                         "Same camera in all four, so what changes is only how much has been decided. This is the still version of the clip above, and what reduced motion gets.")),
+                "a choice. Most of the work is choosing where to look next.")]),
              ("grid", "How it works", "Three edges, not four",
               ["The island is a triangular grid rather than a square one, which is the "
                "decision the whole tile set rests on. Three edges instead of four means "
@@ -100,9 +131,34 @@ PROJECTS = [
                "cell forces a specific tile there and re-propagates outward from it, so "
                "the solver can be pushed toward a coastline or a cliff and then left to "
                "resolve everything the choice implies."],
-              media.clip("island-generator-steering",
-                         "Forcing a tile mid-generation and watching the constraint propagate outward",
-                         "One click fixes a cell, and everything that choice implies resolves around it.")),
+              # Interactive rather than looping, and that is the point rather
+              # than a flourish. This section's claim is that the island is not
+              # drawn but decided -- one cell, then the next, each following from
+              # what was already settled. A loop makes that something you watch.
+              # A click makes it something you do, which is the only version that
+              # puts the reader where the solver is.
+              #
+              # Twelve frames out of one recorded run, chosen at equal increments
+              # of filled area so every click is worth the same amount. Out of the
+              # STILL-CAMERA run: the first take was auto-rotating, and a stepper
+              # whose view swings between clicks makes the reader work out what
+              # moved before they can see what changed. It starts on the bare
+              # board, which is also the best evidence this section has for three
+              # edges rather than four and had never been shown on its own.
+              media.stepper(["plate/island-step-%02d.webp" % i
+                             for i in range(1, 13)],
+                            "The generator stepped forward by hand, from an empty "
+                            "triangulated board to a finished island",
+                            "Twelve steps out of one run, and yours to walk. The "
+                            "board is the argument on its own: three edges per "
+                            "cell rather than four is why ten pieces cover a "
+                            "surface with no visible seam.",
+                            label="Place the next tiles",
+                            again="Back to the empty board",
+                            note="In the app a click does more than advance it: "
+                                 "it forces a specific tile into that cell and "
+                                 "re-propagates outward from the choice.",
+                            plate=(1440, 758))),
              ("pipeline", "How it works", "Blender to browser",
               ["The pieces are modelled in Blender and exported as glTF, then loaded and "
                "instanced through react-three-fiber, which lets the scene graph be "
@@ -112,10 +168,34 @@ PROJECTS = [
                "Rock and foliage colour is done in custom GLSL vertex shaders rather "
                "than baked into the models, which is what keeps a few hand-modelled "
                "pieces from reading as the same object repeated across the island."],
-              media.push("plate/island-generator-finished.webp",
-                         "A finished island: cliffs, water, beaches and scattered conifers",
-                         "Nothing here is placed by hand. The rock and foliage colour is shader work, which is what stops a few modelled pieces reading as one object repeated.",
-                         z=1.4, fx="52%", fy="46%")),
+              # The pieces, by name, out of the app's own controls panel. This
+              # section has always claimed the input is "a set of hand-modelled
+              # pieces" and never shown the set. It is ten, and they are listed
+              # on screen, which is a better proof than any number in a caption.
+              media.stage("plate/island-generator-tiles.webp",
+                          "The controls panel open on the tile list: Grass, four "
+                          "cliffs, water, two beaches and two triangles",
+                          "The entire input, on screen and named. Everything "
+                          "above was built out of these and the rules about which "
+                          "may touch which.",
+                          look=(1723, 14, 458, 605),
+                          call=("ten pieces",
+                                "Grass, four cliffs, water, two beaches, two "
+                                "triangles. That is the whole set.")),
+              # What the ten add up to, against what they started from. Only
+              # possible because the second run was recorded with the camera
+              # still: these are two frames of one take, in exact register, so
+              # the only thing that changes across the seam is the thing being
+              # compared.
+              media.wipe("plate/island-wipe-before.webp",
+                         "plate/island-wipe-after.webp",
+                         "The same board before and after one full generation, "
+                         "split by a line the reader can drag",
+                         "Drag the line. Left is the board with nothing decided; "
+                         "right is what the ten pieces and their adjacency rules "
+                         "made of it, in one run, with nothing placed by hand.",
+                         tags=("nothing decided", "every cell settled"),
+                         plate=(1440, 758))),
              ("taught", "What it taught me", "Constraint propagation, everywhere after",
               ["The thing I did not expect is how often this shape turns up once you "
                "have built it once. A design system's token layers are a constraint "
@@ -129,6 +209,7 @@ PROJECTS = [
          hero="hero/cover-dorms.webp",
          hero_alt="The Dorms @ Brown landing page: find where you will actually want to live",
          live="https://kiara-vong.github.io/dab/",
+         cta=cta("https://kiara-vong.github.io/dab/", "Open Dorms @ Brown"),
          intro=("Before the annual housing lottery, students piece dorm information "
                 "together from old forum posts, secondhand accounts and a housing page "
                 "with floor plans but no photos. D@B puts it in one place: photos, "
@@ -136,11 +217,12 @@ PROJECTS = [
                 "dorms to a shortlist worth touring."),
          meta=[("Role", "Full stack"),
                ("Stack", "React, Java (Spark),<br>Firebase, Docker"),
-               ("Year", "2023"), ("Live", live("https://kiara-vong.github.io/dab/", "Open it")),
+               ("Year", "2023"),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
-              ("does", "What it does", False), ("how", "How it works", False),
-              ("plans", "Floor plans", True), ("photos", "Photographs", True),
+              ("does", "What it does", False),
+              ("page", "A dorm page", True), ("quiz", "The quiz", True),
+              ("how", "How it works", False),
               ("taught", "What it taught me", False)],
          sections=[
              ("context", "Context", "Everyone was guessing, including Res Life",
@@ -202,18 +284,115 @@ PROJECTS = [
                          "search, over the whole campus. Three of the six take "
                          "thirty halls down to Minden.",
                          view=(1280, 600), scroll=228,
-                         look=(0, 80, 820, 412)),
+                         look=(0, 80, 820, 412))),
+
+             ("page", "What it does", "A dorm page, top to bottom",
+              ["The page answers the questions in the order you would ask them. A "
+               "photograph of the actual room first, because that is what nobody "
+               "could find anywhere else. Then the description and the six features "
+               "the filters run on. Then where it is on campus, then the plan of the "
+               "floor you might live on, then what somebody who lived there said.",
+               "Two of those parts took a decision rather than a layout. Dorm photos "
+               "are phone snapshots in every orientation and resolution, and "
+               "hard-cropping a tall one into a fixed frame cuts off the half of the "
+               "room you wanted. The gallery letterboxes the whole photo over a "
+               "blurred, darkened copy of itself: nothing is cropped, the frame keeps "
+               "its size, and the fill reads as intentional rather than as empty "
+               "space.",
+               "The other is the plans. Keeney, Greg, Grad Center, New Pembroke and "
+               "Young Orchard are not buildings, they are several, each with its own "
+               "floors and its own set of plans, so the plans render as grouped card "
+               "grids, one group per building. That only exists because the data was "
+               "looked at rather than assumed, and it is invisible on the other "
+               "twenty-five dorms, which is the correct outcome."],
+              [("Gallery",
+                "Every photo at full height, letterboxed rather than cropped."),
+               ("Description and features",
+                "Room type, bathroom, kitchen, floor, common room, elevator: the "
+                "filter rail restated for one dorm."),
+               ("Location",
+                "An embedded campus map, because South Campus means nothing until "
+                "you have seen the walk."),
+               ("Floor plans",
+                "Grouped per building for the five dorms that are more than one."),
+               ("Reviews",
+                "An average rating, and what the people who lived there wrote.")],
+              # The dorm page itself, and the reason it is one figure rather than
+              # a set of crops: the claim is that everything is in ONE PLACE, and
+              # you cannot make that claim with five pictures of five places. So
+              # the whole page runs past: photographs of the actual room, the
+              # description, the feature table, the map, six floors of four
+              # buildings, and a review at the bottom.
+              #
+              # It closes on the feature table because that is the row-for-row
+              # answer to the filter rail above. Room type, bathroom, kitchen,
+              # floor, common room, elevator: the same six dimensions the index
+              # narrows on, stated for one dorm. Everything else in this page is
+              # shown closer somewhere further down; the table is not.
+              media.page("plate/dorms-detail.webp",
+                         "A dorm page for Grad Center: photo gallery, description, "
+                         "a feature table, a campus map, floor plans for four "
+                         "buildings, and a student review",
+                         "One page per dorm, answering what the filters cannot. "
+                         "Photographs of the actual room rather than the building "
+                         "from outside, a plan for every floor of every building, "
+                         "where it sits on the map, and someone who lived there "
+                         "saying what it was like. The table it ends on is the "
+                         "filter rail again, stated for one dorm.",
+                         view=(1280, 600), scroll=490,
+                         look=(740, 125, 540, 350), dur="18s"),
               media.stage("plate/dorms-reviews.webp",
                           "The reviews section of a dorm page: the rating summary, "
                           "the form for writing one, and a posted review",
-                          "Named in the intro of every version of this project and, "
-                          "until now, shown nowhere. A rating, a box asking what it "
-                          "is actually like, and the one review that came back.",
+                          "The part named in the intro of every version of this "
+                          "project. A rating, a box asking what it is actually like, "
+                          "and the one review that came back.",
                           # The whole section at rest, then the review itself. No
                           # label on this one: the card runs the width of the page,
                           # so reserving a column for one would shrink the words
                           # below reading size, and the words are the point.
                           plate=(2400, 1480), look=(380, 1120, 1640, 320))),
+             ("quiz", "What it does", "Thirty dorms in, three out",
+              ["The filters assume you already know what you want. Plenty of people "
+               "do not. They know they would like to cook sometimes, that a private "
+               "bathroom matters more to them than being on Center Campus, and that "
+               "they would rather not spend a year alone on a Tuesday night, which is "
+               "not a filter query.",
+               "So the quiz asks about those instead: room styles that would work, "
+               "where you would rather live, how much the bathroom matters, and a few "
+               "more. What comes back is not a filtered list with everything else "
+               "hidden, it is a ranked shortlist of three, which is a number of "
+               "buildings you can actually go and walk through before the lottery."],
+              # The form fills itself in, then submits itself. The answers are
+              # not in the capture as a state that can be cross-faded to -- the
+              # capture IS the answered form -- so what moves is the other way
+              # round: an unselected pill sits over each answer and is taken away
+              # in turn, and every one of those pills carries the glyphs lifted
+              # out of the crimson it is covering. See gen/quiz_picks.py.
+              #
+              # Not two states of one screen: two pages, and the click that
+              # goes from one to the other. The form scrolls to its own foot so
+              # the button arrives in frame rather than being cut to, the camera
+              # goes in far enough that a press is a press rather than a couple
+              # of pixels, and the load is a cut -- a page arriving is instant and
+              # a cross-fade would say it was not.
+              #
+              # The button that moves is a crop of the button in the capture,
+              # laid over itself on a patch of the page's own background, so
+              # there is no second asset to keep in register with the first.
+              media.flow(["plate/dorms-quiz-page.webp",
+                          "plate/dorms-quiz-results.webp"],
+                         "The recommendation quiz with all six questions "
+                         "answered, the Get Recommendations button pressed, and "
+                         "the results page ranking Hegeman, Hope and Caswell one "
+                         "to three",
+                         "Six questions, one button, three buildings. Not a "
+                         "shorter list of the same kind: an answer to a question "
+                         "the filters cannot be asked.",
+                         view=(1280, 600),
+                         picks="quiz-picks.json",
+                         press=(510, 1166, 260, 55),
+                         look=(400, 1090, 500, 200))),
              ("how", "How it works", "Why there is a backend at all",
               ["The frontend never talks to the database. Every read and write goes "
                "through a Java server, which is the only thing holding admin "
@@ -240,38 +419,6 @@ PROJECTS = [
                           call=("brown.edu only",
                                 "The whole gate, and the reason a review here is "
                                 "worth more than one anywhere else."))),
-             ("plans", "How it works", "Some dorms are more than one building",
-              ["Keeney, Greg, Grad Center, New Pembroke and Young Orchard are not "
-               "buildings, they are several, each with its own floors and its own set "
-               "of plans. A flat list of floor plans is wrong for those five and "
-               "quietly misleading for anyone who does not already know that.",
-               "So the plans render as grouped card grids, one group per building. It "
-               "is a small structural decision that only exists because the data was "
-               "looked at rather than assumed, and it is invisible on the other "
-               "twenty-five dorms, which is the correct outcome."],
-              media.stage("plate/dorms-floorplans-multibuilding.webp",
-                          "Floor plans grouped into one card grid per building",
-                          "Five of the thirty dorms are several buildings. A flat list of plans is wrong for those and quietly misleading to anyone who does not already know it.",
-                          plate=(2200, 744),
-                          look=[(190, 150, 760, 230), (190, 400, 760, 230)],
-                          call=("per building",
-                                "Archibald-Bronson, then Everett-Poland. A flat "
-                                "list would run these together."))),
-             ("photos", "How it works", "Photographs nobody framed",
-              ["Dorm photos are phone snapshots in every orientation and resolution. "
-               "Hard-cropping a tall photo into a fixed frame cuts off half the room, "
-               "which is the half you wanted.",
-               "The gallery letterboxes the full photo over a blurred, darkened copy of "
-               "itself filling the rest of the frame. Nothing is cropped, the frame "
-               "stays a consistent size, and the fill reads as intentional rather than "
-               "as empty space."],
-              media.stage("plate/dorms-gallery-letterbox.webp",
-                          "A tall phone photo letterboxed over a blurred copy of itself",
-                          "Nothing is cropped and the frame keeps its size. What fills the rest is the same photograph, blurred and darkened.",
-                          plate=(2200, 808), look=(60, 120, 560, 560),
-                          call=("the same photo",
-                                "Blurred and darkened to fill the frame, so a "
-                                "tall photo keeps its top and its bottom."))),
              ("taught", "What it taught me", "The deployment is part of the design",
               ["I had thought of hosting as something that happens after the build. It "
                "is not: the static-host constraint decided the architecture, the "
@@ -280,23 +427,14 @@ PROJECTS = [
                "Client-side routing on a project path needed an explicit basename and "
                "the redirect trick for deep links, because there is no server to "
                "rewrite a URL. That is a design decision that arrived from the "
-               "infrastructure, and I would now go looking for those earlier."],
-              media.stage(["plate/dorms-quiz-asked.webp",
-                           "plate/dorms-quiz-answered.webp"],
-                          "The recommendation quiz with its answers chosen, then "
-                          "the same page showing three dorms ranked one to three",
-                          "Thirty dorms in, a shortlist worth touring out, over a "
-                          "container on a free tier that sleeps between visits.",
-                          # Both shots are the same page at the same width, so they
-                          # sit in register and the camera holds one framing across
-                          # the change: preferences in, ranked list out.
-                          look=(275, 385, 1650, 513))),
+               "infrastructure, and I would now go looking for those earlier."]),
          ]),
 
     dict(slug="p-stardew", title="Stardew Companion", kicker="Personal",
          hero="hero/cover-stardew.webp",
          hero_alt="A pixel-art farm title screen with mountains, a barn and a night sky",
          live="https://kiara-vong.github.io/stardew/",
+         cta=cta("https://kiara-vong.github.io/stardew/", "Open the companion"),
          intro=("A single-page fan guide: look up any of the 34 villagers' favourite "
                 "gifts, click around town to learn what each building is for, and play "
                 "one of four arcade cabinets built into the page. No framework and no "
@@ -304,7 +442,7 @@ PROJECTS = [
                 "the game."),
          meta=[("Role", "Everything"),
                ("Stack", "HTML, CSS, vanilla JS,<br>canvas, Web Audio"),
-               ("Year", "2024"), ("Live", live("https://kiara-vong.github.io/stardew/", "Open it")),
+               ("Year", "2024"),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
               ("how", "How it works", False), ("data", "Facts and assets", True),
@@ -464,12 +602,13 @@ PROJECTS = [
          hero="hero/cover-uxfolio.webp",
          hero_alt="A dark portfolio home page with a large introduction and case study cards",
          live="https://kiara-vong.github.io/portfolio/",
+         cta=cta("https://kiara-vong.github.io/portfolio/", "Open the case studies"),
          intro=("An earlier portfolio, built around research and process rather than "
                 "final screenshots. Each piece walks through the problem, what was "
                 "tried, and what actually shipped, which is the format I still think "
                 "is right and the reason this site looks the way it does."),
          meta=[("Role", "Everything"), ("Stack", "HTML, CSS, JS,<br>static build"),
-               ("Year", "2023"), ("Live", live("https://kiara-vong.github.io/portfolio/", "Open it")),
+               ("Year", "2023"),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
               ("studies", "The four", False), ("how", "How it works", False),
@@ -543,12 +682,13 @@ PROJECTS = [
          hero="hero/cover-chess.webp",
          hero_alt="A chess board at the starting position with move and perspective controls",
          live="https://kiara-vong.github.io/site/projects/chess/",
+         cta=cta("https://kiara-vong.github.io/site/projects/chess/", "Play the engine"),
          intro=("A playable board with an opponent behind it: move generation, "
                 "alpha-beta search, and an evaluation function that is honest about "
                 "how little it knows. It beats me, which was the acceptance criterion "
                 "and remains mildly annoying."),
          meta=[("Role", "Everything"), ("Stack", "JavaScript, canvas"),
-               ("Year", "2023"), ("Live", live("https://kiara-vong.github.io/site/projects/chess/", "Play it")),
+               ("Year", "2023"),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
               ("how", "How it works", False), ("taught", "What it taught me", False)],
@@ -597,13 +737,12 @@ PROJECTS = [
          hero="hero/cover-pacman.webp",
          hero_alt="A Pac-Man maze in blue on black, dots laid through every corridor",
          live="https://kiara-vong.github.io/site/projects/pacman/",
+         cta=cta("https://kiara-vong.github.io/site/projects/pacman/", "Play it"),
          intro=("Pac-Man rebuilt in the browser: the maze, the pellets, four ghosts "
                 "with their own pursuit behaviour, and the frightened state that "
                 "briefly reverses all of it. Canvas and plain JavaScript, no engine."),
          meta=[("Role", "Everything"), ("Stack", "JavaScript, canvas"),
                ("Year", "2023"),
-               ("Live", live("https://kiara-vong.github.io/site/projects/pacman/",
-                             "Play it")),
                ("Note", NOTE)],
          nav=[("overview", "Overview", False), ("context", "Context", False),
               ("how", "How it works", False), ("taught", "What it taught me", False)],
@@ -734,7 +873,7 @@ def build(p):
         title=p["title"], kicker=p["kicker"], intro=p["intro"],
         flowers="foot-projects.png",
         hero=p["hero"], hero_alt=p["hero_alt"],
-        nav=p["nav"], meta=p["meta"], sections=blocks))
+        nav=p["nav"], meta=p["meta"], cta=p.get("cta", ""), sections=blocks))
 
 
 for p in PROJECTS:

@@ -1,4 +1,5 @@
 import io
+import json
 # -*- coding: utf-8 -*-
 """Filled media blocks: a real capture paired with one of camera.css's machines.
 
@@ -22,10 +23,18 @@ def esc(s):
 
 
 def _fig(inner, caption):
-    return ('      <figure class="cs-figure">\n'
-            '%s'
-            '        <figcaption class="cs-caption">%s</figcaption>\n'
-            '      </figure>\n' % (inner, esc(caption)))
+    """A figure, and its caption only if it has one.
+
+    An empty caption used to render as an empty <figcaption>, which is not nothing:
+    it keeps the caption's top margin and line box, so a figure with no words under
+    it sat further from the next one than a figure with words. Some figures say
+    everything they have to say inside the frame -- a callout naming the thing it
+    points at is already a sentence -- and those should close at the frame.
+    """
+    cap = ('        <figcaption class="cs-caption">%s</figcaption>\n'
+           % esc(caption)) if caption else ''
+    return ('      <figure class="cs-figure">\n%s%s      </figure>\n'
+            % (inner, cap))
 
 
 def clip(name, alt, caption, root="../../"):
@@ -200,6 +209,10 @@ def _plate_size(src, given=None):
     return (e["w"], e["h"]) if e else (1440, 810)
 
 
+def _fig_video(src):
+    return src.endswith(".mp4")
+
+
 def _fit(pw, ph, pad, vw=SLOT_W):
     """Largest scale fitting pw x ph in the view with pad around it, and the
     translate that centres it there. Returns (x, y, k) in view pixels.
@@ -297,7 +310,7 @@ def page(shots, alt, caption, view=(1280, 600), look=None, scroll=0,
     sy = max(0.0, sh * (vw / float(sw)) - vh)
 
     x0, y0, k0 = _fit(pw, ph, REST_PAD)
-    cls = "cs-media cam cam-stage page"
+    cls = "cs-media cam cam-stage page" + (" solo" if n == 1 else "")
     var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--dur:%s;--n:%d;'
            '--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f;--sy:%.1fpx;--sr:%.1fpx'
            % (pw, ph, bar, radius, dur, n, x0, y0, k0, -sy, -float(scroll)))
@@ -321,6 +334,221 @@ def page(shots, alt, caption, view=(1280, 600), look=None, scroll=0,
                  'alt="%s"%s loading="lazy">\n'
                  % (i, root, src, esc(alt) if i == 0 else "",
                     "" if i == 0 else ' aria-hidden="true"'))
+    o.append('                </div>\n              </div>\n'
+             '            </div>\n          </div>\n')
+    o.append('        </div>\n')
+    return _fig("".join(o), caption)
+
+
+# The patch of page the pressed button sits on, so the crop that shrinks has
+# something to shrink against. Sampled from the captures rather than guessed --
+# it is the one colour in this file that has to match a file on disk exactly.
+PRESS_BG = "#FBF8F4"
+PRESS_PAD = 12.0
+
+
+# The control column beside a stepper. Wider than a callout's, because it holds a
+# button rather than a label and a button that wraps mid-word reads as broken.
+STEP_W, STEP_GAP = 178.0, 20.0
+
+
+def stepper(shots, alt, caption, label="Place the next tile", again="Start over",
+            note=None, plate=None, radius=None, root="../../"):
+    """A run the reader advances themselves, one frame per click.
+
+    Every other machine here plays at the reader. This one waits, and the reason
+    is specific to what it is showing: the argument is that the island is not
+    drawn but DECIDED, one cell after another, each following from what was
+    already settled. A loop makes that something you watch. A click makes it
+    something you do, and only the second puts the reader where the algorithm is.
+
+    shots  frames of one run, in order. Captured beforehand and chosen at equal
+           increments of filled area, so every click is worth the same amount --
+           a stepper with uneven steps reads as a slideshow with a button and
+           nobody presses it twice.
+    label  what the button says, and `again` what it says at the end, where it
+           restarts rather than dead-ending on a finished picture.
+    """
+    if isinstance(shots, str):
+        shots = [shots]
+    pw, ph = _plate_size(shots[0], plate)
+    n = len(shots)
+    bar = round(pw * BAR)
+    radius = round(pw * 0.013) if radius is None else radius
+    ph += bar
+
+    reserve = STEP_W + STEP_GAP + LOOK_PAD
+    view_w = SLOT_W - reserve
+    x0, y0, k0 = _fit(pw, ph, REST_PAD, view_w)
+    var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--n:%d;'
+           '--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f;--vx:0px;--vw:%.1fpx;'
+           '--cx:%.1fpx;--cw:%dpx'
+           % (pw, ph, bar, radius, n, x0, y0, k0, view_w,
+              view_w + STEP_GAP, int(STEP_W)))
+
+    o = ['        <div class="cs-media cam cam-stage cam-step" style="%s"'
+         ' data-label="%s" data-again="%s">\n' % (var, esc(label), esc(again)),
+         '          <div class="view">\n',
+         '            <div class="plate">\n',
+         '              <span class="bar" aria-hidden="true">'
+         '<i></i><i></i><i></i><b></b></span>\n',
+         '              <div class="shots">\n']
+    for i, src in enumerate(shots):
+        o.append('                <img style="--i:%d" src="%sassets/%s" '
+                 'alt="%s"%s loading="lazy">\n'
+                 % (i, root, src, esc(alt) if i == 0 else "",
+                    "" if i == 0 else ' aria-hidden="true"'))
+    o.append('              </div>\n            </div>\n          </div>\n')
+    # No counter and no progress track. Both answer a question the reader was not
+    # asking -- how far through a slideshow am I -- and asking it turns a run of
+    # the solver into a chore with a known length. What is on screen is how far
+    # along it is; that is the only progress indicator this needs.
+    o.append('          <div class="step-ui">\n'
+             '            <button class="step-go" type="button">%s</button>\n'
+             % esc(label))
+    if note:
+        o.append('            <p class="step-note">%s</p>\n' % esc(note))
+    o.append('          </div>\n        </div>\n')
+    return _fig("".join(o), caption)
+
+
+def wipe(before, after, alt, caption, tags=("before", "after"),
+         start=50, plate=None, radius=None, root="../../"):
+    """Two frames of one run, in register, with a line the reader drags.
+
+    A before and an after are only a comparison if nothing else changed between
+    them. That is a condition on the CAPTURE, not on this code: the run has to be
+    recorded with the camera still, so the only difference across the seam is the
+    thing being compared. Frames from a turning scene make a glitch, not an
+    argument -- the eye reads the jump in the silhouette long before it reads
+    either half.
+
+    The handle and its labels are positioned against the window's DRAWN rectangle,
+    computed here and handed over as --wx/--wy/--ww/--wh, because the plate is
+    scaled to fit and anything drawn inside it is scaled with it: a hairline would
+    land at half a pixel and a label would end up under six point. The clip stays
+    in the plate's own space, where a percentage means the same thing either side.
+    """
+    pw, ph = _plate_size(before, plate)
+    bar = round(pw * BAR)
+    radius = round(pw * 0.013) if radius is None else radius
+    ph += bar
+    x0, y0, k0 = _fit(pw, ph, REST_PAD)
+    barh = bar * k0
+    var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--n:2;'
+           '--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f;--s:%d;'
+           '--wx:%.1fpx;--wy:%.1fpx;--ww:%.1fpx;--wh:%.1fpx'
+           % (pw, ph, bar, radius, x0, y0, k0, int(start),
+              x0, y0 + barh, pw * k0, ph * k0 - barh))
+    return _fig(
+        '        <div class="cs-media cam cam-stage cam-wipe" style="%s">\n'
+        '          <div class="view">\n'
+        '            <div class="plate">\n'
+        '              <span class="bar" aria-hidden="true">'
+        '<i></i><i></i><i></i><b></b></span>\n'
+        '              <div class="shots">\n'
+        '                <img src="%sassets/%s" alt="%s" loading="lazy">\n'
+        '                <img src="%sassets/%s" alt="" aria-hidden="true" '
+        'loading="lazy">\n'
+        '              </div>\n            </div>\n          </div>\n'
+        '          <span class="wipe-tag left">%s</span>\n'
+        '          <span class="wipe-tag right">%s</span>\n'
+        '          <span class="wipe-line" aria-hidden="true"><i></i></span>\n'
+        '          <input class="wipe-range" type="range" min="0" max="100" '
+        'value="%d" aria-label="Reveal the finished island">\n'
+        '        </div>\n'
+        % (var, root, before, esc(alt), root, after,
+           esc(tags[0]), esc(tags[1]), int(start)), caption)
+
+
+def flow(pages, alt, caption, view=(1280, 600), press=None, picks=None,
+         look=None, dur="22s", radius=None, root="../../"):
+    """A form, the button, and the page it takes you to.
+
+    page() above scrolls one page and swaps states of it in place. A form is not
+    that shape: it has a before and an after, they are two different pages, and
+    the moment worth showing is the one where the first becomes the second. So the
+    swap here is a cut rather than a dissolve, and the camera goes in for the
+    press and comes back out on the load, which is how looking at a form actually
+    goes.
+
+    pages  two full-page captures: the form, filled in, and what it returns.
+    press  the button, as (x, y, w, h) in the FIRST page's own pixels at the
+           window's width. It becomes a crop of that button, laid exactly over
+           itself on a patch of page background, and it is the crop that moves --
+           so the press needs no second asset and cannot drift out of register.
+    picks  the index gen/quiz_picks.py writes: an un-answered pill for each answer
+           on the form, and where each one sits. They are laid over the answers
+           they hide and taken away one at a time, so the form is filled in on
+           camera rather than arriving already filled in -- which is what the
+           capture is, and what the figure would otherwise be claiming did not
+           need doing.
+    look   where the camera goes for the press, in the first page's pixels too.
+           Everything about the first page is stated in the first page's
+           coordinates; the scroll offsets are worked out here rather than by
+           whoever is writing the figure.
+    """
+    vw, vh = [float(v) for v in view]
+    bar = round(vw * BAR)
+    radius = round(vw * 0.013) if radius is None else radius
+    pw, ph = vw, vh + bar
+
+    def travel(src):
+        sw, sh = _plate_size(src)
+        return max(0.0, sh * (vw / float(sw)) - vh)
+
+    sy, sy2 = travel(pages[0]), travel(pages[1])
+
+    x0, y0, k0 = _fit(pw, ph, REST_PAD)
+    cls = "cs-media cam cam-stage page flow"
+    var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--dur:%s;--n:2;'
+           '--press-bg:%s;--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f;'
+           '--sy:%.1fpx;--sy2:%.1fpx'
+           % (pw, ph, bar, radius, dur, PRESS_BG, x0, y0, k0, -sy, -sy2))
+
+    if look:
+        # Stated against the page; the camera works in the window, and at the
+        # press the window is showing the page scrolled to its foot.
+        rect = (look[0], look[1] - sy + bar, look[2], look[3])
+        k1 = _look_scale([rect])
+        lx, ly = _look(rect, pw, ph, k1)
+        cls += " moves"
+        var += ';--x1:%.1fpx;--y1:%.1fpx;--k1:%.4f' % (lx, ly, k1)
+
+    o = ['        <div class="%s" style="%s">\n' % (cls, var),
+         '          <div class="view">\n',
+         '            <div class="plate">\n',
+         '              <span class="bar" aria-hidden="true">'
+         '<i></i><i></i><i></i><b></b></span>\n',
+         '              <div class="shots">\n',
+         '                <div class="reel">\n']
+    for i, src in enumerate(pages):
+        o.append('                  <img style="--i:%d" src="%sassets/%s" '
+                 'alt="%s"%s loading="lazy">\n'
+                 % (i, root, src, esc(alt) if i == 0 else "",
+                    "" if i == 0 else ' aria-hidden="true"'))
+    if picks:
+        idx = json.load(io.open(picks, encoding="utf-8"))
+        f = vw / float(idx["src_w"])
+        sheet = "%sassets/plate/dorms-quiz-blanks.webp" % root
+        for i, (bx, by, bw, bh) in enumerate(idx["picks"]):
+            o.append('                  <span class="pick" aria-hidden="true" '
+                     'style="left:%.1fpx;top:%.1fpx;width:%.1fpx;height:%.1fpx;'
+                     'background-image:url(%s);background-size:%.1fpx auto;'
+                     'background-position:0 %.1fpx"></span>\n'
+                     % (bx * f, by * f, bw * f, bh * f, sheet,
+                        idx["sprite_w"] * f, -i * idx["row"] * f))
+    if press:
+        bx, by, bw, bh = [float(v) for v in press]
+        o.append('                  <span class="press" aria-hidden="true" '
+                 'style="left:%.1fpx;top:%.1fpx;width:%.1fpx;height:%.1fpx">'
+                 '<i style="left:%.0fpx;top:%.0fpx;width:%.1fpx;height:%.1fpx;'
+                 'background-image:url(%sassets/%s);background-size:%dpx auto;'
+                 'background-position:%.1fpx %.1fpx"></i></span>\n'
+                 % (bx - PRESS_PAD, by - PRESS_PAD,
+                    bw + PRESS_PAD * 2, bh + PRESS_PAD * 2,
+                    PRESS_PAD, PRESS_PAD, bw, bh,
+                    root, pages[0], int(vw), -bx, -by))
     o.append('                </div>\n              </div>\n'
              '            </div>\n          </div>\n')
     o.append('        </div>\n')
@@ -362,7 +590,9 @@ def stage(shots, alt, caption, look=None, call=None,
     reserve = (CALL_W + CALL_GAP + LOOK_PAD) if (call and look) else 0.0
     view_w = SLOT_W - reserve
     x0, y0, k0 = _fit(pw, ph, REST_PAD, view_w)
-    cls = "cs-media cam cam-stage" + (" seq" if n > 1 else "")
+    # Two states cross-fade on one window; three or more is a progression and
+    # arrives in order. Different claim, different machine.
+    cls = "cs-media cam cam-stage" + (" seq" if n == 2 else " steps" if n > 2 else "")
     var = ('--pw:%dpx;--ph:%dpx;--bar:%dpx;--plate-r:%dpx;--dur:%s;--n:%d;'
            '--x0:%.1fpx;--y0:%.1fpx;--k0:%.4f'
            % (pw, ph, bar, radius, dur, n, x0, y0, k0))
@@ -404,6 +634,20 @@ def stage(shots, alt, caption, look=None, call=None,
          '<i></i><i></i><i></i><b></b></span>\n',
          '              <div class="shots">\n']
     for i, src in enumerate(shots):
+        if src.endswith(".mp4"):
+            # A clip in the window rather than beside it. The rest of this site
+            # frames its screenshots and leaves its recordings bare, which reads as
+            # two different kinds of evidence when they are the same kind: both are
+            # a screen, and a screen on this site has a window around it. The
+            # camera still works over it, though a clip that already moves rarely
+            # wants one.
+            stem = src.rsplit("/", 1)[-1][:-4]
+            o.append('                <video style="--i:%d" src="%sassets/%s" '
+                     'poster="%sassets/video/%s-poster.jpg" '
+                     'aria-label="%s" autoplay muted loop playsinline '
+                     'preload="metadata"></video>\n'
+                     % (i, root, src, root, stem, esc(alt)))
+            continue
         o.append('                <img style="--i:%d" src="%sassets/%s" '
                  'alt="%s"%s loading="lazy">\n'
                  % (i, root, src, esc(alt) if i == 0 else "",

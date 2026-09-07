@@ -174,7 +174,7 @@ PAGE = """<!doctype html>
         </div>
         <div class="cs-headgroup">
         <p class="cs-intro">{intro}</p>
-        <div class="cs-meta">
+{cta}        <div class="cs-meta">
 {meta}        </div>
         </div>
       </div>
@@ -236,6 +236,7 @@ def build(slug, spec):
         intro=esc(spec["intro"]), intro_short=esc(spec["intro"][:150]),
         hero_block=hero_block,
         nav=nav_links(spec["nav"]), meta=meta_cols(spec["meta"]),
+        cta=spec.get("cta", ""),
         # Three knobs, all defaulted to what a work case study wants. They exist so
         # the Art category pages can be built through this same template instead of
         # a near-copy of it: those pages needed a different back link, a different
@@ -255,8 +256,20 @@ def build(slug, spec):
 # Root-relative, and the pages that use it are one folder down, so it is a function
 # of where the page lives rather than a constant.
 def note(root=""):
-    return ('If you would like the detail, please <a class="touch" '
-            'href="%s">get in touch</a>' % (root or "./"))
+    """The confidentiality line in every case study's meta strip.
+
+    "let me know" copies the address rather than linking home. Sending someone to the
+    index to hunt for a contact link is one step too many at the exact moment they
+    have decided to ask, and the site already knows how to hand over an address: the
+    footer and the nav pill both do it. This uses the same data-mail hook, and
+    site-footer.js wires any it finds outside those two.
+
+    href stays a real mailto so the link works with script disabled, and so a
+    right-click still offers to copy the address.
+    """
+    del root                      # the address travels with the link now
+    return ('If you want to know more, <a class="touch" href="#" data-mail>'
+            'let me know</a>')
 
 
 # Two levels, because every page that carries this note now lives in its own
