@@ -778,7 +778,7 @@ build("persona-homepage", dict(
              "director, division lead and executive: a different opening "
              "hand from the same deck, with the reasoning written in the margin "
              "next to every block."],
-            media.flat("case/cs-persona-catalog.svg",
+            media.inline_svg("case/cs-persona-catalog.svg",
                        "The widget catalog: twenty-four widgets under six "
                        "headings, from maturity and compliance through to layout "
                        "primitives",
@@ -830,7 +830,7 @@ build("persona-homepage", dict(
              "Applying it silently was on the table and the room turned it down, "
              "which I think was right. A page that quietly rearranges itself "
              "around a guess about you is a page you cannot argue with."],
-            media.flat("case/cs-persona-five-to-two.svg",
+            media.inline_svg("case/cs-persona-five-to-two.svg",
                        "Five proposed persona layouts above, joined by curves to "
                        "the two that shipped: contributor and leader",
                        "Nothing was thrown away. Two of the five folded into one "

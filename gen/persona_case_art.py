@@ -154,31 +154,38 @@ def mini(x, y, w, h, name, blocks, col, scale=1.0):
 
 
 def five_to_two():
-    o = [rect(0, 0, FW, FH, PAPER)]
+    o = ["<style>.p2-src,.p2-dst{transition:opacity .18s ease}.p2-hit{cursor:pointer}.p2-link{transition:opacity .18s ease,stroke-width .18s ease;animation:p2pulse 9s ease-in-out infinite}.p2-link[data-i=\"1\"]{animation-delay:.5s}.p2-link[data-i=\"2\"]{animation-delay:1s}.p2-link[data-i=\"3\"]{animation-delay:1.5s}.p2-link[data-i=\"4\"]{animation-delay:2s}@keyframes p2pulse{0%,7%{opacity:.55;stroke-width:1.6}2.5%{opacity:1;stroke-width:2.6}12%,100%{opacity:.55;stroke-width:1.6}}svg:has(.p2-src:hover) .p2-link{animation:none;opacity:.12}svg:has(.p2-src:hover) .p2-src:not(:hover){opacity:.32}svg:has(.p2-src:hover) .p2-dst{opacity:.32}svg:has(.p2-src[data-i=\"0\"]:hover) .p2-link[data-i=\"0\"],svg:has(.p2-src[data-i=\"1\"]:hover) .p2-link[data-i=\"1\"],svg:has(.p2-src[data-i=\"2\"]:hover) .p2-link[data-i=\"2\"],svg:has(.p2-src[data-i=\"3\"]:hover) .p2-link[data-i=\"3\"],svg:has(.p2-src[data-i=\"4\"]:hover) .p2-link[data-i=\"4\"]{opacity:1;stroke-width:2.8}svg:has(.p2-src[data-i=\"0\"]:hover) .p2-dst[data-d=\"c\"],svg:has(.p2-src[data-i=\"1\"]:hover) .p2-dst[data-d=\"c\"],svg:has(.p2-src[data-i=\"2\"]:hover) .p2-dst[data-d=\"l\"],svg:has(.p2-src[data-i=\"3\"]:hover) .p2-dst[data-d=\"l\"],svg:has(.p2-src[data-i=\"4\"]:hover) .p2-dst[data-d=\"l\"]{opacity:1}@media (prefers-reduced-motion:reduce){.p2-link,.p2-src,.p2-dst{transition:none;animation:none}}</style>"]
+    o.append(rect(0, 0, FW, FH, PAPER))
     o.append(label(26, 26, "PROPOSED", 9.5, MUT, 700, "start", MONO))
     tw, gap = 130, 22
     tx = [26 + i * (tw + gap) for i in range(5)]
-    for x, (name, n, col) in zip(tx, FIVE):
+    for i, (x, (name, n, col)) in enumerate(zip(tx, FIVE)):
+        o.append('<g class="p2-src" data-i="%d">' % i)
+        o.append('<rect class="p2-hit" x="%.1f" y="%.1f" width="%.1f" '
+                 'height="%.1f" fill="#000" fill-opacity="0" '
+                 'pointer-events="all"/>' % (x - 2, 38, tw + 4, 134))
         o.append(mini(x, 40, tw, 116, name, n, col))
+        o.append('</g>')
 
     o.append(label(26, 212, "SHIPPED", 9.5, MUT, 700, "start", MONO))
     bw = 322
     bx = [26, 26 + bw + 27]
-    o.append(mini(bx[0], 226, bw, 116, "Contributor · one application",
-                  5, ACCENT))
-    o.append(mini(bx[1], 226, bw, 116, "Leader · many, or a division",
-                  6, BLUE))
+    o.append('<g class="p2-dst" data-d="c">%s</g>'
+             % mini(bx[0], 226, bw, 116, "Contributor \u00b7 one application",
+                    5, ACCENT))
+    o.append('<g class="p2-dst" data-d="l">%s</g>'
+             % mini(bx[1], 226, bw, 116, "Leader \u00b7 many, or a division",
+                    6, BLUE))
 
-    # who folded into whom. The curves are the argument: nothing was dropped,
-    # two things were merged and three were merged.
     for i, (name, n, col) in enumerate(FIVE):
         x0 = tx[i] + tw / 2.0
         j = 0 if i < 2 else 1
         x1 = bx[j] + bw / 2.0
         y0, y1 = 172, 226
-        o.append('<path d="M%.1f %.1f C%.1f %.1f %.1f %.1f %.1f %.1f" '
-                 'stroke="%s" stroke-width="1.6" fill="none" opacity=".55"/>'
-                 % (x0, y0, x0, y0 + 28, x1, y1 - 28, x1, y1, col))
+        o.append('<path class="p2-link" data-i="%d" d="M%.1f %.1f '
+                 'C%.1f %.1f %.1f %.1f %.1f %.1f" stroke="%s" stroke-width="1.6" '
+                 'fill="none" opacity=".55"/>'
+                 % (i, x0, y0, x0, y0 + 28, x1, y1 - 28, x1, y1, col))
     return "".join(o)
 
 
@@ -205,21 +212,32 @@ COLUMNS = [[0], [1, 2], [3, 4, 5]]
 
 
 def catalog():
-    o = [rect(0, 0, FW, FH, PAPER)]
+    o = ["<style>.cat-grp{transition:opacity .16s ease}.cat-hit{cursor:pointer}.cat-row{transition:opacity .16s ease}svg:has(.cat-grp:hover) .cat-grp:not(:hover){opacity:.28}svg:has(.cat-grp:hover) .cat-grp:hover .cat-row{opacity:1}@media (prefers-reduced-motion:reduce){.cat-grp,.cat-row{transition:none}}</style>"]
+    o.append(rect(0, 0, FW, FH, PAPER))
     cw, gap = 237, 22
     for ci, group in enumerate(COLUMNS):
         x = 26 + ci * (cw + gap)
         y = 40
         for gi in group:
             name, col, items = CATALOG[gi]
-            o.append(rect(x, y - 11, 3.5, 12, col, 2))
-            o.append(label(x + 10, y, name.upper(), 9.5, MUT, 700, "start", MONO))
+            g = ['<g class="cat-grp" data-c="%d">' % gi]
+            y0 = y - 16
+            hh = 12 + len(items) * 23 + 8
+            g.append('<rect class="cat-hit" x="%.1f" y="%.1f" width="%.1f" '
+                     'height="%.1f" fill="#000" fill-opacity="0" '
+                     'pointer-events="all"/>' % (x - 4, y0, cw + 8, hh))
+            g.append(rect(x, y - 11, 3.5, 12, col, 2))
+            g.append(label(x + 10, y, name.upper(), 9.5, MUT, 700, "start", MONO))
             y += 12
             for it in items:
-                o.append(rect(x, y, cw, 19, col, 4, op=.11))
-                o.append(rect(x, y, 2.5, 19, col, 1.5))
-                o.append(label(x + 9, y + 13.5, it, 10.5, INK, 500))
+                g.append('<g class="cat-row">')
+                g.append(rect(x, y, cw, 19, col, 4, op=.11))
+                g.append(rect(x, y, 2.5, 19, col, 1.5))
+                g.append(label(x + 9, y + 13.5, it, 10.5, INK, 500))
+                g.append('</g>')
                 y += 23
+            g.append('</g>')
+            o.append("".join(g))
             y += 16
     o.append(label(26, 24, "TWENTY-FOUR WIDGETS, SIX HEADINGS", 9.5, INK,
                    700, "start", MONO))

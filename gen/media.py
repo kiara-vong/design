@@ -172,6 +172,44 @@ def flat(src, alt, caption, root="../../"):
         '        </div>\n' % (root, src, esc(alt)), caption)
 
 
+def inline_svg(src, alt, caption, root="../../"):
+    """A drawn figure inlined into the page, so it can respond to the reader.
+
+    flat() delivers a diagram as <img src>, which is inert: an SVG loaded that way
+    is a picture, and its own <style> can animate but its elements cannot be
+    hovered or clicked. A diagram whose argument is "hover a thing to see what it
+    connects to" has to be part of the document instead, so this reads the file at
+    build time and drops its markup straight into the figure. The interaction and
+    the resting animation both live in the SVG's own <style>; nothing on the page
+    has to know the difference, which is the point -- the behaviour travels with
+    the artwork exactly as it does for the <img> version.
+
+    The <svg> keeps its viewBox and gets width/height 100% so it scales into the
+    slot the same way the <img> did. role="img" and aria-label carry the same
+    description the alt did, because to a screen reader an interactive diagram and
+    a static one make the same promise.
+    """
+    path = "assets/" + src
+    try:
+        markup = io.open(path, encoding="utf-8").read().strip()
+    except Exception:
+        # If the file is not there at call time, fall back to the inert form
+        # rather than failing the build.
+        return flat(src, alt, caption, root=root)
+    # scale to the slot and label it; the file's own width/height are the authored
+    # pixel size, which we replace with 100% so the viewBox does the fitting. Built
+    # with concatenation rather than %-formatting because the replacement carries
+    # literal "100%" and a % there would be read as a format spec.
+    import re as _re
+    opener = ('<svg class="cs-flat" width="100%" height="100%" role="img" '
+              'aria-label="' + esc(alt) + '" ')
+    markup = _re.sub(r'<svg ', lambda m: opener, markup, count=1)
+    markup = _re.sub(r'\swidth="\d+" height="\d+"', '', markup, count=1)
+    return _fig('        <div class="cs-media cs-diagram cs-live">\n'
+                '          %s\n'
+                '        </div>\n' % markup, caption)
+
+
 def annotated(src, alt, caption, notes, root="../../"):
     """A still with leader-line labels that push the picture in on what they name.
 
