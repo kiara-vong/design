@@ -405,12 +405,11 @@ CATEGORIES = [
 
     dict(slug="yearbook", name="Yearbook", kind="studio", cover="yb-full3", group="Design",
          tag="Yearbook",
-         blurb="Four years of a high school yearbook, which I edited. The cover is "
-               "thermal-printed: the black silhouettes warm under your hand and clear "
-               "to a collage of students underneath. The only work on this page that "
-               "was actually work.",
+         blurb="Designs from my last year in Yearbook as Editor-in-Chief.",
          pieces=[
-             ("yb-cover", ART + "yearbook/img/cover.png", "Cover", ""),
+             ("yb-cover", ART + "yearbook/img/cover.png", "Cover",
+              "The cover is thermal-printed: the black silhouettes warm under your "
+              "hand and clear to a collage of students underneath."),
              ("yb-title", ART + "yearbook/img/title.jpg", "Title page", ""),
              ("yb-opening", ART + "yearbook/img/opening.jpg", "Opening spread", ""),
              ("yb-front-ensheet", ART + "yearbook/img/front ensheet.jpg", "Front endsheet", ""),

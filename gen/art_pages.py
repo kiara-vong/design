@@ -730,6 +730,13 @@ def plate(media, title, blurb, key, extra=""):
             % (media, esc(title), award(key), tail))
 
 
+# Pieces that carry their caption INTO the gallery grid. The studio galleries are
+# title-only on purpose (a paragraph under every picture turns a wall into a reading
+# exercise), so this is a deliberate, per-piece exception rather than a mode: the
+# yearbook cover is worth a line about how the thermal print behaves in the hand.
+CAPTION_IN_GRID = {"yb-cover"}
+
+
 def build_category(cat):
     slug = cat["slug"]
     by = {p[0]: p for p in cat["pieces"]}
@@ -824,15 +831,17 @@ def build_category(cat):
             # reader has not otherwise seen it full size.
             if pslug == cover_id and cover_id.endswith("-cover"):
                 continue
+            cap = ('<span class="b">%s</span>' % esc(blurb)) \
+                if (pslug in CAPTION_IN_GRID and blurb) else ""
             works.append(
                 '        <div class="ac-work %s">\n'
                 '          <div class="ac-frame"><img src="../../assets/art/%s/%s.jpg" alt="%s" '
                 'loading="lazy" width="%d" height="%d"></div>\n'
-                '          <div class="ac-label"><span class="t">%s</span>%s</div>\n'
+                '          <div class="ac-label"><span class="t">%s</span>%s%s</div>\n'
                 '        </div>\n'
                 % (FRAMES[fi % len(FRAMES)], slug, pslug, esc(title), w, h,
                    esc(title),
-                   award(pslug)))
+                   award(pslug), cap))
             fi += 1
         works.append('      </div>\n')
         title = "The full set" if prose else "The work"
