@@ -131,7 +131,11 @@
                     vanished from the page entirely. */
                  top: auto; left: auto;
                  width: min(78vw, 330px); height: auto; aspect-ratio: 1080 / 836;
-                 margin: 40px auto 0; }
+                 /* 14 rather than 40. The drawing carries transparent space
+                    above the cats, so a margin measured against the box left a gap
+                    twice its size on screen and the caption stopped reading as
+                    belonging to the picture under it. */
+                 margin: 14px auto 0; }
   .mascot { position: absolute; inset: 0; width: 100%; height: 100%; }
   .spk-layer { display: none; }
   /* Gone on every width now. The artwork is a drawing with "Clawed" painted into
@@ -142,7 +146,7 @@
   /* Under them, not beside them. There is no clear gutter on a landscape drawing
      whose right half is a laptop screen, and a line under the picture needs no
      fractions of anything and cannot come loose when the artwork changes again. */
-  .mascot-cap { display: block; position: static; margin: 12px auto 0;
+  .mascot-cap { display: block; position: static; margin: 15px auto 0;
                 width: min(78vw, 330px); left: auto; right: auto; top: auto;
                 bottom: auto; font-size: 10px; line-height: 1.35;
                 text-align: center; white-space: normal;
@@ -186,13 +190,21 @@
     display: flex; justify-content: center;
     z-index: 60; pointer-events: none;
   }
-  .nav { position: static !important; transform: scale(.84); transform-origin: bottom center;
+  .nav { position: static !important; transform: scale(var(--nav-k, .8)); transform-origin: bottom center;
          pointer-events: auto;
          /* flex:none, or the bar is squeezed before it is scaled. It is a flex item of
             #hg-center, so a natural width wider than the viewport made it shrink to
             the viewport first and the .84 then applied to the squeezed box -- 302 at
             360px against a natural 335, i.e. the padding eaten by 10%. The scale is
-            what should do the fitting, and at .84 the widest bar is 356 against 360. */
+            what should do the fitting.
+
+            The factor itself is computed in mobile.js from the bar's own layout
+            width, because CSS cannot divide one length by another. A flat .84 was
+            right for the bar this comment was written about and is not right for
+            the one on the page now: the bar has gained a label and an icon since,
+            and .84 of it is 377px, which hangs off both edges of a 360px phone.
+            The .8 fallback here only applies for the frame before the script
+            runs. */
          flex: none;
          /* On desktop this pill sits on the hero photograph, so it is transparent
             with a white gradient stroke and a backdrop blur. As a bottom bar it sits

@@ -57,19 +57,23 @@ def demo_cta(route, label="Open the rebuild"):
             'tool, with the data scrubbed</span>\n'
             '        </div>\n' % (href, esc(label), ARROW))
 
-def repo_cta(url, label, note):
-    """Same button, pointed at a repository rather than at the demo site.
+def repo_cta(url, label, note, src=None):
+    """Same button, pointed at a rebuild that is deployed on its own.
 
     The other rebuilds are routes inside one deployed app, so demo_cta can build
     their links from a base and a fragment. This one is its own repository with
-    its own README, and hiding that behind the same wording would tell the reader
-    it is the same kind of thing.
+    its own Pages deployment, so it takes a whole URL, and the line under the
+    button carries the source as well: it is the only rebuild on this site a
+    reader can read the code of, and burying that would be throwing away the
+    better half of the claim.
     """
+    tail = ('%s &middot; <a href="%s" target="_blank" rel="noopener">source</a>'
+            % (esc(note), src)) if src else esc(note)
     return ('        <div class="cs-cta">\n'
             '          <a href="%s" target="_blank" rel="noopener">'
             '<span>%s</span>%s</a>\n'
             '          <span class="cs-cta-url">%s</span>\n'
-            '        </div>\n' % (url, esc(label), ARROW, esc(note)))
+            '        </div>\n' % (url, esc(label), ARROW, tail))
 
 
 # =====================================================================
@@ -662,9 +666,10 @@ build("persona-homepage", dict(
     out="work/persona-homepage/index.html", root="../../",
     kicker=CO,
     title="Persona Homepage",
-    cta=repo_cta("https://github.com/kiara-vong/persona-homepage",
+    cta=repo_cta("https://kiara-vong.github.io/persona-homepage/",
                  "Open the recreation",
-                 "A public rebuild of the page, running entirely on invented data"),
+                 "kiara-vong.github.io/persona-homepage",
+                 "https://github.com/kiara-vong/persona-homepage"),
     hero="case/cs-persona-reorder.svg",
     hero_alt="The same homepage twice, its five widgets joined by curves showing "
              "where each one lands for the other persona",
@@ -966,7 +971,9 @@ build("persona-homepage", dict(
                  "and divisions I made up. Rebuilding it removes the question "
                  "rather than managing it, and it is a better artefact anyway, "
                  "because a reader can open it and drive it themselves rather "
-                 "than take a screenshot\u2019s word for it.",
+                 "than take a screenshot\u2019s word for it. It is deployed at "
+                 "kiara-vong.github.io/persona-homepage and the source is on "
+                 "GitHub beside it.",
                  "It carries the decisions this page argues for, not just the "
                  "look: each widget declares which scope dimensions it accepts, "
                  "the effective scope resolves widget then page then default, and "

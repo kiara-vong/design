@@ -18,12 +18,27 @@
     if (vw > MOBILE) {
       root.style.removeProperty('--card-k');
       root.style.removeProperty('--well-k');
+      root.style.removeProperty('--nav-k');
       return;
     }
     var col = vw - 40;                       /* page padding, 20px each side */
     var cardCol = col - 32;                  /* the card adds 16px of its own */
     root.style.setProperty('--card-k', Math.min(cardCol / CARD_W, 1).toFixed(4));
     root.style.setProperty('--well-k', Math.min(col / WELL_W, 1).toFixed(4));
+
+    /* The bottom bar is scaled to fit rather than to a constant. It used to be a
+       flat .84, chosen when the widest bar was 335px wide; the bar has gained a
+       label and an icon since, and .84 of what it is now is 377px, which hangs
+       off both edges of a 360px phone. offsetWidth is the layout width and
+       ignores the transform, so it is the one measurement that does not depend
+       on the answer. .84 stays the ceiling: on a wide phone the bar should stop
+       growing, not fill the screen. */
+    var nav = document.querySelector('.nav');
+    if (nav) {
+      var natural = nav.offsetWidth || 450;
+      root.style.setProperty('--nav-k',
+        Math.min((vw - 24) / natural, 0.84).toFixed(4));
+    }
     /* The home page's fit() sets this from the hero scale and stands down here, so
        there would otherwise be no value at all on a phone. */
     root.style.setProperty('--modal-scale',

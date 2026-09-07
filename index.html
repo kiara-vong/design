@@ -351,7 +351,7 @@ window.__hl = (function () {
    The fractions come from the measured canvas geometry, divided through by the box:
    the panel was 267,604 at 114x42 inside a picture at 56,418 at 530x410. Re-measure
    with a grid over the artwork if it ever changes, then divide again. */
-.mascot-wrap{position:absolute;left:50px;top:412px;width:578px;height:447px;
+.mascot-wrap{position:absolute;left:50px;top:374px;width:578px;height:447px;
   container-type:inline-size}
 /* No cursor:pointer on the artwork. It is a 530x410 rectangle whose corners are
    transparent, so the pointer appeared over a wide band of empty hero background and
@@ -363,8 +363,13 @@ window.__hl = (function () {
 
 /* The caption, above them, in the voice the single-cat one had. Two lines by
    construction rather than by luck: the break is a <br>, so it lands in the same
-   place at every width instead of moving with the box. */
-.mascot-cap{position:absolute;left:44px;top:456px;width:420px;pointer-events:none;
+   place at every width instead of moving with the box.
+
+   Its top and the artwork's move together, 38px above where they used to sit. The
+   drawing was running to the hero's own bottom edge, so the ginger cat's tail was
+   cut off by the fold rather than by the frame, and a picture that ends at the
+   boundary reads as one that did not fit. */
+.mascot-cap{position:absolute;left:80px;top:418px;width:420px;pointer-events:none;
   font-family:'ApercuMono','JetBrains Mono',ui-monospace,monospace;font-size:11.5px;
   line-height:1.5;color:var(--sage);transform:rotate(-2.4deg);text-align:left;
   display:block}
