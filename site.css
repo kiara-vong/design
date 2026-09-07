@@ -1741,7 +1741,7 @@ a.card:nth-of-type(even):hover {
    the thing you plant by clicking, so what you are holding has to match what you
    leave behind; swapping in the clover broke that for no gain. */
 #footer {
-   cursor: url("assets/ui/plant-cursor.svg") 12 31, auto
+   cursor: url("assets/ui/plant-cursor.svg") 16 41, auto
 }
 
 /* Links get their own cursor, everywhere: the raised-finger hand from the
