@@ -3754,32 +3754,24 @@ a[href] {
    pale stroke round its edge. The nav paints its stroke as a pseudo-element
    carrying a 45deg gradient masked to the border; a scrollbar thumb accepts
    no pseudo-element, so the same idea is landed with two inset shadows layered
-   instead -- a stronger one at the top-left, a softer full ring round it. Not
-   the exact gradient the nav wears, but enough to read as the same glass.
+   instead. Not the exact gradient the nav wears, but enough to read as the
+   same glass.
 
-   The track disappears into whatever is behind it (parchment, an ivory wash,
-   the accent band at the foot of a page) so there is no strip painted down the
-   side and no dark tram-line under the thumb.
+   The standardised scrollbar-* properties are deliberately absent. Two reasons.
 
-   Firefox has no backdrop blur on the scrollbar and no way to write a gradient
-   stroke, so it gets the closest fallback: the accent green at low alpha on a
-   transparent track. The property is set with rgb() and one alpha stop because
-   Firefox's parser does not accept an rgba() thumb colour written any other
-   way in every version. */
+   scrollbar-width: thin makes Chrome switch to its native thin scrollbar
+   renderer, which IGNORES ::-webkit-scrollbar entirely. Setting it strips the
+   glass out of Chrome. scrollbar-color, when set, preempts the webkit rules
+   in modern Chrome too, painting whatever fallback tone was written for
+   Firefox instead of the glass. Attempts at gating them behind
+   @-moz-document url-prefix() left some browsers still applying them, and the
+   symptom was a dark green track with a white outline on it -- accent green
+   from the Firefox fallback showing through where it should not.
 
-/* Both standardised scrollbar properties are gated behind @-moz-document,
-   which only Firefox parses. scrollbar-color on its own preempts the
-   ::-webkit-scrollbar rules in modern Chrome, but scrollbar-width does something
-   worse: setting it to thin makes Chrome use its own native thin scrollbar
-   renderer and IGNORE the webkit rules entirely. Either one on * strips the
-   glass out. Firefox gets both here; Chrome and Safari fall through to the
-   webkit rules unhindered and paint the transparent, blurred pill. */
-@-moz-document url-prefix() {
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(100, 159, 37, .22) transparent;
-  }
-}
+   So Firefox is left to its default scrollbar here, which is a neutral grey
+   thin bar. That is not glass, but it is quiet, and it stops fighting the
+   webkit rules. Chrome and Safari, which is most of the site's readers,
+   paint the glass properly. */
 
 *::-webkit-scrollbar {
   width: 12px;
@@ -3789,12 +3781,14 @@ a[href] {
 
 *::-webkit-scrollbar-track {
   background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
-/* The pill itself. No fill, just the blur and the two-layer stroke. Rounded
-   fully so it reads as a pill at every length: the thumb shortens as the page
-   grows, and a fixed corner radius would round the ends less on long pages
-   and more on short ones. */
+/* The pill itself. Empty fill, blurred backdrop, hairline stroke. Rounded
+   fully so the corners hold at every thumb length: as the page grows the
+   thumb shortens, and a fixed corner radius rounds short thumbs more and long
+   ones less. */
 *::-webkit-scrollbar-thumb {
   background: transparent;
   -webkit-backdrop-filter: blur(12px);
@@ -3806,8 +3800,8 @@ a[href] {
   transition: box-shadow .18s ease, background .18s ease;
 }
 
-/* Hover picks up the stroke rather than filling the pill. Same behaviour the
-   nav pill has: it does not gain a background on hover, it gains presence. */
+/* Hover picks up the stroke rather than filling the pill: same behaviour the
+   nav pill has -- it does not gain a background on hover, it gains presence. */
 *::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, .06);
   box-shadow:
@@ -3830,23 +3824,21 @@ a[href] {
 
 
 /* -------------------------------------------------------- cursors
-   Custom pointers cut from a set of hand-painted icons. Delivered as 32x32
-   PNGs, which is the largest size Firefox and Safari will actually paint --
-   anything above that they silently drop, and the fallback keyword takes
-   over, which is worse than not offering a custom cursor at all. Chrome
-   would paint up to 128, but it is the outlier here.
+   Custom pointers cut from a set of hand-painted icons. Delivered as 48x48
+   PNGs, which is bigger than the OS default without crossing the size at
+   which Firefox and Safari silently fall back to the keyword. A fallback
+   keyword follows every url() so a browser that cannot load an image at all
+   still has the right shape.
 
-   A fallback keyword follows every url() so a browser that cannot load an
-   image (or an old spec that never supported url() cursors on anything but
-   the root element) still has the right shape.
-
-   Hotspots, per cursor, in the 32-canvas:
+   Hotspots, per cursor, in the 48-canvas:
      arrow  -- the tip of the arrow, top-left of the canvas.
-     point  -- the tip of the raised finger, top-centre.
-     wait   -- the middle, because an hourglass has no tip. */
+     point  -- the tip of the raised finger, near the top-centre.
+     wait   -- the middle, because an hourglass has no tip.
+     move   -- the middle, for the same reason.
+     resize -- the middle. */
 
 :root {
-  cursor: url("assets/ui/cursor-arrow.png") 0 0, auto;
+  cursor: url("assets/ui/cursor-arrow.png") 2 2, auto;
 }
 
 /* Links and buttons: the two things a reader knows in advance are interactive.
@@ -3858,7 +3850,7 @@ a, button, summary,
 label[for],
 input[type="submit"], input[type="reset"], input[type="button"],
 input[type="checkbox"], input[type="radio"], select {
-  cursor: url("assets/ui/cursor-point.png") 16 2, pointer;
+  cursor: url("assets/ui/cursor-point.png") 24 3, pointer;
 }
 
 /* Things a reader is meant to pick up. The persona-homepage demo has grips
@@ -3866,18 +3858,18 @@ input[type="checkbox"], input[type="radio"], select {
    pages without the elements, and adding them here keeps a future draggable
    working without a second stylesheet. */
 [draggable="true"], .grip {
-  cursor: url("assets/ui/cursor-move.png") 16 16, grab;
+  cursor: url("assets/ui/cursor-move.png") 24 24, grab;
 }
 [draggable="true"]:active, .grip:active {
-  cursor: url("assets/ui/cursor-move.png") 16 16, grabbing;
+  cursor: url("assets/ui/cursor-move.png") 24 24, grabbing;
 }
 .rz, .rz-e, .rz-s, .rz-se {
-  cursor: url("assets/ui/cursor-resize.png") 16 16, nwse-resize;
+  cursor: url("assets/ui/cursor-resize.png") 24 24, nwse-resize;
 }
 
 /* Waiting states, on the element that carries the wait: aria-busy is what a
    loading tile or a submitting form should set. Deliberately not applied to
    the page: a busy cursor site-wide reads as a page that has broken. */
 .is-busy, [aria-busy="true"] {
-  cursor: url("assets/ui/cursor-wait.png") 16 16, progress;
+  cursor: url("assets/ui/cursor-wait.png") 24 24, progress;
 }
