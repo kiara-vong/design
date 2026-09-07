@@ -467,7 +467,10 @@ PROSE = {
    ]),
  "rheoscopic": dict(
    # All eight figures, since with no hang this section IS the page.
-   picks=["rh-final", "rh-detail", "rh-gears", "rh-cad", "rh-cad2", "rh-flow",
+   # rh-final ("the piece, running") is the closing film now, not a still, so it
+   # comes out of the picks and in as the run below. The Selected stills are the
+   # documentation: the detail, the gears, the CAD and the flow studies.
+   picks=["rh-detail", "rh-gears", "rh-cad", "rh-cad2", "rh-flow",
           "rh-flow2", "rh-bench"],
    sections=[
      ("Context", [
@@ -492,7 +495,18 @@ PROSE = {
    # No hang. The figures on this page are CAD, a gear housing and two flow studies
    # -- documentation of one object, not a set of works, and presenting eight of
    # them as a salon wall claimed a body of work that does not exist.
-   hang=False),
+   hang=False,
+   # The whole point of a kinetic piece is that it moves, and a still of a running
+   # sculpture is the one frame that cannot show the thing it is about. The run is
+   # the gear train driving itself, the fluid drawing its own currents.
+   film=dict(src="rheoscopic", poster="rh-run", dur="0:18",
+             title="The piece, running",
+             cap="The gear train under its own drive, the rheoscopic fluid drawing "
+                 "the flow inside each cylinder. The banding is the no-slip "
+                 "condition made visible: fluid at the wall keeps pace with the "
+                 "wall, fluid at the centre lags, and the shear between them is the "
+                 "pattern. It looks like the bands on a gas giant for the same "
+                 "reason.")),
  "sandsketch": dict(
    picks=["ss-3", "ss-1", "ss-4"],
    # The count in the credit strip should say what the page holds, and for these two
@@ -776,17 +790,33 @@ def build_category(cat):
         # A title and nothing else, on every category. A paragraph under every
         # picture turns a wall into a reading exercise, and the writing that
         # matters is already above it, in Context and Method.
+        # The arrival cover is skipped here. It is the image the ticket you came
+        # from has just shown you, so repeating it as the first thing in the grid
+        # is the page opening on its own thumbnail. Only the cover is skipped; a
+        # piece that happens to be titled "Cover" but is not THIS page's cover
+        # (the yearbook's actual cover, say) stays, because it is a real piece the
+        # reader has not seen yet.
         works = ['      <div class="ac-hang">\n']
-        for i, (pslug, title, blurb, w, h) in enumerate(cat["pieces"]):
+        fi = 0
+        cover_id = cat.get("cover") or ""
+        for (pslug, title, blurb, w, h) in cat["pieces"]:
+            # Skip only a DEDICATED cover image -- one whose id ends in "-cover",
+            # a piece that exists to be the ticket face and nothing else. A cover
+            # that is really a content piece (the yearbook's cover is a feature
+            # spread, water-drop's is "Mycology") is left in the grid, because the
+            # reader has not otherwise seen it full size.
+            if pslug == cover_id and cover_id.endswith("-cover"):
+                continue
             works.append(
                 '        <div class="ac-work %s">\n'
                 '          <div class="ac-frame"><img src="../../assets/art/%s/%s.jpg" alt="%s" '
                 'loading="lazy" width="%d" height="%d"></div>\n'
                 '          <div class="ac-label"><span class="t">%s</span>%s</div>\n'
                 '        </div>\n'
-                % (FRAMES[i % len(FRAMES)], slug, pslug, esc(title), w, h,
+                % (FRAMES[fi % len(FRAMES)], slug, pslug, esc(title), w, h,
                    esc(title),
                    award(pslug)))
+            fi += 1
         works.append('      </div>\n')
         title = "The full set" if prose else "The work"
         nav.append(("works", title, False))

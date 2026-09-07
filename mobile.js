@@ -201,7 +201,11 @@
     }
     figs.forEach(function (fig) {
       var el = fig.firstElementChild;
-      if (!el || el.tagName === 'IMG') return;
+      /* Images and videos opt out: the case-study camera figures that need
+         scaling are DIVs authored at 799px, whereas a bare <img> or <video>
+         in an art .ac-plate is already responsive (width:100%) and scaling it
+         to 44% is what shrank the art films to a stamp on a phone. */
+      if (!el || el.tagName === 'IMG' || el.tagName === 'VIDEO') return;
       clear(el);
       /* Impact opts out. It is a block of numbers and sentences, and shrinking type to
          44% is the opposite of what it needs; mobile.css gives it a stacked layout at

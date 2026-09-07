@@ -66,8 +66,6 @@ CATEGORIES = [
              ("wd-crown", ART + "water drop/crown (drop).png", "Crown",
               "The textbook Worthington crown, lit from behind so the rim reads "
               "as separate points rather than one ring."),
-             ("wd-globe", ART + "water drop/globe.png", "Globe",
-              "The whole event enclosed in a bubble that survived the impact."),
              ("wd-bubble", ART + "water drop/bubble.png", "Bubble",
               "Same setup, a few milliseconds later, before the surface closed."),
              ("wd-neon", ART + "water drop/neon.png", "Neon",
@@ -128,6 +126,8 @@ CATEGORIES = [
                "cylinders, driven by a 3D-printed gear train, after Paul "
                "Matisse's Kalliroscope.",
          pieces=[
+             ("rh-run", SRC + "rheo/run.jpg", "The piece, running",
+              "The gear train running."),
              ("rh-final", SRC + "rheo/image5.jpg", "The piece, running",
               "Mica flakes suspended in water. They orient along the flow "
               "direction the way logs do in a river, so the currents inside the "
