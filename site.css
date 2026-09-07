@@ -3767,21 +3767,16 @@ a[href] {
    Firefox's parser does not accept an rgba() thumb colour written any other
    way in every version. */
 
-/* scrollbar-color is now standardised, and modern Chrome supports it. When set
-   on * it PREEMPTS the ::-webkit-scrollbar rules below, and Chrome painted the
-   Firefox fallback -- accent green at low alpha -- instead of the glass. So it
-   is gated behind @-moz-document, which only Firefox parses; Chrome and Safari
-   ignore that block and pick up the webkit rules unhindered.
-
-   scrollbar-width: thin is safe to keep on *: Chrome accepts it and it just
-   sets the thinner track width, which agrees with what the webkit rule
-   declares anyway. */
-* {
-  scrollbar-width: thin;
-}
-
+/* Both standardised scrollbar properties are gated behind @-moz-document,
+   which only Firefox parses. scrollbar-color on its own preempts the
+   ::-webkit-scrollbar rules in modern Chrome, but scrollbar-width does something
+   worse: setting it to thin makes Chrome use its own native thin scrollbar
+   renderer and IGNORE the webkit rules entirely. Either one on * strips the
+   glass out. Firefox gets both here; Chrome and Safari fall through to the
+   webkit rules unhindered and paint the transparent, blurred pill. */
 @-moz-document url-prefix() {
   * {
+    scrollbar-width: thin;
     scrollbar-color: rgba(100, 159, 37, .22) transparent;
   }
 }
@@ -3831,4 +3826,58 @@ a[href] {
    whatever is behind the two tracks shows through the gap between them. */
 *::-webkit-scrollbar-corner {
   background: transparent;
+}
+
+
+/* -------------------------------------------------------- cursors
+   Custom pointers cut from a set of hand-painted icons. Delivered as 32x32
+   PNGs, which is the largest size Firefox and Safari will actually paint --
+   anything above that they silently drop, and the fallback keyword takes
+   over, which is worse than not offering a custom cursor at all. Chrome
+   would paint up to 128, but it is the outlier here.
+
+   A fallback keyword follows every url() so a browser that cannot load an
+   image (or an old spec that never supported url() cursors on anything but
+   the root element) still has the right shape.
+
+   Hotspots, per cursor, in the 32-canvas:
+     arrow  -- the tip of the arrow, top-left of the canvas.
+     point  -- the tip of the raised finger, top-centre.
+     wait   -- the middle, because an hourglass has no tip. */
+
+:root {
+  cursor: url("assets/ui/cursor-arrow.png") 0 0, auto;
+}
+
+/* Links and buttons: the two things a reader knows in advance are interactive.
+   Restricted to those rather than a wider net -- turning every card into a
+   pointer target reads as everything on the page being clickable, and half
+   the cards on this site are not. */
+a, button, summary,
+[role="button"], [role="link"], [role="menuitem"], [role="tab"],
+label[for],
+input[type="submit"], input[type="reset"], input[type="button"],
+input[type="checkbox"], input[type="radio"], select {
+  cursor: url("assets/ui/cursor-point.png") 16 2, pointer;
+}
+
+/* Things a reader is meant to pick up. The persona-homepage demo has grips
+   and resize handles; the portfolio itself has none. Rules cost nothing on
+   pages without the elements, and adding them here keeps a future draggable
+   working without a second stylesheet. */
+[draggable="true"], .grip {
+  cursor: url("assets/ui/cursor-move.png") 16 16, grab;
+}
+[draggable="true"]:active, .grip:active {
+  cursor: url("assets/ui/cursor-move.png") 16 16, grabbing;
+}
+.rz, .rz-e, .rz-s, .rz-se {
+  cursor: url("assets/ui/cursor-resize.png") 16 16, nwse-resize;
+}
+
+/* Waiting states, on the element that carries the wait: aria-busy is what a
+   loading tile or a submitting form should set. Deliberately not applied to
+   the page: a busy cursor site-wide reads as a page that has broken. */
+.is-busy, [aria-busy="true"] {
+  cursor: url("assets/ui/cursor-wait.png") 16 16, progress;
 }
